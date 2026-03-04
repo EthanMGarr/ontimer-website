@@ -1,19 +1,8 @@
-"use client";
-
-import { useState } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 
+const WAITLIST_URL = "https://forms.gle/96FxjQbUokqZcjKE8";
+
 export default function AndroidPage() {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (email.trim()) {
-      setSubmitted(true);
-    }
-  }
-
   return (
     <>
       {/* Hero */}
@@ -29,49 +18,22 @@ export default function AndroidPage() {
             <span className="text-green-500">Android</span> is on its way.
           </h1>
           <p className="mt-5 text-lg text-zinc-400">
-            We&apos;re working hard to bring OnTimer to Android. Drop your email
-            below and you&apos;ll be the first to know when it launches.
+            We&apos;re working hard to bring OnTimer to Android. Join the
+            waitlist and you&apos;ll be the first to know when it launches.
           </p>
 
-          {/* Waitlist form */}
           <div className="mt-10">
-            {submitted ? (
-              <div className="rounded-2xl border border-green-500/30 bg-green-500/10 px-8 py-10">
-                <div className="mb-3 text-4xl">🎉</div>
-                <h2 className="text-2xl font-black text-white">
-                  You&apos;re on the list!
-                </h2>
-                <p className="mt-2 text-zinc-400">
-                  We&apos;ll email <strong className="text-white">{email}</strong>{" "}
-                  as soon as OnTimer for Android is available.
-                </p>
-              </div>
-            ) : (
-              <form
-                onSubmit={handleSubmit}
-                className="mx-auto max-w-md"
-              >
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    required
-                    className="flex-1 rounded-full border border-zinc-700 bg-zinc-900 px-5 py-3.5 text-sm text-white placeholder-zinc-500 outline-none transition-colors focus:border-green-500"
-                  />
-                  <button
-                    type="submit"
-                    className="rounded-full bg-green-500 px-6 py-3.5 text-sm font-semibold text-black transition-colors hover:bg-green-400"
-                  >
-                    Notify Me
-                  </button>
-                </div>
-                <p className="mt-3 text-xs text-zinc-500">
-                  No spam. One email when Android launches.
-                </p>
-              </form>
-            )}
+            <a
+              href={WAITLIST_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-green-500 px-8 py-4 text-base font-semibold text-black transition-colors hover:bg-green-400"
+            >
+              Join the Android Waitlist
+            </a>
+            <p className="mt-3 text-xs text-zinc-500">
+              No spam. One email when Android launches.
+            </p>
           </div>
         </div>
       </section>
