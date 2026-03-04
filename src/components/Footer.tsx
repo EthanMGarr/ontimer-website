@@ -40,6 +40,7 @@ export default function Footer() {
                 { href: "/faq", label: "FAQ" },
                 { href: "/blog", label: "Blog" },
                 { href: "/android", label: "Android Waitlist" },
+                { href: "/meeting-reminder-app", label: "Meeting Reminder App" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
