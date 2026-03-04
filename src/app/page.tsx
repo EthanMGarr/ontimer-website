@@ -57,6 +57,7 @@ const comparison = [
   { left: "Easy to forget", right: "Hard to miss" },
   { left: "One calendar", right: "Multiple calendars" },
   { left: "Simple reminder", right: "Real meeting alarm" },
+  { left: "No travel awareness", right: "Time-to-Leave alerts (location + traffic)" },
 ];
 
 const steps = [
@@ -97,10 +98,13 @@ export default function Home() {
                 Never Miss a{" "}
                 <span className="text-green-500">Meeting Again</span>
               </h1>
-              <p className="mt-6 max-w-xl text-lg text-zinc-400 lg:text-xl">
+              <p className="mt-4 text-xl font-semibold text-zinc-300">
+                Calendar reminders aren&apos;t alarms.
+              </p>
+              <p className="mt-4 max-w-xl text-lg text-zinc-400 lg:text-xl">
                 OnTimer connects to your calendars and creates alarms you
-                can&apos;t ignore — so meetings, calls, and appointments
-                don&apos;t sneak up on you.
+                can&apos;t ignore — so meetings, Zoom calls, Teams meetings,
+                and appointments don&apos;t sneak up on you.
               </p>
 
               <div className="mt-8">
@@ -166,8 +170,7 @@ export default function Home() {
           </h2>
           <div className="mt-6 space-y-4 text-left text-zinc-400 leading-relaxed">
             <p>
-              Most calendar notifications are easy to swipe away — and easy to
-              forget.
+              Most calendar reminders are easy to ignore.
             </p>
             <div className="rounded-xl border border-zinc-800 bg-zinc-900 px-6 py-5 space-y-2 text-zinc-300">
               <p>You glance at the reminder.</p>
@@ -182,6 +185,16 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── SECOND CTA ── */}
+      <section className="py-12 text-center">
+        <div className="mx-auto max-w-sm px-4">
+          <p className="mb-4 text-base font-semibold text-white">
+            Get alarms you can&apos;t ignore.
+          </p>
+          <AppStoreButton size="lg" />
+        </div>
+      </section>
+
       {/* ── VALUE PROPOSITION ── */}
       <section className="py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
@@ -190,6 +203,9 @@ export default function Home() {
             <span className="text-green-500">hate being late.</span>
           </h2>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
+            OnTimer is a calendar alarm app designed for people who rely on their schedule.
+          </p>
+          <p className="mt-3 text-lg text-zinc-400 leading-relaxed">
             Your calendar already knows where you need to be and when.
           </p>
           <p className="mt-3 text-lg text-zinc-400 leading-relaxed">
@@ -264,9 +280,15 @@ export default function Home() {
       {/* ── COMPARISON ── */}
       <section className="py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="mb-10 text-3xl font-black tracking-tight text-white sm:text-4xl">
+          <h2 className="mb-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
             Why OnTimer works when calendar reminders fail
           </h2>
+          <p className="mb-2 text-zinc-400">
+            Unlike typical reminders, this calendar alarm app creates persistent alarms for your meetings.
+          </p>
+          <p className="mb-10 text-sm font-semibold text-green-500">
+            Calendar reminders aren&apos;t alarms.
+          </p>
           <div className="overflow-hidden rounded-2xl border border-zinc-800">
             {/* Header */}
             <div className="grid grid-cols-2 border-b border-zinc-800 bg-zinc-900">
@@ -291,6 +313,38 @@ export default function Home() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── WHY CALENDAR REMINDERS FAIL ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-24">
+        <div className="mx-auto max-w-2xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            Why calendar reminders fail
+          </h2>
+          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+            <p>Most calendar apps were designed to show notifications, not alarms.</p>
+            <p>That means reminders are easy to ignore.</p>
+            <div className="space-y-2 text-zinc-300">
+              <p>You swipe the notification away.</p>
+              <p>You get distracted.</p>
+              <p>You think you&apos;ll join the meeting in a minute.</p>
+              <p>And suddenly the meeting already started.</p>
+            </div>
+            <p>This happens with:</p>
+            <ul className="space-y-1 pl-1">
+              {["Google Calendar reminders", "Outlook notifications", "phone lock-screen alerts"].map((item) => (
+                <li key={item} className="flex items-start gap-2 text-zinc-400">
+                  <span className="mt-1 flex-shrink-0 text-zinc-600">—</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p>They&apos;re helpful — but they&apos;re not designed to make sure you actually show up on time.</p>
+            <p className="text-zinc-300">
+              OnTimer fixes this by turning calendar events into real alarms that stay visible until you dismiss them — so you actually know when it&apos;s time for your meeting.
+            </p>
           </div>
         </div>
       </section>
