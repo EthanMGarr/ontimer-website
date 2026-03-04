@@ -11,20 +11,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
-    "/features/page": [
+    "/privacy/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/features/page.js"
+      "static/chunks/app/privacy/page.js"
     ],
-    "/blog/page": [
+    "/terms/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/blog/page.js"
-    ],
-    "/robots.txt/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/robots.txt/route.js"
+      "static/chunks/app/terms/page.js"
     ]
   }
 }
