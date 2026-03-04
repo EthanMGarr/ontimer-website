@@ -1,0 +1,6 @@
+{
+  "/robots.txt/route": "app/robots.txt/route.js",
+  "/features/page": "app/features/page.js",
+  "/page": "app/page.js",
+  "/blog/page": "app/blog/page.js"
+}
