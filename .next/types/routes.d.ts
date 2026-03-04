@@ -5,7 +5,7 @@ type AppRoutes = "/" | "/android" | "/blog" | "/blog/[slug]" | "/faq" | "/featur
 type AppRouteHandlerRoutes = "/feed.xml"
 type PageRoutes = never
 type LayoutRoutes = "/"
-type RedirectRoutes = never
+type RedirectRoutes = "/privacy" | "/terms"
 type RewriteRoutes = never
 type Routes = AppRoutes | PageRoutes | LayoutRoutes | RedirectRoutes | RewriteRoutes | AppRouteHandlerRoutes
 

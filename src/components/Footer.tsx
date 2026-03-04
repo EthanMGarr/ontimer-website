@@ -60,16 +60,24 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2.5">
               {[
-                { href: "/privacy", label: "Privacy Policy" },
-                { href: "/terms", label: "Terms of Service" },
+                {
+                  href: "https://ontimer.app/OnTimer_Privacy_Policy.html",
+                  label: "Privacy Policy",
+                },
+                {
+                  href: "https://ontimer.app/OnTimer_Terms_of_Service.html",
+                  label: "Terms of Service",
+                },
               ].map((link) => (
                 <li key={link.href}>
-                  <Link
+                  <a
                     href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-sm text-zinc-400 transition-colors hover:text-white"
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
