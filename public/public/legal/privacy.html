@@ -1,0 +1,210 @@
+OnTimer Privacy Policy
+Last Updated: January 10, 2026
+
+1. Introduction
+Breakout Growth ("we," "our," or "us") operates the OnTimer mobile application ("the App"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use OnTimer.
+
+By using OnTimer, you consent to the data practices described in this policy.
+
+🔒 KEY PRIVACY PRINCIPLES
+Read-Only Calendar Access: We only READ your calendar events. We never modify, create, delete, or share your calendar data.
+Local Storage: Calendar data is primarily stored on your device, not on our servers.
+Minimal Data Collection: We collect only what's necessary to provide alarm functionality.
+No Data Selling: We never sell your personal information to third parties.
+2. Information We Collect
+2.1 Calendar Data (Read-Only)
+When you connect your Google Calendar or Microsoft Outlook account, OnTimer requests read-only access to the following information:
+
+Data Type	Purpose	Storage Location
+Event titles	Display in app and notifications	Stored locally on your device
+Event start/end times	Schedule alarms and notifications	Stored locally on your device
+Event descriptions	Display additional event details	Stored locally on your device
+Event location	Display meeting location information	Stored locally on your device
+Calendar names	Allow you to select which calendars to monitor	Stored locally on your device
+Attendee information	Display meeting participants (optional)	Stored locally on your device
+Important: OnTimer uses the following OAuth scopes:
+
+Google Calendar: https://www.googleapis.com/auth/calendar.readonly (read-only access)
+Microsoft Calendar: Calendars.Read (read-only access)
+These scopes grant read-only access to your calendar events. OnTimer cannot and does not modify, create, or delete your calendar events.
+
+2.2 Device Information
+We collect limited device information to provide notification services:
+
+Device token: For Apple Push Notifications (to trigger background syncs)
+App version and build number: For troubleshooting and support
+Operating system version: To ensure compatibility
+Device timezone: To display event times correctly
+2.3 Usage Analytics
+We collect anonymous usage data to improve the App:
+
+App opens and feature usage
+Notification interaction (dismissed, tapped, etc.)
+Subscription status (free vs. premium)
+Error logs and crash reports
+This data is anonymized and cannot be used to identify you personally.
+
+2.4 Account Information
+If you create an account or subscribe to premium features:
+
+Email address: Used for account management and support (optional)
+Subscription status: Managed by RevenueCat and Apple
+Purchase history: Stored by Apple App Store, not by us
+2.5 Information We Do NOT Collect
+OnTimer does not collect:
+
+Email content or messages
+Contacts or address book information
+Files or documents from your accounts
+Location data beyond timezone information
+Passwords (authentication is handled securely through OAuth)
+Payment information (processed by Apple)
+3. How We Use Your Information
+We use the information we collect to:
+
+Provide alarm functionality: Schedule and deliver notifications for your calendar events
+Sync calendar data: Periodically refresh your event list to ensure accuracy
+Display event information: Show event details in the app interface
+Improve the App: Analyze usage patterns to fix bugs and add features
+Provide customer support: Respond to your questions and troubleshoot issues
+Send service notifications: Alert you about App updates or service changes
+Manage subscriptions: Process premium feature access and billing
+4. Data Storage and Security
+4.1 Local Storage
+The majority of your calendar data is stored locally on your device using:
+
+iOS Keychain (for OAuth tokens - encrypted)
+SwiftData/Core Data (for event information - encrypted at rest)
+UserDefaults (for app settings - non-sensitive data only)
+4.2 Server Storage
+Minimal data is stored on our servers:
+
+Device tokens: Required for Apple Push Notifications (for background sync triggers)
+Anonymous analytics: Aggregated usage statistics
+Crash reports: For debugging (anonymized)
+We do NOT store your calendar events or personal calendar data on our servers.
+
+4.3 Security Measures
+We implement industry-standard security measures:
+
+OAuth 2.0 authentication (no password storage)
+HTTPS/TLS encryption for all network communications
+Encrypted local storage using iOS security features
+Regular security audits and updates
+Minimal data retention policies
+However, no method of transmission over the internet or electronic storage is 100% secure. While we strive to protect your information, we cannot guarantee absolute security.
+
+5. Third-Party Services
+OnTimer integrates with the following third-party services:
+
+5.1 Google Calendar API
+Purpose: Read calendar events from Google Calendar
+Data shared: OAuth authentication tokens (managed by Google)
+Privacy policy: https://policies.google.com/privacy
+5.2 Microsoft Graph API
+Purpose: Read calendar events from Outlook/Microsoft 365
+Data shared: OAuth authentication tokens (managed by Microsoft)
+Privacy policy: https://privacy.microsoft.com/privacystatement
+5.3 RevenueCat
+Purpose: Subscription management and payment processing
+Data shared: Anonymous user ID, subscription status
+Privacy policy: https://www.revenuecat.com/privacy
+5.4 Apple Push Notification Service (APNs)
+Purpose: Trigger background calendar syncs
+Data shared: Device token, silent push notifications
+Privacy policy: https://www.apple.com/legal/privacy/
+5.5 Analytics Services
+Purpose: Anonymous usage analytics and crash reporting
+Data shared: Anonymized usage patterns, device information
+Note: No personally identifiable information is shared
+6. Data Sharing and Disclosure
+We do not sell, trade, or rent your personal information to third parties.
+
+We may disclose your information only in the following circumstances:
+
+With your consent: When you explicitly authorize us to share information
+Service providers: Third-party services necessary to operate the App (as listed above)
+Legal requirements: If required by law, court order, or government request
+Protection of rights: To protect our legal rights, safety, or property
+Business transfers: In connection with a merger, acquisition, or sale of assets
+7. Data Retention
+Calendar data: Stored on your device only; deleted when you disconnect your calendar or delete the App
+OAuth tokens: Stored until you revoke access or disconnect your account
+Device tokens: Retained as long as the App is installed
+Analytics data: Retained for up to 2 years in anonymized form
+Account data: Deleted within 30 days of account deletion request
+8. Your Privacy Rights
+You have the following rights regarding your data:
+
+8.1 Access and Control
+View your data: Access all calendar data stored locally in the App
+Disconnect calendars: Revoke access at any time through App settings
+Delete local data: Remove the App to delete all locally stored data
+Manage subscriptions: Cancel or modify through App Store settings
+8.2 Revoke Calendar Access
+You can revoke OnTimer's access to your calendar at any time through:
+
+In-App: Settings → Remove Calendar Connections
+Google: https://myaccount.google.com/permissions
+Microsoft: https://account.microsoft.com/privacy/app-access
+iOS: Settings → Privacy & Security → Calendars
+8.3 Data Deletion Requests
+To request deletion of your data:
+
+Delete the OnTimer app from your device (removes all local data)
+Email support@ontimer.app to request server-side data deletion
+We will delete your device token and any associated data within 30 days
+8.4 California Privacy Rights (CCPA)
+If you are a California resident, you have additional rights under the California Consumer Privacy Act (CCPA):
+
+Right to know what personal information we collect
+Right to know if we sell or disclose personal information (we do not)
+Right to request deletion of personal information
+Right to opt-out of sale (not applicable as we don't sell data)
+Right to non-discrimination for exercising your privacy rights
+To exercise these rights, contact us at support@ontimer.app
+
+8.5 European Privacy Rights (GDPR)
+If you are in the European Economic Area (EEA), you have rights under the General Data Protection Regulation (GDPR):
+
+Right to access your personal data
+Right to rectification of inaccurate data
+Right to erasure ("right to be forgotten")
+Right to restrict processing
+Right to data portability
+Right to object to processing
+To exercise these rights, contact us at support@ontimer.app
+
+9. Children's Privacy
+OnTimer is not intended for children under the age of 13. We do not knowingly collect personal information from children under 13. If you believe we have collected information from a child under 13, please contact us immediately at support@ontimer.app and we will delete such information.
+
+10. International Data Transfers
+Your information may be transferred to and processed in countries other than your country of residence. These countries may have data protection laws different from your jurisdiction. By using OnTimer, you consent to the transfer of your information to the United States and other countries where we operate.
+
+11. Changes to This Privacy Policy
+We may update this Privacy Policy from time to time. We will notify you of material changes by:
+
+Updating the "Last Updated" date at the top of this policy
+Posting a notice in the App
+Sending an email notification (if you have provided your email)
+Your continued use of OnTimer after changes become effective constitutes acceptance of the updated Privacy Policy.
+
+12. Google API Services User Data Policy Compliance
+OnTimer's use of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements.
+
+Specifically:
+
+OnTimer only requests the minimum scopes necessary (read-only calendar access)
+Calendar data is used solely to provide alarm and notification functionality
+We do not transfer calendar data to third parties except as necessary to provide the App's core functionality
+Calendar data is not used for serving advertisements
+Human access to calendar data is limited to debugging and support purposes only
+13. Contact Us
+If you have questions about this Privacy Policy or our data practices, please contact us:
+
+Breakout Growth
+Email: support@ontimer.app
+Website: https://ontimer.app
+
+14. Your Consent
+By using OnTimer, you acknowledge that you have read this Privacy Policy and consent to our collection, use, and disclosure of your information as described herein.
