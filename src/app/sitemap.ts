@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getSortedPosts } from "@/lib/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://ontimer.app";
+  const baseUrl = "https://www.ontimer.app";
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {

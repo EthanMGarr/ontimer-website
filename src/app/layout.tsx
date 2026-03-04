@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ontimer.app"),
+  metadataBase: new URL("https://www.ontimer.app"),
   title: {
     default: "OnTimer — Calendar Alarm App to Never Be Late for Meetings",
     template: "%s | OnTimer",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://ontimer.app",
+    url: "https://www.ontimer.app",
     siteName: "OnTimer",
     title: "OnTimer — Calendar Alarm App to Never Be Late for Meetings",
     description:

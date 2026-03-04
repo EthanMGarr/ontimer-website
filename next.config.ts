@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/:path*",
+        has: [{ type: "host", value: "ontimer.app" }],
+        destination: "https://www.ontimer.app/:path*",
+        permanent: true,
+      },
+      {
         source: "/privacy",
         destination: "https://ontimer.app/OnTimer_Privacy_Policy.html",
         permanent: true,
