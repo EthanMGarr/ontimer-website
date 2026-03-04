@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
 const APP_STORE_URL =
@@ -22,6 +23,13 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/images/ontimer_1024x1024.png"
+              alt="OnTimer"
+              width={32}
+              height={32}
+              className="rounded-lg"
+            />
             <span className="text-xl font-bold tracking-tight">
               On<span className="text-green-500">Timer</span>
             </span>

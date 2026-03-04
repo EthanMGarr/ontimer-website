@@ -1,44 +1,13 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
+import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "OnTimer — Never Be Late Again",
+  title: "OnTimer — Calendar Alarm App to Never Be Late for Meetings",
   description:
-    "OnTimer connects to your calendar and automatically sets alarms so you always leave on time. Download free on the App Store.",
+    "OnTimer connects to Google Calendar and Outlook and creates persistent meeting alarms you can't ignore. Free iPhone app.",
 };
-
-const features = [
-  {
-    icon: "📅",
-    title: "Calendar Connected",
-    description:
-      "Syncs with your iPhone calendar so it always knows what's next on your schedule.",
-    image: "/images/ConnectsToCalendars.png",
-  },
-  {
-    icon: "⏰",
-    title: "Automatic Alarms",
-    description:
-      "Sets smart alarms based on your events — no manual setup needed, ever.",
-    image: "/images/AutomaticAlarms.png",
-  },
-  {
-    icon: "🔔",
-    title: "Can't-Miss Alerts",
-    description:
-      "Escalating alerts ensure you'll never sleep through an important commitment.",
-    image: "/images/CantMissAlerts.png",
-  },
-  {
-    icon: "🎛️",
-    title: "You're In Control",
-    description:
-      "Customize lead times, snooze settings, and which events get alarms.",
-    image: "/images/YoureInControl.png",
-  },
-];
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -50,8 +19,63 @@ const jsonLd = {
   downloadUrl:
     "https://apps.apple.com/us/app/ontimer-never-be-late/id6755317601",
   description:
-    "OnTimer connects to your calendar and automatically sets alarms based on your events — so you always leave on time, without thinking about it.",
+    "OnTimer connects to your calendars and creates alarms you can't ignore — so meetings, calls, and appointments don't sneak up on you.",
 };
+
+const features = [
+  {
+    icon: "📅",
+    title: "All Your Calendars",
+    body: "Connect Google and Microsoft calendars in seconds — including multiple work and personal accounts.\n\nOnTimer automatically monitors your events and prepares alarms for everything on your schedule.",
+  },
+  {
+    icon: "⏰",
+    title: "Automatic Alarms",
+    body: "Every event becomes an alarm — no manual setup required.\n\nUpcoming meetings, calls, and appointments are always covered.\n\nTime-to-Leave alerts based on location and traffic ensure you know when it's time to head out.",
+  },
+  {
+    icon: "🔔",
+    title: "Alerts You Won't Miss",
+    body: "Unlike normal calendar notifications, OnTimer alarms stay loud and visible until you dismiss them.\n\nNo silent reminders disappearing into your notification center.",
+  },
+  {
+    icon: "🎛️",
+    title: "Control What Matters",
+    bullets: [
+      "how early alarms fire",
+      "which calendars trigger alarms",
+      "business hours filtering",
+      "recurring event handling",
+    ],
+    suffix: "OnTimer works the way your schedule actually works.",
+  },
+];
+
+const comparison = [
+  { left: "Easy to swipe away", right: "Persistent alarms" },
+  { left: "Passive notification", right: "Loud alarm" },
+  { left: "Easy to forget", right: "Hard to miss" },
+  { left: "One calendar", right: "Multiple calendars" },
+  { left: "Simple reminder", right: "Real meeting alarm" },
+];
+
+const steps = [
+  {
+    number: "01",
+    title: "Connect your calendars",
+    body: "Link all of your Google and Microsoft calendars in seconds.",
+  },
+  {
+    number: "02",
+    title: "OnTimer creates alarms",
+    body: "Every calendar event automatically gets a persistent alarm.",
+  },
+  {
+    number: "03",
+    title: "Show up on time",
+    body: "When the alarm fires, you know exactly when it's time to join the meeting or leave.",
+  },
+];
 
 export default function Home() {
   return (
@@ -60,42 +84,59 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-hero-gradient pb-20 pt-24 md:pt-32">
+
+      {/* ── HERO ── */}
+      <section className="relative overflow-hidden pb-20 pt-24 md:pt-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.15),transparent)]" />
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex flex-col items-center gap-16 lg:flex-row lg:items-center">
-            {/* Hero text */}
+
+            {/* Text */}
             <div className="flex-1 text-center lg:text-left">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-3 py-1 text-sm text-green-400">
-                <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
-                Available on the App Store
-              </div>
               <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
-                Never Be{" "}
-                <span className="text-green-500">Late Again</span>
+                Never Miss a{" "}
+                <span className="text-green-500">Meeting Again</span>
               </h1>
               <p className="mt-6 max-w-xl text-lg text-zinc-400 lg:text-xl">
-                OnTimer connects to your calendar and automatically sets alarms
-                based on your events — so you always leave on time, without
-                thinking about it.
+                OnTimer connects to your calendars and creates alarms you
+                can&apos;t ignore — so meetings, calls, and appointments
+                don&apos;t sneak up on you.
               </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
+
+              <div className="mt-8">
                 <AppStoreButton size="lg" />
-                <AndroidWaitlistButton size="lg" />
+                <p className="mt-3 text-xs text-zinc-500">
+                  Free download • Connect your calendars in seconds
+                </p>
               </div>
-              <p className="mt-4 text-xs text-zinc-500">
-                Free download · iOS 16+ · No subscription required
-              </p>
+
+              {/* Calendar logos */}
+              <div className="mt-8">
+                <p className="mb-3 text-xs font-semibold text-zinc-500">
+                  Works with Google &amp; Microsoft calendars
+                </p>
+                <div className="flex items-center justify-center gap-4 lg:justify-start">
+                  <img
+                    src="/images/google-calendar-logo-google-calendar.jpg"
+                    alt="Google Calendar"
+                    className="h-[38px] w-auto"
+                  />
+                  <img
+                    src="/images/outlook-calendar.jpg"
+                    alt="Microsoft Outlook"
+                    className="h-[38px] w-auto"
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Hero screenshots */}
+            {/* Screenshots */}
             <div className="relative flex-shrink-0">
               <div className="relative flex gap-4">
                 <div className="relative mt-8 h-[480px] w-[220px] overflow-hidden rounded-[2rem] border border-zinc-700 shadow-2xl shadow-green-500/10">
                   <Image
                     src="/images/NeverBeLateAgain.png"
-                    alt="OnTimer — Never Be Late Again"
+                    alt="OnTimer — Never Miss a Meeting Again"
                     fill
                     className="object-cover"
                     priority
@@ -111,185 +152,221 @@ export default function Home() {
                   />
                 </div>
               </div>
-              {/* Glow effect */}
               <div className="pointer-events-none absolute -inset-4 rounded-full bg-green-500/5 blur-3xl" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Social proof strip */}
-      <section className="border-y border-zinc-800 bg-zinc-900/50 py-6">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="flex flex-wrap items-center justify-center gap-8 text-center">
-            {[
-              { stat: "5★", label: "App Store Rating" },
-              { stat: "iOS 16+", label: "Compatible" },
-              { stat: "Free", label: "Download" },
-              { stat: "0 Setup", label: "Required" },
-            ].map((item) => (
-              <div key={item.label} className="px-4">
-                <p className="text-2xl font-bold text-green-500">{item.stat}</p>
-                <p className="text-sm text-zinc-400">{item.label}</p>
-              </div>
-            ))}
+      {/* ── PROBLEM ── */}
+      <section className="border-y border-zinc-800 bg-zinc-900/50 py-20">
+        <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            Calendar reminders aren&apos;t alarms.
+          </h2>
+          <div className="mt-6 space-y-4 text-left text-zinc-400 leading-relaxed">
+            <p>
+              Most calendar notifications are easy to swipe away — and easy to
+              forget.
+            </p>
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900 px-6 py-5 space-y-2 text-zinc-300">
+              <p>You glance at the reminder.</p>
+              <p>You think &quot;I&apos;ll join in a minute.&quot;</p>
+              <p>Then suddenly the meeting started 10 minutes ago.</p>
+            </div>
+            <p>
+              OnTimer fixes this by turning calendar events into real alarms you
+              can&apos;t ignore.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Features overview */}
+      {/* ── VALUE PROPOSITION ── */}
       <section className="py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-16 text-center">
-            <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
-              Built for people who{" "}
-              <span className="text-green-500">hate being late</span>
-            </h2>
-            <p className="mt-4 text-lg text-zinc-400">
-              OnTimer removes every excuse. Your calendar knows where you need
-              to be — OnTimer makes sure you get there.
-            </p>
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
+            Built for people who{" "}
+            <span className="text-green-500">hate being late.</span>
+          </h2>
+          <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
+            Your calendar already knows where you need to be and when.
+          </p>
+          <p className="mt-3 text-lg text-zinc-400 leading-relaxed">
+            OnTimer turns those events into alarms you won&apos;t miss — so
+            meetings, calls, and appointments never slip by.
+          </p>
+          <div className="mt-6">
+            <p className="font-semibold text-white">No more:</p>
+            <ul className="mt-3 space-y-2">
+              {[
+                "ignoring reminders",
+                "losing track of time",
+                "realizing a meeting started 10 minutes ago",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3 text-zinc-400">
+                  <span className="mt-1 flex-shrink-0 text-green-500">✗</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
+        </div>
+      </section>
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {features.map((feature) => (
+      {/* ── FEATURES ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/30 py-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="grid gap-6 sm:grid-cols-2">
+            {features.map((f) => (
               <div
-                key={feature.title}
-                className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition-colors hover:border-green-500/40 hover:bg-zinc-800/50"
+                key={f.title}
+                className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8"
               >
-                <div className="mb-4 text-3xl">{feature.icon}</div>
-                <h3 className="mb-2 text-lg font-bold text-white">
-                  {feature.title}
+                <div className="mb-4 text-3xl">{f.icon}</div>
+                <h3 className="mb-3 text-xl font-black text-white">
+                  {f.title}
                 </h3>
-                <p className="text-sm text-zinc-400">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-10 text-center">
-            <Link
-              href="/features"
-              className="text-sm font-semibold text-green-500 hover:text-green-400"
-            >
-              See all features →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Screenshots showcase */}
-      <section className="overflow-hidden bg-zinc-900/30 py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-16 text-center">
-            <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
-              Calm, clear, on time
-            </h2>
-            <p className="mt-4 text-lg text-zinc-400">
-              A beautiful interface designed to reduce stress, not add to it.
-            </p>
-          </div>
-
-          <div className="flex justify-center gap-4 overflow-x-auto pb-4">
-            {[
-              {
-                src: "/images/CantMissAlerts.png",
-                alt: "Can't-miss alerts",
-              },
-              {
-                src: "/images/ConnectsToCalendars.png",
-                alt: "Connects to your calendar",
-              },
-              {
-                src: "/images/AutomaticAlarms.png",
-                alt: "Automatic alarms",
-              },
-              {
-                src: "/images/YoureInControl.png",
-                alt: "You're in control",
-              },
-            ].map((shot) => (
-              <div
-                key={shot.alt}
-                className="relative h-[440px] w-[200px] flex-shrink-0 overflow-hidden rounded-[1.75rem] border border-zinc-700 shadow-xl"
-              >
-                <Image
-                  src={shot.src}
-                  alt={shot.alt}
-                  fill
-                  className="object-cover"
-                />
+                {"body" in f && f.body && (
+                  <div className="space-y-3">
+                    {f.body.split("\n\n").map((para, i) => (
+                      <p key={i} className="text-sm text-zinc-400 leading-relaxed">
+                        {para}
+                      </p>
+                    ))}
+                  </div>
+                )}
+                {"bullets" in f && f.bullets && (
+                  <>
+                    <p className="mb-2 text-sm text-zinc-400">Choose:</p>
+                    <ul className="mb-4 space-y-1.5">
+                      {f.bullets.map((b) => (
+                        <li
+                          key={b}
+                          className="flex items-start gap-2 text-sm text-zinc-400"
+                        >
+                          <span className="mt-0.5 flex-shrink-0 text-green-500">
+                            ✓
+                          </span>
+                          {b}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="text-sm text-zinc-400">{f.suffix}</p>
+                  </>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How it works teaser */}
+      {/* ── COMPARISON ── */}
       <section className="py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-16 text-center">
-            <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
-              Works in{" "}
-              <span className="text-green-500">3 simple steps</span>
-            </h2>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-3">
-            {[
-              {
-                step: "01",
-                title: "Connect your calendar",
-                description:
-                  "OnTimer reads your upcoming events — meetings, appointments, anything with a time.",
-              },
-              {
-                step: "02",
-                title: "We set the alarms",
-                description:
-                  "Based on your schedule, OnTimer automatically creates alarms with your chosen lead time.",
-              },
-              {
-                step: "03",
-                title: "Relax. You're on time.",
-                description:
-                  "Your alarm goes off. You leave. You arrive on time. No stress, no scrambling.",
-              },
-            ].map((item) => (
-              <div key={item.step} className="relative pl-6">
-                <div className="mb-3 text-5xl font-black text-green-500/20">
-                  {item.step}
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-10 text-3xl font-black tracking-tight text-white sm:text-4xl">
+            Why OnTimer works when calendar reminders fail
+          </h2>
+          <div className="overflow-hidden rounded-2xl border border-zinc-800">
+            {/* Header */}
+            <div className="grid grid-cols-2 border-b border-zinc-800 bg-zinc-900">
+              <div className="px-6 py-4 text-sm font-semibold text-zinc-400">
+                Typical Calendar Reminder
+              </div>
+              <div className="border-l border-zinc-800 px-6 py-4 text-sm font-semibold text-green-500">
+                OnTimer
+              </div>
+            </div>
+            {/* Rows */}
+            {comparison.map((row, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-2 border-b border-zinc-800 last:border-0"
+              >
+                <div className="px-6 py-4 text-sm text-zinc-500">
+                  {row.left}
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-white">
-                  {item.title}
-                </h3>
-                <p className="text-zinc-400">{item.description}</p>
+                <div className="border-l border-zinc-800 px-6 py-4 text-sm font-medium text-white">
+                  {row.right}
+                </div>
               </div>
             ))}
           </div>
-          <div className="mt-10 text-center">
+        </div>
+      </section>
+
+      {/* ── HOW IT WORKS ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/30 py-24">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-12 text-3xl font-black tracking-tight text-white sm:text-4xl">
+            How OnTimer Works
+          </h2>
+          <div className="space-y-10">
+            {steps.map((step) => (
+              <div key={step.number} className="flex gap-6">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-green-500 text-sm font-black text-black">
+                  {parseInt(step.number)}
+                </div>
+                <div>
+                  <h3 className="font-bold text-white">{step.title}</h3>
+                  <p className="mt-1 text-zinc-400">{step.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-10">
             <Link
               href="/how-it-works"
               className="text-sm font-semibold text-green-500 hover:text-green-400"
             >
-              Learn more →
+              See the full walkthrough →
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* ── PERFECT FOR ── */}
+      <section className="py-24">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            Perfect for people who rely on their calendar
+          </h2>
+          <p className="mt-4 text-zinc-400">
+            OnTimer is especially helpful if you:
+          </p>
+          <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+            {[
+              "struggle with time blindness or ADHD",
+              "run back-to-back Zoom or Teams meetings",
+              "manage multiple calendars",
+              "work remotely",
+              "lead teams or manage clients",
+              "forget meetings even when reminders appear",
+            ].map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-3 rounded-xl border border-zinc-800 bg-zinc-900 px-5 py-4 text-sm text-zinc-300"
+              >
+                <span className="flex-shrink-0 text-green-500">✓</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ── FINAL CTA ── */}
       <section className="relative overflow-hidden border-t border-zinc-800 py-24">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-2xl px-4 text-center sm:px-6">
           <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
-            Stop running late. Start today.
+            Stop missing meetings.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            Download OnTimer for free and never miss another meeting, flight, or
-            appointment.
+            Download OnTimer and let your calendar finally keep you on time.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-8">
             <AppStoreButton size="lg" />
-            <AndroidWaitlistButton size="lg" />
           </div>
         </div>
       </section>
