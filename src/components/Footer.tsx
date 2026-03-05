@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-zinc-800 bg-zinc-950">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}
           <div className="col-span-1 lg:col-span-2">
             <Link href="/" className="text-xl font-bold tracking-tight">
@@ -51,6 +51,31 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
+              Get in Touch
+            </h3>
+            <ul className="space-y-2.5">
+              <li>
+                <a
+                  href="mailto:support@ontimer.app"
+                  className="text-sm text-zinc-400 transition-colors hover:text-white"
+                >
+                  support@ontimer.app
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:press@ontimer.app"
+                  className="text-sm text-zinc-400 transition-colors hover:text-white"
+                >
+                  press@ontimer.app
+                </a>
+              </li>
             </ul>
           </div>
 
