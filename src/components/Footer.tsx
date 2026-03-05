@@ -17,6 +17,16 @@ export default function Footer() {
               Never be late again. OnTimer connects to your calendar and sets
               automatic alarms so you always leave on time.
             </p>
+            <div className="mt-4 space-y-1 text-sm text-zinc-500">
+              <p>© {new Date().getFullYear()} Breakout Growth Labs LLC</p>
+              <a
+                href="mailto:support@ontimer.app"
+                className="block transition-colors hover:text-zinc-300"
+              >
+                support@ontimer.app
+              </a>
+              <p>Aberdeen, NJ</p>
+            </div>
             <a
               href={APP_STORE_URL}
               target="_blank"
@@ -111,9 +121,6 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-zinc-800 pt-6 sm:flex-row sm:items-center">
-          <p className="text-xs text-zinc-500">
-            © {new Date().getFullYear()} OnTimer. All rights reserved.
-          </p>
           <Link
             href="/feed.xml"
             className="text-xs text-zinc-500 transition-colors hover:text-zinc-300"
