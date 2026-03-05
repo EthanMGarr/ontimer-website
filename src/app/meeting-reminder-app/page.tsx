@@ -22,8 +22,8 @@ export default function MeetingReminderApp() {
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             Most calendar apps rely on simple notifications to remind you about
             meetings. These notifications are easy to swipe away or ignore.
-            OnTimer solves this problem by turning meeting reminders into
-            persistent alarms that demand your attention.
+            OnTimer is a calendar alarm app that turns your calendar events into
+            persistent alarms so meetings never sneak up on you.
           </p>
           <div className="mt-8">
             <AppStoreButton size="lg" />
@@ -56,9 +56,10 @@ export default function MeetingReminderApp() {
             How OnTimer Fixes This
           </h2>
           <p className="mt-6 text-zinc-400 leading-relaxed">
-            OnTimer connects to your calendar and creates a real alarm before
-            your meeting begins. Instead of a quiet notification, you receive an
-            alert that is designed to get your attention.
+            OnTimer is a calendar alarm app that connects to your calendar and
+            creates a real alarm before your meeting begins. Instead of a quiet
+            notification, you receive an alert that is designed to get your
+            attention.
           </p>
           <p className="mt-4 text-zinc-400">Key benefits include:</p>
           <ul className="mt-4 space-y-3">

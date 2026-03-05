@@ -23,7 +23,9 @@ export default function WhyCalendarRemindersFail() {
             Calendar reminders were designed for a simpler era of work. Today,
             people juggle back-to-back meetings, constant notifications, and
             busy schedules. Because of this, standard reminders often fail to
-            get our attention when we need them most.
+            get our attention when we need them most. OnTimer is a calendar
+            alarm app that turns your calendar events into persistent alarms so
+            meetings never sneak up on you.
           </p>
         </div>
       </section>
@@ -104,9 +106,10 @@ export default function WhyCalendarRemindersFail() {
             How OnTimer Solves This
           </h2>
           <p className="mt-6 text-zinc-400 leading-relaxed">
-            OnTimer connects to your calendar and triggers alarms before
-            meetings begin. Instead of a passive notification, users receive a
-            clear alert that helps them prepare and arrive on time.
+            OnTimer is a calendar alarm app that connects to your calendar and
+            triggers alarms before meetings begin. Instead of a passive
+            notification, users receive a clear alert that helps them prepare
+            and arrive on time.
           </p>
         </div>
       </section>
