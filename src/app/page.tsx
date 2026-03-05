@@ -15,11 +15,14 @@ const jsonLd = {
   name: "OnTimer",
   operatingSystem: "iOS",
   applicationCategory: "ProductivityApplication",
-  url: "https://ontimer.app",
-  downloadUrl:
-    "https://apps.apple.com/us/app/ontimer-never-be-late/id6755317601",
   description:
-    "OnTimer connects to your calendars and creates alarms you can't ignore — so meetings, calls, and appointments don't sneak up on you.",
+    "OnTimer turns calendar reminders into real alarms so you never miss meetings again.",
+  url: "https://ontimer.app",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
 };
 
 const features = [
@@ -406,6 +409,47 @@ export default function Home() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* ── SEO FAQ ── */}
+      <section className="border-t border-zinc-800 py-24">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-10 text-3xl font-black tracking-tight text-white sm:text-4xl">
+            Common Questions About Meeting Reminders
+          </h2>
+          <div className="space-y-6">
+            {[
+              {
+                q: "How do I get an alarm for calendar events?",
+                a: "Most calendar apps only send passive notifications that are easy to miss. OnTimer turns your calendar events into persistent alarms so you get a real alert before your meeting starts.",
+              },
+              {
+                q: "Why are calendar reminders easy to miss?",
+                a: "Standard calendar reminders appear as notifications that can be swiped away or ignored. When you're busy or focused, they're easy to dismiss without noticing the time. OnTimer solves this by triggering an alarm instead of a passive notification.",
+              },
+              {
+                q: "Is there an app that reminds me about meetings?",
+                a: "Yes. OnTimer connects to your Google Calendar, Outlook, or Apple Calendar and turns meeting reminders into alarms so you never miss an important meeting again.",
+              },
+              {
+                q: "How can I stop being late to Zoom meetings?",
+                a: "The easiest way to stop being late to Zoom meetings is to use an alarm instead of a standard reminder. OnTimer triggers an alarm before your meeting starts so you have time to prepare and join on time.",
+              },
+              {
+                q: "How do I get reminders before Microsoft Teams meetings?",
+                a: "OnTimer syncs with your calendar and alerts you before any scheduled meeting, including Microsoft Teams meetings. Instead of a notification, you receive a clear alarm so you don't miss the start time.",
+              },
+            ].map(({ q, a }) => (
+              <div
+                key={q}
+                className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6"
+              >
+                <h3 className="font-bold text-white">{q}</h3>
+                <p className="mt-2 text-sm text-zinc-400 leading-relaxed">{a}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

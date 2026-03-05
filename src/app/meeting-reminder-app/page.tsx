@@ -1,43 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
+import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Best Meeting Reminder App (Never Be Late Again) | OnTimer",
+  title: "Best Meeting Reminder App for iPhone | Never Miss a Meeting Again",
   description:
-    "OnTimer is a meeting reminder app that connects to your calendar and triggers loud persistent alarms before meetings so you never miss an appointment again.",
+    "OnTimer turns calendar reminders into real alarms so you never miss meetings, Zoom calls, or appointments again.",
 };
-
-const features = [
-  "Connects to Google Calendar and Microsoft Outlook",
-  "Triggers persistent alarms before every meeting",
-  "Customizable lead time — fire alarms 5, 10, or 30 minutes early",
-  "Works automatically with your existing calendar events",
-  "Built specifically for meetings, calls, and appointments",
-];
-
-const audiences = [
-  {
-    title: "Professionals with busy schedules",
-    body: "Back-to-back meetings leave no room for error. OnTimer ensures every transition is covered.",
-  },
-  {
-    title: "Remote workers",
-    body: "Working from home means more distractions. OnTimer cuts through them with alarms you can't swipe away.",
-  },
-  {
-    title: "Salespeople",
-    body: "Missing a client call is costly. OnTimer makes sure you're ready before the phone rings.",
-  },
-  {
-    title: "Executives",
-    body: "High-stakes meetings require punctuality. OnTimer handles the timing so you can focus on the work.",
-  },
-  {
-    title: "People with ADHD or time blindness",
-    body: "Standard reminders are too easy to ignore. OnTimer's persistent alarms are designed to break through.",
-  },
-];
 
 export default function MeetingReminderApp() {
   return (
@@ -47,134 +16,134 @@ export default function MeetingReminderApp() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.15),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl">
-            The Best Meeting Reminder App{" "}
-            <span className="text-green-500">for iPhone</span>
+            Meeting Reminder App That Turns Calendar Events Into{" "}
+            <span className="text-green-500">Real Alarms</span>
           </h1>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
-            Most calendar notifications are easy to ignore. OnTimer is a{" "}
-            <strong className="text-white">meeting reminder app</strong> that
-            connects to your calendar and fires persistent alarms before every
-            meeting — so you actually show up on time.
+            Most calendar apps rely on simple notifications to remind you about
+            meetings. These notifications are easy to swipe away or ignore.
+            OnTimer solves this problem by turning meeting reminders into
+            persistent alarms that demand your attention.
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="mt-8">
             <AppStoreButton size="lg" />
-            <AndroidWaitlistButton size="lg" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">
-            Free download • Works with Google Calendar and Outlook
-          </p>
         </div>
       </section>
 
-      {/* ── WHY CALENDAR ALERTS FAIL ── */}
+      {/* ── WHY CALENDAR REMINDERS FAIL ── */}
       <section className="border-t border-zinc-800 bg-zinc-900/50 py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Why calendar alerts fail
+            Why Calendar Reminders Fail
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              Standard calendar apps show a notification banner — then it
-              disappears. You glance at it, think you have more time, and
-              suddenly the meeting already started.
-            </p>
-            <p>
-              The problem isn&apos;t your calendar. It&apos;s that notifications
-              aren&apos;t alarms. They&apos;re designed to inform you, not to
-              make sure you actually act.
-            </p>
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900 px-6 py-5 space-y-2 text-zinc-300">
-              <p>You swipe the reminder away.</p>
-              <p>You get distracted.</p>
-              <p>You think &quot;I&apos;ll join in a minute.&quot;</p>
-              <p>Then suddenly the meeting started 10 minutes ago.</p>
-            </div>
-            <p>
-              A proper meeting reminder app doesn&apos;t just notify you — it
-              alarms you. And that&apos;s exactly what OnTimer does.
+              Calendar notifications often fail because they are passive. When
+              you&apos;re focused on work or switching between tasks, a small
+              notification is easy to miss. Many professionals discover they are
+              late to meetings simply because they dismissed the reminder without
+              realizing it.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── HOW ONTIMER WORKS ── */}
+      {/* ── HOW ONTIMER FIXES THIS ── */}
       <section className="py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            How OnTimer works
+            How OnTimer Fixes This
           </h2>
-          <p className="mt-4 text-zinc-400">
-            OnTimer is the{" "}
-            <Link href="/" className="text-green-500 hover:text-green-400">
-              OnTimer meeting alarm app
-            </Link>{" "}
-            that replaces passive notifications with alarms you can&apos;t miss.
+          <p className="mt-6 text-zinc-400 leading-relaxed">
+            OnTimer connects to your calendar and creates a real alarm before
+            your meeting begins. Instead of a quiet notification, you receive an
+            alert that is designed to get your attention.
           </p>
-          <ul className="mt-6 space-y-3">
-            {features.map((f) => (
-              <li key={f} className="flex items-start gap-3 text-zinc-300">
-                <span className="mt-1 flex-shrink-0 text-green-500">✓</span>
-                {f}
+          <p className="mt-4 text-zinc-400">Key benefits include:</p>
+          <ul className="mt-4 space-y-3">
+            {[
+              "Persistent alarms before meetings",
+              "Multiple calendar support",
+              "Business hours filtering",
+              "Time-to-leave alerts based on location and traffic",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-3 text-zinc-300">
+                <span className="mt-1 flex-shrink-0 text-green-500">•</span>
+                {item}
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-zinc-400 leading-relaxed">
-            Once connected, OnTimer monitors your calendar and automatically
-            schedules alarms for every event. No manual setup. No forgotten
-            meetings.
-          </p>
         </div>
       </section>
 
-      {/* ── WHO IT'S FOR ── */}
+      {/* ── WHO USES ONTIMER ── */}
       <section className="border-t border-zinc-800 bg-zinc-900/30 py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Who OnTimer is for
+            Who Uses OnTimer
           </h2>
-          <p className="mt-4 text-zinc-400">
-            OnTimer is built for anyone who relies on their calendar and
-            can&apos;t afford to miss a meeting.
+          <p className="mt-6 text-zinc-400 leading-relaxed">
+            OnTimer is designed for people who rely on their calendar to manage
+            a busy schedule.
           </p>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            {audiences.map((a) => (
-              <div
-                key={a.title}
-                className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6"
-              >
-                <h3 className="font-bold text-white">{a.title}</h3>
-                <p className="mt-2 text-sm text-zinc-400 leading-relaxed">
-                  {a.body}
-                </p>
-              </div>
+          <p className="mt-4 text-zinc-400">Common users include:</p>
+          <ul className="mt-4 space-y-3">
+            {[
+              "Professionals with back-to-back meetings",
+              "Remote workers",
+              "Sales professionals",
+              "Founders and executives",
+              "People who struggle with time blindness",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-3 text-zinc-300">
+                <span className="mt-1 flex-shrink-0 text-green-500">•</span>
+                {item}
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
-      {/* ── THE PROBLEM ONTIMER SOLVES ── */}
+      {/* ── COMPARISON ── */}
       <section className="py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            The problem OnTimer solves
+            Calendar Reminder vs OnTimer Alarm
           </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
-            <p>
-              Missing a meeting doesn&apos;t just waste time — it damages
-              relationships, costs deals, and creates stress. Most people
-              don&apos;t miss meetings because they don&apos;t care. They miss
-              them because standard calendar reminders aren&apos;t designed to
-              guarantee attention.
-            </p>
-            <p>
-              OnTimer solves this by turning every calendar event into a
-              persistent alarm. When it fires, it stays on your screen until
-              you dismiss it — the same way a morning alarm works. You
-              won&apos;t just see it. You&apos;ll have to deal with it.
-            </p>
-            <p>
-              The result: you show up prepared, on time, every time.
-            </p>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+              <h3 className="font-bold text-zinc-400">
+                Standard Calendar Reminder
+              </h3>
+              <ul className="mt-4 space-y-2">
+                {[
+                  "Passive notification",
+                  "Easy to dismiss",
+                  "Often missed during focused work",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-zinc-500">
+                    <span className="mt-0.5 flex-shrink-0 text-zinc-600">—</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-green-500/30 bg-zinc-900 p-6">
+              <h3 className="font-bold text-green-500">OnTimer Alarm</h3>
+              <ul className="mt-4 space-y-2">
+                {[
+                  "Persistent alert",
+                  "Hard to ignore",
+                  "Helps ensure you arrive on time",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-zinc-300">
+                    <span className="mt-0.5 flex-shrink-0 text-green-500">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -184,21 +153,21 @@ export default function MeetingReminderApp() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-2xl px-4 text-center sm:px-6">
           <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
-            Stop missing meetings.
+            Never miss a meeting again.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            Download OnTimer and let your calendar finally keep you on time.
+            Download OnTimer on the App Store and never miss a meeting again.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-8">
             <AppStoreButton size="lg" />
           </div>
           <p className="mt-6 text-sm text-zinc-500">
-            Android version coming soon —{" "}
+            Also read:{" "}
             <Link
-              href="/android"
+              href="/why-calendar-reminders-fail"
               className="text-green-500 hover:text-green-400"
             >
-              join the waitlist.
+              Why Calendar Reminders Fail
             </Link>
           </p>
         </div>

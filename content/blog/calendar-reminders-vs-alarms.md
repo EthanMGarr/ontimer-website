@@ -83,3 +83,9 @@ The fix is a system that gives you calendar awareness *and* alarm urgency, autom
 ---
 
 *OnTimer combines your calendar's knowledge with true alarm urgency. Download free on the App Store.*
+
+## Recommended Reading
+
+- [Why Calendar Reminders Fail](/why-calendar-reminders-fail)
+- [How to Stop Being Late to Meetings](/blog/stop-being-late-to-meetings)
+- [Meeting Reminder App](/meeting-reminder-app)

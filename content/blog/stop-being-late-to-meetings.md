@@ -71,3 +71,9 @@ Start with one change: stop setting reminders for when meetings start, and start
 ---
 
 *OnTimer automates exactly this. Download it free on the App Store and let your calendar do the work.*
+
+## Recommended Reading
+
+- [Why Calendar Reminders Fail](/why-calendar-reminders-fail)
+- [Calendar Reminders vs Alarms](/blog/calendar-reminders-vs-alarms)
+- [Meeting Reminder App](/meeting-reminder-app)
