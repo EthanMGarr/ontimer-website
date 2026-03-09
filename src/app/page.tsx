@@ -235,6 +235,56 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── PEOPLE ASK ── */}
+      <section className="border-y border-zinc-800 py-24">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-10 text-3xl font-black tracking-tight text-white sm:text-4xl">
+            People ask…
+          </h2>
+          <div className="space-y-6">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+              <h3 className="font-bold text-white">
+                Is there an app that reminds you about meetings on iPhone?
+              </h3>
+              <p className="mt-2 text-sm text-zinc-400 leading-relaxed">
+                Yes. OnTimer connects to your calendar and creates loud,
+                persistent alarms before meetings and events so they are harder
+                to miss than standard calendar notifications.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+              <h3 className="font-bold text-white">
+                Why do I miss calendar reminders on iPhone?
+              </h3>
+              <p className="mt-2 text-sm text-zinc-400 leading-relaxed">
+                Most calendar reminders are passive notifications that disappear
+                quickly and are easy to ignore. OnTimer turns those events into
+                alarms that stay visible until you dismiss them.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+              <h3 className="font-bold text-white">
+                Can I get an alert when it&apos;s time to leave for a meeting?
+              </h3>
+              <p className="mt-2 text-sm text-zinc-400 leading-relaxed">
+                Yes. For calendar events with a location, OnTimer offers Time To
+                Leave alerts based on travel time and traffic. Time To Leave is
+                a paid feature.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+              <h3 className="font-bold text-white">
+                Can I use multiple calendars with one reminder app?
+              </h3>
+              <p className="mt-2 text-sm text-zinc-400 leading-relaxed">
+                Yes. OnTimer supports multiple calendars, including Google and
+                Microsoft accounts.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── CALENDAR REMINDERS AREN'T ALARMS ── */}
       <section className="border-y border-zinc-800 bg-zinc-900/50 py-20">
         <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
