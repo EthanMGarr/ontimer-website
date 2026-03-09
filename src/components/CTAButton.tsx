@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 const APP_STORE_URL =
@@ -7,6 +9,7 @@ interface CTAButtonProps {
   size?: "sm" | "md" | "lg";
   variant?: "primary" | "outline";
   className?: string;
+  location?: string;
 }
 
 const sizeClasses = {
@@ -15,10 +18,19 @@ const sizeClasses = {
   lg: "px-8 py-4 text-base",
 };
 
+function trackAppStoreClick(location: string) {
+  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
+  window.gtag("event", "app_store_click", {
+    page_path: window.location.pathname,
+    button_location: location,
+  });
+}
+
 export function AppStoreButton({
   size = "md",
   variant = "primary",
   className = "",
+  location = "cta",
 }: CTAButtonProps) {
   const base = "inline-flex items-center gap-2.5 rounded-full font-semibold transition-colors";
   const variants = {
@@ -33,6 +45,7 @@ export function AppStoreButton({
       target="_blank"
       rel="noopener noreferrer"
       className={`${base} ${variants[variant]} ${sizeClasses[size]} ${className}`}
+      onClick={() => trackAppStoreClick(location)}
     >
       <AppleIcon className="h-4 w-4" />
       Download on the App Store

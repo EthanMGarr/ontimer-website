@@ -181,7 +181,7 @@ export default function Home() {
               </p>
 
               <div className="mt-8">
-                <AppStoreButton size="lg" />
+                <AppStoreButton size="lg" location="hero" />
                 <p className="mt-3 text-xs text-zinc-500">
                   Free download • Connect your calendars in seconds
                 </p>
