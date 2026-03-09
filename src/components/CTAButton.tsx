@@ -60,7 +60,7 @@ export function AndroidWaitlistButton({
   return (
     <Link
       href="/android"
-      className={`inline-flex items-center gap-2.5 rounded-full border border-zinc-700 font-semibold text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center gap-2.5 rounded-full border border-green-500 font-semibold text-green-500 transition-colors hover:bg-green-500 hover:text-black ${sizeClasses[size]} ${className}`}
     >
       Join Android Waitlist
     </Link>

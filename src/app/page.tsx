@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "OnTimer | Loud Calendar Alarms for Meetings on iPhone",
@@ -181,7 +181,10 @@ export default function Home() {
               </p>
 
               <div className="mt-8">
-                <AppStoreButton size="lg" location="hero" />
+                <div className="flex flex-wrap items-center gap-4">
+                  <AppStoreButton size="lg" location="hero" />
+                  <AndroidWaitlistButton size="lg" />
+                </div>
                 <p className="mt-3 text-xs text-zinc-500">
                   Free download • Connect your calendars in seconds
                 </p>
