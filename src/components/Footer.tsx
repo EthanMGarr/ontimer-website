@@ -7,15 +7,15 @@ export default function Footer() {
   return (
     <footer className="border-t border-zinc-800 bg-zinc-950">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-6">
           {/* Brand */}
           <div className="col-span-1 lg:col-span-2">
             <Link href="/" className="text-xl font-bold tracking-tight">
               On<span className="text-green-500">Timer</span>
             </Link>
             <p className="mt-3 max-w-xs text-sm text-zinc-400">
-              Never be late again. OnTimer connects to your calendar and sets
-              automatic alarms so you always leave on time.
+              OnTimer connects to your calendar and creates loud, persistent
+              alarms before meetings and events.
             </p>
             <div className="mt-4 space-y-1 text-sm text-zinc-500">
               <p>© {new Date().getFullYear()} Breakout Growth Labs LLC</p>
@@ -51,6 +51,29 @@ export default function Footer() {
                 { href: "/blog", label: "Blog" },
                 { href: "/android", label: "Android Waitlist" },
                 { href: "/meeting-reminder-app", label: "Meeting Reminder App" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-zinc-400 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
+              Resources
+            </h3>
+            <ul className="space-y-2.5">
+              {[
+                { href: "/how-to-never-be-late-to-meetings", label: "How to Never Be Late to Meetings" },
+                { href: "/loud-calendar-alerts-iphone", label: "Loud Calendar Alerts on iPhone" },
+                { href: "/time-to-leave-reminders", label: "Time To Leave Reminders" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link

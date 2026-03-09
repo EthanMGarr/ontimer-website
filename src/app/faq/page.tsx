@@ -3,21 +3,130 @@
 import { useState } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Is OnTimer free?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. OnTimer is free to download. Some advanced features, including Time To Leave alerts, are paid features.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What does OnTimer do?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "OnTimer connects to your calendar and creates loud, persistent alarms before meetings and events so they are harder to miss.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How is OnTimer different from my calendar app's built-in reminders?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Most calendar apps send standard notifications. OnTimer is built to create a stronger, more persistent alert before it is time to join or leave.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Does OnTimer work with Google Calendar?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. OnTimer works with Google Calendar.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Does OnTimer work with Microsoft calendars?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. OnTimer works with Microsoft calendars.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Does OnTimer support multiple calendars?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. You can use OnTimer with multiple calendars and accounts.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can OnTimer remind me when it is time to leave?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. For events with a location, Time To Leave can alert you when it is time to leave based on travel time and traffic. Time To Leave is a paid feature.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Who is OnTimer best for?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "OnTimer is especially useful for busy professionals, people with back-to-back meetings, people who miss standard notifications, and people who struggle with time blindness or chronic lateness.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Does OnTimer upload my calendar data anywhere?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "No. OnTimer is completely on-device. It reads your calendar locally and never sends your data to any server. Your schedule stays private on your iPhone.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is there an Android version?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Not yet, but it is coming. Join the Android waitlist to be notified as soon as it is available.",
+      },
+    },
+  ],
+};
+
 const faqs = [
   {
     question: "Is OnTimer free?",
     answer:
-      "Yes. OnTimer is free to download and use. There is no subscription, no paywall, and no in-app purchases required to use the core features. We believe punctuality should be accessible to everyone.",
+      "Yes. OnTimer is free to download. Some advanced features, including Time To Leave alerts, are paid features.",
   },
   {
-    question: "What iOS version does OnTimer require?",
+    question: "What does OnTimer do?",
     answer:
-      "OnTimer requires iOS 16 or later. It is optimized for iPhone and works on all iPhones that support iOS 16+.",
+      "OnTimer connects to your calendar and creates loud, persistent alarms before meetings and events so they are harder to miss.",
+  },
+  {
+    question: "How is OnTimer different from my calendar app's built-in reminders?",
+    answer:
+      "Most calendar apps send standard notifications. OnTimer is built to create a stronger, more persistent alert before it is time to join or leave.",
   },
   {
     question: "Does OnTimer work with Google Calendar?",
+    answer: "Yes. OnTimer works with Google Calendar.",
+  },
+  {
+    question: "Does OnTimer work with Microsoft calendars?",
+    answer: "Yes. OnTimer works with Microsoft calendars.",
+  },
+  {
+    question: "Does OnTimer support multiple calendars?",
+    answer: "Yes. You can use OnTimer with multiple calendars and accounts.",
+  },
+  {
+    question: "Can OnTimer remind me when it is time to leave?",
     answer:
-      "Yes. OnTimer works with any calendar that syncs to your iPhone's native Calendar app — including iCloud Calendar, Google Calendar, Outlook, Exchange, and more. As long as the calendar shows up in your iPhone Calendar app, OnTimer can read it.",
+      "Yes. For events with a location, Time To Leave can alert you when it is time to leave based on travel time and traffic. Time To Leave is a paid feature.",
+  },
+  {
+    question: "Who is OnTimer best for?",
+    answer:
+      "OnTimer is especially useful for busy professionals, people with back-to-back meetings, people who miss standard notifications, and people who struggle with time blindness or chronic lateness.",
   },
   {
     question: "Does OnTimer upload my calendar data anywhere?",
@@ -25,34 +134,9 @@ const faqs = [
       "No. OnTimer is completely on-device. It reads your calendar locally and never sends your data to any server. Your schedule stays private on your iPhone.",
   },
   {
-    question: "What happens when I change or cancel an event?",
-    answer:
-      "OnTimer automatically syncs with your calendar in real time. If you update an event's time or cancel it entirely, the corresponding alarm is automatically updated or removed. You don't need to do anything.",
-  },
-  {
-    question: "Can I choose which events get alarms?",
-    answer:
-      "Yes. You can configure OnTimer to only alarm for certain calendars, or to skip events that don't require travel. You have full control over which events trigger alarms.",
-  },
-  {
-    question: "How far in advance does OnTimer set alarms?",
-    answer:
-      "You choose your lead time. Common settings are 15, 30, or 60 minutes before an event. You can also set different lead times for different types of events, or customize per-event.",
-  },
-  {
-    question: "Does OnTimer work with Do Not Disturb / Focus modes?",
-    answer:
-      "Yes. OnTimer is designed to break through Focus modes for time-critical alarms when you want it to. You can configure which Focus modes OnTimer is allowed to interrupt so you never miss an important departure time.",
-  },
-  {
     question: "Is there an Android version?",
     answer:
-      "Not yet, but it's coming. Join the Android waitlist to be notified as soon as it's available.",
-  },
-  {
-    question: "How is OnTimer different from my calendar app's built-in reminders?",
-    answer:
-      "Calendar reminders are passive notifications — easy to dismiss and forget. OnTimer creates true alarms that escalate and persist until you acknowledge them. It also factors in your lead time preferences automatically, so you don't have to manually set a reminder for every event.",
+      "Not yet, but it is coming. Join the Android waitlist to be notified as soon as it is available.",
   },
 ];
 
@@ -89,15 +173,20 @@ function FAQItem({
 export default function FAQPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
       {/* Hero */}
       <section className="border-b border-zinc-800 py-20 text-center">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl">
-            Frequently asked{" "}
-            <span className="text-green-500">questions</span>
+            OnTimer <span className="text-green-500">FAQ</span>
           </h1>
           <p className="mt-5 text-lg text-zinc-400">
-            Everything you want to know about OnTimer, answered.
+            Answers to common questions about OnTimer, calendar alarms, and
+            meeting reminders.
           </p>
         </div>
       </section>
@@ -121,10 +210,11 @@ export default function FAQPage() {
       <section className="border-t border-zinc-800 py-20 text-center">
         <div className="mx-auto max-w-xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white">
-            Ready to be on time?
+            Ready to stop missing meetings?
           </h2>
           <p className="mt-3 text-zinc-400">
-            Download OnTimer free and start every day with less stress.
+            Download OnTimer free and get more reliable alerts from your
+            calendar.
           </p>
           <div className="mt-6">
             <AppStoreButton size="lg" />

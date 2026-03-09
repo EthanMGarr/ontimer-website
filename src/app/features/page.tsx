@@ -3,23 +3,23 @@ import Image from "next/image";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Features",
+  title: "Features | OnTimer Calendar Alarm App for iPhone",
   description:
-    "Explore every feature that makes OnTimer the smartest way to never be late — automatic alarms, calendar sync, smart alerts, and more.",
+    "OnTimer is built around one job: making calendar events harder to miss. Connect your calendars and get loud, persistent alarms before every meeting.",
 };
 
 const features = [
   {
     number: "01",
-    title: "Calendar Integration",
-    headline: "Your calendar already knows your schedule.",
+    eyebrow: "01 — Calendar Connection",
+    headline: "Connect the calendars you actually use",
     description:
-      "OnTimer connects directly to your native iPhone calendar. It reads every event with a time — meetings, doctor appointments, flights, gym sessions — and builds your alarm schedule automatically. You never have to manually enter an event.",
+      "OnTimer works with your existing calendar setup so you do not have to rebuild your schedule somewhere else. Connect Google and Microsoft calendars, including multiple accounts, and OnTimer uses those events to prepare alarms.",
     bullets: [
-      "Reads all calendar events automatically",
-      "Works with iCloud, Google Calendar, Outlook, and more",
-      "Syncs in real time as your calendar updates",
-      "No duplicate data entry, ever",
+      "Works with Google and Microsoft calendars",
+      "Supports multiple calendar accounts",
+      "Uses your existing event schedule",
+      "No need to create separate reminders by hand",
     ],
     image: "/images/ConnectsToCalendars.png",
     imageAlt: "OnTimer calendar connection screen",
@@ -27,15 +27,15 @@ const features = [
   },
   {
     number: "02",
-    title: "Automatic Alarms",
-    headline: "Set it once. Forget about being late forever.",
+    eyebrow: "02 — Automatic Event Alarms",
+    headline: "Prepare alarms automatically",
     description:
-      "Once OnTimer knows your events, it creates alarms automatically — no tapping, no scheduling. Choose your default lead time and OnTimer handles the rest. You wake up to exactly the right alarm at exactly the right time.",
+      "Once OnTimer is connected, upcoming meetings, calls, and appointments can be turned into alarms automatically based on your settings.",
     bullets: [
-      "Alarms created automatically for every event",
-      "Customizable lead times (15 min, 30 min, 1 hour, etc.)",
-      "Alarms update when events change",
-      "No alarm fatigue — only relevant events get alarms",
+      "Alarms created from calendar events",
+      "Adjustable lead times",
+      "Updates when your schedule changes",
+      "Less manual reminder setup",
     ],
     image: "/images/AutomaticAlarms.png",
     imageAlt: "OnTimer automatic alarms screen",
@@ -43,31 +43,31 @@ const features = [
   },
   {
     number: "03",
-    title: "Can't-Miss Alerts",
-    headline: "An alarm that actually works.",
+    eyebrow: "03 — Persistent Alerts",
+    headline: "Get alerts that are harder to ignore",
     description:
-      "Most alarm apps let you dismiss and forget. OnTimer's alerts are designed to get your attention and keep it. Escalating notifications ensure you know it's time to go — even if you're deep in focus mode.",
+      "Standard calendar reminders are easy to miss. OnTimer is designed to create a louder, more persistent signal when it is time to pay attention.",
     bullets: [
-      "Escalating alert system for critical events",
-      "Rich notifications with event details",
-      "Works with Focus modes and Do Not Disturb",
-      "Persistent reminders until you acknowledge",
+      "Loud, visible alerts",
+      "Persistent alarm behavior",
+      "Event details included in the alert",
+      "Better for high-consequence meetings and appointments",
     ],
     image: "/images/CantMissAlerts.png",
-    imageAlt: "OnTimer can't-miss alerts screen",
+    imageAlt: "OnTimer persistent alerts screen",
     flip: false,
   },
   {
     number: "04",
-    title: "You're In Control",
-    headline: "Smart defaults. Endless customization.",
+    eyebrow: "04 — Flexible Control",
+    headline: "Choose what should trigger alarms",
     description:
-      "Every person's schedule is different. OnTimer gives you the controls to make it your own — choose which calendars get alarms, set custom lead times per event type, and snooze with confidence knowing OnTimer has your back.",
+      "Different schedules need different rules. OnTimer gives you control over timing and calendar behavior without making setup complicated.",
     bullets: [
-      "Per-calendar alarm settings",
-      "Custom lead times per event",
-      "Snooze that re-alerts before you're truly late",
-      "Mute individual events when needed",
+      "Choose alarm lead times",
+      "Control which calendars matter",
+      "Use business-hours filtering",
+      "Handle recurring events more cleanly",
     ],
     image: "/images/YoureInControl.png",
     imageAlt: "OnTimer customization screen",
@@ -75,18 +75,18 @@ const features = [
   },
   {
     number: "05",
-    title: "Relax, You're On Time",
-    headline: "Less anxiety. More presence.",
+    eyebrow: "05 — Time To Leave",
+    headline: "Know when it is time to head out",
     description:
-      "When you know OnTimer has your schedule covered, you stop clock-watching. You can be fully present in whatever you're doing, knowing that an alarm will fire when it's actually time to leave — not a second too early, not a second too late.",
+      "For calendar events with a location, Time To Leave can alert you when it is time to leave based on travel time and traffic. This is a paid feature.",
     bullets: [
-      "Reduces time-anxiety throughout the day",
-      "Clean, distraction-free interface",
-      "Quick glance status of upcoming events",
-      "Peace of mind built in",
+      "Uses event location data",
+      "Factors in travel time and traffic",
+      "Useful for appointments and in-person meetings",
+      "Premium feature",
     ],
     image: "/images/RelaxYourOnTime.png",
-    imageAlt: "OnTimer relax screen",
+    imageAlt: "OnTimer Time To Leave screen",
     flip: false,
   },
 ];
@@ -98,12 +98,12 @@ export default function FeaturesPage() {
       <section className="border-b border-zinc-800 py-20 text-center">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl">
-            Everything you need to{" "}
+            Features built to help you{" "}
             <span className="text-green-500">show up on time</span>
           </h1>
           <p className="mt-5 text-lg text-zinc-400">
-            OnTimer isn't just another alarm app. It's a complete punctuality
-            system built around your real life.
+            OnTimer is built around one job: making calendar events harder to
+            miss.
           </p>
           <div className="mt-8">
             <AppStoreButton size="lg" />
@@ -136,7 +136,7 @@ export default function FeaturesPage() {
                 {/* Text */}
                 <div className="flex-1">
                   <div className="mb-2 text-sm font-semibold uppercase tracking-widest text-green-500">
-                    {feature.number} — {feature.title}
+                    {feature.eyebrow}
                   </div>
                   <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
                     {feature.headline}
@@ -165,10 +165,11 @@ export default function FeaturesPage() {
       <section className="border-t border-zinc-800 py-24 text-center">
         <div className="mx-auto max-w-xl px-4 sm:px-6">
           <h2 className="text-4xl font-black tracking-tight text-white">
-            Ready to stop being late?
+            Ready to stop missing meetings?
           </h2>
           <p className="mt-4 text-zinc-400">
-            Download OnTimer for free and be on time to everything.
+            Download OnTimer for free and get more reliable alerts from your
+            calendar.
           </p>
           <div className="mt-8">
             <AppStoreButton size="lg" />
