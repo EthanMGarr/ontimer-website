@@ -217,6 +217,39 @@ export default function ZoomMeetingReminder() {
         </div>
       </section>
 
+      {/* ── RELATED GUIDES ── */}
+      <section className="border-t border-zinc-800 py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-6 text-xl font-bold text-white">Related Guides</h2>
+          <ul className="space-y-3">
+            <li>
+              <Link
+                href="/meeting-reminder-app"
+                className="text-green-500 hover:text-green-400 transition-colors"
+              >
+                Meeting Reminder App →
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/calendar-alarm-app"
+                className="text-green-500 hover:text-green-400 transition-colors"
+              >
+                Calendar Alarm App →
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/never-be-late-to-meetings"
+                className="text-green-500 hover:text-green-400 transition-colors"
+              >
+                How to Never Be Late to Meetings →
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
       <section className="relative overflow-hidden border-t border-zinc-800 py-24">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,rgba(34,197,94,0.12),transparent)]" />

@@ -33,6 +33,30 @@ export default function BlogPage() {
         </div>
       </section>
 
+      {/* Guides */}
+      <section className="border-b border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-6 text-xl font-bold text-white">Guides</h2>
+          <ul className="space-y-3">
+            {[
+              { label: "Why Calendar Reminders Fail", href: "/why-calendar-reminders-fail" },
+              { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
+              { label: "Calendar Reminders Not Working", href: "/calendar-reminders-not-working" },
+              { label: "How to Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
+            ].map(({ label, href }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-green-500 hover:text-green-400 transition-colors"
+                >
+                  {label} →
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* Posts */}
       <section className="py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">

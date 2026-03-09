@@ -453,6 +453,32 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── HELPFUL GUIDES ── */}
+      <section className="border-t border-zinc-800 py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-8 text-2xl font-black tracking-tight text-white">
+            Helpful Guides
+          </h2>
+          <ul className="space-y-3">
+            {[
+              { label: "Why Calendar Reminders Fail", href: "/why-calendar-reminders-fail" },
+              { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
+              { label: "How to Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
+              { label: "Best Meeting Reminder App", href: "/best-meeting-reminder-app" },
+            ].map(({ label, href }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-green-500 hover:text-green-400 transition-colors"
+                >
+                  {label} →
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ── FINAL CTA ── */}
       <section className="relative overflow-hidden border-t border-zinc-800 py-24">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,rgba(34,197,94,0.12),transparent)]" />
