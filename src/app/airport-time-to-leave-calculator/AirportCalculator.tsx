@@ -250,7 +250,7 @@ export default function AirportCalculator() {
       <div className="grid gap-10 lg:grid-cols-2">
 
         {/* ── Inputs ── */}
-        <div className="space-y-6">
+        <div className="space-y-7">
 
           {/* Date + time */}
           <div className="grid gap-4 sm:grid-cols-2">
@@ -315,12 +315,23 @@ export default function AirportCalculator() {
           {/* Travel time hint / manual fallback */}
           <div>
             {hasRouteInputs ? (
-              <p className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-sm text-zinc-400">
-                Drive time will be estimated by Google Maps when you calculate.
-                <span className="block mt-1 text-xs text-zinc-500">
-                  Or enter minutes below to override.
-                </span>
-              </p>
+              <div>
+                <p className="text-sm text-zinc-400">
+                  Drive time is estimated automatically when you calculate.
+                </p>
+                <p className="mt-1 text-xs text-zinc-500">
+                  Want to set it yourself? Enter minutes below.
+                </p>
+                <input
+                  type="number"
+                  min="0"
+                  max="300"
+                  placeholder="Manual drive time (optional)"
+                  value={manualTravelMinutes}
+                  onChange={(e) => setManualTravelMinutes(e.target.value)}
+                  className={`${inputClass} mt-2`}
+                />
+              </div>
             ) : (
               <div>
                 <FieldLabel>Drive time to airport (minutes)</FieldLabel>
@@ -333,22 +344,10 @@ export default function AirportCalculator() {
                   onChange={(e) => setManualTravelMinutes(e.target.value)}
                   className={inputClass}
                 />
-                <p className="mt-1.5 text.xs text-zinc-500 text-xs">
-                  Enter your starting location and airport above for an automatic Google Maps estimate.
+                <p className="mt-1.5 text-xs text-zinc-500">
+                  Enter your starting location and airport above for an automatic estimate.
                 </p>
               </div>
-            )}
-            {/* Always show manual override when route inputs are filled */}
-            {hasRouteInputs && (
-              <input
-                type="number"
-                min="0"
-                max="300"
-                placeholder="Override drive time (optional)"
-                value={manualTravelMinutes}
-                onChange={(e) => setManualTravelMinutes(e.target.value)}
-                className={`${inputClass} mt-2`}
-              />
             )}
           </div>
 
@@ -395,7 +394,7 @@ export default function AirportCalculator() {
             >
               {showBufferOverride
                 ? "Use recommended buffer"
-                : `Override arrival buffer (recommended: ${defaultBuffer} min)`}
+                : `Adjust airport arrival buffer (${defaultBuffer} min recommended)`}
             </button>
             {showBufferOverride && (
               <div className="mt-3">
@@ -409,7 +408,7 @@ export default function AirportCalculator() {
                   className={inputClass}
                 />
                 <p className="mt-1.5 text-xs text-zinc-500">
-                  Minutes before departure to arrive at the airport.
+                  How early to arrive at the airport before your flight.
                 </p>
               </div>
             )}
@@ -435,48 +434,42 @@ export default function AirportCalculator() {
         <div className="flex flex-col">
           {result ? (
             <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-6">
-              <p className="mb-5 text-xs font-semibold uppercase tracking-wider text-green-500">
-                Your results
-              </p>
+              {/* Leave by — dominant result */}
+              <div className="border-b border-zinc-700 pb-5">
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">Leave by</p>
+                <p className="text-5xl font-black text-green-500">{fmtTime(result.leaveTime)}</p>
+                <p className="mt-1 text-sm text-zinc-400">{fmtDate(result.leaveTime)}</p>
+              </div>
 
-              <div className="space-y-5">
-                <div className="border-b border-zinc-700 pb-5">
-                  <p className="mb-1 text-xs text-zinc-500">Recommended airport arrival</p>
-                  <p className="text-2xl font-black text-white">{fmtTime(result.arrivalTime)}</p>
-                  <p className="text-sm text-zinc-400">{fmtDate(result.arrivalTime)}</p>
+              {/* Secondary details */}
+              <div className="space-y-3 pt-1">
+                <div className="flex items-baseline justify-between">
+                  <p className="text-xs text-zinc-500">Arrive at airport by</p>
+                  <p className="text-sm font-semibold text-white">{fmtTime(result.arrivalTime)}</p>
                 </div>
-
-                <div className="border-b border-zinc-700 pb-5">
-                  <p className="mb-1 text-xs text-zinc-500">Estimated drive time</p>
-                  <p className="text-2xl font-black text-white">{result.travelMinutes} min</p>
-                  {result.travelSource === "google" && (
-                    <p className="mt-0.5 text-xs text-green-500">
-                      {result.hasTrafficData
-                        ? "Google Maps · live traffic"
-                        : "Google Maps · estimated"}
-                    </p>
-                  )}
+                <div className="flex items-baseline justify-between">
+                  <p className="text-xs text-zinc-500">Drive time</p>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold text-white">{result.travelMinutes} min</p>
+                    {result.travelSource === "google" && (
+                      <p className="text-xs text-green-500">
+                        {result.hasTrafficData ? "live traffic" : "estimated"}
+                      </p>
+                    )}
+                  </div>
                 </div>
-
-                <div>
-                  <p className="mb-1 text-xs text-zinc-500">Leave by</p>
-                  <p className="text-4xl font-black text-green-500">{fmtTime(result.leaveTime)}</p>
-                  <p className="text-sm text-zinc-400">{fmtDate(result.leaveTime)}</p>
+                <div className="flex items-baseline justify-between">
+                  <p className="text-xs text-zinc-500">Airport buffer</p>
+                  <p className="text-sm font-semibold text-white">{result.bufferMinutes} min</p>
                 </div>
               </div>
 
-              <p className="mt-5 text-xs leading-relaxed text-zinc-500">
-                Based on a {result.bufferMinutes}-minute airport arrival buffer plus{" "}
-                {result.travelMinutes} minutes of drive time.
-              </p>
-
-              <div className="mt-6 rounded-xl border border-green-900/40 bg-green-950/20 p-4">
+              <div className="mt-5 rounded-xl border border-green-900/40 bg-green-950/20 p-4">
                 <p className="mb-1 text-sm font-semibold text-green-400">
                   Want this automatically?
                 </p>
                 <p className="mb-3 text-xs leading-relaxed text-zinc-400">
-                  OnTimer can remind you when it&apos;s time to leave for flights,
-                  meetings, and appointments — without the manual math.
+                  OnTimer can remind you when it&apos;s time to leave — for flights, meetings, and more.
                 </p>
                 <AppStoreButton size="sm" location="airport_calculator" />
               </div>

@@ -79,45 +79,39 @@ export default function AirportTimeToLeaveCalculator() {
       />
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden pb-16 pt-24 md:pt-32">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.15),transparent)]" />
+      <section className="relative overflow-hidden pb-8 pt-12 md:pt-16">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-green-500">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-green-500">
             Free calculator
           </p>
-          <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl">
+          <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
             Airport{" "}
             <span className="text-green-500">Time-to-Leave</span>{" "}
             Calculator
           </h1>
-          <p className="mt-6 text-lg leading-relaxed text-zinc-400">
-            Estimate when to leave for the airport based on your flight time,
-            arrival buffer, travel time, bags, security, and how you&apos;re
-            getting there.
+          <p className="mt-3 text-base leading-relaxed text-zinc-400 max-w-xl">
+            Enter your flight details and get the exact time you need to walk out the door.
           </p>
-          <p className="mt-3 text-sm text-zinc-500">
-            OnTimer can do this automatically for calendar events with locations.{" "}
-            <Link
-              href="/time-to-leave-reminders"
-              className="text-green-500 hover:text-green-400 transition-colors"
-            >
-              Learn how →
-            </Link>
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="mt-5 flex flex-wrap items-center gap-3">
             <a
               href="#calculator"
-              className="inline-flex items-center gap-2 rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400"
+              className="inline-flex items-center gap-2 rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-green-400"
             >
               Calculate leave time
             </a>
-            <AppStoreButton size="md" variant="outline" location="airport_calculator_hero" />
+            <Link
+              href="/time-to-leave-reminders"
+              className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+            >
+              Want this automated? →
+            </Link>
           </div>
         </div>
       </section>
 
       {/* ── CALCULATOR ── */}
-      <section id="calculator" className="border-t border-zinc-800 py-16">
+      <section id="calculator" className="border-t border-zinc-800 py-8 md:py-10">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <AirportCalculator />
         </div>
