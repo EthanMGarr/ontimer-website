@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-/// Server-side proxy to Google Maps Distance Matrix API with TTL caching.
+/// Server-side proxy to Google Maps Routes API (computeRoutes) with TTL caching.
 ///
 /// ## Purpose
 /// Keeps GOOGLE_MAPS_API_KEY server-only. Caches results to minimise upstream
@@ -28,7 +28,6 @@ import { NextRequest, NextResponse } from "next/server";
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 const CACHE_TTL_MS = 45 * 60 * 1000;   // 45 minutes
-const CACHE_REVALIDATE_S = 45 * 60;    // Next.js Data Cache TTL (seconds)
 const BUCKET_MINUTES = 30;             // Round departure time to this window
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -43,16 +42,14 @@ interface CacheEntry {
   expiresAt: number;
 }
 
-interface DistanceMatrixElement {
-  status: string;
-  duration?: { value: number };
-  duration_in_traffic?: { value: number };
+interface RoutesApiRoute {
+  duration?: string;       // traffic-aware, e.g. "1200s"
+  staticDuration?: string; // baseline without traffic, e.g. "1050s"
 }
 
-interface DistanceMatrixResponse {
-  status: string;
-  error_message?: string;
-  rows?: { elements: DistanceMatrixElement[] }[];
+interface RoutesApiResponse {
+  routes?: RoutesApiRoute[];
+  error?: { code: number; message: string; status: string };
 }
 
 // ─── In-memory TTL cache ──────────────────────────────────────────────────────
@@ -96,55 +93,67 @@ function cacheKey(origin: string, dest: string, bucket: number): string {
   return `${normalize(origin)}|${normalize(dest)}|${bucket}`;
 }
 
-// ─── Google Maps call ─────────────────────────────────────────────────────────
+// ─── Google Maps Routes API call ──────────────────────────────────────────────
 
-async function callDistanceMatrix(
+/** Parse a duration string like "1200s" → seconds as number. */
+function parseDurationSeconds(s: string | undefined): number {
+  if (!s) return 0;
+  return parseInt(s.replace("s", ""), 10) || 0;
+}
+
+async function callRoutesApi(
   origin: string,
   destination: string,
   bucketedTime: number,
   apiKey: string
 ): Promise<TravelResult> {
-  // Google Maps Distance Matrix API requires departure_time >= now.
-  // If the bucketed time is in the past (e.g. user entered a departure that
-  // already passed), clamp to "now + 60s" so the API accepts the request.
+  // Routes API requires departureTime >= now (RFC3339 UTC).
+  // Clamp so a bucketed time that fell into the past is still accepted.
   const nowUnix = Math.floor(Date.now() / 1000);
-  const safeDepartureTime = Math.max(bucketedTime, nowUnix + 60);
+  const safeDepartureUnix = Math.max(bucketedTime, nowUnix + 60);
+  const departureTime = new Date(safeDepartureUnix * 1000).toISOString();
 
-  const params = new URLSearchParams({
-    origins: origin,
-    destinations: destination,
-    mode: "driving",
-    departure_time: safeDepartureTime.toString(),
-    key: apiKey,
-  });
+  const body = {
+    origin: { address: origin },
+    destination: { address: destination },
+    travelMode: "DRIVE",
+    routingPreference: "TRAFFIC_AWARE",
+    departureTime,
+  };
 
-  const url = `https://maps.googleapis.com/maps/api/distancematrix/json?${params}`;
-
-  // Explicit no-store: in-memory TTL cache is our caching layer.
-  // next: { revalidate } in Route Handlers has unpredictable behaviour in
-  // Next.js 15 and is not needed here.
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(
+    "https://routes.googleapis.com/directions/v2:computeRoutes",
+    {
+      method: "POST",
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": apiKey,
+        // Only request the fields we need — minimises response size and billing
+        "X-Goog-FieldMask": "routes.duration,routes.staticDuration",
+      },
+      body: JSON.stringify(body),
+    }
+  );
 
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-  const data: DistanceMatrixResponse = await res.json();
+  const data: RoutesApiResponse = await res.json();
 
-  if (data.status !== "OK") {
-    // Surface the exact Google error so it appears in Vercel function logs
-    throw new Error(`Maps status=${data.status}${data.error_message ? ` msg=${data.error_message}` : ""}`);
+  if (data.error) {
+    throw new Error(`Routes API error ${data.error.code}: ${data.error.message} (${data.error.status})`);
   }
 
-  const element = data.rows?.[0]?.elements?.[0];
-  if (!element || element.status !== "OK") {
-    throw new Error(`Element status=${element?.status ?? "missing"}`);
-  }
+  const route = data.routes?.[0];
+  if (!route) throw new Error("Routes API returned no routes");
 
-  const durationSeconds =
-    element.duration_in_traffic?.value ?? element.duration?.value ?? 0;
+  const durationSec = parseDurationSeconds(route.duration);
+  const staticSec = parseDurationSeconds(route.staticDuration);
 
   return {
-    durationMinutes: Math.ceil(durationSeconds / 60),
-    hasTrafficData: !!element.duration_in_traffic,
+    durationMinutes: Math.ceil(durationSec / 60),
+    // hasTrafficData is true when the traffic-aware duration differs from static
+    hasTrafficData: durationSec !== staticSec,
   };
 }
 
@@ -202,8 +211,8 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // ── Layer 3: Google Maps call (with Next.js Data Cache as backup) ─────────
-  const promise = callDistanceMatrix(origin, destination, bucket, apiKey);
+  // ── Layer 3: Google Maps Routes API call ─────────────────────────────────
+  const promise = callRoutesApi(origin, destination, bucket, apiKey);
   inflight.set(key, promise);
 
   try {
