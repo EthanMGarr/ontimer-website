@@ -7,17 +7,18 @@ import { AppStoreButton } from "@/components/CTAButton";
 
 type FlightType = "domestic" | "international";
 type ArrivalMode = "parking" | "rideshare" | "dropoff";
+type TravelTimeSource = "api" | "manual";
 
 interface CalculatorResult {
   arrivalTime: Date;
   leaveTime: Date;
   bufferMinutes: number;
   travelMinutes: number;
+  travelTimeSource: TravelTimeSource;
+  hasTrafficData: boolean;
 }
 
 // ─── Calculation Logic ────────────────────────────────────────────────────────
-// Isolated for Phase 2 upgrade: swap getTravelTimeMinutes() with a Maps API call
-// without touching any UI code.
 
 function recommendedBuffer(
   flightType: FlightType,
@@ -33,21 +34,33 @@ function recommendedBuffer(
   return minutes;
 }
 
-// Phase 2 integration point: replace this stub with Google Maps / Mapbox API.
-// Origin and destination are already captured in state and passed here.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getTravelTimeMinutes(
-  _origin: string,
-  _destination: string,
-  _departureAt: Date
-): Promise<number | null> {
-  return null; // Replaced with Maps API in Phase 2
-}
-
 function parseManualTravelTime(value: string): number | null {
   const n = parseInt(value, 10);
   return isNaN(n) || n < 0 ? null : n;
 }
+
+// ─── Google Maps travel time fetch ───────────────────────────────────────────
+// Calls the server-side /api/travel-time route so the API key stays secret.
+
+async function fetchTravelTime(
+  origin: string,
+  destination: string,
+  departureAt: Date
+): Promise<{ durationMinutes: number; hasTrafficData: boolean }> {
+  const params = new URLSearchParams({
+    origin,
+    destination,
+    departureTime: Math.floor(departureAt.getTime() / 1000).toString(),
+  });
+  const res = await fetch(`/api/travel-time?${params}`);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `API error ${res.status}`);
+  }
+  return res.json();
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function fmtTime(d: Date) {
   return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
@@ -67,9 +80,7 @@ function track(name: string, params?: Record<string, string | number>) {
 // ─── Small UI primitives ──────────────────────────────────────────────────────
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="mb-2 text-sm font-semibold text-zinc-300">{children}</p>
-  );
+  return <p className="mb-2 text-sm font-semibold text-zinc-300">{children}</p>;
 }
 
 function SegmentedControl<T extends string>({
@@ -139,12 +150,18 @@ export default function AirportCalculator() {
   const [departureTime, setDepartureTime] = useState("09:00");
   const [flightType, setFlightType] = useState<FlightType>("domestic");
 
-  // Origin + destination (captured for Phase 2 Maps API integration)
+  // Origin + destination
   const [origin, setOrigin] = useState("");
   const [airport, setAirport] = useState("");
 
-  // Travel options
+  // Travel time — set by API or manual entry
   const [travelTimeMinutes, setTravelTimeMinutes] = useState("");
+  const [travelTimeSource, setTravelTimeSource] = useState<TravelTimeSource>("manual");
+  const [hasTrafficData, setHasTrafficData] = useState(false);
+  const [isFetchingTravel, setIsFetchingTravel] = useState(false);
+  const [travelFetchError, setTravelFetchError] = useState<string | null>(null);
+
+  // Travel options
   const [hasPreCheck, setHasPreCheck] = useState(false);
   const [hasCheckedBag, setHasCheckedBag] = useState(false);
   const [arrivalMode, setArrivalMode] = useState<ArrivalMode>("parking");
@@ -155,21 +172,53 @@ export default function AirportCalculator() {
 
   // Output
   const [result, setResult] = useState<CalculatorResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [calcError, setCalcError] = useState<string | null>(null);
 
   const defaultBuffer = recommendedBuffer(flightType, hasPreCheck, hasCheckedBag, arrivalMode);
+  const canEstimateTravel = origin.trim().length >= 3 && airport.trim().length >= 2;
+
+  async function handleEstimateTravel() {
+    if (!canEstimateTravel) return;
+    setTravelFetchError(null);
+    setIsFetchingTravel(true);
+
+    const [year, month, day] = departureDate.split("-").map(Number);
+    const [hour, minute] = departureTime.split(":").map(Number);
+    const departure = new Date(year, month - 1, day, hour, minute, 0);
+
+    try {
+      const { durationMinutes, hasTrafficData: traffic } = await fetchTravelTime(
+        origin.trim(),
+        airport.trim(),
+        departure
+      );
+      setTravelTimeMinutes(durationMinutes.toString());
+      setTravelTimeSource("api");
+      setHasTrafficData(traffic);
+      track("airport_calculator_travel_time_fetched", {
+        duration_minutes: durationMinutes,
+        has_traffic: traffic ? 1 : 0,
+      });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Could not estimate drive time.";
+      setTravelFetchError(msg);
+      setTravelTimeSource("manual");
+    } finally {
+      setIsFetchingTravel(false);
+    }
+  }
 
   function handleCalculate() {
-    setError(null);
+    setCalcError(null);
 
     if (!departureDate || !departureTime) {
-      setError("Enter your flight departure date and time.");
+      setCalcError("Enter your flight departure date and time.");
       return;
     }
 
     const travel = parseManualTravelTime(travelTimeMinutes);
     if (travel === null) {
-      setError("Enter your estimated drive time in minutes.");
+      setCalcError("Enter your drive time in minutes, or use the estimate button above.");
       return;
     }
 
@@ -178,28 +227,31 @@ export default function AirportCalculator() {
     const departure = new Date(year, month - 1, day, hour, minute, 0);
 
     const bufferMins =
-      showBufferOverride && customBuffer
-        ? parseInt(customBuffer, 10)
-        : defaultBuffer;
+      showBufferOverride && customBuffer ? parseInt(customBuffer, 10) : defaultBuffer;
 
     if (isNaN(bufferMins) || bufferMins < 0) {
-      setError("Enter a valid buffer in minutes.");
+      setCalcError("Enter a valid buffer in minutes.");
       return;
     }
 
     const arrivalTime = new Date(departure.getTime() - bufferMins * 60 * 1000);
     const leaveTime = new Date(arrivalTime.getTime() - travel * 60 * 1000);
 
-    setResult({ arrivalTime, leaveTime, bufferMinutes: bufferMins, travelMinutes: travel });
+    setResult({
+      arrivalTime,
+      leaveTime,
+      bufferMinutes: bufferMins,
+      travelMinutes: travel,
+      travelTimeSource,
+      hasTrafficData,
+    });
 
     track("calculator_used", { flight_type: flightType, arrival_mode: arrivalMode });
     track("airport_calculator_result_shown", {
       buffer_minutes: bufferMins,
       travel_minutes: travel,
+      travel_source: travelTimeSource,
     });
-
-    // Phase 2: call getTravelTimeMinutes(origin, airport, departure) here
-    void getTravelTimeMinutes(origin, airport, departure);
   }
 
   return (
@@ -245,7 +297,7 @@ export default function AirportCalculator() {
             />
           </div>
 
-          {/* Origin + destination — captured for Phase 2 Maps API */}
+          {/* Origin + destination */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <FieldLabel>Starting location</FieldLabel>
@@ -253,7 +305,10 @@ export default function AirportCalculator() {
                 type="text"
                 placeholder="City or address"
                 value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
+                onChange={(e) => {
+                  setOrigin(e.target.value);
+                  setTravelTimeSource("manual");
+                }}
                 className={inputClass}
               />
             </div>
@@ -263,51 +318,78 @@ export default function AirportCalculator() {
                 type="text"
                 placeholder="e.g. JFK, LAX, Newark"
                 value={airport}
-                onChange={(e) => setAirport(e.target.value)}
+                onChange={(e) => {
+                  setAirport(e.target.value);
+                  setTravelTimeSource("manual");
+                }}
                 className={inputClass}
               />
             </div>
           </div>
 
-          {/* Drive time — manual until Maps API added */}
+          {/* Travel time — API estimate or manual */}
           <div>
-            <FieldLabel>Drive time to airport (minutes)</FieldLabel>
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <FieldLabel>Drive time to airport (minutes)</FieldLabel>
+              {canEstimateTravel && (
+                <button
+                  type="button"
+                  onClick={handleEstimateTravel}
+                  disabled={isFetchingTravel}
+                  className="flex-shrink-0 rounded-full border border-green-700 px-3 py-1 text-xs font-semibold text-green-400 transition-colors hover:border-green-500 hover:text-green-300 disabled:opacity-50"
+                >
+                  {isFetchingTravel ? "Estimating…" : "Estimate with Google Maps"}
+                </button>
+              )}
+            </div>
             <input
               type="number"
               min="0"
               max="300"
               placeholder="e.g. 35"
               value={travelTimeMinutes}
-              onChange={(e) => setTravelTimeMinutes(e.target.value)}
+              onChange={(e) => {
+                setTravelTimeMinutes(e.target.value);
+                setTravelTimeSource("manual");
+              }}
               className={inputClass}
             />
-            <p className="mt-1.5 text-xs text-zinc-500">
-              Enter your estimated drive time. Live traffic estimates coming soon.
-            </p>
+            {travelTimeSource === "api" && travelTimeMinutes && (
+              <p className="mt-1.5 text-xs text-green-500">
+                ✓ Estimated by Google Maps
+                {hasTrafficData ? " (with live traffic)" : ""} — edit to override
+              </p>
+            )}
+            {travelFetchError && (
+              <p className="mt-1.5 text-xs text-red-400">
+                {travelFetchError} — enter manually below.
+              </p>
+            )}
+            {!canEstimateTravel && !travelTimeMinutes && (
+              <p className="mt-1.5 text-xs text-zinc-500">
+                Enter your starting location and airport above to get a Google Maps estimate.
+              </p>
+            )}
           </div>
 
           {/* Security */}
           <div>
             <FieldLabel>Security</FieldLabel>
-            <div className="flex flex-wrap gap-2">
-              <Toggle
-                checked={hasPreCheck}
-                onChange={setHasPreCheck}
-                label="TSA PreCheck / Global Entry"
-              />
-            </div>
+            <Toggle
+              checked={hasPreCheck}
+              onChange={setHasPreCheck}
+              label="TSA PreCheck / Global Entry"
+            />
           </div>
 
           {/* Bags */}
           <div>
             <FieldLabel>Bags</FieldLabel>
-            <div className="flex flex-wrap gap-2">
-              <Toggle
-                checked={hasCheckedBag}
-                onChange={setHasCheckedBag}
-                label="Checking a bag"
-              />
-            </div>
+            <Toggle
+              checked={hasCheckedBag}
+              onChange={setHasCheckedBag}
+              label="Checking a bag"
+            />
           </div>
 
           {/* Arrival mode */}
@@ -347,15 +429,15 @@ export default function AirportCalculator() {
                   className={inputClass}
                 />
                 <p className="mt-1.5 text-xs text-zinc-500">
-                  Minutes before departure you want to arrive at the airport.
+                  Minutes before departure to arrive at the airport.
                 </p>
               </div>
             )}
           </div>
 
-          {error && (
+          {calcError && (
             <p className="rounded-lg border border-red-900/50 bg-red-950/30 px-4 py-3 text-sm text-red-400">
-              {error}
+              {calcError}
             </p>
           )}
 
@@ -379,24 +461,25 @@ export default function AirportCalculator() {
               <div className="space-y-5">
                 <div className="border-b border-zinc-700 pb-5">
                   <p className="mb-1 text-xs text-zinc-500">Recommended airport arrival</p>
-                  <p className="text-2xl font-black text-white">
-                    {fmtTime(result.arrivalTime)}
-                  </p>
+                  <p className="text-2xl font-black text-white">{fmtTime(result.arrivalTime)}</p>
                   <p className="text-sm text-zinc-400">{fmtDate(result.arrivalTime)}</p>
                 </div>
 
                 <div className="border-b border-zinc-700 pb-5">
                   <p className="mb-1 text-xs text-zinc-500">Estimated drive time</p>
-                  <p className="text-2xl font-black text-white">
-                    {result.travelMinutes} min
-                  </p>
+                  <p className="text-2xl font-black text-white">{result.travelMinutes} min</p>
+                  {result.travelTimeSource === "api" && (
+                    <p className="mt-0.5 text-xs text-green-500">
+                      {result.hasTrafficData
+                        ? "Google Maps · with live traffic"
+                        : "Google Maps · estimated"}
+                    </p>
+                  )}
                 </div>
 
                 <div>
                   <p className="mb-1 text-xs text-zinc-500">Leave by</p>
-                  <p className="text-4xl font-black text-green-500">
-                    {fmtTime(result.leaveTime)}
-                  </p>
+                  <p className="text-4xl font-black text-green-500">{fmtTime(result.leaveTime)}</p>
                   <p className="text-sm text-zinc-400">{fmtDate(result.leaveTime)}</p>
                 </div>
               </div>
@@ -415,10 +498,7 @@ export default function AirportCalculator() {
                   OnTimer can remind you when it&apos;s time to leave for flights,
                   meetings, and appointments — without the manual math.
                 </p>
-                <AppStoreButton
-                  size="sm"
-                  location="airport_calculator"
-                />
+                <AppStoreButton size="sm" location="airport_calculator" />
               </div>
             </div>
           ) : (
