@@ -93,6 +93,15 @@ function cacheKey(origin: string, dest: string, bucket: number): string {
   return `${normalize(origin)}|${normalize(dest)}|${bucket}`;
 }
 
+/**
+ * If a string looks like a bare IATA/ICAO airport code (2–4 letters, nothing
+ * else), append "airport" so the Routes API geocoder resolves it correctly.
+ * "EWR" → "EWR airport", "KEWR" → "KEWR airport", "Newark" → unchanged.
+ */
+function expandAirportCode(s: string): string {
+  return /^[a-zA-Z]{2,4}$/.test(s.trim()) ? `${s.trim()} airport` : s;
+}
+
 // ─── Google Maps Routes API call ──────────────────────────────────────────────
 
 /** Parse a duration string like "1200s" → seconds as number. */
@@ -114,8 +123,8 @@ async function callRoutesApi(
   const departureTime = new Date(safeDepartureUnix * 1000).toISOString();
 
   const body = {
-    origin: { address: origin },
-    destination: { address: destination },
+    origin: { address: expandAirportCode(origin) },
+    destination: { address: expandAirportCode(destination) },
     travelMode: "DRIVE",
     routingPreference: "TRAFFIC_AWARE",
     departureTime,
