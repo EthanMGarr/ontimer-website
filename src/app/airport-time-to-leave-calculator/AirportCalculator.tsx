@@ -145,11 +145,23 @@ const inputClass =
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
+function defaultDeparture() {
+  // 2 hours from now, rounded up to the nearest 15 minutes
+  const d = new Date(Date.now() + 2 * 60 * 60 * 1000);
+  const mins = d.getMinutes();
+  const remainder = mins % 15;
+  if (remainder !== 0) d.setMinutes(mins + (15 - remainder), 0, 0);
+  const date = d.toLocaleDateString("en-CA"); // YYYY-MM-DD in local time
+  const time = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }); // HH:MM
+  return { date, time };
+}
+
 export default function AirportCalculator() {
   const today = new Date().toISOString().split("T")[0];
+  const { date: defaultDate, time: defaultTime } = defaultDeparture();
 
-  const [departureDate, setDepartureDate] = useState(today);
-  const [departureTime, setDepartureTime] = useState("09:00");
+  const [departureDate, setDepartureDate] = useState(defaultDate);
+  const [departureTime, setDepartureTime] = useState(defaultTime);
   const [flightType, setFlightType] = useState<FlightType>("domestic");
   const [origin, setOrigin] = useState("");
   const [airport, setAirport] = useState("");
