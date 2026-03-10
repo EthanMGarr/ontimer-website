@@ -131,10 +131,10 @@ export default function AirportTimeToLeaveCalculator() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden pb-8 pt-12 md:pt-16">
+      <section className="relative overflow-hidden pb-5 pt-9 md:pt-12">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-green-500">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-green-500">
             Free calculator
           </p>
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
@@ -142,13 +142,13 @@ export default function AirportTimeToLeaveCalculator() {
             <span className="text-green-500">Time-to-Leave</span>{" "}
             Calculator
           </h1>
-          <p className="mt-3 text-base leading-relaxed text-zinc-400 max-w-xl">
+          <p className="mt-2.5 text-base leading-relaxed text-zinc-400 max-w-xl">
             Enter your flight details and get the exact time you need to walk out the door.
           </p>
-          <div className="mt-5 flex flex-wrap items-center gap-3">
+          <div className="mt-4 flex flex-wrap items-center gap-3">
             <a
               href="#calculator"
-              className="inline-flex items-center gap-2 rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-green-400"
+              className="inline-flex items-center gap-2 rounded-full bg-green-500 px-5 py-2 text-sm font-semibold text-black transition-colors hover:bg-green-400"
             >
               Calculate leave time
             </a>
@@ -163,7 +163,7 @@ export default function AirportTimeToLeaveCalculator() {
       </section>
 
       {/* ── CALCULATOR ── */}
-      <section id="calculator" className="border-t border-zinc-800 py-8 md:py-10">
+      <section id="calculator" className="border-t border-zinc-800 py-6 md:py-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <AirportCalculator />
         </div>

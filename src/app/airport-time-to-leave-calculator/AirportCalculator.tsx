@@ -316,21 +316,22 @@ export default function AirportCalculator() {
           <div>
             {hasRouteInputs ? (
               <div>
-                <p className="text-sm text-zinc-400">
-                  Drive time is estimated automatically when you calculate.
-                </p>
-                <p className="mt-1 text-xs text-zinc-500">
-                  Want to set it yourself? Enter minutes below.
+                <FieldLabel>Estimated drive time</FieldLabel>
+                <p className="mb-2 text-xs text-zinc-500">
+                  We estimate this automatically based on your starting location and airport.
                 </p>
                 <input
                   type="number"
                   min="0"
                   max="300"
-                  placeholder="Manual drive time (optional)"
+                  placeholder="Or enter minutes manually (optional)"
                   value={manualTravelMinutes}
                   onChange={(e) => setManualTravelMinutes(e.target.value)}
-                  className={`${inputClass} mt-2`}
+                  className={inputClass}
                 />
+                <p className="mt-1.5 text-xs text-zinc-600">
+                  Prefer to enter it manually? Type minutes above.
+                </p>
               </div>
             ) : (
               <div>
@@ -483,13 +484,25 @@ export default function AirportCalculator() {
             </div>
           ) : (
             <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-zinc-700 p-10 text-center">
-              <div className="mb-3 text-5xl">✈️</div>
-              <p className="text-sm font-semibold text-zinc-400">
-                Fill in your details and click Calculate.
+              <div className="mb-4 text-4xl">✈️</div>
+              <p className="text-base font-semibold text-zinc-300">
+                Your leave time will appear here
               </p>
-              <p className="mt-2 text-xs text-zinc-600">
-                Your suggested leave time will appear here.
+              <p className="mt-1.5 text-sm text-zinc-500">
+                Fill in your flight details and click Calculate.
               </p>
+              <ul className="mt-6 space-y-2.5 text-left w-full max-w-xs">
+                {[
+                  "Recommended airport arrival time",
+                  "Estimated drive time based on traffic",
+                  "Exact time to leave your home",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-xs text-zinc-600">
+                    <span className="mt-0.5 flex-shrink-0 text-zinc-700">•</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>
