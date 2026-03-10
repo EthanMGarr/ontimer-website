@@ -104,26 +104,33 @@ async function callDistanceMatrix(
   bucketedTime: number,
   apiKey: string
 ): Promise<TravelResult> {
+  // Google Maps Distance Matrix API requires departure_time >= now.
+  // If the bucketed time is in the past (e.g. user entered a departure that
+  // already passed), clamp to "now + 60s" so the API accepts the request.
+  const nowUnix = Math.floor(Date.now() / 1000);
+  const safeDepartureTime = Math.max(bucketedTime, nowUnix + 60);
+
   const params = new URLSearchParams({
     origins: origin,
     destinations: destination,
     mode: "driving",
-    departure_time: bucketedTime.toString(),
+    departure_time: safeDepartureTime.toString(),
     key: apiKey,
   });
 
   const url = `https://maps.googleapis.com/maps/api/distancematrix/json?${params}`;
 
-  // Next.js Data Cache: revalidate every 45 min.
-  // URL is deterministic (normalized + bucketed) so identical routes share
-  // the same cache entry across all serverless instances on Vercel.
-  const res = await fetch(url, { next: { revalidate: CACHE_REVALIDATE_S } });
+  // Explicit no-store: in-memory TTL cache is our caching layer.
+  // next: { revalidate } in Route Handlers has unpredictable behaviour in
+  // Next.js 15 and is not needed here.
+  const res = await fetch(url, { cache: "no-store" });
 
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
   const data: DistanceMatrixResponse = await res.json();
 
   if (data.status !== "OK") {
+    // Surface the exact Google error so it appears in Vercel function logs
     throw new Error(`Maps status=${data.status}${data.error_message ? ` msg=${data.error_message}` : ""}`);
   }
 
@@ -211,7 +218,7 @@ export async function GET(request: NextRequest) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error(`[travel-time] routes_api_failed key="${key}" err="${msg}"`);
     return NextResponse.json(
-      { error: "Could not estimate drive time", cacheHit: false },
+      { error: msg, cacheHit: false },
       { status: 502 }
     );
   } finally {
