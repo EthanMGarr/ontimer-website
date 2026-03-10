@@ -250,6 +250,24 @@ export default function BestMeetingReminderApp() {
         </div>
       </section>
 
+      {/* ── AIRPORT CALCULATOR CALLOUT ── */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="text-zinc-400 leading-relaxed">
+            Need to figure out{" "}
+            <Link
+              href="/airport-time-to-leave-calculator"
+              className="text-green-500 hover:text-green-400 transition-colors"
+            >
+              when to leave for the airport
+            </Link>
+            ? Our free Airport Time-to-Leave Calculator estimates your exact
+            departure time based on traffic, security time, bags, and how
+            you&apos;re getting there.
+          </p>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
       <section className="relative overflow-hidden border-t border-zinc-800 py-24">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,rgba(34,197,94,0.12),transparent)]" />

@@ -10,9 +10,19 @@ const APP_STORE_URL =
 const navLinks = [
   { href: "/features", label: "Features" },
   { href: "/how-it-works", label: "How It Works" },
+  { href: "/airport-time-to-leave-calculator", label: "Airport Calculator" },
   { href: "/faq", label: "FAQ" },
   { href: "/blog", label: "Blog" },
 ];
+
+function trackNavClick(label: string) {
+  if (typeof window === "undefined") return;
+  const g = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+  if (typeof g !== "function") return;
+  if (label === "Airport Calculator") {
+    g("event", "airport_calculator_nav_click", { page_path: window.location.pathname });
+  }
+}
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -42,6 +52,7 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 className="text-sm text-zinc-400 transition-colors hover:text-white"
+                onClick={() => trackNavClick(link.label)}
               >
                 {link.label}
               </Link>
@@ -85,7 +96,7 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   className="text-sm text-zinc-400 transition-colors hover:text-white"
-                  onClick={() => setMobileOpen(false)}
+                  onClick={() => { setMobileOpen(false); trackNavClick(link.label); }}
                 >
                   {link.label}
                 </Link>

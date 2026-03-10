@@ -472,6 +472,13 @@ export default function AirportCalculator() {
                   OnTimer can remind you when it&apos;s time to leave — for flights, meetings, and more.
                 </p>
                 <AppStoreButton size="sm" location="airport_calculator" />
+                <a
+                  href="/features"
+                  className="mt-3 block text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+                  onClick={() => track("airport_calculator_feature_click")}
+                >
+                  See how OnTimer automatically reminds you when it&apos;s time to leave →
+                </a>
               </div>
             </div>
           ) : (

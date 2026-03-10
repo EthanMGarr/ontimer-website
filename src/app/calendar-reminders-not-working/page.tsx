@@ -288,6 +288,14 @@ export default function CalendarRemindersNotWorking() {
                 Meeting Reminder App →
               </Link>
             </li>
+            <li>
+              <Link
+                href="/airport-time-to-leave-calculator"
+                className="text-green-500 hover:text-green-400 transition-colors"
+              >
+                Airport Time-to-Leave Calculator →
+              </Link>
+            </li>
           </ul>
         </div>
       </section>

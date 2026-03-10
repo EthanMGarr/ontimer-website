@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
+import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 const faqJsonLd = {
@@ -87,10 +88,18 @@ const faqJsonLd = {
         text: "Not yet, but it is coming. Join the Android waitlist to be notified as soon as it is available.",
       },
     },
+    {
+      "@type": "Question",
+      name: "When should I leave for the airport?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "It depends on your flight type, security setup, bags, and how you are getting there. Domestic flights typically require arriving 2 hours early; international flights 3 hours. Add your drive time and any parking buffer on top of that. You can estimate your exact departure time using the OnTimer Airport Time-to-Leave Calculator at ontimer.app/airport-time-to-leave-calculator.",
+      },
+    },
   ],
 };
 
-const faqs = [
+const faqs: { question: string; answer: React.ReactNode }[] = [
   {
     question: "Is OnTimer free?",
     answer:
@@ -138,6 +147,23 @@ const faqs = [
     answer:
       "Not yet, but it is coming. Join the Android waitlist to be notified as soon as it is available.",
   },
+  {
+    question: "When should I leave for the airport?",
+    answer: (
+      <>
+        It depends on your flight type, security setup, bags, and how you are getting there.
+        Domestic flights typically require arriving 2 hours early; international 3 hours.
+        Add your drive time and any parking buffer on top of that.{" "}
+        <Link
+          href="/airport-time-to-leave-calculator"
+          className="text-green-500 hover:text-green-400 transition-colors"
+        >
+          Use the Airport Time-to-Leave Calculator
+        </Link>{" "}
+        to estimate your exact departure time.
+      </>
+    ),
+  },
 ];
 
 function FAQItem({
@@ -145,7 +171,7 @@ function FAQItem({
   answer,
 }: {
   question: string;
-  answer: string;
+  answer: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
 

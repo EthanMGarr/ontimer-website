@@ -54,10 +54,10 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Resources */}
+          {/* Tools & Guides */}
           <div>
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              Resources
+              Tools &amp; Guides
             </h3>
             <ul className="space-y-2.5">
               {[

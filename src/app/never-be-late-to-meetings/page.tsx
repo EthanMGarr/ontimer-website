@@ -267,6 +267,22 @@ export default function NeverBeLateToMeetingsPage() {
         </div>
       </section>
 
+      {/* Airport Calculator Callout */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="text-zinc-400 leading-relaxed">
+            Flying somewhere? Use our{" "}
+            <Link
+              href="/airport-time-to-leave-calculator"
+              className="text-green-500 hover:text-green-400 transition-colors"
+            >
+              Airport Time-to-Leave Calculator
+            </Link>
+            {" "}to figure out when to leave for the airport based on traffic, security time, and your flight type.
+          </p>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section className="py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">

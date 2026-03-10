@@ -70,6 +70,37 @@ const faqJsonLd = {
   })),
 };
 
+const softwareAppJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "OnTimer Airport Time-to-Leave Calculator",
+  applicationCategory: "TravelApplication",
+  operatingSystem: "Web",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  description:
+    "A free calculator that estimates when you should leave for the airport based on your flight time, traffic, security buffer, bags, and arrival method.",
+  url: "https://www.ontimer.app/airport-time-to-leave-calculator",
+  author: {
+    "@type": "Organization",
+    name: "OnTimer",
+    url: "https://www.ontimer.app",
+  },
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
+    { "@type": "ListItem", position: 2, name: "Tools", item: "https://www.ontimer.app/tools" },
+    { "@type": "ListItem", position: 3, name: "Airport Time-to-Leave Calculator", item: "https://www.ontimer.app/airport-time-to-leave-calculator" },
+  ],
+};
+
 export default function AirportTimeToLeaveCalculator() {
   return (
     <>
@@ -77,6 +108,27 @@ export default function AirportTimeToLeaveCalculator() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
+      {/* ── BREADCRUMBS ── */}
+      <nav aria-label="Breadcrumb" className="border-b border-zinc-800/50 bg-zinc-950">
+        <div className="mx-auto max-w-3xl px-4 py-2.5 sm:px-6">
+          <ol className="flex items-center gap-1.5 text-xs text-zinc-500">
+            <li><Link href="/" className="hover:text-zinc-300 transition-colors">Home</Link></li>
+            <li aria-hidden="true">›</li>
+            <li><span className="text-zinc-400">Tools</span></li>
+            <li aria-hidden="true">›</li>
+            <li className="text-zinc-300">Airport Time-to-Leave Calculator</li>
+          </ol>
+        </div>
+      </nav>
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden pb-8 pt-12 md:pt-16">

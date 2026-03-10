@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
@@ -157,6 +158,36 @@ export default function FeaturesPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Free Tools */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <p className="mb-6 text-sm font-semibold uppercase tracking-widest text-green-500">
+            Free Tools
+          </p>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-8">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+              <div className="text-5xl">✈️</div>
+              <div className="flex-1">
+                <h2 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
+                  Airport Time-to-Leave Calculator
+                </h2>
+                <p className="mt-3 text-zinc-400 leading-relaxed">
+                  Estimate exactly when to leave for the airport based on traffic,
+                  security time, bags, and how you&apos;re getting there. Free, no
+                  account required.
+                </p>
+                <Link
+                  href="/airport-time-to-leave-calculator"
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-green-500 hover:text-green-400 transition-colors"
+                >
+                  Try the calculator →
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
