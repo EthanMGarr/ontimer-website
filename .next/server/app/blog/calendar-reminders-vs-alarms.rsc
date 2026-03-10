@@ -1,0 +1,119 @@
+1:"$Sreact.fragment"
+2:I[958,["619","static/chunks/619-ba102abea3e3d0e4.js","356","static/chunks/356-1ae4a496cefe0fa8.js","177","static/chunks/app/layout-b091792dc428302e.js"],"default"]
+3:I[7394,["619","static/chunks/619-ba102abea3e3d0e4.js","356","static/chunks/356-1ae4a496cefe0fa8.js","177","static/chunks/app/layout-b091792dc428302e.js"],"default"]
+4:I[9766,[],""]
+5:I[8924,[],""]
+6:I[2619,["619","static/chunks/619-ba102abea3e3d0e4.js","953","static/chunks/app/blog/%5Bslug%5D/page-83916211c6eb51b6.js"],""]
+7:I[5793,["619","static/chunks/619-ba102abea3e3d0e4.js","953","static/chunks/app/blog/%5Bslug%5D/page-83916211c6eb51b6.js"],"AppStoreButton"]
+13:I[7150,[],""]
+:HL["/_next/static/media/e4af272ccee01ff0-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/css/afa8b53ec11df080.css","style"]
+0:{"P":null,"b":"EaTtEqHH1y6uiTgrEi_d8","p":"","c":["","blog","calendar-reminders-vs-alarms"],"i":false,"f":[[["",{"children":["blog",{"children":[["slug","calendar-reminders-vs-alarms","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/afa8b53ec11df080.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","className":"__variable_f367f3","children":["$","body",null,{"className":"bg-zinc-950 text-white min-h-screen flex flex-col","children":[["$","$L2",null,{}],["$","$L3",null,{}],["$","main",null,{"className":"flex-1","children":["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],["$","footer",null,{"className":"border-t border-zinc-800 bg-zinc-950","children":["$","div",null,{"className":"mx-auto max-w-6xl px-4 py-12 sm:px-6","children":[["$","div",null,{"className":"grid gap-10 sm:grid-cols-2 lg:grid-cols-6","children":[["$","div",null,{"className":"col-span-1 lg:col-span-2","children":[["$","$L6",null,{"href":"/","className":"text-xl font-bold tracking-tight","children":["On",["$","span",null,{"className":"text-green-500","children":"Timer"}]]}],["$","p",null,{"className":"mt-3 max-w-xs text-sm text-zinc-400","children":"OnTimer connects to your calendar and creates loud, persistent alarms before meetings and events."}],["$","div",null,{"className":"mt-4 space-y-1 text-sm text-zinc-500","children":[["$","p",null,{"children":["© ",2026," Breakout Growth Labs LLC"]}],["$","a",null,{"href":"mailto:support@ontimer.app","className":"block transition-colors hover:text-zinc-300","children":"support@ontimer.app"}],["$","p",null,{"children":"Aberdeen, NJ"}]]}],["$","$L7",null,{"size":"md","location":"footer","className":"mt-5"}]]}],["$","div",null,{"children":[["$","h3",null,{"className":"mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400","children":"Product"}],["$","ul",null,{"className":"space-y-2.5","children":[["$","li","/features",{"children":["$","$L6",null,{"href":"/features","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"Features"}]}],["$","li","/how-it-works",{"children":["$","$L6",null,{"href":"/how-it-works","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"How It Works"}]}],["$","li","/faq",{"children":["$","$L6",null,{"href":"/faq","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"FAQ"}]}],["$","li","/blog",{"children":["$","$L6",null,{"href":"/blog","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"Blog"}]}],["$","li","/android",{"children":["$","$L6",null,{"href":"/android","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"Android Waitlist"}]}],["$","li","/meeting-reminder-app",{"children":["$","$L6",null,{"href":"/meeting-reminder-app","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"Meeting Reminder App"}]}]]}]]}],["$","div",null,{"children":[["$","h3",null,{"className":"mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400","children":"Resources"}],["$","ul",null,{"className":"space-y-2.5","children":["$L8","$L9","$La","$Lb"]}]]}],"$Lc","$Ld"]}],"$Le"]}]}]]}]}]]}],{"children":["blog","$Lf",{"children":[["slug","calendar-reminders-vs-alarms","d"],"$L10",{"children":["__PAGE__","$L11",{},null,false]},null,false]},null,false]},null,false],"$L12",false]],"m":"$undefined","G":["$13",[]],"s":false,"S":true}
+15:I[4431,[],"OutletBoundary"]
+17:I[5278,[],"AsyncMetadataOutlet"]
+19:I[4431,[],"ViewportBoundary"]
+1b:I[4431,[],"MetadataBoundary"]
+1c:"$Sreact.suspense"
+8:["$","li","/airport-time-to-leave-calculator",{"children":["$","$L6",null,{"href":"/airport-time-to-leave-calculator","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"Airport Time-to-Leave Calculator"}]}]
+9:["$","li","/how-to-never-be-late-to-meetings",{"children":["$","$L6",null,{"href":"/how-to-never-be-late-to-meetings","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"How to Never Be Late to Meetings"}]}]
+a:["$","li","/loud-calendar-alerts-iphone",{"children":["$","$L6",null,{"href":"/loud-calendar-alerts-iphone","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"Loud Calendar Alerts on iPhone"}]}]
+b:["$","li","/time-to-leave-reminders",{"children":["$","$L6",null,{"href":"/time-to-leave-reminders","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"Time To Leave Reminders"}]}]
+c:["$","div",null,{"children":[["$","h3",null,{"className":"mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400","children":"Get in Touch"}],["$","ul",null,{"className":"space-y-2.5","children":[["$","li",null,{"children":["$","a",null,{"href":"mailto:support@ontimer.app","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"support@ontimer.app"}]}],["$","li",null,{"children":["$","a",null,{"href":"mailto:press@ontimer.app","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"press@ontimer.app"}]}]]}]]}]
+d:["$","div",null,{"children":[["$","h3",null,{"className":"mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400","children":"Legal"}],["$","ul",null,{"className":"space-y-2.5","children":[["$","li","https://ontimer.app/OnTimer_Privacy_Policy.html",{"children":["$","a",null,{"href":"https://ontimer.app/OnTimer_Privacy_Policy.html","target":"_blank","rel":"noopener noreferrer","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"Privacy Policy"}]}],["$","li","https://ontimer.app/OnTimer_Terms_of_Service.html",{"children":["$","a",null,{"href":"https://ontimer.app/OnTimer_Terms_of_Service.html","target":"_blank","rel":"noopener noreferrer","className":"text-sm text-zinc-400 transition-colors hover:text-white","children":"Terms of Service"}]}]]}]]}]
+e:["$","div",null,{"className":"mt-10 flex flex-col items-start justify-between gap-4 border-t border-zinc-800 pt-6 sm:flex-row sm:items-center","children":["$","$L6",null,{"href":"/feed.xml","className":"text-xs text-zinc-500 transition-colors hover:text-zinc-300","children":"RSS Feed"}]}]
+f:["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+10:["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+11:["$","$1","c",{"children":["$L14",null,["$","$L15",null,{"children":["$L16",["$","$L17",null,{"promise":"$@18"}]]}]]}]
+12:["$","$1","h",{"children":[null,[["$","$L19",null,{"children":"$L1a"}],["$","meta",null,{"name":"next-size-adjust","content":""}]],["$","$L1b",null,{"children":["$","div",null,{"hidden":true,"children":["$","$1c",null,{"fallback":null,"children":"$L1d"}]}]}]]}]
+1e:T1625,<h2>Two Tools, One Goal</h2>
+<p>If you&#39;ve ever missed a meeting despite getting a reminder, you already know that reminders and alarms are not the same thing.</p>
+<p>They look similar on paper: both involve your phone notifying you of something at a scheduled time. But they&#39;re psychologically and functionally very different — and understanding that difference is the key to actually being on time.</p>
+<h2>What Calendar Reminders Do</h2>
+<p>Calendar reminders are designed to <strong>inform</strong>. They surface a notification that says &quot;hey, this thing is coming up.&quot; They assume you&#39;re responsible for deciding what to do next.</p>
+<p>The standard iOS calendar reminder fires as a notification. You see it, you process it, and then... you decide what to do. Usually you dismiss it, think &quot;ok got it,&quot; and continue doing whatever you were doing.</p>
+<p>Reminders are passive. They require you to act. And when you&#39;re busy, focused, or just in the middle of something, acting on a passive notification is exactly the thing you won&#39;t do.</p>
+<h2>What Alarms Do</h2>
+<p>Alarms are designed to <strong>interrupt</strong>. They demand attention. They persist. They create urgency.</p>
+<p>A true alarm doesn&#39;t just notify you — it breaks your current flow and forces a response. That&#39;s why we use alarm clocks to wake up instead of calendar reminders. Imagine setting a calendar reminder for &quot;Wake up at 7am&quot; instead of an alarm. You&#39;d sleep through it every time.</p>
+<p>The difference between an alarm and a reminder is the difference between <strong>imperative</strong> and <strong>informative</strong>. One commands action. The other provides information.</p>
+<h2>The Problem with Relying on Reminders for Punctuality</h2>
+<p>For anything that requires you to physically go somewhere, a passive reminder is the wrong tool. Here&#39;s why:</p>
+<p><strong>Reminders are easy to dismiss.</strong> One tap and it&#39;s gone. You&#39;ll think about it later... and then you won&#39;t.</p>
+<p><strong>Reminders don&#39;t create urgency.</strong> &quot;Meeting in 30 minutes&quot; doesn&#39;t communicate &quot;you need to leave in 8 minutes.&quot; Your brain doesn&#39;t naturally do that math under pressure.</p>
+<p><strong>Reminders fire at the wrong time.</strong> Most people set reminders for when events start, not when they need to leave. Even a timely reminder is useless if it fires 5 minutes after you should have left.</p>
+<p><strong>Reminders can be missed.</strong> Notification fatigue is real. A banner that appears and disappears while you&#39;re focused on something else might as well not exist.</p>
+<h2>The Problem with Traditional Alarms</h2>
+<p>Traditional alarm clocks and the default iOS Clock app alarms are the right category of tool — but they have their own problems.</p>
+<p><strong>They require manual setup.</strong> You have to remember to set an alarm for every event, every time. For people with busy, changing calendars, this is a lot of overhead.</p>
+<p><strong>They don&#39;t sync with your calendar.</strong> If your meeting gets rescheduled or cancelled, your alarm doesn&#39;t know. You either get an alarm for an event that moved, or you forget to create a new one.</p>
+<p><strong>They don&#39;t account for lead time.</strong> Setting an alarm for 2:00 PM when your meeting is at 2:00 PM is useless. You need to know when to <em>leave</em>, not when to <em>arrive</em>.</p>
+<h2>The Hybrid Approach: The Right Answer</h2>
+<p>The solution isn&#39;t choosing between reminders and alarms — it&#39;s combining the intelligence of a calendar with the urgency of an alarm.</p>
+<p>What you want is a system that:</p>
+<ul>
+<li>Knows your schedule automatically (like a calendar)</li>
+<li>Acts like an alarm when it&#39;s time to leave (not a passive notification)</li>
+<li>Fires at departure time, not event start time</li>
+<li>Updates automatically when your schedule changes</li>
+</ul>
+<p>This is what OnTimer does. It reads your calendar to understand your schedule, then creates actual alarms — not soft reminders — at the right departure time.</p>
+<h2>A Quick Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Calendar Reminders</th>
+<th>Traditional Alarms</th>
+<th>OnTimer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Automatic from calendar</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Hard to ignore</td>
+<td>✗</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Fires at departure time</td>
+<td>✗</td>
+<td>Only if set manually</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Updates when schedule changes</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Zero setup per event</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<h2>The Bottom Line</h2>
+<p>Calendar reminders are great for awareness. Use them to know what&#39;s on your calendar.</p>
+<p>Alarms are great for action. Use them to actually leave on time.</p>
+<p>The problem is that most people use reminders for both purposes — and end up late.</p>
+<p>The fix is a system that gives you calendar awareness <em>and</em> alarm urgency, automatically. Once you have that, punctuality stops being about willpower and starts being about having the right infrastructure.</p>
+<hr>
+<p><em>OnTimer combines your calendar&#39;s knowledge with true alarm urgency. Download free on the App Store.</em></p>
+<h2>Recommended Reading</h2>
+<ul>
+<li><a href="/why-calendar-reminders-fail">Why Calendar Reminders Fail</a></li>
+<li><a href="/blog/stop-being-late-to-meetings">How to Stop Being Late to Meetings</a></li>
+<li><a href="/meeting-reminder-app">Meeting Reminder App</a></li>
+</ul>
+14:[["$","section",null,{"className":"border-b border-zinc-800 py-16","children":["$","div",null,{"className":"mx-auto max-w-3xl px-4 sm:px-6","children":[["$","$L6",null,{"href":"/blog","className":"mb-8 inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors","children":"← Back to Blog"}],["$","time",null,{"className":"block text-xs font-semibold uppercase tracking-widest text-green-500","children":"January 21, 2025"}],["$","h1",null,{"className":"mt-3 text-4xl font-black tracking-tight text-white sm:text-5xl","children":"Calendar Reminders vs Alarms: Which Actually Gets You There On Time"}],["$","p",null,{"className":"mt-4 text-xl text-zinc-400","children":"Calendar reminders and alarms seem similar, but they work very differently — and only one reliably gets you out the door. Here's the breakdown."}]]}]}],["$","section",null,{"className":"py-12","children":["$","div",null,{"className":"mx-auto max-w-3xl px-4 sm:px-6","children":["$","div",null,{"className":"prose","dangerouslySetInnerHTML":{"__html":"$1e"}}]}]}],"$L1f"]
+1f:["$","section",null,{"className":"border-t border-zinc-800 bg-zinc-900/40 py-16","children":["$","div",null,{"className":"mx-auto max-w-2xl px-4 text-center sm:px-6","children":[["$","h2",null,{"className":"text-3xl font-black tracking-tight text-white","children":"Ready to stop being late?"}],["$","p",null,{"className":"mt-3 text-zinc-400","children":"Download OnTimer free and let your calendar work for you."}],["$","div",null,{"className":"mt-6","children":["$","$L7",null,{"size":"lg"}]}]]}]}]
+1a:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+16:null
+18:{"metadata":[["$","title","0",{"children":"Calendar Reminders vs Alarms: Which Actually Gets You There On Time | OnTimer"}],["$","meta","1",{"name":"description","content":"Calendar reminders and alarms seem similar, but they work very differently — and only one reliably gets you out the door. Here's the breakdown."}],["$","meta","2",{"name":"author","content":"OnTimer"}],["$","meta","3",{"name":"keywords","content":"OnTimer,never be late,calendar alarm,punctuality app,iOS app,time management,meeting reminders,automatic alarms"}],["$","meta","4",{"name":"creator","content":"OnTimer"}],["$","meta","5",{"name":"robots","content":"index, follow"}],["$","meta","6",{"name":"googlebot","content":"index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"}],["$","meta","7",{"property":"og:title","content":"Calendar Reminders vs Alarms: Which Actually Gets You There On Time"}],["$","meta","8",{"property":"og:description","content":"Calendar reminders and alarms seem similar, but they work very differently — and only one reliably gets you out the door. Here's the breakdown."}],["$","meta","9",{"property":"og:type","content":"article"}],["$","meta","10",{"property":"article:published_time","content":"2025-01-22"}],["$","meta","11",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","12",{"name":"twitter:title","content":"OnTimer — Calendar Alarm App to Never Be Late for Meetings"}],["$","meta","13",{"name":"twitter:description","content":"OnTimer connects to your calendar and automatically sets alarms before meetings so you're never late again. Free iPhone app."}],["$","meta","14",{"name":"twitter:image","content":"https://www.ontimer.app/images/NeverBeLateAgain.png"}]],"error":null,"digest":"$undefined"}
+1d:"$18:metadata"

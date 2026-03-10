@@ -1,1 +1,230 @@
-{"version":3,"caseSensitive":false,"basePath":"","rewrites":{"beforeFiles":[],"afterFiles":[],"fallback":[]},"redirects":[{"source":"/:path+/","destination":"/:path+","permanent":true,"internal":true,"regex":"^(?:\\/((?:[^\\/]+?)(?:\\/(?:[^\\/]+?))*))\\/$"},{"source":"/privacy","destination":"https://ontimer.app/OnTimer_Privacy_Policy.html","permanent":true,"regex":"^(?!\\/_next)\\/privacy(?:\\/)?$"},{"source":"/terms","destination":"https://ontimer.app/OnTimer_Terms_of_Service.html","permanent":true,"regex":"^(?!\\/_next)\\/terms(?:\\/)?$"}],"headers":[]}
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "ontimer.app"
+        }
+      ],
+      "destination": "https://www.ontimer.app/:path*",
+      "statusCode": 308,
+      "regex": "^(?!/_next)(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "source": "/privacy",
+      "destination": "https://ontimer.app/OnTimer_Privacy_Policy.html",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/privacy(?:/)?$"
+    },
+    {
+      "source": "/terms",
+      "destination": "https://ontimer.app/OnTimer_Terms_of_Service.html",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/terms(?:/)?$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/blog/[slug]",
+      "regex": "^/blog/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/blog/(?<nxtPslug>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/adhd-time-blindness-tools",
+      "regex": "^/adhd\\-time\\-blindness\\-tools(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adhd\\-time\\-blindness\\-tools(?:/)?$"
+    },
+    {
+      "page": "/airport-time-to-leave-calculator",
+      "regex": "^/airport\\-time\\-to\\-leave\\-calculator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/airport\\-time\\-to\\-leave\\-calculator(?:/)?$"
+    },
+    {
+      "page": "/android",
+      "regex": "^/android(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/android(?:/)?$"
+    },
+    {
+      "page": "/best-meeting-reminder-app",
+      "regex": "^/best\\-meeting\\-reminder\\-app(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/best\\-meeting\\-reminder\\-app(?:/)?$"
+    },
+    {
+      "page": "/best-meeting-reminder-apps-iphone",
+      "regex": "^/best\\-meeting\\-reminder\\-apps\\-iphone(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/best\\-meeting\\-reminder\\-apps\\-iphone(?:/)?$"
+    },
+    {
+      "page": "/blog",
+      "regex": "^/blog(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/blog(?:/)?$"
+    },
+    {
+      "page": "/calendar-alarm-app",
+      "regex": "^/calendar\\-alarm\\-app(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/calendar\\-alarm\\-app(?:/)?$"
+    },
+    {
+      "page": "/calendar-reminders-not-working",
+      "regex": "^/calendar\\-reminders\\-not\\-working(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/calendar\\-reminders\\-not\\-working(?:/)?$"
+    },
+    {
+      "page": "/faq",
+      "regex": "^/faq(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/faq(?:/)?$"
+    },
+    {
+      "page": "/features",
+      "regex": "^/features(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/features(?:/)?$"
+    },
+    {
+      "page": "/feed.xml",
+      "regex": "^/feed\\.xml(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/feed\\.xml(?:/)?$"
+    },
+    {
+      "page": "/how-it-works",
+      "regex": "^/how\\-it\\-works(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/how\\-it\\-works(?:/)?$"
+    },
+    {
+      "page": "/how-to-never-be-late-to-meetings",
+      "regex": "^/how\\-to\\-never\\-be\\-late\\-to\\-meetings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/how\\-to\\-never\\-be\\-late\\-to\\-meetings(?:/)?$"
+    },
+    {
+      "page": "/loud-calendar-alerts-iphone",
+      "regex": "^/loud\\-calendar\\-alerts\\-iphone(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/loud\\-calendar\\-alerts\\-iphone(?:/)?$"
+    },
+    {
+      "page": "/meeting-reminder-app",
+      "regex": "^/meeting\\-reminder\\-app(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/meeting\\-reminder\\-app(?:/)?$"
+    },
+    {
+      "page": "/never-be-late-to-meetings",
+      "regex": "^/never\\-be\\-late\\-to\\-meetings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/never\\-be\\-late\\-to\\-meetings(?:/)?$"
+    },
+    {
+      "page": "/privacy",
+      "regex": "^/privacy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privacy(?:/)?$"
+    },
+    {
+      "page": "/robots.txt",
+      "regex": "^/robots\\.txt(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/robots\\.txt(?:/)?$"
+    },
+    {
+      "page": "/sitemap.xml",
+      "regex": "^/sitemap\\.xml(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sitemap\\.xml(?:/)?$"
+    },
+    {
+      "page": "/stop-missing-calendar-meetings",
+      "regex": "^/stop\\-missing\\-calendar\\-meetings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/stop\\-missing\\-calendar\\-meetings(?:/)?$"
+    },
+    {
+      "page": "/terms",
+      "regex": "^/terms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terms(?:/)?$"
+    },
+    {
+      "page": "/time-to-leave-reminders",
+      "regex": "^/time\\-to\\-leave\\-reminders(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/time\\-to\\-leave\\-reminders(?:/)?$"
+    },
+    {
+      "page": "/why-calendar-reminders-fail",
+      "regex": "^/why\\-calendar\\-reminders\\-fail(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/why\\-calendar\\-reminders\\-fail(?:/)?$"
+    },
+    {
+      "page": "/zoom-meeting-reminder",
+      "regex": "^/zoom\\-meeting\\-reminder(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/zoom\\-meeting\\-reminder(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments"
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

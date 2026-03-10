@@ -47,10 +47,46 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 }
 
 
+// Validate ../../src/app/adhd-time-blindness-tools/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/adhd-time-blindness-tools">> = Specific
+  const handler = {} as typeof import("../../src/app/adhd-time-blindness-tools/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/airport-time-to-leave-calculator/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/airport-time-to-leave-calculator">> = Specific
+  const handler = {} as typeof import("../../src/app/airport-time-to-leave-calculator/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/android/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/android">> = Specific
   const handler = {} as typeof import("../../src/app/android/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/best-meeting-reminder-app/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/best-meeting-reminder-app">> = Specific
+  const handler = {} as typeof import("../../src/app/best-meeting-reminder-app/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/best-meeting-reminder-apps-iphone/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/best-meeting-reminder-apps-iphone">> = Specific
+  const handler = {} as typeof import("../../src/app/best-meeting-reminder-apps-iphone/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
@@ -69,6 +105,24 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends AppPageConfig<"/blog">> = Specific
   const handler = {} as typeof import("../../src/app/blog/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/calendar-alarm-app/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/calendar-alarm-app">> = Specific
+  const handler = {} as typeof import("../../src/app/calendar-alarm-app/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/calendar-reminders-not-working/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/calendar-reminders-not-working">> = Specific
+  const handler = {} as typeof import("../../src/app/calendar-reminders-not-working/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
@@ -101,6 +155,33 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/how-to-never-be-late-to-meetings/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/how-to-never-be-late-to-meetings">> = Specific
+  const handler = {} as typeof import("../../src/app/how-to-never-be-late-to-meetings/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/loud-calendar-alerts-iphone/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/loud-calendar-alerts-iphone">> = Specific
+  const handler = {} as typeof import("../../src/app/loud-calendar-alerts-iphone/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/meeting-reminder-app/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/meeting-reminder-app">> = Specific
+  const handler = {} as typeof import("../../src/app/meeting-reminder-app/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/never-be-late-to-meetings/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/never-be-late-to-meetings">> = Specific
@@ -128,10 +209,46 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/stop-missing-calendar-meetings/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/stop-missing-calendar-meetings">> = Specific
+  const handler = {} as typeof import("../../src/app/stop-missing-calendar-meetings/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/terms/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/terms">> = Specific
   const handler = {} as typeof import("../../src/app/terms/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/time-to-leave-reminders/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/time-to-leave-reminders">> = Specific
+  const handler = {} as typeof import("../../src/app/time-to-leave-reminders/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/why-calendar-reminders-fail/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/why-calendar-reminders-fail">> = Specific
+  const handler = {} as typeof import("../../src/app/why-calendar-reminders-fail/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/zoom-meeting-reminder/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/zoom-meeting-reminder">> = Specific
+  const handler = {} as typeof import("../../src/app/zoom-meeting-reminder/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
