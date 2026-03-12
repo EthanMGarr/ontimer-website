@@ -62,6 +62,8 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {[
                 { href: "/airport-time-to-leave-calculator", label: "Airport Time-to-Leave Calculator" },
+                { href: "/what-time-should-i-leave", label: "What Time Should I Leave Calculator" },
+                { href: "/wake-up-time-calculator", label: "Wake-Up Time Calculator" },
                 { href: "/how-to-never-be-late-to-meetings", label: "How to Never Be Late to Meetings" },
                 { href: "/loud-calendar-alerts-iphone", label: "Loud Calendar Alerts on iPhone" },
                 { href: "/time-to-leave-reminders", label: "Time To Leave Reminders" },

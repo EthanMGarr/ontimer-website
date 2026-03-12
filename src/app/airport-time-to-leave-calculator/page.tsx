@@ -145,6 +145,9 @@ export default function AirportTimeToLeaveCalculator() {
           <p className="mt-2.5 text-base leading-relaxed text-zinc-400 max-w-xl">
             Enter your flight details and get the exact time you need to walk out the door.
           </p>
+          <p className="mt-3 max-w-xl text-sm text-zinc-500">
+            Use this airport time-to-leave calculator to determine exactly when you should leave for the airport based on your departure time, travel time, and arrival buffer.
+          </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <a
               href="#calculator"

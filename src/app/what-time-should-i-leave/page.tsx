@@ -130,6 +130,9 @@ export default function WhatTimeShouldILeavePage() {
             Calculate when to leave based on your arrival time, travel time, and extra
             buffer so you can get there on time.
           </p>
+          <p className="mt-3 max-w-xl text-sm text-zinc-500">
+            Use this leave-time calculator to determine exactly when you should leave for a meeting, appointment, interview, class, or event based on your arrival time, travel time, and extra buffer.
+          </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <a
               href="#calculator"
