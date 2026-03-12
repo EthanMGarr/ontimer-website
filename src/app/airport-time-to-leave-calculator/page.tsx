@@ -375,6 +375,14 @@ export default function AirportTimeToLeaveCalculator() {
           <ul className="space-y-3">
             {[
               {
+                href: "/what-time-should-i-leave",
+                label: "What Time Should I Leave Calculator →",
+              },
+              {
+                href: "/wake-up-time-calculator",
+                label: "Wake-Up Time Calculator →",
+              },
+              {
                 href: "/time-to-leave-reminders",
                 label: "How to Get a Reminder When It's Time to Leave →",
               },

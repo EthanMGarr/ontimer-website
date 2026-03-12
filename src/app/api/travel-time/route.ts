@@ -89,8 +89,8 @@ function bucketTime(unixSeconds: number): number {
   return Math.round(unixSeconds / bucketSec) * bucketSec;
 }
 
-function cacheKey(origin: string, dest: string, bucket: number): string {
-  return `${normalize(origin)}|${normalize(dest)}|${bucket}`;
+function cacheKey(origin: string, dest: string, bucket: number, mode: string): string {
+  return `${normalize(origin)}|${normalize(dest)}|${bucket}|${mode}`;
 }
 
 /**
@@ -114,7 +114,8 @@ async function callRoutesApi(
   origin: string,
   destination: string,
   bucketedTime: number,
-  apiKey: string
+  apiKey: string,
+  travelMode: string
 ): Promise<TravelResult> {
   // Routes API requires departureTime >= now (RFC3339 UTC).
   // Clamp so a bucketed time that fell into the past is still accepted.
@@ -122,13 +123,19 @@ async function callRoutesApi(
   const safeDepartureUnix = Math.max(bucketedTime, nowUnix + 60);
   const departureTime = new Date(safeDepartureUnix * 1000).toISOString();
 
-  const body = {
+  const body: Record<string, unknown> = {
     origin: { address: expandAirportCode(origin) },
     destination: { address: expandAirportCode(destination) },
-    travelMode: "DRIVE",
-    routingPreference: "TRAFFIC_AWARE",
-    departureTime,
+    travelMode,
   };
+
+  if (travelMode === "DRIVE") {
+    body.routingPreference = "TRAFFIC_AWARE";
+    body.departureTime = departureTime;
+  } else if (travelMode === "TRANSIT") {
+    body.departureTime = departureTime;
+  }
+  // WALK: no departureTime or routingPreference
 
   const res = await fetch(
     "https://routes.googleapis.com/directions/v2:computeRoutes",
@@ -161,8 +168,8 @@ async function callRoutesApi(
 
   return {
     durationMinutes: Math.ceil(durationSec / 60),
-    // hasTrafficData is true when the traffic-aware duration differs from static
-    hasTrafficData: durationSec !== staticSec,
+    // hasTrafficData only meaningful for DRIVE; WALK/TRANSIT don't use traffic routing
+    hasTrafficData: travelMode === "DRIVE" && durationSec !== staticSec,
   };
 }
 
@@ -174,6 +181,8 @@ export async function GET(request: NextRequest) {
   const rawOrigin = searchParams.get("origin") ?? "";
   const rawDest = searchParams.get("destination") ?? "";
   const rawTime = searchParams.get("departureTime") ?? "";
+  const rawMode = searchParams.get("travelMode") ?? "DRIVE";
+  const travelMode = ["DRIVE", "WALK", "TRANSIT"].includes(rawMode) ? rawMode : "DRIVE";
 
   if (!rawOrigin.trim() || !rawDest.trim()) {
     return NextResponse.json(
@@ -198,7 +207,7 @@ export async function GET(request: NextRequest) {
     ? rawUnix
     : Math.floor(Date.now() / 1000);
   const bucket = bucketTime(departureUnix);
-  const key = cacheKey(origin, destination, bucket);
+  const key = cacheKey(origin, destination, bucket, travelMode);
 
   // ── Layer 1: in-memory TTL cache ──────────────────────────────────────────
   const cached = cacheGet(key);
@@ -221,7 +230,7 @@ export async function GET(request: NextRequest) {
   }
 
   // ── Layer 3: Google Maps Routes API call ─────────────────────────────────
-  const promise = callRoutesApi(origin, destination, bucket, apiKey);
+  const promise = callRoutesApi(origin, destination, bucket, apiKey, travelMode);
   inflight.set(key, promise);
 
   try {
@@ -229,7 +238,7 @@ export async function GET(request: NextRequest) {
     cacheSet(key, result);
     console.log(
       `[travel-time] routes_api_called origin="${origin}" dest="${destination}" ` +
-      `bucket=${bucket} duration=${result.durationMinutes}min traffic=${result.hasTrafficData}`
+      `bucket=${bucket} mode=${travelMode} duration=${result.durationMinutes}min traffic=${result.hasTrafficData}`
     );
     return NextResponse.json({ ...result, cacheHit: false });
   } catch (err) {
