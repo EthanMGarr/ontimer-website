@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
+import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -304,12 +305,11 @@ export default function AirportCalculator() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <FieldLabel>Starting location</FieldLabel>
-              <input
-                type="text"
-                placeholder="City or address"
+              <PlaceAutocomplete
                 value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-                className={inputClass}
+                onChange={setOrigin}
+                placeholder="Start typing an address or city"
+                inputClassName={inputClass}
               />
             </div>
             <div>
