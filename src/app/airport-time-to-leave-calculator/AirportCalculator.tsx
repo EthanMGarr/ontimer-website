@@ -173,16 +173,14 @@ export default function AirportCalculator() {
   const [showBufferOverride, setShowBufferOverride] = useState(false);
   const [customBuffer, setCustomBuffer] = useState("");
 
+  const [showManualDriveTime, setShowManualDriveTime] = useState(false);
+
   const [isCalculating, setIsCalculating] = useState(false);
   const [result, setResult] = useState<CalculatorResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const defaultBuffer = recommendedBuffer(flightType, hasPreCheck, hasCheckedBag, arrivalMode);
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
-
-  // Google Maps is used automatically when origin + airport are filled.
-  // Manual travel time is only required when they are not.
-  const requiresManualTime = !hasRouteInputs;
 
   async function handleCalculate() {
     setError(null);
@@ -324,30 +322,24 @@ export default function AirportCalculator() {
             </div>
           </div>
 
-          {/* Travel time hint / manual fallback */}
+          {/* Drive time — progressive disclosure */}
           <div>
-            {hasRouteInputs ? (
+            <FieldLabel>Drive time</FieldLabel>
+            {!showManualDriveTime ? (
               <div>
-                <FieldLabel>Estimated drive time</FieldLabel>
-                <p className="mb-2 text-xs text-zinc-500">
-                  We estimate this automatically based on your starting location and airport.
+                <p className="text-sm text-zinc-500">
+                  Estimated automatically from your starting location and airport.
                 </p>
-                <input
-                  type="number"
-                  min="0"
-                  max="300"
-                  placeholder="Or enter minutes manually (optional)"
-                  value={manualTravelMinutes}
-                  onChange={(e) => setManualTravelMinutes(e.target.value)}
-                  className={inputClass}
-                />
-                <p className="mt-1.5 text-xs text-zinc-600">
-                  Prefer to enter it manually? Type minutes above.
-                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowManualDriveTime(true)}
+                  className="mt-2 text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300"
+                >
+                  Enter drive time manually
+                </button>
               </div>
             ) : (
               <div>
-                <FieldLabel>Drive time to airport (minutes)</FieldLabel>
                 <input
                   type="number"
                   min="0"
@@ -357,9 +349,13 @@ export default function AirportCalculator() {
                   onChange={(e) => setManualTravelMinutes(e.target.value)}
                   className={inputClass}
                 />
-                <p className="mt-1.5 text-xs text-zinc-500">
-                  Enter your starting location and airport above for an automatic estimate.
-                </p>
+                <button
+                  type="button"
+                  onClick={() => { setShowManualDriveTime(false); setManualTravelMinutes(""); }}
+                  className="mt-2 text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300"
+                >
+                  Use automatic estimate instead
+                </button>
               </div>
             )}
           </div>
