@@ -131,7 +131,7 @@ export default function WakeUpTimeCalculatorPage() {
             how long you need to get ready.
           </p>
           <p className="mt-3 max-w-xl text-sm text-zinc-500">
-            Use this wake-up time calculator to determine exactly what time you should wake up based on your arrival time, travel time, morning routine, and extra buffer.
+            Use this wake-up time calculator to determine exactly when you should wake up based on your arrival time, travel time, your morning routine, and an extra buffer.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <a
