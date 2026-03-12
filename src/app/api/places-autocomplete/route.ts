@@ -30,6 +30,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const input = (searchParams.get("input") ?? "").trim();
   const sessiontoken = (searchParams.get("sessiontoken") ?? "").trim();
+  const types = searchParams.get("types") ?? "geocode";
 
   // Enforce minimum chars server-side (client also enforces, but defense-in-depth)
   if (input.length < 3) {
@@ -47,7 +48,7 @@ export async function GET(req: NextRequest) {
   );
   url.searchParams.set("input", input);
   url.searchParams.set("key", apiKey);
-  url.searchParams.set("types", "geocode");
+  url.searchParams.set("types", types);
   url.searchParams.set("language", "en");
   if (sessiontoken) url.searchParams.set("sessiontoken", sessiontoken);
 

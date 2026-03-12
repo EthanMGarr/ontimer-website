@@ -39,6 +39,7 @@ interface PlaceAutocompleteProps {
   placeholder?: string;
   inputClassName?: string;
   id?: string;
+  types?: string;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -57,6 +58,7 @@ export default function PlaceAutocomplete({
   placeholder = "Start typing an address or city",
   inputClassName = "",
   id,
+  types = "geocode",
 }: PlaceAutocompleteProps) {
   const [suggestions, setSuggestions] = useState<Prediction[]>([]);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -101,6 +103,7 @@ export default function PlaceAutocomplete({
       const params = new URLSearchParams({
         input,
         sessiontoken: sessionTokenRef.current,
+        types,
       });
       const res = await fetch(`/api/places-autocomplete?${params}`);
       if (!res.ok) return;
@@ -114,7 +117,7 @@ export default function PlaceAutocomplete({
       setSuggestions([]);
       setIsOpen(false);
     }
-  }, []);
+  }, [types]);
 
   // ── Input change handler ────────────────────────────────────────────────────
   const handleChange = useCallback(

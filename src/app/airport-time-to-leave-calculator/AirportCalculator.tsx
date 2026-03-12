@@ -314,12 +314,12 @@ export default function AirportCalculator() {
             </div>
             <div>
               <FieldLabel>Airport</FieldLabel>
-              <input
-                type="text"
-                placeholder="e.g. JFK, LAX, Newark"
+              <PlaceAutocomplete
                 value={airport}
-                onChange={(e) => setAirport(e.target.value)}
-                className={inputClass}
+                onChange={setAirport}
+                placeholder="e.g. JFK, LAX, Newark"
+                inputClassName={inputClass}
+                types="establishment"
               />
             </div>
           </div>
