@@ -69,6 +69,9 @@ export default function Footer() {
                 { href: "/time-to-leave-reminders", label: "Time To Leave Reminders" },
                 { href: "/alarm-didnt-go-off-late-for-work", label: "Alarm Didn't Go Off" },
                 { href: "/missed-appointment-fee-how-to-prevent-no-shows", label: "Missed Appointment Fee" },
+                { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working" },
+                { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting" },
+                { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link

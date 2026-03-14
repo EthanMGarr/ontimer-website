@@ -182,6 +182,33 @@ export default function MeetingReminderApp() {
             </Link>
             {" "}for a practical prevention system.
           </p>
+          <p className="text-zinc-400 leading-relaxed">
+            If your calendar notifications aren&apos;t firing reliably, see{" "}
+            <Link
+              href="/calendar-notifications-not-working"
+              className="text-green-500 hover:text-green-400 transition-colors"
+            >
+              Calendar Notifications Not Working
+            </Link>
+            {" "}for eight targeted fixes.
+          </p>
+          <p className="text-zinc-400 leading-relaxed">
+            For a complete guide on building a reliable reminder system, read{" "}
+            <Link
+              href="/why-calendar-reminders-fail"
+              className="text-green-500 hover:text-green-400 transition-colors"
+            >
+              Why Calendar Reminders Fail
+            </Link>
+            {" "}and{" "}
+            <Link
+              href="/how-to-never-miss-a-meeting"
+              className="text-green-500 hover:text-green-400 transition-colors"
+            >
+              How to Never Miss a Meeting
+            </Link>
+            .
+          </p>
         </div>
       </section>
 
