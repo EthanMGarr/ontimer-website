@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-zinc-800 bg-zinc-950">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-6">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-8">
           {/* Brand */}
           <div className="col-span-1 lg:col-span-2">
             <Link href="/" className="text-xl font-bold tracking-tight">
@@ -54,24 +54,64 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Tools & Guides */}
+          {/* Tools */}
           <div>
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              Tools &amp; Guides
+              Tools
             </h3>
             <ul className="space-y-2.5">
               {[
                 { href: "/airport-time-to-leave-calculator", label: "Airport Time-to-Leave Calculator" },
                 { href: "/what-time-should-i-leave", label: "What Time Should I Leave Calculator" },
                 { href: "/wake-up-time-calculator", label: "Wake-Up Time Calculator" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-zinc-400 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Reminder Guides */}
+          <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
+              Reminder Guides
+            </h3>
+            <ul className="space-y-2.5">
+              {[
                 { href: "/how-to-never-be-late-to-meetings", label: "How to Never Be Late to Meetings" },
-                { href: "/loud-calendar-alerts-iphone", label: "Loud Calendar Alerts on iPhone" },
-                { href: "/time-to-leave-reminders", label: "Time To Leave Reminders" },
-                { href: "/alarm-didnt-go-off-late-for-work", label: "Alarm Didn't Go Off" },
-                { href: "/missed-appointment-fee-how-to-prevent-no-shows", label: "Missed Appointment Fee" },
-                { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working" },
                 { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting" },
+                { href: "/time-to-leave-reminders", label: "Time To Leave Reminders" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-zinc-400 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Reminder Troubleshooting */}
+          <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
+              Troubleshooting
+            </h3>
+            <ul className="space-y-2.5">
+              {[
+                { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working" },
+                { href: "/alarm-didnt-go-off-late-for-work", label: "Alarm Didn't Go Off" },
                 { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
+                { href: "/loud-calendar-alerts-iphone", label: "Loud Calendar Alerts on iPhone" },
+                { href: "/missed-appointment-fee-how-to-prevent-no-shows", label: "Missed Appointment Fee" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
