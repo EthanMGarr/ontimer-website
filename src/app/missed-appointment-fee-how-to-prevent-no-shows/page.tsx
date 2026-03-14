@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   title: "Missed Appointment Fee? How to Prevent Costly No-Shows",
   description:
     "Missed an appointment and got charged a fee? Learn how to prevent no-shows with a simple reminder system that ensures you never miss important appointments again.",
+  openGraph: {
+    title: "Missed Appointment Fee? How to Prevent Costly No-Shows",
+    description:
+      "Missed an appointment and got charged a fee? Learn how to prevent no-shows with a simple reminder system that ensures you never miss important appointments again.",
+    type: "article",
+  },
 };
 
 const faqItems = [
@@ -55,6 +61,7 @@ export default function MissedAppointmentFee() {
             Missed Appointment Fee?{" "}
             <span className="text-green-500">How to Prevent Costly No-Shows</span>
           </h1>
+          <p className="mt-4 text-sm text-zinc-500">By Ethan Garr</p>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             Medical offices, therapists, and service providers commonly charge $50–$200 for missed appointments. Often the reason isn&apos;t irresponsibility — it&apos;s a reminder system that failed at the wrong moment.
           </p>
@@ -321,6 +328,26 @@ export default function MissedAppointmentFee() {
           <p className="mt-8 text-zinc-400 leading-relaxed">
             Many people add a persistent pre-meeting alert system like OnTimer so they receive alerts that are difficult to miss — whether it&apos;s a doctor&apos;s appointment, a job interview, or a therapy session.
           </p>
+        </div>
+      </section>
+
+      {/* ── RELATED GUIDES ── */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-6 text-xl font-bold text-white">Related Guides</h2>
+          <ul className="space-y-3">
+            {[
+              { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
+              { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working? 8 Fixes" },
+              { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
+            ].map(({ href, label }) => (
+              <li key={href}>
+                <Link href={href} className="text-green-500 transition-colors hover:text-green-400">
+                  {label} →
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

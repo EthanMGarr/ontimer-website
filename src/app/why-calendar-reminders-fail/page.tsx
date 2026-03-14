@@ -63,6 +63,7 @@ export default function WhyCalendarRemindersFail() {
             Why Calendar Reminders Fail{" "}
             <span className="text-green-500">(And How to Make Them Reliable)</span>
           </h1>
+          <p className="mt-4 text-sm text-zinc-500">By Ethan Garr</p>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             Default calendar reminders were not designed to guarantee you show up on time. They were designed to be convenient — and convenience and reliability are not the same thing.
           </p>
@@ -255,6 +256,26 @@ export default function WhyCalendarRemindersFail() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── RELATED GUIDES ── */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-6 text-xl font-bold text-white">Related Guides</h2>
+          <ul className="space-y-3">
+            {[
+              { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working? 8 Fixes" },
+              { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
+              { href: "/alarm-didnt-go-off-late-for-work", label: "Alarm Didn't Go Off? Build a Fail-Safe Reminder System" },
+            ].map(({ href, label }) => (
+              <li key={href}>
+                <Link href={href} className="text-green-500 transition-colors hover:text-green-400">
+                  {label} →
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

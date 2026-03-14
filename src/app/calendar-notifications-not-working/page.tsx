@@ -63,6 +63,7 @@ export default function CalendarNotificationsNotWorking() {
             Calendar Notifications Not Working?{" "}
             <span className="text-green-500">8 Fixes That Actually Help</span>
           </h1>
+          <p className="mt-4 text-sm text-zinc-500">By Ethan Garr</p>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             Many people assume their calendar reminders are reliable until the moment they miss a meeting or appointment. In reality, calendar notifications can fail for several reasons — most of which have nothing to do with user error.
           </p>
@@ -298,6 +299,26 @@ export default function CalendarNotificationsNotWorking() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── RELATED GUIDES ── */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-6 text-xl font-bold text-white">Related Guides</h2>
+          <ul className="space-y-3">
+            {[
+              { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
+              { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
+              { href: "/alarm-didnt-go-off-late-for-work", label: "Alarm Didn't Go Off? Build a Fail-Safe Reminder System" },
+            ].map(({ href, label }) => (
+              <li key={href}>
+                <Link href={href} className="text-green-500 transition-colors hover:text-green-400">
+                  {label} →
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

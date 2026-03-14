@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   title: "Alarm Didn't Go Off? How to Build a Fail-Safe Meeting Reminder System",
   description:
     "Alarm didn't go off and you were late? Learn why phone alarms fail and how to build a fail-safe reminder system that prevents missed meetings and appointments.",
+  openGraph: {
+    title: "Alarm Didn't Go Off? How to Build a Fail-Safe Meeting Reminder System",
+    description:
+      "Alarm didn't go off and you were late? Learn why phone alarms fail and how to build a fail-safe reminder system that prevents missed meetings and appointments.",
+    type: "article",
+  },
 };
 
 const faqItems = [
@@ -60,6 +66,7 @@ export default function AlarmDidntGoOff() {
             Alarm Didn&apos;t Go Off?{" "}
             <span className="text-green-500">How to Build a Fail-Safe Reminder System</span>
           </h1>
+          <p className="mt-4 text-sm text-zinc-500">By Ethan Garr</p>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             People assume their phone alarms and calendar notifications are reliable. But millions of people discover the opposite the moment they miss a meeting, appointment, or work shift.
           </p>
@@ -333,6 +340,26 @@ export default function AlarmDidntGoOff() {
             </Link>{" "}
             works the same way.
           </p>
+        </div>
+      </section>
+
+      {/* ── RELATED GUIDES ── */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-6 text-xl font-bold text-white">Related Guides</h2>
+          <ul className="space-y-3">
+            {[
+              { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
+              { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working? 8 Fixes" },
+              { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
+            ].map(({ href, label }) => (
+              <li key={href}>
+                <Link href={href} className="text-green-500 transition-colors hover:text-green-400">
+                  {label} →
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

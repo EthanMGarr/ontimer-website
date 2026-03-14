@@ -58,6 +58,7 @@ export default function HowToNeverMissAMeeting() {
             How to Never Miss a Meeting Again{" "}
             <span className="text-green-500">(Even If Your Calendar Fails)</span>
           </h1>
+          <p className="mt-4 text-sm text-zinc-500">By Ethan Garr</p>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             Even highly organized professionals miss meetings. In most cases the meeting was in the calendar, the reminder was set, and the intention was real — but the reminder system failed at the critical moment.
           </p>
@@ -263,6 +264,26 @@ export default function HowToNeverMissAMeeting() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── RELATED GUIDES ── */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-6 text-xl font-bold text-white">Related Guides</h2>
+          <ul className="space-y-3">
+            {[
+              { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
+              { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working? 8 Fixes" },
+              { href: "/alarm-didnt-go-off-late-for-work", label: "Alarm Didn't Go Off? Build a Fail-Safe Reminder System" },
+            ].map(({ href, label }) => (
+              <li key={href}>
+                <Link href={href} className="text-green-500 transition-colors hover:text-green-400">
+                  {label} →
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
