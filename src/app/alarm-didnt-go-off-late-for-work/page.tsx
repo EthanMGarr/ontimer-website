@@ -6,10 +6,12 @@ export const metadata: Metadata = {
   title: "Alarm Didn't Go Off? How to Build a Fail-Safe Meeting Reminder System",
   description:
     "Alarm didn't go off and you were late? Learn why phone alarms fail and how to build a fail-safe reminder system that prevents missed meetings and appointments.",
+  alternates: { canonical: "https://www.ontimer.app/alarm-didnt-go-off-late-for-work" },
   openGraph: {
     title: "Alarm Didn't Go Off? How to Build a Fail-Safe Meeting Reminder System",
     description:
       "Alarm didn't go off and you were late? Learn why phone alarms fail and how to build a fail-safe reminder system that prevents missed meetings and appointments.",
+    url: "https://www.ontimer.app/alarm-didnt-go-off-late-for-work",
     type: "article",
   },
 };

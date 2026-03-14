@@ -6,10 +6,12 @@ export const metadata: Metadata = {
   title: "Why Calendar Reminders Fail (And How to Make Them Reliable)",
   description:
     "Calendar reminders often fail because of phone settings, notification limits, and dismissed alerts. Learn how to build a reliable reminder system.",
+  alternates: { canonical: "https://www.ontimer.app/why-calendar-reminders-fail" },
   openGraph: {
     title: "Why Calendar Reminders Fail (And How to Make Them Reliable)",
     description:
       "Calendar reminders often fail because of phone settings, notification limits, and dismissed alerts. Learn how to build a reliable reminder system.",
+    url: "https://www.ontimer.app/why-calendar-reminders-fail",
     type: "article",
   },
 };

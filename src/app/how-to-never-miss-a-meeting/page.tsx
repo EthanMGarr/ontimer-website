@@ -6,10 +6,12 @@ export const metadata: Metadata = {
   title: "How to Never Miss a Meeting Again (Even If Your Calendar Fails)",
   description:
     "Learn a simple reminder system that ensures you never miss meetings, calls, or appointments — even if calendar notifications fail.",
+  alternates: { canonical: "https://www.ontimer.app/how-to-never-miss-a-meeting" },
   openGraph: {
     title: "How to Never Miss a Meeting Again (Even If Your Calendar Fails)",
     description:
       "Learn a simple reminder system that ensures you never miss meetings, calls, or appointments — even if calendar notifications fail.",
+    url: "https://www.ontimer.app/how-to-never-miss-a-meeting",
     type: "article",
   },
 };

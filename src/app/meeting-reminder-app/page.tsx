@@ -6,6 +6,14 @@ export const metadata: Metadata = {
   title: "Best Meeting Reminder App for iPhone | Never Miss a Meeting Again",
   description:
     "OnTimer turns calendar reminders into real alarms so you never miss meetings, Zoom calls, or appointments again.",
+  alternates: { canonical: "https://www.ontimer.app/meeting-reminder-app" },
+  openGraph: {
+    title: "Best Meeting Reminder App for iPhone | Never Miss a Meeting Again",
+    description:
+      "OnTimer turns calendar reminders into real alarms so you never miss meetings, Zoom calls, or appointments again.",
+    url: "https://www.ontimer.app/meeting-reminder-app",
+    type: "website",
+  },
 };
 
 export default function MeetingReminderApp() {

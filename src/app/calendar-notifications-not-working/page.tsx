@@ -6,10 +6,12 @@ export const metadata: Metadata = {
   title: "Calendar Notifications Not Working? 8 Fixes for iPhone and Google Calendar",
   description:
     "Calendar notifications not working? Learn the most common reasons reminders fail on iPhone and Google Calendar and how to fix them so you never miss a meeting again.",
+  alternates: { canonical: "https://www.ontimer.app/calendar-notifications-not-working" },
   openGraph: {
     title: "Calendar Notifications Not Working? 8 Fixes for iPhone and Google Calendar",
     description:
       "Calendar notifications not working? Learn the most common reasons reminders fail on iPhone and Google Calendar and how to fix them so you never miss a meeting again.",
+    url: "https://www.ontimer.app/calendar-notifications-not-working",
     type: "article",
   },
 };

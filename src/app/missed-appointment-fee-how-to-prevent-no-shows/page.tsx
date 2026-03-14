@@ -6,10 +6,12 @@ export const metadata: Metadata = {
   title: "Missed Appointment Fee? How to Prevent Costly No-Shows",
   description:
     "Missed an appointment and got charged a fee? Learn how to prevent no-shows with a simple reminder system that ensures you never miss important appointments again.",
+  alternates: { canonical: "https://www.ontimer.app/missed-appointment-fee-how-to-prevent-no-shows" },
   openGraph: {
     title: "Missed Appointment Fee? How to Prevent Costly No-Shows",
     description:
       "Missed an appointment and got charged a fee? Learn how to prevent no-shows with a simple reminder system that ensures you never miss important appointments again.",
+    url: "https://www.ontimer.app/missed-appointment-fee-how-to-prevent-no-shows",
     type: "article",
   },
 };
