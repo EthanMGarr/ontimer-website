@@ -67,6 +67,8 @@ export default function Footer() {
                 { href: "/how-to-never-be-late-to-meetings", label: "How to Never Be Late to Meetings" },
                 { href: "/loud-calendar-alerts-iphone", label: "Loud Calendar Alerts on iPhone" },
                 { href: "/time-to-leave-reminders", label: "Time To Leave Reminders" },
+                { href: "/alarm-didnt-go-off-late-for-work", label: "Alarm Didn't Go Off" },
+                { href: "/missed-appointment-fee-how-to-prevent-no-shows", label: "Missed Appointment Fee" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link

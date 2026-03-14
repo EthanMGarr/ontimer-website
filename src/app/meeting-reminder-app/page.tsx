@@ -149,9 +149,9 @@ export default function MeetingReminderApp() {
         </div>
       </section>
 
-      {/* ── AIRPORT CALCULATOR CALLOUT ── */}
+      {/* ── RELATED GUIDES CALLOUT ── */}
       <section className="border-t border-zinc-800 py-12">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+        <div className="mx-auto max-w-3xl space-y-4 px-4 sm:px-6">
           <p className="text-zinc-400 leading-relaxed">
             If you need to figure out when to leave for the airport, try our{" "}
             <Link
@@ -161,6 +161,26 @@ export default function MeetingReminderApp() {
               Airport Time-to-Leave Calculator
             </Link>
             {" "}— it estimates your exact departure time based on traffic, security time, bags, and how you&apos;re getting there.
+          </p>
+          <p className="text-zinc-400 leading-relaxed">
+            If your alarm recently failed to fire, read{" "}
+            <Link
+              href="/alarm-didnt-go-off-late-for-work"
+              className="text-green-500 hover:text-green-400 transition-colors"
+            >
+              Alarm Didn&apos;t Go Off? How to Build a Fail-Safe Reminder System
+            </Link>
+            {" "}for a step-by-step fix.
+          </p>
+          <p className="text-zinc-400 leading-relaxed">
+            If you&apos;ve been charged for a missed appointment, see{" "}
+            <Link
+              href="/missed-appointment-fee-how-to-prevent-no-shows"
+              className="text-green-500 hover:text-green-400 transition-colors"
+            >
+              Missed Appointment Fee? How to Prevent Costly No-Shows
+            </Link>
+            {" "}for a practical prevention system.
           </p>
         </div>
       </section>
