@@ -110,6 +110,31 @@ function fmtDate(d: Date) {
   return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
 }
 
+/** "HH:MM" → "8:00 PM" */
+function fmtDepartureTime(timeStr: string): string {
+  const [h, m] = timeStr.split(":").map(Number);
+  if (isNaN(h)) return "";
+  const hour = h % 12 || 12;
+  const ampm = h < 12 ? "AM" : "PM";
+  return m === 0 ? `${hour} ${ampm}` : `${hour}:${m.toString().padStart(2, "0")} ${ampm}`;
+}
+
+/**
+ * Produce a clean airport display string from raw user input.
+ * "John F. Kennedy International Airport (JFK)" → "John F. Kennedy International Airport (JFK)"
+ * "Newark Airport" → "Newark Airport"
+ * "JFK" → "JFK"
+ */
+function buildAirportDisplay(input: string): string {
+  const s = input.trim();
+  if (!s) return "your airport";
+  // If the string already contains "(XXX)", use as-is (PlaceAutocomplete often returns this)
+  if (/\([A-Z]{3}\)/.test(s)) return s;
+  // Bare 3-letter code
+  if (/^[A-Za-z]{3}$/.test(s)) return s.toUpperCase();
+  return s;
+}
+
 // ─── Small UI primitives ──────────────────────────────────────────────────────
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
@@ -252,6 +277,13 @@ export default function AirportCalculator() {
   const estimatedSecurityMins = securityEstimate?.avg ?? (flightType === "domestic" ? 25 : 45);
   const defaultBuffer = baseBuffer + estimatedSecurityMins;
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
+
+  // Security description lines
+  const airportDisplay = buildAirportDisplay(airport);
+  const timeDisplay = fmtDepartureTime(departureTime);
+  const securityPrimaryLine = securityEstimate?.source === "live"
+    ? `Live TSA wait time at ${airportDisplay}`
+    : `Based on TSA wait times for ${airportDisplay}${timeDisplay ? ` at ${timeDisplay}` : ""}`;
 
   async function handleCalculate() {
     setError(null);
@@ -456,7 +488,7 @@ export default function AirportCalculator() {
                 className="cursor-help rounded-full border border-green-900/50 bg-green-950/30 px-2 py-0.5 text-xs text-green-500"
                 title="Calculated using TSA wait times, airport data, and time-of-day patterns"
               >
-                Smart Estimate
+                TSA-Based Estimate
               </span>
             </div>
 
@@ -466,24 +498,22 @@ export default function AirportCalculator() {
                 <p className="text-sm text-zinc-500">Estimating…</p>
               ) : (
                 <>
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-2xl font-bold text-white">
-                      {showSecurityOverride && customSecurityMinutes
-                        ? `${customSecurityMinutes} min`
-                        : `${estimatedSecurityMins} min`}
-                    </span>
-                    {securityEstimate && (
-                      <span className="text-xs text-zinc-600">
-                        Typical range: {securityEstimate.min}–{securityEstimate.max} min depending on TSA traffic
-                      </span>
-                    )}
-                  </div>
-                  {securityEstimate && (
-                    <p className="mt-0.5 text-xs text-zinc-500">{securityEstimate.context}</p>
-                  )}
-                  <p className="mt-0.5 text-xs text-zinc-600">
-                    Uses TSA wait time data and time-of-day patterns
+                  <p className="text-2xl font-bold text-white">
+                    {showSecurityOverride && customSecurityMinutes
+                      ? `${customSecurityMinutes} min`
+                      : `${estimatedSecurityMins} min`}
                   </p>
+                  {securityEstimate && (
+                    <>
+                      <p className="mt-1.5 text-xs text-zinc-400">{securityPrimaryLine}</p>
+                      <p className="mt-0.5 text-xs text-zinc-500">
+                        Typical range: {securityEstimate.min}–{securityEstimate.max} min depending on TSA traffic
+                      </p>
+                      <p className="mt-0.5 text-xs text-zinc-600">
+                        Security time changes throughout the day — this adjusts for your departure time
+                      </p>
+                    </>
+                  )}
                 </>
               )}
             </div>
