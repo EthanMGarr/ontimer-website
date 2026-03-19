@@ -119,20 +119,53 @@ function fmtDepartureTime(timeStr: string): string {
   return m === 0 ? `${hour} ${ampm}` : `${hour}:${m.toString().padStart(2, "0")} ${ampm}`;
 }
 
+// Client-side city → IATA code lookup (covers major US airports)
+const CITY_CODE_MAP: Record<string, string> = {
+  newark: "EWR", "new york": "JFK", "los angeles": "LAX", chicago: "ORD",
+  "san francisco": "SFO", miami: "MIA", atlanta: "ATL", dallas: "DFW",
+  denver: "DEN", seattle: "SEA", boston: "BOS", phoenix: "PHX",
+  minneapolis: "MSP", detroit: "DTW", "las vegas": "LAS", houston: "IAH",
+  "salt lake": "SLC", portland: "PDX", "san diego": "SAN", charlotte: "CLT",
+  orlando: "MCO", baltimore: "BWI", washington: "DCA", philadelphia: "PHL",
+  "new orleans": "MSY", nashville: "BNA", austin: "AUS", pittsburgh: "PIT",
+  cleveland: "CLE", tampa: "TPA", sacramento: "SMF", "san jose": "SJC",
+  raleigh: "RDU", "kansas city": "MCI",
+};
+
 /**
- * Produce a clean airport display string from raw user input.
- * "John F. Kennedy International Airport (JFK)" → "John F. Kennedy International Airport (JFK)"
- * "Newark Airport" → "Newark Airport"
- * "JFK" → "JFK"
+ * Produce a short "City (CODE)" label from raw PlaceAutocomplete output.
+ * Input: "Newark Liberty International Airport, Spring Street, Newark, NJ, USA"
+ * Output: "Newark (EWR)"
  */
-function buildAirportDisplay(input: string): string {
+function buildAirportShortDisplay(input: string): string {
   const s = input.trim();
-  if (!s) return "your airport";
-  // If the string already contains "(XXX)", use as-is (PlaceAutocomplete often returns this)
-  if (/\([A-Z]{3}\)/.test(s)) return s;
-  // Bare 3-letter code
+  if (!s) return "";
+
+  // Bare 3-letter code typed directly: "JFK" → "JFK"
   if (/^[A-Za-z]{3}$/.test(s)) return s.toUpperCase();
-  return s;
+
+  // Drop everything after the first comma (address/city/state Google appends)
+  const placeName = s.split(",")[0].trim();
+
+  // Extract explicit IATA code from parentheses: "... (JFK)"
+  const inParens = s.match(/\(([A-Z]{3})\)/);
+  const explicitCode = inParens?.[1] ?? null;
+
+  // Strip secondary names and suffixes common in airport names
+  let shortName = placeName
+    .replace(/\s*\([A-Z]{3}\)/g, "")
+    .replace(/\s+(Liberty|O'?Hare|Midway|Logan|Dulles|Hartsfield[-\s]Jackson|Reagan|Tacoma|Dulles)\b.*/i, "")
+    .replace(/\s+(International|Intl\.?|Regional|Municipal|National|Executive|Memorial)\s*(Airport|Airfield)?\.?\s*$/i, "")
+    .replace(/\s+Airport\.?\s*$/i, "")
+    .trim();
+
+  // Code lookup against the short name or the full original string
+  const lower = `${shortName} ${s}`.toLowerCase();
+  const lookupCode = Object.entries(CITY_CODE_MAP).find(([city]) => lower.includes(city))?.[1] ?? null;
+  const code = explicitCode ?? lookupCode;
+
+  if (!shortName) shortName = placeName.split(" ")[0];
+  return code ? `${shortName} (${code})` : shortName;
 }
 
 // ─── Small UI primitives ──────────────────────────────────────────────────────
@@ -278,12 +311,9 @@ export default function AirportCalculator() {
   const defaultBuffer = baseBuffer + estimatedSecurityMins;
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
 
-  // Security description lines
-  const airportDisplay = buildAirportDisplay(airport);
+  // Security display strings
+  const airportShortDisplay = buildAirportShortDisplay(airport);
   const timeDisplay = fmtDepartureTime(departureTime);
-  const securityPrimaryLine = securityEstimate?.source === "live"
-    ? `Live TSA wait time at ${airportDisplay}`
-    : `Based on TSA wait times for ${airportDisplay}${timeDisplay ? ` at ${timeDisplay}` : ""}`;
 
   async function handleCalculate() {
     setError(null);
@@ -498,21 +528,27 @@ export default function AirportCalculator() {
                 <p className="text-sm text-zinc-500">Estimating…</p>
               ) : (
                 <>
+                  {/* Line 1 — time value */}
                   <p className="text-2xl font-bold text-white">
                     {showSecurityOverride && customSecurityMinutes
                       ? `${customSecurityMinutes} min`
                       : `${estimatedSecurityMins} min`}
                   </p>
+                  {/* Lines 2–4 — only when we have an estimate */}
                   {securityEstimate && (
-                    <>
-                      <p className="mt-1.5 text-xs text-zinc-400">{securityPrimaryLine}</p>
-                      <p className="mt-0.5 text-xs text-zinc-500">
-                        Typical range: {securityEstimate.min}–{securityEstimate.max} min depending on TSA traffic
+                    <div className="mt-1.5 space-y-0.5">
+                      {/* Line 2 — airport • time */}
+                      <p className="text-sm text-zinc-400">
+                        {airportShortDisplay || "your airport"}
+                        {timeDisplay ? ` • ${timeDisplay}` : ""}
                       </p>
-                      <p className="mt-0.5 text-xs text-zinc-600">
-                        Security time changes throughout the day — this adjusts for your departure time
+                      {/* Line 3 — short label */}
+                      <p className="text-xs text-zinc-500">TSA-based estimate</p>
+                      {/* Line 4 — range */}
+                      <p className="text-xs text-zinc-600">
+                        Typical range: {securityEstimate.min}–{securityEstimate.max} min
                       </p>
-                    </>
+                    </div>
                   )}
                 </>
               )}
