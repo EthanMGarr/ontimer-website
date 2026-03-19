@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
+import type { SecurityEstimate } from "@/app/api/security-wait/route";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -14,25 +15,53 @@ interface CalculatorResult {
   arrivalTime: Date;
   leaveTime: Date;
   bufferMinutes: number;
+  securityMinutes: number;
   travelMinutes: number;
   travelSource: TravelSource;
   hasTrafficData: boolean;
 }
 
-// ─── Buffer logic (isolated, easy to tune) ───────────────────────────────────
+// ─── Buffer logic (non-security portion only) ─────────────────────────────────
+// Security time is handled separately by the dynamic estimate.
+// This covers: gate transit, boarding start window, bag drop, parking walk.
 
-function recommendedBuffer(
+function baseAirportBuffer(
   flightType: FlightType,
-  hasPreCheck: boolean,
   hasCheckedBag: boolean,
   arrivalMode: ArrivalMode
 ): number {
-  let minutes = flightType === "domestic" ? 120 : 180;
-  if (hasPreCheck) minutes -= 15;
+  let minutes = flightType === "domestic" ? 90 : 135;
   if (hasCheckedBag) minutes += 15;
   if (arrivalMode === "parking") minutes += 20;
   else if (arrivalMode === "rideshare" || arrivalMode === "dropoff") minutes += 5;
   return minutes;
+}
+
+// ─── Security estimate fetch ──────────────────────────────────────────────────
+// Proxied through /api/security-wait so all blending logic stays server-side.
+
+async function fetchSecurityEstimate(
+  airport: string,
+  departureUnix: number | null,
+  flightType: FlightType,
+  hasPreCheck: boolean,
+  hasClear: boolean
+): Promise<SecurityEstimate | null> {
+  try {
+    const params = new URLSearchParams({
+      airport,
+      flightType,
+      hasPreCheck: hasPreCheck.toString(),
+      hasClear: hasClear.toString(),
+    });
+    if (departureUnix !== null) params.set("departureTime", departureUnix.toString());
+
+    const res = await fetch(`/api/security-wait?${params}`);
+    if (!res.ok) return null;
+    return await res.json() as SecurityEstimate;
+  } catch {
+    return null;
+  }
 }
 
 // ─── Travel time fetch ────────────────────────────────────────────────────────
@@ -168,6 +197,7 @@ export default function AirportCalculator() {
   const [airport, setAirport] = useState("");
   const [manualTravelMinutes, setManualTravelMinutes] = useState("");
   const [hasPreCheck, setHasPreCheck] = useState(false);
+  const [hasClear, setHasClear] = useState(false);
   const [hasCheckedBag, setHasCheckedBag] = useState(false);
   const [arrivalMode, setArrivalMode] = useState<ArrivalMode>("parking");
   const [showBufferOverride, setShowBufferOverride] = useState(false);
@@ -175,11 +205,52 @@ export default function AirportCalculator() {
 
   const [showManualDriveTime, setShowManualDriveTime] = useState(false);
 
+  // Security estimate state
+  const [securityEstimate, setSecurityEstimate] = useState<SecurityEstimate | null>(null);
+  const [isFetchingSecurityEstimate, setIsFetchingSecurityEstimate] = useState(false);
+  const [showSecurityOverride, setShowSecurityOverride] = useState(false);
+  const [customSecurityMinutes, setCustomSecurityMinutes] = useState("");
+
   const [isCalculating, setIsCalculating] = useState(false);
   const [result, setResult] = useState<CalculatorResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const defaultBuffer = recommendedBuffer(flightType, hasPreCheck, hasCheckedBag, arrivalMode);
+  const securityDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  // ── Auto-fetch security estimate when relevant inputs change ───────────────
+  useEffect(() => {
+    clearTimeout(securityDebounceRef.current);
+    securityDebounceRef.current = setTimeout(async () => {
+      // Build departure unix for time-of-day logic
+      let departureUnix: number | null = null;
+      if (departureDate && departureTime) {
+        const [y, mo, d] = departureDate.split("-").map(Number);
+        const [h, mi] = departureTime.split(":").map(Number);
+        const dep = new Date(y, mo - 1, d, h, mi, 0);
+        if (!isNaN(dep.getTime())) {
+          departureUnix = Math.floor(dep.getTime() / 1000);
+        }
+      }
+
+      setIsFetchingSecurityEstimate(true);
+      const estimate = await fetchSecurityEstimate(
+        airport,
+        departureUnix,
+        flightType,
+        hasPreCheck,
+        hasClear
+      );
+      setSecurityEstimate(estimate);
+      setIsFetchingSecurityEstimate(false);
+    }, 500);
+
+    return () => clearTimeout(securityDebounceRef.current);
+  }, [airport, departureDate, departureTime, flightType, hasPreCheck, hasClear]);
+
+  // Derived values
+  const baseBuffer = baseAirportBuffer(flightType, hasCheckedBag, arrivalMode);
+  const estimatedSecurityMins = securityEstimate?.avg ?? (flightType === "domestic" ? 25 : 45);
+  const defaultBuffer = baseBuffer + estimatedSecurityMins;
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
 
   async function handleCalculate() {
@@ -194,8 +265,18 @@ export default function AirportCalculator() {
     const [hour, minute] = departureTime.split(":").map(Number);
     const departure = new Date(year, month - 1, day, hour, minute, 0);
 
+    // Resolve security time
+    const securityMins =
+      showSecurityOverride && customSecurityMinutes
+        ? parseInt(customSecurityMinutes, 10)
+        : estimatedSecurityMins;
+
+    // Resolve total buffer
     const bufferMins =
-      showBufferOverride && customBuffer ? parseInt(customBuffer, 10) : defaultBuffer;
+      showBufferOverride && customBuffer
+        ? parseInt(customBuffer, 10)
+        : baseBuffer + securityMins;
+
     if (isNaN(bufferMins) || bufferMins < 0) {
       setError("Enter a valid buffer in minutes.");
       return;
@@ -206,7 +287,6 @@ export default function AirportCalculator() {
     let hasTrafficData = false;
 
     if (hasRouteInputs) {
-      // ── Fetch from Google Maps (only on submit, never reactively) ──
       setIsCalculating(true);
       try {
         const res = await fetchTravelTime(origin, airport, departure);
@@ -214,14 +294,12 @@ export default function AirportCalculator() {
         travelSource = "google";
         hasTrafficData = res.hasTrafficData;
 
-        // Analytics: let client report cache vs live call
         if (res.cacheHit) {
           track("travel_time_cache_hit", { duration_minutes: travelMinutes });
         } else {
           track("routes_api_called", { duration_minutes: travelMinutes });
         }
       } catch {
-        // Fallback: try manual entry if the user had filled it in
         const manual = parseInt(manualTravelMinutes, 10);
         if (!isNaN(manual) && manual >= 0) {
           travelMinutes = manual;
@@ -237,7 +315,6 @@ export default function AirportCalculator() {
         setIsCalculating(false);
       }
     } else {
-      // ── Manual entry required when no route inputs ──
       const manual = parseInt(manualTravelMinutes, 10);
       if (isNaN(manual) || manual < 0) {
         setError(
@@ -251,7 +328,15 @@ export default function AirportCalculator() {
     const arrivalTime = new Date(departure.getTime() - bufferMins * 60 * 1000);
     const leaveTime = new Date(arrivalTime.getTime() - travelMinutes * 60 * 1000);
 
-    setResult({ arrivalTime, leaveTime, bufferMinutes: bufferMins, travelMinutes, travelSource, hasTrafficData });
+    setResult({
+      arrivalTime,
+      leaveTime,
+      bufferMinutes: bufferMins,
+      securityMinutes: securityMins,
+      travelMinutes,
+      travelSource,
+      hasTrafficData,
+    });
     track("calculator_used", { flight_type: flightType, arrival_mode: arrivalMode, travel_source: travelSource });
     track("airport_calculator_result_shown", { buffer_minutes: bufferMins, travel_minutes: travelMinutes });
   }
@@ -360,14 +445,79 @@ export default function AirportCalculator() {
             )}
           </div>
 
-          {/* Security */}
+          {/* Security Time — dynamic estimate replacing static toggle */}
           <div>
-            <FieldLabel>Security</FieldLabel>
-            <Toggle
-              checked={hasPreCheck}
-              onChange={setHasPreCheck}
-              label="TSA PreCheck / Global Entry"
-            />
+            <FieldLabel>Security Time</FieldLabel>
+
+            {/* Estimate display */}
+            <div className="mb-3">
+              {isFetchingSecurityEstimate ? (
+                <p className="text-sm text-zinc-500">Estimating…</p>
+              ) : (
+                <>
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-2xl font-bold text-white">
+                      {showSecurityOverride && customSecurityMinutes
+                        ? `${customSecurityMinutes} min`
+                        : `${estimatedSecurityMins} min`}
+                    </span>
+                    {securityEstimate && (
+                      <span className="text-xs text-zinc-600">
+                        {securityEstimate.min}–{securityEstimate.max} min range
+                      </span>
+                    )}
+                  </div>
+                  {securityEstimate && (
+                    <>
+                      <p className="mt-0.5 text-xs text-zinc-500">{securityEstimate.context}</p>
+                      <p className="text-xs text-zinc-600">
+                        {securityEstimate.source === "live"
+                          ? "Based on live TSA data"
+                          : securityEstimate.source === "historical"
+                          ? "Based on historical TSA data"
+                          : "Standard estimate"}
+                      </p>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Controls */}
+            <div className="flex flex-wrap gap-2">
+              <Toggle checked={hasPreCheck} onChange={setHasPreCheck} label="TSA PreCheck / Global Entry" />
+              <Toggle checked={hasClear} onChange={setHasClear} label="CLEAR" />
+            </div>
+
+            {/* Manual override */}
+            {!showSecurityOverride ? (
+              <button
+                type="button"
+                onClick={() => setShowSecurityOverride(true)}
+                className="mt-2 text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300"
+              >
+                Adjust manually
+              </button>
+            ) : (
+              <div className="mt-3">
+                <input
+                  type="number"
+                  min="0"
+                  max="180"
+                  placeholder={`Auto: ${estimatedSecurityMins} min`}
+                  value={customSecurityMinutes}
+                  onChange={(e) => setCustomSecurityMinutes(e.target.value)}
+                  className={inputClass}
+                />
+                <button
+                  type="button"
+                  onClick={() => { setShowSecurityOverride(false); setCustomSecurityMinutes(""); }}
+                  className="mt-2 text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300"
+                >
+                  Use estimated time instead
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Bags */}
@@ -466,6 +616,10 @@ export default function AirportCalculator() {
                       </p>
                     )}
                   </div>
+                </div>
+                <div className="flex items-baseline justify-between">
+                  <p className="text-xs text-zinc-500">Security wait (est.)</p>
+                  <p className="text-sm font-semibold text-white">{result.securityMinutes} min</p>
                 </div>
                 <div className="flex items-baseline justify-between">
                   <p className="text-xs text-zinc-500">Airport buffer</p>
