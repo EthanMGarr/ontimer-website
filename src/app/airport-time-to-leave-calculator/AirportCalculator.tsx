@@ -278,26 +278,25 @@ export default function AirportCalculator() {
   // ── Auto-fetch security estimate when relevant inputs change ───────────────
   useEffect(() => {
     clearTimeout(securityDebounceRef.current);
+
+    // No meaningful airport → clear immediately, skip fetch
+    if (airport.trim().length < 2) {
+      setSecurityEstimate(null);
+      setIsFetchingSecurityEstimate(false);
+      return;
+    }
+
     securityDebounceRef.current = setTimeout(async () => {
-      // Build departure unix for time-of-day logic
       let departureUnix: number | null = null;
       if (departureDate && departureTime) {
         const [y, mo, d] = departureDate.split("-").map(Number);
         const [h, mi] = departureTime.split(":").map(Number);
         const dep = new Date(y, mo - 1, d, h, mi, 0);
-        if (!isNaN(dep.getTime())) {
-          departureUnix = Math.floor(dep.getTime() / 1000);
-        }
+        if (!isNaN(dep.getTime())) departureUnix = Math.floor(dep.getTime() / 1000);
       }
 
       setIsFetchingSecurityEstimate(true);
-      const estimate = await fetchSecurityEstimate(
-        airport,
-        departureUnix,
-        flightType,
-        hasPreCheck,
-        hasClear
-      );
+      const estimate = await fetchSecurityEstimate(airport, departureUnix, flightType, hasPreCheck, hasClear);
       setSecurityEstimate(estimate);
       setIsFetchingSecurityEstimate(false);
     }, 500);
@@ -311,9 +310,18 @@ export default function AirportCalculator() {
   const defaultBuffer = baseBuffer + estimatedSecurityMins;
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
 
-  // Security display strings
+  // Security display strings + explicit state machine
   const airportShortDisplay = buildAirportShortDisplay(airport);
   const timeDisplay = fmtDepartureTime(departureTime);
+  const hasAirport = airport.trim().length >= 2;
+  // "empty"   → no airport entered
+  // "loading" → airport present but estimate not yet available
+  // "ready"   → airport present + estimate loaded
+  type SecurityState = "empty" | "loading" | "ready";
+  const securityState: SecurityState =
+    !hasAirport ? "empty" :
+    (isFetchingSecurityEstimate || securityEstimate === null) ? "loading" :
+    "ready";
 
   async function handleCalculate() {
     setError(null);
@@ -522,36 +530,47 @@ export default function AirportCalculator() {
               </span>
             </div>
 
-            {/* Estimate display */}
+            {/* Estimate display — 3 explicit states */}
             <div className="mb-3">
-              {isFetchingSecurityEstimate ? (
-                <p className="text-sm text-zinc-500">Estimating…</p>
-              ) : (
+
+              {securityState === "empty" && (
                 <>
-                  {/* Line 1 — time value */}
+                  <p className="text-2xl font-bold text-white">{estimatedSecurityMins} min</p>
+                  <div className="mt-1.5 space-y-0.5">
+                    <p className="text-xs text-zinc-500">Add an airport to get a TSA estimate</p>
+                    <p className="text-xs text-zinc-600">Typical range: 10–25 min</p>
+                  </div>
+                </>
+              )}
+
+              {securityState === "loading" && (
+                <>
+                  <p className="text-2xl font-bold text-white">{estimatedSecurityMins} min</p>
+                  <p className="mt-1.5 text-sm text-zinc-500">
+                    {airportShortDisplay} • Estimating…
+                  </p>
+                </>
+              )}
+
+              {securityState === "ready" && securityEstimate && (
+                <>
                   <p className="text-2xl font-bold text-white">
                     {showSecurityOverride && customSecurityMinutes
                       ? `${customSecurityMinutes} min`
                       : `${estimatedSecurityMins} min`}
                   </p>
-                  {/* Lines 2–4 — only when we have an estimate */}
-                  {securityEstimate && (
-                    <div className="mt-1.5 space-y-0.5">
-                      {/* Line 2 — airport • time */}
-                      <p className="text-sm text-zinc-400">
-                        {airportShortDisplay || "your airport"}
-                        {timeDisplay ? ` • ${timeDisplay}` : ""}
-                      </p>
-                      {/* Line 3 — short label */}
-                      <p className="text-xs text-zinc-500">TSA-based estimate</p>
-                      {/* Line 4 — range */}
-                      <p className="text-xs text-zinc-600">
-                        Typical range: {securityEstimate.min}–{securityEstimate.max} min
-                      </p>
-                    </div>
-                  )}
+                  <div className="mt-1.5 space-y-0.5">
+                    <p className="text-sm text-zinc-400">
+                      {airportShortDisplay}{timeDisplay ? ` • ${timeDisplay}` : ""}
+                    </p>
+                    <p className="text-xs text-zinc-500">TSA-based estimate</p>
+                    <p className="text-xs text-zinc-600">
+                      Typical range: {securityEstimate.min}–{securityEstimate.max} min
+                    </p>
+                  </div>
                 </>
               )}
+
             </div>
 
             {/* Controls */}
