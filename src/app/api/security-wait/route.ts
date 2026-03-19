@@ -164,16 +164,11 @@ function extractAirportCode(input: string): string | null {
 
 // ─── Context label ────────────────────────────────────────────────────────────
 
-function buildContext(airportCode: string | null, departure: Date, source: SecurityEstimate["source"]): string {
-  const h = departure.getHours() % 12 || 12;
-  const m = departure.getMinutes();
-  const ampm = departure.getHours() < 12 ? "AM" : "PM";
-  const timeStr = m > 0 ? `${h}:${m.toString().padStart(2, "0")} ${ampm}` : `${h} ${ampm}`;
+function buildContext(airportCode: string | null, source: SecurityEstimate["source"]): string {
   const ap = airportCode ?? "your airport";
-
-  if (source === "live")       return `Live TSA data at ${ap} around ${timeStr}`;
-  if (source === "historical") return `Typical for ${ap} around ${timeStr}`;
-  return `Standard estimate for ${ap}`;
+  if (source === "live")       return `Live TSA wait estimate for ${ap} right now`;
+  if (source === "historical") return `Estimated TSA wait time for ${ap} at your departure time`;
+  return `Estimated airport security time for ${ap}`;
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -220,7 +215,7 @@ export async function GET(request: NextRequest) {
   };
 
   const adjusted = applyTrustedTraveler(rawEst, hasPreCheck, hasClear);
-  const context  = buildContext(airportCode, departure, source);
+  const context  = buildContext(airportCode, source);
 
   return NextResponse.json({ ...adjusted, source, context } satisfies SecurityEstimate);
 }

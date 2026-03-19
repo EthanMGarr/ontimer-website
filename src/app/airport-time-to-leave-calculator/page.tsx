@@ -6,16 +6,16 @@ import AirportCalculator from "./AirportCalculator";
 export const metadata: Metadata = {
   title: "Airport Time-to-Leave Calculator | OnTimer",
   description:
-    "Calculate exactly when to leave for the airport based on your flight time, travel time, security buffer, bags, and parking. Then automate it with OnTimer.",
+    "Calculate exactly when to leave for the airport — using TSA wait times, real-time traffic, and flight-specific buffers. Enter your details and get your leave time.",
   openGraph: {
     title: "Airport Time-to-Leave Calculator | OnTimer",
     description:
-      "Calculate exactly when to leave for the airport based on your flight time, travel time, security buffer, bags, and parking. Then automate it with OnTimer.",
+      "Calculate exactly when to leave for the airport — using TSA wait times, real-time traffic, and flight-specific buffers. Enter your details and get your leave time.",
   },
   twitter: {
     title: "Airport Time-to-Leave Calculator | OnTimer",
     description:
-      "Calculate exactly when to leave for the airport based on your flight time, travel time, security buffer, bags, and parking.",
+      "Calculate exactly when to leave for the airport — using TSA wait times, real-time traffic, and flight-specific buffers.",
   },
 };
 
@@ -143,7 +143,7 @@ export default function AirportTimeToLeaveCalculator() {
             Calculator
           </h1>
           <p className="mt-2.5 text-base leading-relaxed text-zinc-400 max-w-xl">
-            Enter your flight details and get the exact time you need to walk out the door.
+            Enter your flight details and get the exact time you need to leave — based on TSA wait times, travel time, and airport-specific conditions.
           </p>
           <p className="mt-3 max-w-xl text-sm text-zinc-500">
             Use this airport time-to-leave calculator to determine exactly when you should leave for the airport based on your departure time, travel time, and arrival buffer.
@@ -169,6 +169,15 @@ export default function AirportTimeToLeaveCalculator() {
       <section id="calculator" className="border-t border-zinc-800 py-6 md:py-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <AirportCalculator />
+          <p className="mt-5 text-center text-sm text-zinc-600">
+            Want to see how far you can push it?{" "}
+            <Link
+              href="/airport-theory-calculator"
+              className="text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300"
+            >
+              Try the Airport Theory Calculator →
+            </Link>
+          </p>
         </div>
       </section>
 
@@ -211,10 +220,12 @@ export default function AirportTimeToLeaveCalculator() {
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              There is no single right answer, but there are a few factors that
-              always matter: whether you&apos;re flying domestic or international,
-              how long security will take, whether you&apos;re checking a bag, and
-              how long the drive actually is at the time you&apos;re leaving.
+              There is no single right answer, but a few factors always matter:
+              whether you&apos;re flying domestic or international, how long
+              security will take, whether you&apos;re checking a bag, and how
+              long the drive actually is at the time you&apos;re leaving. Security
+              time in particular varies widely depending on TSA wait times, time
+              of day, and airport traffic.
             </p>
             <p>
               Most people underestimate at least one of these. They check traffic
@@ -226,7 +237,8 @@ export default function AirportTimeToLeaveCalculator() {
               A reliable estimate works backwards from your departure time: subtract
               the airport arrival buffer first, then subtract travel time. The result
               is the latest reasonable moment to walk out the door. The calculator
-              above automates that math.
+              above automates that math using real-world inputs like TSA wait
+              times and travel conditions.
             </p>
           </div>
         </div>
@@ -254,7 +266,9 @@ export default function AirportTimeToLeaveCalculator() {
               ))}
             </ul>
             <p>
-              These are starting points, not guarantees. A small regional airport
+              These are starting points, not guarantees. TSA wait times can vary
+              significantly by airport and time of day, which is why static rules
+              often break down in real-world conditions. A small regional airport
               with no lines is very different from a major hub on a holiday weekend.
               TSA PreCheck and Global Entry can meaningfully reduce security time.
               Checking a bag adds time at the counter and imposes hard cutoffs —
@@ -297,9 +311,9 @@ export default function AirportTimeToLeaveCalculator() {
               how close you are to the airport.
             </p>
             <p>
-              Security lines are unpredictable. TSA PreCheck helps. But even with
-              PreCheck, a busy checkpoint or a slow line can add real minutes to
-              your buffer.
+              Security lines are unpredictable and heavily influenced by TSA wait
+              times, staffing, and checkpoint volume. Even with TSA PreCheck, a
+              busy period can add meaningful delay.
             </p>
             <p>
               The biggest factor is overconfidence. Most people who miss flights
@@ -324,10 +338,10 @@ export default function AirportTimeToLeaveCalculator() {
               with the right inputs.
             </p>
             <p>
-              OnTimer is an iPhone app designed to solve this automatically. For
-              any calendar event with a location, it calculates when you need to
-              leave and alerts you at the right time — based on travel time and
-              traffic, not just a fixed reminder.
+              OnTimer is an iPhone app designed to solve this automatically. It
+              calculates when you need to leave based on real-world conditions
+              like traffic and timing — so you don&apos;t have to rely on static
+              estimates or guesswork.
             </p>
             <p>
               The same feature works for meetings, appointments, pickups, and

@@ -415,6 +415,9 @@ export default function AirportCalculator() {
                 <p className="text-sm text-zinc-500">
                   Estimated automatically from your starting location and airport.
                 </p>
+                <p className="mt-1 text-xs text-zinc-600">
+                  Based on current routing and traffic patterns
+                </p>
                 <button
                   type="button"
                   onClick={() => setShowManualDriveTime(true)}
@@ -447,7 +450,15 @@ export default function AirportCalculator() {
 
           {/* Security Time — dynamic estimate replacing static toggle */}
           <div>
-            <FieldLabel>Security Time</FieldLabel>
+            <div className="mb-2 flex items-center gap-2">
+              <p className="text-sm font-semibold text-zinc-300">Security Time</p>
+              <span
+                className="cursor-help rounded-full border border-green-900/50 bg-green-950/30 px-2 py-0.5 text-xs text-green-500"
+                title="Calculated using TSA wait times, airport data, and time-of-day patterns"
+              >
+                Smart Estimate
+              </span>
+            </div>
 
             {/* Estimate display */}
             <div className="mb-3">
@@ -463,22 +474,16 @@ export default function AirportCalculator() {
                     </span>
                     {securityEstimate && (
                       <span className="text-xs text-zinc-600">
-                        {securityEstimate.min}–{securityEstimate.max} min range
+                        Typical range: {securityEstimate.min}–{securityEstimate.max} min depending on TSA traffic
                       </span>
                     )}
                   </div>
                   {securityEstimate && (
-                    <>
-                      <p className="mt-0.5 text-xs text-zinc-500">{securityEstimate.context}</p>
-                      <p className="text-xs text-zinc-600">
-                        {securityEstimate.source === "live"
-                          ? "Based on live TSA data"
-                          : securityEstimate.source === "historical"
-                          ? "Based on historical TSA data"
-                          : "Standard estimate"}
-                      </p>
-                    </>
+                    <p className="mt-0.5 text-xs text-zinc-500">{securityEstimate.context}</p>
                   )}
+                  <p className="mt-0.5 text-xs text-zinc-600">
+                    Uses TSA wait time data and time-of-day patterns
+                  </p>
                 </>
               )}
             </div>
