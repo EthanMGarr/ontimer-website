@@ -53,6 +53,7 @@ const LEVELS: Record<Aggression, {
   bgClass: string;
   quips: string[];
   successRate: string;
+  translation: string;
 }> = {
   1: {
     emoji: "😇",
@@ -62,6 +63,7 @@ const LEVELS: Record<Aggression, {
     bgClass: "bg-amber-950/20",
     quips: ["You'll probably make it.", "Probably.", "Don't stop for coffee."],
     successRate: "73%",
+    translation: "you miss roughly 1 in 4 flights like this",
   },
   2: {
     emoji: "😬",
@@ -70,11 +72,12 @@ const LEVELS: Record<Aggression, {
     borderClass: "border-orange-900/50",
     bgClass: "bg-orange-950/20",
     quips: [
-      "This is… not a great plan.",
-      "You are betting your entire trip on a lot of things going right.",
+      "This is not a plan.",
+      "This is a bet.",
       "Good luck.",
     ],
     successRate: "41%",
+    translation: "you miss roughly 6 in 10 flights like this",
   },
   3: {
     emoji: "😈",
@@ -83,40 +86,39 @@ const LEVELS: Record<Aggression, {
     borderClass: "border-red-900/50",
     bgClass: "bg-red-950/20",
     quips: [
-      "Are you okay?",
-      "Seriously.",
-      "This is insane.",
-      "We calculated this because you asked.",
-      "We did not recommend it.",
+      "This is how people miss flights.",
+      "You're not planning. You're gambling.",
+      "We calculated it. We do not recommend it.",
     ],
     successRate: "12% (on a good day)",
+    translation: "you make this flight about 1 in 8 times",
   },
 };
 
 const REALITY_CHECKS: Record<Aggression, string[]> = {
   1: [
-    "No traffic delays",
+    "No traffic",
     "Security line is moving normally",
-    "Your gate isn't at the end of the terminal",
+    "Gate isn't at the end of the terminal",
     "Boarding is still open when you arrive",
   ],
   2: [
     "No traffic",
-    "No security line whatsoever",
-    "Your gate is close to security",
-    "Boarding is still open when you arrive",
-    "You don't stop for anything",
+    "No security line",
+    "Gate is close to security",
+    "Boarding is still open",
+    "No stops — nothing",
   ],
   3: [
     "No traffic",
     "No security line",
     "TSA PreCheck lane is open and empty",
-    "Your gate is right after security",
+    "Gate is right after security",
     "Boarding hasn't started closing",
-    "You ate before you left",
-    "You don't need the bathroom",
+    "No stops (bathroom, food, anything)",
     "Every moving walkway is working",
     "You can sprint in your shoes",
+    "No delays anywhere",
     "The gate agent takes pity on you",
     "The universe is on your side today",
   ],
@@ -492,13 +494,17 @@ function ResultPanel({ result, onShare, shareStatus }: {
         </p>
         <p className={`text-5xl font-black ${level.accentClass}`}>{fmtTime(result.leaveTime)}</p>
         <p className="mt-1 text-sm text-zinc-400">{fmtDate(result.leaveTime)}</p>
-        <p className={`mt-3 text-sm font-semibold ${level.accentClass}`}>
+        <p className={`mt-3 text-xs font-semibold uppercase tracking-wider text-zinc-500`}>
+          You are attempting airport theory.
+        </p>
+        <p className={`mt-2 text-sm font-semibold ${level.accentClass}`}>
           {level.emoji} {level.label} mode
         </p>
         <div className="mt-2 flex items-center gap-2">
           <span className="text-xs text-zinc-500">Estimated success rate:</span>
           <span className={`text-xs font-bold ${level.accentClass}`}>{level.successRate}</span>
         </div>
+        <p className="mt-1 text-xs text-zinc-600">Translation: {level.translation}</p>
       </div>
 
       {/* Quips */}
@@ -521,14 +527,14 @@ function ResultPanel({ result, onShare, shareStatus }: {
           <span className="font-semibold text-white">{result.bufferMinutes} min</span>
         </div>
         {result.hasCheckedBag && result.aggression === 3 && (
-          <p className="pt-1 text-xs text-red-400">⚠️ You checked a bag on maniac mode. You&apos;ve already lost.</p>
+          <p className="pt-1 text-xs text-red-400">⚠️ Checking a bag on maniac mode is not a strategy.</p>
         )}
       </div>
 
       {/* Reality check */}
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/80 p-4">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-400">
-          What has to go perfectly
+          {REALITY_CHECKS[result.aggression].length} things that must go perfectly
         </p>
         <ul className="space-y-1.5">
           {REALITY_CHECKS[result.aggression].map((item) => (
@@ -544,10 +550,13 @@ function ResultPanel({ result, onShare, shareStatus }: {
       </div>
 
       {/* Share */}
-      <button type="button" onClick={onShare}
-        className="w-full rounded-full border border-zinc-700 py-2.5 text-sm font-medium text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white">
-        {shareStatus === "copied" ? "✓ Link copied!" : "Send this to your most reckless friend →"}
-      </button>
+      <div className="space-y-2 text-center">
+        <p className="text-xs text-zinc-500">Know someone who would 100% try this?</p>
+        <button type="button" onClick={onShare}
+          className="w-full rounded-full border border-zinc-700 py-2.5 text-sm font-medium text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white">
+          {shareStatus === "copied" ? "✓ Copied!" : "Send this to them →"}
+        </button>
+      </div>
 
       {/* Sane recommendation */}
       <div className="rounded-xl border border-green-900/40 bg-green-950/20 p-4">

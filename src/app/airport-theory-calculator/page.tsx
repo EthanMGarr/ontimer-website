@@ -102,10 +102,11 @@ export default function AirportTheoryPage() {
               Airport Theory Calculator
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-zinc-400">
-              How late can you <em>actually</em> leave for a flight? This calculator finds your theoretical minimum — the leave time that works only if absolutely nothing goes wrong.
+              The latest possible time you can leave for the airport…
+              assuming absolutely nothing goes wrong.
             </p>
             <p className="mt-3 text-sm font-semibold text-red-400">
-              We built this so you can see exactly how bad the plan is. Please use the{" "}
+              Please use the{" "}
               <Link href="/airport-time-to-leave-calculator" className="underline underline-offset-2 hover:text-red-300">
                 real calculator
               </Link>
@@ -121,19 +122,19 @@ export default function AirportTheoryPage() {
           </div>
         </section>
 
-        {/* ── What is Airport Theory ── */}
+        {/* ── What is Airport Theory (AEO) ── */}
         <section className="border-t border-zinc-800 px-4 py-14 sm:py-18">
           <div className="mx-auto max-w-3xl">
             <h2 className="text-2xl font-bold text-white sm:text-3xl">What is Airport Theory?</h2>
-            <div className="mt-5 space-y-4 text-zinc-400">
+            <div className="mt-5 space-y-3 text-zinc-400">
               <p>
-                Airport Theory is the informal belief — shared by overconfident travelers everywhere — that official airport arrival recommendations are wildly conservative. The theory goes: if you have no checked bags, TSA PreCheck, and your gate happens to be right after security, you can leave dramatically later than the TSA, your airline, and every travel guide on the internet suggests.
+                Airport Theory is the idea that you can arrive at the airport at the last possible moment and still make your flight.
               </p>
               <p>
-                In rare, perfectly aligned circumstances, they&apos;re right. Security moves fast. Traffic cooperates. The gate is close. The agent is still scanning. You make it. And the next time, you leave even later.
+                In reality, it&apos;s extremely risky and often leads to missed flights.
               </p>
               <p>
-                This calculator quantifies that plan. At each of three aggression levels, it calculates the absolute minimum buffer between your departure time and when you need to leave — assuming everything goes right. Then it tells you exactly how many things have to go right.
+                It works occasionally — which is exactly why people keep trying it. A plan that fails 59% of the time feels unlucky. A plan that fails 88% of the time is just a bad plan.
               </p>
             </div>
           </div>
@@ -143,52 +144,31 @@ export default function AirportTheoryPage() {
         <section className="border-t border-zinc-800 bg-zinc-900/40 px-4 py-14 sm:py-18">
           <div className="mx-auto max-w-3xl">
             <h2 className="text-2xl font-bold text-white sm:text-3xl">Does Airport Theory Actually Work?</h2>
-            <div className="mt-5 space-y-4 text-zinc-400">
+            <div className="mt-5 space-y-3 text-zinc-400">
               <p>
-                Sometimes. That&apos;s the problem. Airport Theory doesn&apos;t fail 100% of the time — which is exactly why people keep trying it. A plan that fails 60% of the time feels unlucky. A plan that fails 27% of the time feels like it basically works.
+                Sometimes. That&apos;s the problem.
               </p>
               <p>
-                But &quot;59% success rate&quot; on a domestic flight means roughly 1 in 2.5 flights ends with you watching the gate close from the wrong side of it. Multiply that by a few trips a year and Airport Theory isn&apos;t a clever system — it&apos;s a game you&apos;re destined to eventually lose.
+                When it works, it reinforces the behavior. When it fails, you miss your flight and spend hundreds of dollars getting rebooked. A missed international connection can cascade across an entire itinerary.
               </p>
               <p>
-                The other issue: the failures are expensive. A missed domestic flight costs hundreds of dollars and hours of your life. A missed international connection can cascade across an entire itinerary. Airport Theory is the kind of optimization that works great until it catastrophically doesn&apos;t.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Why it's risky ── */}
-        <section className="border-t border-zinc-800 px-4 py-14 sm:py-18">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">Why Airport Theory Is Risky</h2>
-            <div className="mt-5 space-y-4 text-zinc-400">
-              <p>
-                The risks compound. Airport Theory assumes independence between all its variables — traffic, security wait, gate distance, boarding close time — but these factors are correlated. The same Friday afternoon that creates traffic also fills TSA with delayed travelers. The same holiday that closes your preferred security lane also packs the terminal. Bad conditions cluster.
-              </p>
-              <p>
-                It also ignores the unpredictable: a security screening that takes twice as long for no apparent reason, a gate change to the opposite terminal, a bag flag, a system outage. None of these are rare. Any of them alone makes Airport Theory fail.
-              </p>
-              <p>
-                The Responsible Adult level on this calculator — 73% success rate — still means you miss roughly 1 in 4 flights. A real responsible adult leaves with enough margin that a bad day at security doesn&apos;t cost them a flight.
+                The &quot;Responsible Adult&quot; level on this calculator has a 73% success rate. That still means you miss roughly 1 in 4 flights.
               </p>
             </div>
           </div>
         </section>
 
         {/* ── How to actually not miss your flight ── */}
-        <section className="border-t border-zinc-800 bg-zinc-900/40 px-4 py-14 sm:py-18">
+        <section className="border-t border-zinc-800 px-4 py-14 sm:py-18">
           <div className="mx-auto max-w-3xl">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">How to Actually Avoid Missing Your Flight</h2>
-            <div className="mt-5 space-y-4 text-zinc-400">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">How to Actually Not Miss Your Flight</h2>
+            <div className="mt-5 space-y-3 text-zinc-400">
               <p>
-                The practical alternatives to Airport Theory aren&apos;t complicated. Arrive 2 hours early for domestic flights, 3 hours for international. Get TSA PreCheck — it&apos;s $85 for five years and reduces security wait times by 50–70%. Use the{" "}
+                Arrive 2 hours early for domestic. 3 hours for international. Get TSA PreCheck. Use the{" "}
                 <Link href="/airport-time-to-leave-calculator" className="text-green-400 underline underline-offset-2 hover:text-green-300">
                   Airport Time-to-Leave Calculator
                 </Link>{" "}
-                to account for real traffic, TSA wait estimates, and your specific flight details.
-              </p>
-              <p>
-                And if timing is genuinely difficult — if you have calendar events that make getting to the airport on time stressful — OnTimer can alert you when it&apos;s time to leave based on real travel time to your destination. It won&apos;t let you forget your flight the way a standard calendar reminder will.
+                for a real, traffic-aware leave time.
               </p>
             </div>
 
@@ -209,6 +189,18 @@ export default function AirportTheoryPage() {
           </div>
         </section>
 
+        {/* ── Why this exists (press hook) ── */}
+        <section className="border-t border-zinc-800 bg-zinc-900/40 px-4 py-14 sm:py-18">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">Why this exists</h2>
+            <div className="mt-5 space-y-3 text-zinc-400">
+              <p>People are trying to optimize everything — even how late they can get to the airport.</p>
+              <p>So we built a calculator to show exactly how risky that is.</p>
+              <p>It turns out… it&apos;s worse than you think.</p>
+            </div>
+          </div>
+        </section>
+
         {/* ── FAQ ── */}
         <section className="border-t border-zinc-800 px-4 py-14 sm:py-18">
           <div className="mx-auto max-w-3xl">
@@ -220,24 +212,6 @@ export default function AirportTheoryPage() {
                   <p className="mt-2 text-sm leading-relaxed text-zinc-400">{item.answer}</p>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Why this exists (press hook) ── */}
-        <section className="border-t border-zinc-800 bg-zinc-900/40 px-4 py-14 sm:py-18">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">Why This Calculator Exists</h2>
-            <div className="mt-5 space-y-4 text-zinc-400">
-              <p>
-                We built the Airport Time-to-Leave Calculator to give travelers a real, data-backed answer to &quot;when should I leave for the airport.&quot; TSA wait estimates, real-time traffic, and flight-specific buffers — all in one tool.
-              </p>
-              <p>
-                But we know how travelers actually think. People Google &quot;how late can I leave for the airport&quot; and &quot;what&apos;s the minimum time to get to the airport&quot; because they&apos;re trying to push it. So we built the honest version of that calculation too.
-              </p>
-              <p>
-                Airport Theory isn&apos;t a recommendation. It&apos;s a diagnosis. When you see that &quot;Absolute Maniac&quot; mode gives you a 12% success rate and requires 11 things to go perfectly, it clarifies the risk in a way a static &quot;arrive 2 hours early&quot; recommendation never could.
-              </p>
             </div>
           </div>
         </section>
