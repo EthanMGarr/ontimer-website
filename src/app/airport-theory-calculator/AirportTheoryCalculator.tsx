@@ -646,8 +646,8 @@ function ResultPanel({ result, onShare, shareStatus }: {
       </div>
 
       {/* App CTA */}
-      <div className="pt-1">
-        <p className="mb-3 text-xs text-zinc-400">Or just don&apos;t think about this ever again…</p>
+      <div className="pt-2">
+        <p className="mb-4 text-sm font-semibold text-zinc-300">Or stop doing this to yourself and use OnTimer.</p>
         <AppStoreButton size="sm" location="airport_theory_result" />
       </div>
 
