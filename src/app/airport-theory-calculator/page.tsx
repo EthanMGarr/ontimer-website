@@ -7,6 +7,7 @@
 /// ## Include
 /// - Metadata + OpenGraph + Twitter cards
 /// - FAQ JSON-LD schema
+/// - WebApplication JSON-LD schema
 /// - Hero with humor-forward framing
 /// - Long-form content sections (H2s for SEO)
 /// - AirportTheoryCalculator client component
@@ -25,7 +26,7 @@ import { AppStoreButton } from "@/components/CTAButton";
 import AirportTheoryCalculator from "./AirportTheoryCalculator";
 
 export const metadata: Metadata = {
-  title: "Airport Theory Calculator: How Late Can You Leave for a Flight? | OnTimer",
+  title: "Airport Theory Calculator | OnTimer",
   description:
     "Calculate the absolute minimum time you can leave for the airport at three aggression levels — Responsible Adult, Cutting It Close, and Absolute Maniac. Warning: this is a terrible idea.",
   openGraph: {
@@ -82,12 +83,37 @@ const faqJsonLd = {
   })),
 };
 
+const webAppJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Airport Theory Calculator",
+  url: "https://www.ontimer.app/airport-theory-calculator",
+  description:
+    "Calculate the latest possible time you can leave for the airport at three risk levels: Responsible Adult, Cutting It Close, and Absolute Maniac.",
+  applicationCategory: "TravelApplication",
+  operatingSystem: "Web",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  provider: {
+    "@type": "Organization",
+    name: "OnTimer",
+    url: "https://www.ontimer.app",
+  },
+};
+
 export default function AirportTheoryPage() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
       <main className="min-h-screen bg-zinc-950 text-white">
