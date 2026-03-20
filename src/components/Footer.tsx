@@ -3,192 +3,118 @@ import { AppStoreButton } from "@/components/CTAButton";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-zinc-800 bg-zinc-950">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-8">
-          {/* Brand */}
-          <div className="col-span-1 lg:col-span-2">
-            <Link href="/" className="text-xl font-bold tracking-tight">
+    <footer className="border-t border-zinc-800/60 bg-zinc-950">
+      <div className="mx-auto max-w-6xl px-6 py-20 sm:px-8">
+
+        {/* ── Main grid ── */}
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
+
+          {/* Col 1 — Brand */}
+          <div>
+            <Link href="/" className="text-xl font-bold tracking-tight text-white">
               On<span className="text-green-500">Timer</span>
             </Link>
-            <p className="mt-3 max-w-xs text-sm text-zinc-400">
-              OnTimer connects to your calendar and creates loud, persistent
-              alarms before meetings and events.
+            <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+              Calendar alarms that actually wake you up. Built for people who can&apos;t afford to be late.
             </p>
-            <div className="mt-4 space-y-1 text-sm text-zinc-500">
-              <p>© {new Date().getFullYear()} Breakout Growth Labs LLC</p>
-              <a
-                href="mailto:support@ontimer.app"
-                className="block transition-colors hover:text-zinc-300"
-              >
-                support@ontimer.app
-              </a>
-              <p>Aberdeen, NJ</p>
+            <p className="mt-2 text-xs text-zinc-600">Aberdeen, NJ</p>
+            <div className="mt-6">
+              <AppStoreButton size="sm" location="footer" />
             </div>
-            <AppStoreButton size="md" location="footer" className="mt-5" />
           </div>
 
-          {/* Product links */}
+          {/* Col 2 — Product */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
+            <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-zinc-300">
               Product
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-3">
               {[
-                { href: "/features", label: "Features" },
+                { href: "/features",     label: "Features"     },
                 { href: "/how-it-works", label: "How It Works" },
-                { href: "/faq", label: "FAQ" },
-                { href: "/blog", label: "Blog" },
-                { href: "/android", label: "Android Waitlist" },
-                { href: "/meeting-reminder-app", label: "Meeting Reminder App" },
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-zinc-400 transition-colors hover:text-white"
-                  >
-                    {link.label}
+                { href: "/faq",          label: "FAQ"          },
+                { href: "/blog",         label: "Blog"         },
+              ].map(({ href, label }) => (
+                <li key={href}>
+                  <Link href={href} className="text-sm text-zinc-500 transition-colors hover:text-white">
+                    {label}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Tools */}
+          {/* Col 3 — Tools */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
+            <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-zinc-300">
               Tools
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-3">
               {[
-                { href: "/airport-time-to-leave-calculator", label: "Airport Time-to-Leave Calculator" },
-                { href: "/what-time-should-i-leave", label: "What Time Should I Leave Calculator" },
-                { href: "/wake-up-time-calculator", label: "Wake-Up Time Calculator" },
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-zinc-400 transition-colors hover:text-white"
-                  >
-                    {link.label}
+                { href: "/airport-time-to-leave-calculator", label: "Airport Calculator"         },
+                { href: "/airport-theory-calculator",        label: "Airport Theory Calculator"  },
+                { href: "/what-time-should-i-leave",         label: "Time to Leave Calculator"   },
+                { href: "/wake-up-time-calculator",          label: "Wake-Up Calculator"          },
+              ].map(({ href, label }) => (
+                <li key={href}>
+                  <Link href={href} className="text-sm text-zinc-500 transition-colors hover:text-white">
+                    {label}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Reminder Guides */}
+          {/* Col 4 — Support & Legal */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              Reminder Guides
+            <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-zinc-300">
+              Support
             </h3>
-            <ul className="space-y-2.5">
-              {[
-                { href: "/how-to-never-be-late-to-meetings", label: "How to Never Be Late to Meetings" },
-                { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting" },
-                { href: "/time-to-leave-reminders", label: "Time To Leave Reminders" },
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-zinc-400 transition-colors hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Reminder Troubleshooting */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              Troubleshooting
-            </h3>
-            <ul className="space-y-2.5">
-              {[
-                { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working" },
-                { href: "/alarm-didnt-go-off-late-for-work", label: "Alarm Didn't Go Off" },
-                { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
-                { href: "/loud-calendar-alerts-iphone", label: "Loud Calendar Alerts on iPhone" },
-                { href: "/missed-appointment-fee-how-to-prevent-no-shows", label: "Missed Appointment Fee" },
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-zinc-400 transition-colors hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              Get in Touch
-            </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-3">
               <li>
-                <a
-                  href="mailto:support@ontimer.app"
-                  className="text-sm text-zinc-400 transition-colors hover:text-white"
-                >
+                <a href="mailto:support@ontimer.app" className="text-sm text-zinc-500 transition-colors hover:text-white">
                   support@ontimer.app
                 </a>
               </li>
               <li>
-                <a
-                  href="mailto:press@ontimer.app"
-                  className="text-sm text-zinc-400 transition-colors hover:text-white"
-                >
+                <a href="mailto:press@ontimer.app" className="text-sm text-zinc-500 transition-colors hover:text-white">
                   press@ontimer.app
                 </a>
               </li>
             </ul>
-          </div>
 
-          {/* Legal links */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
+            <h3 className="mb-5 mt-8 text-xs font-semibold uppercase tracking-widest text-zinc-300">
               Legal
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-3">
               {[
-                {
-                  href: "https://ontimer.app/OnTimer_Privacy_Policy.html",
-                  label: "Privacy Policy",
-                },
-                {
-                  href: "https://ontimer.app/OnTimer_Terms_of_Service.html",
-                  label: "Terms of Service",
-                },
-              ].map((link) => (
-                <li key={link.href}>
+                { href: "https://ontimer.app/OnTimer_Privacy_Policy.html",    label: "Privacy Policy"    },
+                { href: "https://ontimer.app/OnTimer_Terms_of_Service.html",  label: "Terms of Service"  },
+              ].map(({ href, label }) => (
+                <li key={href}>
                   <a
-                    href={link.href}
+                    href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-zinc-400 transition-colors hover:text-white"
+                    className="text-sm text-zinc-500 transition-colors hover:text-white"
                   >
-                    {link.label}
+                    {label}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
+
         </div>
 
-        <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-zinc-800 pt-6 sm:flex-row sm:items-center">
-          <Link
-            href="/feed.xml"
-            className="text-xs text-zinc-500 transition-colors hover:text-zinc-300"
-          >
-            RSS Feed
+        {/* ── Bottom bar ── */}
+        <div className="mt-16 flex items-center justify-between border-t border-zinc-800/60 pt-6">
+          <p className="text-xs text-zinc-600">© {new Date().getFullYear()} OnTimer</p>
+          <Link href="/feed.xml" className="text-xs text-zinc-700 transition-colors hover:text-zinc-500">
+            RSS
           </Link>
         </div>
+
       </div>
     </footer>
   );
