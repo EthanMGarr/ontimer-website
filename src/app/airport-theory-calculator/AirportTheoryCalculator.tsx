@@ -466,7 +466,7 @@ export default function AirportTheoryCalculator() {
 
           {/* Aggression picker */}
           <div>
-            <FieldLabel>How aggressive are you?</FieldLabel>
+            <p className="mb-2 text-base font-semibold text-zinc-200">How reckless are you?</p>
             <div className="grid grid-cols-3 gap-2">
               {([1, 2, 3] as Aggression[]).map((lvl) => {
                 const cfg = LEVELS[lvl];
