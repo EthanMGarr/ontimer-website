@@ -22,7 +22,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
@@ -90,7 +90,7 @@ const LEVELS: Record<Aggression, {
       "You're not planning. You're gambling.",
       "We calculated it. We do not recommend it.",
     ],
-    successRate: "12% (on a good day)",
+    successRate: "12%",
     translation: "you make this flight about 1 in 8 times",
   },
 };
@@ -122,6 +122,20 @@ const REALITY_CHECKS: Record<Aggression, string[]> = {
     "The gate agent takes pity on you",
     "The universe is on your side today",
   ],
+};
+
+// ─── Mode ↔ Aggression maps (used for share URL params) ──────────────────────
+
+const MODE_TO_AGGRESSION: Record<string, Aggression> = {
+  responsible: 1,
+  close: 2,
+  maniac: 3,
+};
+
+const AGGRESSION_TO_MODE: Record<Aggression, string> = {
+  1: "responsible",
+  2: "close",
+  3: "maniac",
 };
 
 // ─── Theory buffer logic ──────────────────────────────────────────────────────
@@ -271,6 +285,39 @@ export default function AirportTheoryCalculator() {
 
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
 
+  // ── Read shared URL params on mount ──────────────────────────────────────────
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const mode  = params.get("mode");
+    const leave = params.get("leave");
+
+    if (!mode || !MODE_TO_AGGRESSION[mode]) return;
+    const ag = MODE_TO_AGGRESSION[mode];
+    setAggression(ag);
+
+    if (!leave) return;
+    // Parse "9:36pm" → local Date
+    const match = leave.match(/^(\d{1,2}):(\d{2})(am|pm)$/i);
+    if (!match) return;
+    let h = parseInt(match[1]);
+    const m = parseInt(match[2]);
+    if (match[3].toLowerCase() === "pm" && h !== 12) h += 12;
+    if (match[3].toLowerCase() === "am" && h === 12) h = 0;
+    const lt = new Date();
+    lt.setHours(h, m, 0, 0);
+    if (lt.getTime() < Date.now()) lt.setDate(lt.getDate() + 1);
+    setResult({
+      leaveTime: lt,
+      bufferMinutes: theoryBuffer("domestic", false, false, ag),
+      travelMinutes: 0,
+      travelSource: "manual",
+      aggression: ag,
+      hasCheckedBag: false,
+      flightType: "domestic",
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function handleCalculate() {
     setError(null);
     if (!departureDate || !departureTime) {
@@ -319,13 +366,17 @@ export default function AirportTheoryCalculator() {
 
   async function handleShare() {
     if (!result) return;
-    const text = `I just found out I can leave at ${fmtTime(result.leaveTime)} and still (maybe) make my flight ${LEVELS[result.aggression].emoji} — Airport Theory Calculator`;
-    const url = "https://www.ontimer.app/airport-theory-calculator";
+    const level      = LEVELS[result.aggression];
+    const modeSlug   = AGGRESSION_TO_MODE[result.aggression];
+    const leaveStr   = fmtTime(result.leaveTime).replace(/\s/g, "").toLowerCase();
+    const successNum = level.successRate.replace(/[^0-9]/g, "");
+    const url  = `https://ontimer.app/airport-theory-calculator?mode=${modeSlug}&leave=${encodeURIComponent(leaveStr)}&success=${successNum}`;
+    const text = `According to this, you'd make your flight only ${level.successRate} of the time ${level.emoji}\nYou're in *${level.label} mode*.\n\nTry it yourself:\n${url}`;
     try {
       if (navigator.share) {
         await navigator.share({ title: "Airport Theory Calculator", text, url });
       } else {
-        await navigator.clipboard.writeText(`${text}\n\n${url}`);
+        await navigator.clipboard.writeText(text);
         setShareStatus("copied");
         setTimeout(() => setShareStatus("idle"), 2500);
       }
@@ -442,7 +493,7 @@ export default function AirportTheoryCalculator() {
 
           <button type="button" onClick={handleCalculate} disabled={isCalculating}
             className="w-full rounded-full bg-red-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-60">
-            {isCalculating ? "Calculating your bad decision…" : `Calculate My Bad Decision ${level.emoji}`}
+            {isCalculating ? "Calculating…" : `Calculate Risk ${level.emoji}`}
           </button>
         </div>
 
@@ -485,26 +536,26 @@ function ResultPanel({ result, onShare, shareStatus }: {
   const level = LEVELS[result.aggression];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
 
       {/* Leave time */}
-      <div className={`rounded-xl border ${level.borderClass} ${level.bgClass} p-6`}>
+      <div className={`rounded-xl border ${level.borderClass} ${level.bgClass} p-4`}>
         <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-          Leave by (if everything goes perfectly)
+          Leave at (if nothing goes wrong)
         </p>
         <p className={`text-5xl font-black ${level.accentClass}`}>{fmtTime(result.leaveTime)}</p>
         <p className="mt-1 text-sm text-zinc-400">{fmtDate(result.leaveTime)}</p>
-        <p className={`mt-3 text-xs font-semibold uppercase tracking-wider text-zinc-500`}>
+        <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
           You are attempting airport theory.
         </p>
-        <p className={`mt-2 text-sm font-semibold ${level.accentClass}`}>
+        <p className={`mt-1.5 text-sm font-semibold ${level.accentClass}`}>
           {level.emoji} {level.label} mode
         </p>
-        <div className="mt-2 flex items-center gap-2">
-          <span className="text-xs text-zinc-500">Estimated success rate:</span>
+        <div className="mt-1.5 flex items-center gap-2">
+          <span className="text-xs text-zinc-500">Success rate:</span>
           <span className={`text-xs font-bold ${level.accentClass}`}>{level.successRate}</span>
         </div>
-        <p className="mt-1 text-xs text-zinc-600">Translation: {level.translation}</p>
+        <p className="mt-0.5 text-xs text-zinc-600">{level.translation}</p>
       </div>
 
       {/* Quips */}

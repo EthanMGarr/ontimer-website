@@ -93,24 +93,17 @@ export default function AirportTheoryPage() {
       <main className="min-h-screen bg-zinc-950 text-white">
 
         {/* ── Hero ── */}
-        <section className="relative overflow-hidden border-b border-zinc-800 bg-gradient-to-b from-red-950/40 to-zinc-950 px-4 py-20 text-center sm:py-28">
+        <section className="relative overflow-hidden border-b border-zinc-800 bg-gradient-to-b from-red-950/40 to-zinc-950 px-4 py-12 text-center sm:py-16">
           <div className="mx-auto max-w-3xl">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-red-900/60 bg-red-950/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-red-400">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-red-900/60 bg-red-950/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-red-400">
               ⚠️ Warning: This is a terrible idea
             </div>
-            <h1 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
               Airport Theory Calculator
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-zinc-400">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-400">
               The latest possible time you can leave for the airport…
-              assuming absolutely nothing goes wrong.
-            </p>
-            <p className="mt-3 text-sm font-semibold text-red-400">
-              Please use the{" "}
-              <Link href="/airport-time-to-leave-calculator" className="underline underline-offset-2 hover:text-red-300">
-                real calculator
-              </Link>
-              .
+              assuming nothing goes wrong.
             </p>
           </div>
         </section>
