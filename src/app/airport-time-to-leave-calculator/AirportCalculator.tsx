@@ -461,7 +461,7 @@ export default function AirportCalculator() {
               <PlaceAutocomplete
                 value={origin}
                 onChange={setOrigin}
-                placeholder="Start typing an address or city"
+                placeholder="Start typing your address"
                 inputClassName={inputClass}
               />
             </div>
