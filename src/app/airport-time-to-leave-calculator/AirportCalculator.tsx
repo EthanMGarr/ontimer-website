@@ -229,7 +229,7 @@ function Toggle({
 }
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
@@ -482,16 +482,16 @@ export default function AirportCalculator() {
             <FieldLabel>Drive time</FieldLabel>
             {!showManualDriveTime ? (
               <div>
-                <p className="text-sm text-zinc-500">
+                <p className="text-sm text-zinc-400">
                   Estimated automatically from your starting location and airport.
                 </p>
-                <p className="mt-1 text-xs text-zinc-600">
+                <p className="mt-1 text-xs text-zinc-400">
                   Based on current routing and traffic patterns
                 </p>
                 <button
                   type="button"
                   onClick={() => setShowManualDriveTime(true)}
-                  className="mt-2 text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300"
+                  className="mt-2 text-xs text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-300"
                 >
                   Enter drive time manually
                 </button>
@@ -510,7 +510,7 @@ export default function AirportCalculator() {
                 <button
                   type="button"
                   onClick={() => { setShowManualDriveTime(false); setManualTravelMinutes(""); }}
-                  className="mt-2 text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300"
+                  className="mt-2 text-xs text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-300"
                 >
                   Use automatic estimate instead
                 </button>
@@ -537,8 +537,8 @@ export default function AirportCalculator() {
                 <>
                   <p className="text-2xl font-bold text-white">{estimatedSecurityMins} min</p>
                   <div className="mt-1.5 space-y-0.5">
-                    <p className="text-xs text-zinc-500">Add an airport to get a TSA estimate</p>
-                    <p className="text-xs text-zinc-600">Typical range: 10–25 min</p>
+                    <p className="text-xs text-zinc-400">Add an airport to get a TSA estimate</p>
+                    <p className="text-xs text-zinc-400">Typical range: 10–25 min</p>
                   </div>
                 </>
               )}
@@ -546,7 +546,7 @@ export default function AirportCalculator() {
               {securityState === "loading" && (
                 <>
                   <p className="text-2xl font-bold text-white">{estimatedSecurityMins} min</p>
-                  <p className="mt-1.5 text-sm text-zinc-500">
+                  <p className="mt-1.5 text-sm text-zinc-400">
                     {airportShortDisplay} • Estimating…
                   </p>
                 </>
@@ -563,8 +563,8 @@ export default function AirportCalculator() {
                     <p className="text-sm text-zinc-400">
                       {airportShortDisplay}{timeDisplay ? ` • ${timeDisplay}` : ""}
                     </p>
-                    <p className="text-xs text-zinc-500">TSA-based estimate</p>
-                    <p className="text-xs text-zinc-600">
+                    <p className="text-xs text-zinc-400">TSA-based estimate</p>
+                    <p className="text-xs text-zinc-400">
                       Typical range: {securityEstimate.min}–{securityEstimate.max} min
                     </p>
                   </div>
@@ -584,7 +584,7 @@ export default function AirportCalculator() {
               <button
                 type="button"
                 onClick={() => setShowSecurityOverride(true)}
-                className="mt-2 text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300"
+                className="mt-2 text-xs text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-300"
               >
                 Adjust manually
               </button>
@@ -602,7 +602,7 @@ export default function AirportCalculator() {
                 <button
                   type="button"
                   onClick={() => { setShowSecurityOverride(false); setCustomSecurityMinutes(""); }}
-                  className="mt-2 text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300"
+                  className="mt-2 text-xs text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-300"
                 >
                   Use estimated time instead
                 </button>
@@ -639,7 +639,7 @@ export default function AirportCalculator() {
             <button
               type="button"
               onClick={() => setShowBufferOverride(!showBufferOverride)}
-              className="text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300"
+              className="text-xs text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-300"
             >
               {showBufferOverride
                 ? "Use recommended buffer"
@@ -656,7 +656,7 @@ export default function AirportCalculator() {
                   onChange={(e) => setCustomBuffer(e.target.value)}
                   className={inputClass}
                 />
-                <p className="mt-1.5 text-xs text-zinc-500">
+                <p className="mt-1.5 text-xs text-zinc-400">
                   How early to arrive at the airport before your flight.
                 </p>
               </div>
@@ -685,7 +685,7 @@ export default function AirportCalculator() {
             <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-6">
               {/* Leave by — dominant result */}
               <div className="border-b border-zinc-700 pb-5">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">Leave by</p>
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">Leave by</p>
                 <p className="text-5xl font-black text-green-500">{fmtTime(result.leaveTime)}</p>
                 <p className="mt-1 text-sm text-zinc-400">{fmtDate(result.leaveTime)}</p>
               </div>
@@ -693,11 +693,11 @@ export default function AirportCalculator() {
               {/* Secondary details */}
               <div className="space-y-3 pt-1">
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-500">Arrive at airport by</p>
+                  <p className="text-xs text-zinc-400">Arrive at airport by</p>
                   <p className="text-sm font-semibold text-white">{fmtTime(result.arrivalTime)}</p>
                 </div>
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-500">Drive time</p>
+                  <p className="text-xs text-zinc-400">Drive time</p>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-white">{result.travelMinutes} min</p>
                     {result.travelSource === "google" && (
@@ -708,11 +708,11 @@ export default function AirportCalculator() {
                   </div>
                 </div>
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-500">Security wait (est.)</p>
+                  <p className="text-xs text-zinc-400">Security wait (est.)</p>
                   <p className="text-sm font-semibold text-white">{result.securityMinutes} min</p>
                 </div>
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-500">Airport buffer</p>
+                  <p className="text-xs text-zinc-400">Airport buffer</p>
                   <p className="text-sm font-semibold text-white">{result.bufferMinutes} min</p>
                 </div>
               </div>
@@ -727,7 +727,7 @@ export default function AirportCalculator() {
                 <AppStoreButton size="sm" location="airport_calculator" />
                 <a
                   href="/features"
-                  className="mt-3 block text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+                  className="mt-3 block text-xs text-zinc-400 hover:text-zinc-300 transition-colors"
                   onClick={() => track("airport_calculator_feature_click")}
                 >
                   See how OnTimer automatically reminds you when it&apos;s time to leave →
@@ -740,7 +740,7 @@ export default function AirportCalculator() {
               <p className="text-base font-semibold text-zinc-300">
                 Your leave time will appear here
               </p>
-              <p className="mt-1.5 text-sm text-zinc-500">
+              <p className="mt-1.5 text-sm text-zinc-400">
                 Fill in your flight details and click Calculate.
               </p>
               <ul className="mt-6 space-y-2.5 text-left w-full max-w-xs">
@@ -749,8 +749,8 @@ export default function AirportCalculator() {
                   "Estimated drive time based on traffic",
                   "Exact time to leave your home",
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-xs text-zinc-600">
-                    <span className="mt-0.5 flex-shrink-0 text-zinc-700">•</span>
+                  <li key={item} className="flex items-start gap-2.5 text-xs text-zinc-400">
+                    <span className="mt-0.5 flex-shrink-0 text-zinc-400">•</span>
                     {item}
                   </li>
                 ))}

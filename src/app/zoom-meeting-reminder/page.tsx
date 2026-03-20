@@ -264,7 +264,7 @@ export default function ZoomMeetingReminder() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <AppStoreButton size="lg" />
           </div>
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-zinc-400">
             Android coming soon —{" "}
             <Link href="/android" className="text-green-500 hover:text-green-400">
               join the waitlist.

@@ -120,7 +120,7 @@ export default function AirportTimeToLeaveCalculator() {
       {/* ── BREADCRUMBS ── */}
       <nav aria-label="Breadcrumb" className="border-b border-zinc-800/50 bg-zinc-950">
         <div className="mx-auto max-w-3xl px-4 py-2.5 sm:px-6">
-          <ol className="flex items-center gap-1.5 text-xs text-zinc-500">
+          <ol className="flex items-center gap-1.5 text-xs text-zinc-400">
             <li><Link href="/" className="hover:text-zinc-300 transition-colors">Home</Link></li>
             <li aria-hidden="true">›</li>
             <li><span className="text-zinc-400">Tools</span></li>
@@ -145,7 +145,7 @@ export default function AirportTimeToLeaveCalculator() {
           <p className="mt-2.5 text-base leading-relaxed text-zinc-400 max-w-xl">
             Enter your flight details and get the exact time you need to leave — based on TSA wait times, travel time, and airport-specific conditions.
           </p>
-          <p className="mt-3 max-w-xl text-sm text-zinc-500">
+          <p className="mt-3 max-w-xl text-sm text-zinc-400">
             Use this airport time-to-leave calculator to determine exactly when you should leave for the airport based on your departure time, travel time, and arrival buffer.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -157,7 +157,7 @@ export default function AirportTimeToLeaveCalculator() {
             </a>
             <Link
               href="/time-to-leave-reminders"
-              className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+              className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors"
             >
               Want this automated? →
             </Link>
@@ -169,11 +169,11 @@ export default function AirportTimeToLeaveCalculator() {
       <section id="calculator" className="border-t border-zinc-800 py-6 md:py-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <AirportCalculator />
-          <p className="mt-5 text-center text-sm text-zinc-600">
+          <p className="mt-5 text-center text-sm text-zinc-400">
             Want to see how far you can push it?{" "}
             <Link
               href="/airport-theory-calculator"
-              className="text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300"
+              className="text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-300"
             >
               Try the Airport Theory Calculator →
             </Link>

@@ -17,7 +17,7 @@ export default function Footer() {
             <p className="mt-3 text-sm leading-relaxed text-zinc-400">
               Calendar alarms that actually wake you up. Built for people who can&apos;t afford to be late.
             </p>
-            <p className="mt-2 text-xs text-zinc-600">Aberdeen, NJ</p>
+            <p className="mt-2 text-xs text-zinc-400">Aberdeen, NJ</p>
             <div className="mt-6">
               <AppStoreButton size="sm" location="footer" />
             </div>
@@ -36,7 +36,7 @@ export default function Footer() {
                 { href: "/blog",         label: "Blog"         },
               ].map(({ href, label }) => (
                 <li key={href}>
-                  <Link href={href} className="text-sm text-zinc-500 transition-colors hover:text-white">
+                  <Link href={href} className="text-sm text-zinc-400 transition-colors hover:text-white">
                     {label}
                   </Link>
                 </li>
@@ -57,7 +57,7 @@ export default function Footer() {
                 { href: "/wake-up-time-calculator",          label: "Wake-Up Calculator"          },
               ].map(({ href, label }) => (
                 <li key={href}>
-                  <Link href={href} className="text-sm text-zinc-500 transition-colors hover:text-white">
+                  <Link href={href} className="text-sm text-zinc-400 transition-colors hover:text-white">
                     {label}
                   </Link>
                 </li>
@@ -72,12 +72,12 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a href="mailto:support@ontimer.app" className="text-sm text-zinc-500 transition-colors hover:text-white">
+                <a href="mailto:support@ontimer.app" className="text-sm text-zinc-400 transition-colors hover:text-white">
                   support@ontimer.app
                 </a>
               </li>
               <li>
-                <a href="mailto:press@ontimer.app" className="text-sm text-zinc-500 transition-colors hover:text-white">
+                <a href="mailto:press@ontimer.app" className="text-sm text-zinc-400 transition-colors hover:text-white">
                   press@ontimer.app
                 </a>
               </li>
@@ -96,7 +96,7 @@ export default function Footer() {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-zinc-500 transition-colors hover:text-white"
+                    className="text-sm text-zinc-400 transition-colors hover:text-white"
                   >
                     {label}
                   </a>
@@ -109,8 +109,8 @@ export default function Footer() {
 
         {/* ── Bottom bar ── */}
         <div className="mt-16 flex items-center justify-between border-t border-zinc-800/60 pt-6">
-          <p className="text-xs text-zinc-600">© {new Date().getFullYear()} OnTimer</p>
-          <Link href="/feed.xml" className="text-xs text-zinc-700 transition-colors hover:text-zinc-500">
+          <p className="text-xs text-zinc-400">© {new Date().getFullYear()} OnTimer</p>
+          <Link href="/feed.xml" className="text-xs text-zinc-400 transition-colors hover:text-zinc-400">
             RSS
           </Link>
         </div>

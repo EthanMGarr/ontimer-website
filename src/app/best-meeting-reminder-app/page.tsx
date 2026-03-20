@@ -175,10 +175,10 @@ export default function BestMeetingReminderApp() {
                 className="grid grid-cols-3 border-b border-zinc-800 last:border-0"
               >
                 <div className="px-4 py-4 text-sm text-zinc-400">{row.type}</div>
-                <div className={`border-l border-zinc-800 px-4 py-4 text-sm font-medium ${row.verdict === "Hard to miss" ? "text-green-500" : "text-zinc-500"}`}>
+                <div className={`border-l border-zinc-800 px-4 py-4 text-sm font-medium ${row.verdict === "Hard to miss" ? "text-green-500" : "text-zinc-400"}`}>
                   {row.verdict}
                 </div>
-                <div className="border-l border-zinc-800 px-4 py-4 text-sm text-zinc-500">{row.details}</div>
+                <div className="border-l border-zinc-800 px-4 py-4 text-sm text-zinc-400">{row.details}</div>
               </div>
             ))}
           </div>
@@ -281,7 +281,7 @@ export default function BestMeetingReminderApp() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <AppStoreButton size="lg" />
           </div>
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-zinc-400">
             Android coming soon —{" "}
             <Link href="/android" className="text-green-500 hover:text-green-400">
               join the waitlist.

@@ -135,7 +135,7 @@ function SegmentedControl<T extends string>({
 }
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
 
 function defaultArrival() {
   const d = new Date();
@@ -325,7 +325,7 @@ export default function WakeUpCalculator() {
           <div>
             <FieldLabel>
               Extra time for breakfast, packing, or getting out the door{" "}
-              <span className="font-normal text-zinc-500">(optional)</span>
+              <span className="font-normal text-zinc-400">(optional)</span>
             </FieldLabel>
             <PillSelector
               options={[0, 5, 10, 15, 20, 30]}
@@ -339,7 +339,7 @@ export default function WakeUpCalculator() {
             {hasRouteInputs ? (
               <>
                 <FieldLabel>Estimated travel time</FieldLabel>
-                <p className="mb-2 text-xs text-zinc-500">
+                <p className="mb-2 text-xs text-zinc-400">
                   Estimated automatically from your locations. Override if needed.
                 </p>
                 <input
@@ -364,7 +364,7 @@ export default function WakeUpCalculator() {
                   onChange={(e) => setManualTravelMinutes(e.target.value)}
                   className={inputClass}
                 />
-                <p className="mt-1.5 text-xs text-zinc-500">
+                <p className="mt-1.5 text-xs text-zinc-400">
                   Enter a starting location and destination above for an automatic estimate.
                 </p>
               </>
@@ -392,7 +392,7 @@ export default function WakeUpCalculator() {
           {result ? (
             <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-6">
               <div className="border-b border-zinc-700 pb-5">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">
                   Wake up at
                 </p>
                 <p className="text-5xl font-black text-green-500">
@@ -403,13 +403,13 @@ export default function WakeUpCalculator() {
 
               <div className="space-y-3 pt-4">
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-500">Arrive by</p>
+                  <p className="text-xs text-zinc-400">Arrive by</p>
                   <p className="text-sm font-semibold text-white">
                     {fmtTime(result.arrivalTime)}
                   </p>
                 </div>
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-500">Travel time</p>
+                  <p className="text-xs text-zinc-400">Travel time</p>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-white">
                       {result.travelMinutes} min
@@ -422,14 +422,14 @@ export default function WakeUpCalculator() {
                   </div>
                 </div>
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-500">Get ready</p>
+                  <p className="text-xs text-zinc-400">Get ready</p>
                   <p className="text-sm font-semibold text-white">
                     {result.getReadyMinutes} min
                   </p>
                 </div>
                 {result.bufferMinutes > 0 && (
                   <div className="flex items-baseline justify-between">
-                    <p className="text-xs text-zinc-500">Buffer</p>
+                    <p className="text-xs text-zinc-400">Buffer</p>
                     <p className="text-sm font-semibold text-white">
                       {result.bufferMinutes} min
                     </p>
@@ -437,7 +437,7 @@ export default function WakeUpCalculator() {
                 )}
                 {result.extraMinutes > 0 && (
                   <div className="flex items-baseline justify-between">
-                    <p className="text-xs text-zinc-500">Breakfast / packing</p>
+                    <p className="text-xs text-zinc-400">Breakfast / packing</p>
                     <p className="text-sm font-semibold text-white">
                       {result.extraMinutes} min
                     </p>
@@ -445,7 +445,7 @@ export default function WakeUpCalculator() {
                 )}
               </div>
 
-              <p className="mt-4 border-t border-zinc-700 pt-4 text-xs leading-relaxed text-zinc-500">
+              <p className="mt-4 border-t border-zinc-700 pt-4 text-xs leading-relaxed text-zinc-400">
                 To arrive by {fmtTime(result.arrivalTime)} with {result.travelMinutes}{" "}
                 min of travel and {result.getReadyMinutes} min to get ready
                 {result.bufferMinutes > 0
@@ -474,7 +474,7 @@ export default function WakeUpCalculator() {
               <p className="text-base font-semibold text-zinc-300">
                 Your wake-up time will appear here
               </p>
-              <p className="mt-1.5 text-sm text-zinc-500">
+              <p className="mt-1.5 text-sm text-zinc-400">
                 Fill in your destination, arrival time, and routine, then click Calculate.
               </p>
               <ul className="mt-6 w-full max-w-xs space-y-2.5 text-left">
@@ -483,8 +483,8 @@ export default function WakeUpCalculator() {
                   "Accounts for your morning routine",
                   "Exact wake-up time so you are not rushed",
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-xs text-zinc-600">
-                    <span className="mt-0.5 flex-shrink-0 text-zinc-700">•</span>
+                  <li key={item} className="flex items-start gap-2.5 text-xs text-zinc-400">
+                    <span className="mt-0.5 flex-shrink-0 text-zinc-400">•</span>
                     {item}
                   </li>
                 ))}

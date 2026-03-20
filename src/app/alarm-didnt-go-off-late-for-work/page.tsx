@@ -68,7 +68,7 @@ export default function AlarmDidntGoOff() {
             Alarm Didn&apos;t Go Off?{" "}
             <span className="text-green-500">How to Build a Fail-Safe Reminder System</span>
           </h1>
-          <p className="mt-4 text-sm text-zinc-500">By Ethan Garr</p>
+          <p className="mt-4 text-sm text-zinc-400">By Ethan Garr</p>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             People assume their phone alarms and calendar notifications are reliable. But millions of people discover the opposite the moment they miss a meeting, appointment, or work shift.
           </p>
@@ -116,7 +116,7 @@ export default function AlarmDidntGoOff() {
                 </span>
                 <div>
                   <p className="font-semibold text-zinc-200">{item.step}</p>
-                  <p className="mt-1 text-sm text-zinc-500">{item.detail}</p>
+                  <p className="mt-1 text-sm text-zinc-400">{item.detail}</p>
                 </div>
               </li>
             ))}
@@ -239,7 +239,7 @@ export default function AlarmDidntGoOff() {
               </div>
             ))}
           </div>
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-zinc-400">
             Using all three layers reduces the probability of missing a meeting to near zero. Any single layer can fail — but it is unlikely all three fail at once.
           </p>
         </div>
@@ -262,7 +262,7 @@ export default function AlarmDidntGoOff() {
               "A missed notification during focused work doesn't repeat itself",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 text-zinc-400">
-                <span className="mt-1 flex-shrink-0 text-zinc-600">—</span>
+                <span className="mt-1 flex-shrink-0 text-zinc-400">—</span>
                 <span className="text-sm leading-relaxed">{item}</span>
               </li>
             ))}

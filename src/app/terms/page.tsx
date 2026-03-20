@@ -12,7 +12,7 @@ export default function TermsPage() {
         <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
           Terms of Service
         </h1>
-        <p className="mt-3 text-sm text-zinc-500">
+        <p className="mt-3 text-sm text-zinc-400">
           Last updated: January 1, 2025
         </p>
 

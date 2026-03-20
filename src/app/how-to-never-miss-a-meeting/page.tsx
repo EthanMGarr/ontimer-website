@@ -60,7 +60,7 @@ export default function HowToNeverMissAMeeting() {
             How to Never Miss a Meeting Again{" "}
             <span className="text-green-500">(Even If Your Calendar Fails)</span>
           </h1>
-          <p className="mt-4 text-sm text-zinc-500">By Ethan Garr</p>
+          <p className="mt-4 text-sm text-zinc-400">By Ethan Garr</p>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             Even highly organized professionals miss meetings. In most cases the meeting was in the calendar, the reminder was set, and the intention was real — but the reminder system failed at the critical moment.
           </p>
@@ -141,7 +141,7 @@ export default function HowToNeverMissAMeeting() {
               <div key={item.layer} className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
                 <div className="flex items-start justify-between gap-4">
                   <p className="font-bold text-green-500">{item.layer}</p>
-                  <span className="flex-shrink-0 rounded-full border border-zinc-700 px-2.5 py-0.5 text-xs text-zinc-500">
+                  <span className="flex-shrink-0 rounded-full border border-zinc-700 px-2.5 py-0.5 text-xs text-zinc-400">
                     {item.reliability}
                   </span>
                 </div>
@@ -190,7 +190,7 @@ export default function HowToNeverMissAMeeting() {
               >
                 <div className="w-28 flex-shrink-0">
                   <p className="text-sm font-bold text-green-500">{item.time}</p>
-                  <p className="mt-0.5 text-xs text-zinc-600">{item.action}</p>
+                  <p className="mt-0.5 text-xs text-zinc-400">{item.action}</p>
                 </div>
                 <div className="border-l border-zinc-700 pl-4">
                   <p className="text-sm text-zinc-400 leading-relaxed">{item.purpose}</p>
@@ -198,7 +198,7 @@ export default function HowToNeverMissAMeeting() {
               </div>
             ))}
           </div>
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-zinc-400">
             You don&apos;t need all four stages for every meeting. Use the 24-hour and 30-minute alerts for in-person appointments; the 10-minute alert for high-stakes video calls.
           </p>
         </div>
@@ -226,7 +226,7 @@ export default function HowToNeverMissAMeeting() {
           <p className="mt-4 text-zinc-400 leading-relaxed">
             For in-person meetings and appointments, OnTimer also calculates when you need to leave based on your location and live traffic, so your departure alert fires at the right time — not just a fixed number of minutes before the event starts.
           </p>
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-zinc-400">
             Related:{" "}
             <Link
               href="/never-be-late-to-meetings"

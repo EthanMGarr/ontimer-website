@@ -31,7 +31,7 @@ export default function AndroidPage() {
             >
               Join the Android Waitlist
             </a>
-            <p className="mt-3 text-xs text-zinc-500">
+            <p className="mt-3 text-xs text-zinc-400">
               No spam. One email when Android launches.
             </p>
           </div>

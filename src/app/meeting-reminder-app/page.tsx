@@ -131,8 +131,8 @@ export default function MeetingReminderApp() {
                   "Easy to dismiss",
                   "Often missed during focused work",
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-zinc-500">
-                    <span className="mt-0.5 flex-shrink-0 text-zinc-600">—</span>
+                  <li key={item} className="flex items-start gap-2 text-sm text-zinc-400">
+                    <span className="mt-0.5 flex-shrink-0 text-zinc-400">—</span>
                     {item}
                   </li>
                 ))}
@@ -233,7 +233,7 @@ export default function MeetingReminderApp() {
           <div className="mt-8">
             <AppStoreButton size="lg" />
           </div>
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-zinc-400">
             Also read:{" "}
             <Link
               href="/why-calendar-reminders-fail"

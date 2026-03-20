@@ -228,7 +228,7 @@ export default function PlaceAutocomplete({
             >
               <p className="truncate text-sm text-white">{pred.mainText}</p>
               {pred.secondaryText && (
-                <p className="truncate text-xs text-zinc-500">
+                <p className="truncate text-xs text-zinc-400">
                   {pred.secondaryText}
                 </p>
               )}

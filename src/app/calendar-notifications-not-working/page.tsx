@@ -65,7 +65,7 @@ export default function CalendarNotificationsNotWorking() {
             Calendar Notifications Not Working?{" "}
             <span className="text-green-500">8 Fixes That Actually Help</span>
           </h1>
-          <p className="mt-4 text-sm text-zinc-500">By Ethan Garr</p>
+          <p className="mt-4 text-sm text-zinc-400">By Ethan Garr</p>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             Many people assume their calendar reminders are reliable until the moment they miss a meeting or appointment. In reality, calendar notifications can fail for several reasons — most of which have nothing to do with user error.
           </p>
@@ -182,7 +182,7 @@ export default function CalendarNotificationsNotWorking() {
                 </span>
                 <div>
                   <p className="font-semibold text-zinc-200">{item.fix}</p>
-                  <p className="mt-1 text-sm text-zinc-500 leading-relaxed">{item.detail}</p>
+                  <p className="mt-1 text-sm text-zinc-400 leading-relaxed">{item.detail}</p>
                 </div>
               </li>
             ))}
@@ -208,7 +208,7 @@ export default function CalendarNotificationsNotWorking() {
               "Focus mode can be reactivated automatically by time-of-day or location triggers you set up and forgot",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 text-zinc-400">
-                <span className="mt-1 flex-shrink-0 text-zinc-600">—</span>
+                <span className="mt-1 flex-shrink-0 text-zinc-400">—</span>
                 <span className="text-sm leading-relaxed">{item}</span>
               </li>
             ))}
@@ -268,7 +268,7 @@ export default function CalendarNotificationsNotWorking() {
           <p className="mt-4 text-zinc-400 leading-relaxed">
             This is especially useful for professionals with back-to-back schedules, remote workers who can&apos;t rely on office context cues, and anyone who has missed a high-stakes meeting due to a silent notification.
           </p>
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-zinc-400">
             Related:{" "}
             <Link
               href="/never-be-late-to-meetings"

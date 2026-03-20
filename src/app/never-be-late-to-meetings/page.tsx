@@ -174,7 +174,7 @@ export default function NeverBeLateToMeetingsPage() {
             >
               See all features →
             </Link>
-            <span className="text-zinc-600">·</span>
+            <span className="text-zinc-400">·</span>
             <Link
               href="/how-it-works"
               className="text-sm font-semibold text-green-500 hover:text-green-400"
@@ -327,7 +327,7 @@ export default function NeverBeLateToMeetingsPage() {
             <AppStoreButton size="lg" />
             <AndroidWaitlistButton size="lg" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">
+          <p className="mt-3 text-xs text-zinc-400">
             Free download · iOS 16+ · No subscription required
           </p>
         </div>

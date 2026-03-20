@@ -170,7 +170,7 @@ export default function CalendarAlarmApp() {
               ["Competes with other notifications", "Interrupts regardless of focus"],
             ].map(([left, right], i) => (
               <div key={i} className="grid grid-cols-2 border-b border-zinc-800 last:border-0">
-                <div className="px-6 py-4 text-sm text-zinc-500">{left}</div>
+                <div className="px-6 py-4 text-sm text-zinc-400">{left}</div>
                 <div className="border-l border-zinc-800 px-6 py-4 text-sm font-medium text-white">{right}</div>
               </div>
             ))}
@@ -280,7 +280,7 @@ export default function CalendarAlarmApp() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <AppStoreButton size="lg" />
           </div>
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-zinc-400">
             Android coming soon —{" "}
             <Link href="/android" className="text-green-500 hover:text-green-400">
               join the waitlist.

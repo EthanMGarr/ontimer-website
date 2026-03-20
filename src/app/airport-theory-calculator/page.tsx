@@ -175,7 +175,7 @@ export default function AirportTheoryPage() {
                 <div key={stat} className="rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-center">
                   <p className="text-2xl font-black text-white">{stat}</p>
                   <p className="mt-1 text-xs text-zinc-400">{label}</p>
-                  <p className="mt-0.5 text-xs text-zinc-600">{note}</p>
+                  <p className="mt-0.5 text-xs text-zinc-400">{note}</p>
                 </div>
               ))}
             </div>
@@ -220,7 +220,7 @@ export default function AirportTheoryPage() {
               <AppStoreButton size="lg" location="airport_theory_cta" />
               <Link
                 href="/airport-time-to-leave-calculator"
-                className="text-sm text-zinc-500 underline underline-offset-4 hover:text-zinc-300"
+                className="text-sm text-zinc-400 underline underline-offset-4 hover:text-zinc-300"
               >
                 Or use the real airport calculator →
               </Link>

@@ -192,14 +192,14 @@ export default function Home() {
                     Join Android Waitlist
                   </a>
                 </div>
-                <p className="mt-3 text-xs text-zinc-500">
+                <p className="mt-3 text-xs text-zinc-400">
                   Free download • Connect your calendars in seconds
                 </p>
               </div>
 
               {/* Calendar logos */}
               <div className="mt-8">
-                <p className="mb-3 text-xs font-semibold text-zinc-500">
+                <p className="mb-3 text-xs font-semibold text-zinc-400">
                   Works with Google &amp; Microsoft calendars
                 </p>
                 <div className="flex items-center justify-center gap-4 lg:justify-start">
@@ -404,7 +404,7 @@ export default function Home() {
                 key={i}
                 className="grid grid-cols-2 border-b border-zinc-800 last:border-0"
               >
-                <div className="px-6 py-4 text-sm text-zinc-500">
+                <div className="px-6 py-4 text-sm text-zinc-400">
                   {row.left}
                 </div>
                 <div className="border-l border-zinc-800 px-6 py-4 text-sm font-medium text-white">

@@ -99,7 +99,7 @@ export default function WhatTimeShouldILeavePage() {
       {/* ── BREADCRUMBS ── */}
       <nav aria-label="Breadcrumb" className="border-b border-zinc-800/50 bg-zinc-950">
         <div className="mx-auto max-w-3xl px-4 py-2.5 sm:px-6">
-          <ol className="flex items-center gap-1.5 text-xs text-zinc-500">
+          <ol className="flex items-center gap-1.5 text-xs text-zinc-400">
             <li>
               <Link href="/" className="transition-colors hover:text-zinc-300">
                 Home
@@ -130,7 +130,7 @@ export default function WhatTimeShouldILeavePage() {
             Calculate when to leave based on your arrival time, travel time, and extra
             buffer so you can get there on time.
           </p>
-          <p className="mt-3 max-w-xl text-sm text-zinc-500">
+          <p className="mt-3 max-w-xl text-sm text-zinc-400">
             Use this leave-time calculator to determine exactly when you should leave for a meeting, appointment, interview, class, or event based on your arrival time, travel time, and extra buffer.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -142,7 +142,7 @@ export default function WhatTimeShouldILeavePage() {
             </a>
             <Link
               href="/time-to-leave-reminders"
-              className="text-sm text-zinc-500 transition-colors hover:text-zinc-300"
+              className="text-sm text-zinc-400 transition-colors hover:text-zinc-300"
             >
               Want this automated? →
             </Link>

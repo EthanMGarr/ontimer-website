@@ -137,7 +137,7 @@ function SegmentedControl<T extends string>({
 }
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
 
 function defaultArrival() {
   const d = new Date(Date.now() + 2 * 60 * 60 * 1000);
@@ -319,7 +319,7 @@ export default function LeaveTimeCalculator() {
           <div>
             <FieldLabel>
               Extra time for parking, walking in, or check-in{" "}
-              <span className="font-normal text-zinc-500">(optional)</span>
+              <span className="font-normal text-zinc-400">(optional)</span>
             </FieldLabel>
             <PillSelector
               options={[0, 5, 10, 15, 20, 30]}
@@ -333,7 +333,7 @@ export default function LeaveTimeCalculator() {
             {hasRouteInputs ? (
               <>
                 <FieldLabel>Estimated travel time</FieldLabel>
-                <p className="mb-2 text-xs text-zinc-500">
+                <p className="mb-2 text-xs text-zinc-400">
                   Estimated automatically from your locations. Override if needed.
                 </p>
                 <input
@@ -358,7 +358,7 @@ export default function LeaveTimeCalculator() {
                   onChange={(e) => setManualTravelMinutes(e.target.value)}
                   className={inputClass}
                 />
-                <p className="mt-1.5 text-xs text-zinc-500">
+                <p className="mt-1.5 text-xs text-zinc-400">
                   Enter a starting location and destination above for an automatic estimate.
                 </p>
               </>
@@ -386,7 +386,7 @@ export default function LeaveTimeCalculator() {
           {result ? (
             <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-6">
               <div className="border-b border-zinc-700 pb-5">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">
                   Leave by
                 </p>
                 <p className="text-5xl font-black text-green-500">
@@ -397,13 +397,13 @@ export default function LeaveTimeCalculator() {
 
               <div className="space-y-3 pt-4">
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-500">Arrive by</p>
+                  <p className="text-xs text-zinc-400">Arrive by</p>
                   <p className="text-sm font-semibold text-white">
                     {fmtTime(result.arrivalTime)}
                   </p>
                 </div>
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-500">Travel time</p>
+                  <p className="text-xs text-zinc-400">Travel time</p>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-white">
                       {result.travelMinutes} min
@@ -417,7 +417,7 @@ export default function LeaveTimeCalculator() {
                 </div>
                 {result.bufferMinutes > 0 && (
                   <div className="flex items-baseline justify-between">
-                    <p className="text-xs text-zinc-500">Buffer</p>
+                    <p className="text-xs text-zinc-400">Buffer</p>
                     <p className="text-sm font-semibold text-white">
                       {result.bufferMinutes} min
                     </p>
@@ -425,7 +425,7 @@ export default function LeaveTimeCalculator() {
                 )}
                 {result.prepMinutes > 0 && (
                   <div className="flex items-baseline justify-between">
-                    <p className="text-xs text-zinc-500">Parking / check-in</p>
+                    <p className="text-xs text-zinc-400">Parking / check-in</p>
                     <p className="text-sm font-semibold text-white">
                       {result.prepMinutes} min
                     </p>
@@ -433,7 +433,7 @@ export default function LeaveTimeCalculator() {
                 )}
               </div>
 
-              <p className="mt-4 border-t border-zinc-700 pt-4 text-xs leading-relaxed text-zinc-500">
+              <p className="mt-4 border-t border-zinc-700 pt-4 text-xs leading-relaxed text-zinc-400">
                 To arrive by {fmtTime(result.arrivalTime)} with {result.travelMinutes}{" "}
                 min of travel
                 {result.bufferMinutes > 0
@@ -462,7 +462,7 @@ export default function LeaveTimeCalculator() {
               <p className="text-base font-semibold text-zinc-300">
                 Your leave time will appear here
               </p>
-              <p className="mt-1.5 text-sm text-zinc-500">
+              <p className="mt-1.5 text-sm text-zinc-400">
                 Fill in your destination and arrival time, then click Calculate.
               </p>
               <ul className="mt-6 w-full max-w-xs space-y-2.5 text-left">
@@ -471,8 +471,8 @@ export default function LeaveTimeCalculator() {
                   "Accounts for buffer and check-in time",
                   "Exact time to leave so you are not late",
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-xs text-zinc-600">
-                    <span className="mt-0.5 flex-shrink-0 text-zinc-700">•</span>
+                  <li key={item} className="flex items-start gap-2.5 text-xs text-zinc-400">
+                    <span className="mt-0.5 flex-shrink-0 text-zinc-400">•</span>
                     {item}
                   </li>
                 ))}

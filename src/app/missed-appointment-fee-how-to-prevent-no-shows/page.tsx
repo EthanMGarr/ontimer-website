@@ -63,7 +63,7 @@ export default function MissedAppointmentFee() {
             Missed Appointment Fee?{" "}
             <span className="text-green-500">How to Prevent Costly No-Shows</span>
           </h1>
-          <p className="mt-4 text-sm text-zinc-500">By Ethan Garr</p>
+          <p className="mt-4 text-sm text-zinc-400">By Ethan Garr</p>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             Medical offices, therapists, and service providers commonly charge $50–$200 for missed appointments. Often the reason isn&apos;t irresponsibility — it&apos;s a reminder system that failed at the wrong moment.
           </p>
@@ -90,7 +90,7 @@ export default function MissedAppointmentFee() {
               "Consistent reminder systems on the patient side reduce no-shows by over 50% in most studies",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 text-zinc-400">
-                <span className="mt-1 flex-shrink-0 text-zinc-600">—</span>
+                <span className="mt-1 flex-shrink-0 text-zinc-400">—</span>
                 <span className="text-sm leading-relaxed">{item}</span>
               </li>
             ))}
@@ -132,7 +132,7 @@ export default function MissedAppointmentFee() {
                 </span>
                 <div>
                   <p className="font-semibold text-zinc-200">{item.step}</p>
-                  <p className="mt-1 text-sm text-zinc-500">{item.detail}</p>
+                  <p className="mt-1 text-sm text-zinc-400">{item.detail}</p>
                 </div>
               </li>
             ))}
@@ -178,7 +178,7 @@ export default function MissedAppointmentFee() {
               >
                 <div className="flex-shrink-0 text-right">
                   <p className="text-sm font-bold text-green-500">{item.timing}</p>
-                  <p className="mt-0.5 text-xs text-zinc-600">{item.purpose}</p>
+                  <p className="mt-0.5 text-xs text-zinc-400">{item.purpose}</p>
                 </div>
                 <div className="border-l border-zinc-700 pl-4">
                   <p className="text-sm text-zinc-400 leading-relaxed">{item.detail}</p>
@@ -186,7 +186,7 @@ export default function MissedAppointmentFee() {
               </div>
             ))}
           </div>
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-zinc-400">
             Using all four stages reduces the probability of a missed appointment to near zero. Even if one or two alerts are missed, the others act as a failsafe.
           </p>
         </div>
@@ -210,7 +210,7 @@ export default function MissedAppointmentFee() {
               "Most people don't add multiple reminder stages to each appointment",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 text-zinc-400">
-                <span className="mt-1 flex-shrink-0 text-zinc-600">—</span>
+                <span className="mt-1 flex-shrink-0 text-zinc-400">—</span>
                 <span className="text-sm leading-relaxed">{item}</span>
               </li>
             ))}
@@ -218,7 +218,7 @@ export default function MissedAppointmentFee() {
           <p className="mt-6 text-zinc-400 leading-relaxed">
             This is why even organized, responsible people miss appointments. The system isn&apos;t designed to be reliable — it&apos;s designed to be convenient. For important appointments with financial consequences, convenience isn&apos;t enough.
           </p>
-          <p className="mt-4 text-sm text-zinc-500">
+          <p className="mt-4 text-sm text-zinc-400">
             See also:{" "}
             <Link
               href="/never-be-late-to-meetings"
@@ -273,7 +273,7 @@ export default function MissedAppointmentFee() {
             </Link>{" "}
             so they receive alerts that are difficult to miss — especially for medical appointments, job interviews, and financial consultations where a no-show has real consequences.
           </p>
-          <p className="mt-4 text-sm text-zinc-500">
+          <p className="mt-4 text-sm text-zinc-400">
             If you need to know exactly when to leave, try the{" "}
             <Link
               href="/what-time-should-i-leave"

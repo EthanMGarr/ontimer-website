@@ -65,7 +65,7 @@ export default function WhyCalendarRemindersFail() {
             Why Calendar Reminders Fail{" "}
             <span className="text-green-500">(And How to Make Them Reliable)</span>
           </h1>
-          <p className="mt-4 text-sm text-zinc-500">By Ethan Garr</p>
+          <p className="mt-4 text-sm text-zinc-400">By Ethan Garr</p>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             Default calendar reminders were not designed to guarantee you show up on time. They were designed to be convenient — and convenience and reliability are not the same thing.
           </p>
@@ -142,7 +142,7 @@ export default function WhyCalendarRemindersFail() {
               "A reminder set 15 minutes early can be forgotten in the 15 minutes between alert and meeting",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 text-zinc-400">
-                <span className="mt-1 flex-shrink-0 text-zinc-600">—</span>
+                <span className="mt-1 flex-shrink-0 text-zinc-400">—</span>
                 <span className="text-sm leading-relaxed">{item}</span>
               </li>
             ))}
@@ -218,7 +218,7 @@ export default function WhyCalendarRemindersFail() {
             </Link>{" "}
             for how this works.
           </p>
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-zinc-400">
             Also read:{" "}
             <Link
               href="/never-be-late-to-meetings"

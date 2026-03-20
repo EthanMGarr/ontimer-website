@@ -259,7 +259,7 @@ function SegmentedControl<T extends string>({
 }
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
@@ -438,9 +438,9 @@ export default function AirportTheoryCalculator() {
             <FieldLabel>Drive time</FieldLabel>
             {!showManualTravel ? (
               <div>
-                <p className="text-sm text-zinc-500">Estimated from your location and airport.</p>
+                <p className="text-sm text-zinc-400">Estimated from your location and airport.</p>
                 <button type="button" onClick={() => setShowManualTravel(true)}
-                  className="mt-2 text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300">
+                  className="mt-2 text-xs text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-300">
                   Enter manually
                 </button>
               </div>
@@ -451,7 +451,7 @@ export default function AirportTheoryCalculator() {
                   className={inputClass} />
                 <button type="button"
                   onClick={() => { setShowManualTravel(false); setManualTravelMinutes(""); }}
-                  className="mt-2 text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300">
+                  className="mt-2 text-xs text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-300">
                   Use automatic estimate
                 </button>
               </div>
@@ -477,7 +477,7 @@ export default function AirportTheoryCalculator() {
                       selected ? `${cfg.borderClass} ${cfg.bgClass}` : "border-zinc-700 hover:border-zinc-600"
                     }`}>
                     <div className="text-2xl">{cfg.emoji}</div>
-                    <div className={`mt-1 text-xs font-medium leading-tight ${selected ? cfg.accentClass : "text-zinc-500"}`}>
+                    <div className={`mt-1 text-xs font-medium leading-tight ${selected ? cfg.accentClass : "text-zinc-400"}`}>
                       {cfg.label}
                     </div>
                   </button>
@@ -521,8 +521,8 @@ function EmptyState({ level }: { level: typeof LEVELS[Aggression] }) {
       <p className="text-base font-semibold text-zinc-300">
         Your extremely questionable leave time will appear here
       </p>
-      <p className="mt-2 text-sm text-zinc-500">Fill in your flight details and click the button.</p>
-      <p className="mt-4 text-xs italic text-zinc-600">Warning: this is a terrible idea.</p>
+      <p className="mt-2 text-sm text-zinc-400">Fill in your flight details and click the button.</p>
+      <p className="mt-4 text-xs italic text-zinc-400">Warning: this is a terrible idea.</p>
     </div>
   );
 }
@@ -553,22 +553,22 @@ function ResultPanel({ result, onShare, shareStatus }: {
 
       {/* Leave time */}
       <div className={`rounded-xl border ${level.borderClass} ${level.bgClass} p-4`}>
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">
           Leave at (if nothing goes wrong)
         </p>
         <p className={`text-5xl font-black ${level.accentClass}`}>{fmtTime(result.leaveTime)}</p>
         <p className="mt-1 text-sm text-zinc-400">{fmtDate(result.leaveTime)}</p>
-        <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+        <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
           You are attempting airport theory.
         </p>
         <p className={`mt-1.5 text-sm font-semibold ${level.accentClass}`}>
           {level.emoji} {level.label} mode
         </p>
         <div className="mt-1.5 flex items-center gap-2">
-          <span className="text-xs text-zinc-500">Success rate:</span>
+          <span className="text-xs text-zinc-400">Success rate:</span>
           <span className={`text-xs font-bold ${level.accentClass}`}>{level.successRate}</span>
         </div>
-        <p className="mt-0.5 text-xs text-zinc-600">{level.translation}</p>
+        <p className="mt-0.5 text-xs text-zinc-400">{level.translation}</p>
       </div>
 
       {/* Quips */}
@@ -584,7 +584,7 @@ function ResultPanel({ result, onShare, shareStatus }: {
       <div className="rounded-xl border border-zinc-800/60 bg-zinc-900/60 p-4">
         <ul className="space-y-1">
           {(showAllChecks ? allChecks : previewItems).map((item) => (
-            <li key={item} className="flex items-start gap-2 text-xs text-zinc-600">
+            <li key={item} className="flex items-start gap-2 text-xs text-zinc-400">
               <span className="mt-0.5 flex-shrink-0 text-red-600">✕</span>
               {item}
             </li>
@@ -595,7 +595,7 @@ function ResultPanel({ result, onShare, shareStatus }: {
           <button
             type="button"
             onClick={() => setShowAllChecks(true)}
-            className="mt-2 text-xs text-zinc-600 underline underline-offset-2 transition-colors hover:text-zinc-400"
+            className="mt-2 text-xs text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-300"
           >
             + {remainingCount} more things must go perfectly
           </button>
@@ -607,7 +607,7 @@ function ResultPanel({ result, onShare, shareStatus }: {
             <button
               type="button"
               onClick={() => setShowAllChecks(false)}
-              className="mt-2 text-xs text-zinc-600 underline underline-offset-2 transition-colors hover:text-zinc-400"
+              className="mt-2 text-xs text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-300"
             >
               Show less
             </button>
@@ -616,7 +616,7 @@ function ResultPanel({ result, onShare, shareStatus }: {
       </div>
 
       {/* Breakdown — subtle */}
-      <div className="flex justify-between px-1 text-xs text-zinc-700">
+      <div className="flex justify-between px-1 text-xs text-zinc-400">
         <span>Drive: {result.travelMinutes} min</span>
         <span>Airport buffer: {result.bufferMinutes} min</span>
       </div>
@@ -626,7 +626,7 @@ function ResultPanel({ result, onShare, shareStatus }: {
 
       {/* Share */}
       <div className="space-y-2 text-center">
-        <p className="text-xs text-zinc-500">Know someone who would 100% try this?</p>
+        <p className="text-xs text-zinc-400">Know someone who would 100% try this?</p>
         <button type="button" onClick={onShare}
           className="w-full rounded-full border border-zinc-700 py-2.5 text-sm font-medium text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white">
           {shareStatus === "copied" ? "✓ Copied!" : "Send this to them →"}
@@ -647,7 +647,7 @@ function ResultPanel({ result, onShare, shareStatus }: {
 
       {/* App CTA */}
       <div className="pt-1">
-        <p className="mb-3 text-xs text-zinc-600">Or just don&apos;t think about this ever again…</p>
+        <p className="mb-3 text-xs text-zinc-400">Or just don&apos;t think about this ever again…</p>
         <AppStoreButton size="sm" location="airport_theory_result" />
       </div>
 
