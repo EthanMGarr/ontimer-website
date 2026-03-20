@@ -22,7 +22,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
@@ -362,6 +362,7 @@ export default function AirportTheoryCalculator() {
 
     const leaveTime = new Date(departure.getTime() - (bufferMins + travelMinutes) * 60 * 1000);
     setResult({ leaveTime, bufferMinutes: bufferMins, travelMinutes, travelSource, aggression, hasCheckedBag, flightType });
+    setShareStatus("idle");
   }
 
   async function handleShare() {
@@ -534,6 +535,18 @@ function ResultPanel({ result, onShare, shareStatus }: {
   shareStatus: "idle" | "copied";
 }) {
   const level = LEVELS[result.aggression];
+  const [showAllChecks, setShowAllChecks] = useState(false);
+
+  const allChecks = REALITY_CHECKS[result.aggression];
+  const PREVIEW_COUNT = 3;
+
+  // Re-randomize preview items each time a new result is generated
+  const previewItems = useMemo(() => {
+    return [...allChecks].sort(() => Math.random() - 0.5).slice(0, PREVIEW_COUNT);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result]);
+
+  const remainingCount = allChecks.length - PREVIEW_COUNT;
 
   return (
     <div className="space-y-3">
@@ -567,38 +580,49 @@ function ResultPanel({ result, onShare, shareStatus }: {
         ))}
       </div>
 
-      {/* Breakdown */}
-      <div className="space-y-2 rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3">
-        <div className="flex justify-between text-xs">
-          <span className="text-zinc-500">Drive time</span>
-          <span className="font-semibold text-white">{result.travelMinutes} min</span>
-        </div>
-        <div className="flex justify-between text-xs">
-          <span className="text-zinc-500">Airport buffer (theory mode)</span>
-          <span className="font-semibold text-white">{result.bufferMinutes} min</span>
-        </div>
-        {result.hasCheckedBag && result.aggression === 3 && (
-          <p className="pt-1 text-xs text-red-400">⚠️ Checking a bag on maniac mode is not a strategy.</p>
-        )}
-      </div>
-
       {/* Reality check */}
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900/80 p-4">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-400">
-          {REALITY_CHECKS[result.aggression].length} things that must go perfectly
-        </p>
-        <ul className="space-y-1.5">
-          {REALITY_CHECKS[result.aggression].map((item) => (
-            <li key={item} className="flex items-start gap-2 text-xs text-zinc-500">
-              <span className="mt-0.5 flex-shrink-0 text-red-500">✕</span>
+      <div className="rounded-xl border border-zinc-800/60 bg-zinc-900/60 p-4">
+        <ul className="space-y-1">
+          {(showAllChecks ? allChecks : previewItems).map((item) => (
+            <li key={item} className="flex items-start gap-2 text-xs text-zinc-600">
+              <span className="mt-0.5 flex-shrink-0 text-red-600">✕</span>
               {item}
             </li>
           ))}
         </ul>
-        <p className={`mt-4 text-sm font-bold ${level.accentClass}`}>
-          Miss ONE of these… and you miss your flight.
-        </p>
+
+        {!showAllChecks ? (
+          <button
+            type="button"
+            onClick={() => setShowAllChecks(true)}
+            className="mt-2 text-xs text-zinc-600 underline underline-offset-2 transition-colors hover:text-zinc-400"
+          >
+            + {remainingCount} more things must go perfectly
+          </button>
+        ) : (
+          <>
+            <p className={`mt-3 text-xs font-bold ${level.accentClass}`}>
+              Miss ONE of these… and you miss your flight.
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowAllChecks(false)}
+              className="mt-2 text-xs text-zinc-600 underline underline-offset-2 transition-colors hover:text-zinc-400"
+            >
+              Show less
+            </button>
+          </>
+        )}
       </div>
+
+      {/* Breakdown — subtle */}
+      <div className="flex justify-between px-1 text-xs text-zinc-700">
+        <span>Drive: {result.travelMinutes} min</span>
+        <span>Airport buffer: {result.bufferMinutes} min</span>
+      </div>
+      {result.hasCheckedBag && result.aggression === 3 && (
+        <p className="px-1 text-xs text-red-500">⚠️ Checking a bag on maniac mode is not a strategy.</p>
+      )}
 
       {/* Share */}
       <div className="space-y-2 text-center">
