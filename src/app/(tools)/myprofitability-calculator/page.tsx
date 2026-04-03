@@ -72,8 +72,46 @@ const DEFAULT_INPUTS: Inputs = {
 
 // ─── Calculation Logic ────────────────────────────────────────────────────────
 
+// Practice area demand multiplier applied to comp range
+const PRACTICE_MULTIPLIER: Record<string, number> = {
+  "Private Equity":               1.15,
+  "Corporate / M&A":              1.15,
+  "Restructuring / Bankruptcy":   1.08,
+  "Finance / Capital Markets":    1.08,
+  "Intellectual Property":        1.08,
+  "Technology / Data Privacy":    1.04,
+  "Litigation":                   1.0,
+  "Real Estate":                  1.0,
+  "Tax":                          1.0,
+  "Regulatory / Government Affairs": 1.0,
+  "Healthcare":                   0.96,
+  "Employment / Labor":           0.92,
+  "Family / Trusts & Estates":    0.92,
+};
+
+// Geography cost-of-market multiplier applied to comp range
+const GEO_MULTIPLIER: Record<string, number> = {
+  "New York":          1.15,
+  "San Francisco":     1.15,
+  "Washington D.C.":   1.08,
+  "Los Angeles":       1.08,
+  "Boston":            1.08,
+  "Chicago":           1.0,
+  "Houston":           1.0,
+  "Seattle":           1.0,
+  "Dallas":            0.97,
+  "Miami":             0.97,
+  "Atlanta":           0.95,
+  "Denver":            0.95,
+  "Philadelphia":      0.95,
+  "Minneapolis":       0.95,
+  "Other Major Market": 0.95,
+};
+
 function calculate(inputs: Inputs) {
   const {
+    practiceArea,
+    geography,
     rackRate,
     realization,
     billableHours,
@@ -108,6 +146,12 @@ function calculate(inputs: Inputs) {
     compHigh *= 0.92;
   }
   if (originations > 3_000_000) compHigh *= 1.1;
+
+  // Apply practice area and geography multipliers
+  const practiceMult = PRACTICE_MULTIPLIER[practiceArea] ?? 1.0;
+  const geoMult = GEO_MULTIPLIER[geography] ?? 1.0;
+  compLow  *= practiceMult * geoMult;
+  compHigh *= practiceMult * geoMult;
 
   let tier: "Top 10%" | "Above Average" | "Average" | "Below Average";
   if (profitContribution >= 3_000_000) tier = "Top 10%";
