@@ -81,6 +81,8 @@ export default function ReportSpamPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submittedPhone, setSubmittedPhone] = useState("");
+  const [showExactTime, setShowExactTime] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
@@ -106,10 +108,23 @@ export default function ReportSpamPage() {
     setWhenOption(option);
     if (option === "not_sure") {
       setOccurredAt("");
+      setShowExactTime(false);
     } else if (daysAgo !== null) {
       setOccurredAt(dateFromDaysAgo(daysAgo));
     }
   }, []);
+
+  const handleToggleDetails = useCallback(() => {
+    setShowDetails(v => {
+      const opening = !v;
+      // When opening for the first time, pre-select "Today"
+      if (opening && whenOption === null) {
+        setWhenOption("today");
+        setOccurredAt(dateFromDaysAgo(0));
+      }
+      return opening;
+    });
+  }, [whenOption]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,6 +151,7 @@ export default function ReportSpamPage() {
       if (!res.ok) {
         setError(json.error ?? "Something went wrong. Please try again.");
       } else {
+        setSubmittedPhone(phoneNumber.trim());
         setSubmitted(true);
       }
     } catch {
@@ -155,12 +171,19 @@ export default function ReportSpamPage() {
     setCategory(null);
     setError("");
     setSubmitted(false);
+    setSubmittedPhone("");
+    setShowExactTime(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
   }, []);
 
   // ── Success State ────────────────────────────────────────────────────────────
 
   if (submitted) {
+    const phoneDigits = submittedPhone.replace(/\D/g, "");
+    const lookupUrl = phoneDigits
+      ? `https://directory.youmail.com/phone/${phoneDigits}`
+      : "https://www.youmail.com/features/reverse-phone-number-lookup/";
+
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16"
         style={{ background: "linear-gradient(160deg, #eef2fb 0%, #dde8f8 100%)" }}>
@@ -175,23 +198,23 @@ export default function ReportSpamPage() {
             Thank you for helping protect others. Your report has been recorded.
           </p>
           <div className="flex flex-col gap-3">
-            <button
-              onClick={handleReset}
-              className="w-full py-3 px-6 rounded-xl font-semibold text-white transition-all"
+            <a
+              href={lookupUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3.5 px-6 rounded-xl font-semibold text-white transition-all text-center block"
               style={{ background: "#2563eb" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#1d4ed8")}
               onMouseLeave={e => (e.currentTarget.style.background = "#2563eb")}
             >
-              Submit another report
-            </button>
-            <a
-              href="https://www.youmail.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-3 px-6 rounded-xl font-semibold border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all text-center block"
-            >
-              Get free protection from spam calls now
+              See what else we know about this number
             </a>
+            <button
+              onClick={handleReset}
+              className="w-full py-3 px-6 rounded-xl font-semibold border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all"
+            >
+              Report another number
+            </button>
           </div>
         </div>
       </div>
@@ -312,7 +335,7 @@ export default function ReportSpamPage() {
             <div className="mb-6">
               <button
                 type="button"
-                onClick={() => setShowDetails(v => !v)}
+                onClick={handleToggleDetails}
                 className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
               >
                 <svg
@@ -373,12 +396,25 @@ export default function ReportSpamPage() {
                     ))}
                   </div>
                   {whenOption !== "not_sure" && (
-                    <input
-                      type="datetime-local"
-                      value={occurredAt}
-                      onChange={e => { setOccurredAt(e.target.value); setWhenOption(null); }}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-700 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
-                    />
+                    <>
+                      {!showExactTime && (
+                        <button
+                          type="button"
+                          onClick={() => setShowExactTime(true)}
+                          className="text-xs text-blue-500 hover:text-blue-700 transition-colors"
+                        >
+                          Specify exact date and time
+                        </button>
+                      )}
+                      {showExactTime && (
+                        <input
+                          type="datetime-local"
+                          value={occurredAt}
+                          onChange={e => setOccurredAt(e.target.value)}
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-700 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+                        />
+                      )}
+                    </>
                   )}
                 </div>
 
