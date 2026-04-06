@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+// Handle preflight
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+}
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -15,7 +26,7 @@ export async function POST(request: NextRequest) {
     if (!phoneNumber && !file) {
       return NextResponse.json(
         { error: "Please enter a phone number or upload an image" },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
@@ -69,7 +80,7 @@ export async function POST(request: NextRequest) {
       throw insertError;
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true }, { headers: CORS_HEADERS });
   } catch (err: any) {
     console.error("[spam-report] Unexpected error FULL:", err);
 
@@ -81,7 +92,7 @@ export async function POST(request: NextRequest) {
           JSON.stringify(err) ||
           "Unknown error",
       },
-      { status: 500 }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
 }
