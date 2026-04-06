@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const occurredAt = formData.get("occurred_at") as string | null;
     const category = formData.get("category") as string | null;
 
-    // At least one of phone_number or file is required
+    // Require at least phone OR file
     if (!phoneNumber && !file) {
       return NextResponse.json(
         { error: "Please enter a phone number or upload an image" },
@@ -27,22 +27,23 @@ export async function POST(request: NextRequest) {
     if (file && file.size > 0) {
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-      const ext = file.name.split(".").pop() ?? "bin";
-      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("spam-uploads")
-        .upload(fileName, buffer, {
-          contentType: file.type,
-          upsert: false,
-        });
+      const ext = file.name.split(".").pop() ?? "bin";
+      const fileName = `${Date.now()}-${Math.random()
+        .toString(36)
+        .slice(2)}.${ext}`;
+
+      const { data: uploadData, error: uploadError } =
+        await supabase.storage
+          .from("spam-uploads")
+          .upload(fileName, buffer, {
+            contentType: file.type,
+            upsert: false,
+          });
 
       if (uploadError) {
         console.error("[spam-report] Storage upload error:", uploadError);
-        return NextResponse.json(
-          { error: "File upload failed. Please try again." },
-          { status: 500 }
-        );
+        throw uploadError;
       }
 
       const { data: publicUrlData } = supabase.storage
@@ -52,28 +53,34 @@ export async function POST(request: NextRequest) {
       fileUrl = publicUrlData?.publicUrl ?? null;
     }
 
-    // Insert row into spam_reports
-    const { error: insertError } = await supabase.from("spam_reports").insert({
-      phone_number: phoneNumber || null,
-      file_url: fileUrl,
-      encounter_type: encounterType || null,
-      occurred_at: occurredAt || null,
-      category: category || null,
-    });
+    // Insert into DB
+    const { error: insertError } = await supabase
+      .from("spam_reports")
+      .insert({
+        phone_number: phoneNumber,
+        file_url: fileUrl,
+        encounter_type: encounterType,
+        occurred_at: occurredAt,
+        category: category,
+      });
 
     if (insertError) {
-      console.error("[spam-report] DB insert error:", insertError);
-      return NextResponse.json(
-        { error: "Failed to save report. Please try again." },
-        { status: 500 }
-      );
+      console.error("[spam-report] INSERT ERROR:", insertError);
+      throw insertError;
     }
 
     return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error("[spam-report] Unexpected error:", err);
+  } catch (err: any) {
+    console.error("[spam-report] Unexpected error FULL:", err);
+
     return NextResponse.json(
-      { error: "An unexpected error occurred. Please try again." },
+      {
+        error:
+          err?.message ||
+          err?.error_description ||
+          JSON.stringify(err) ||
+          "Unknown error",
+      },
       { status: 500 }
     );
   }
