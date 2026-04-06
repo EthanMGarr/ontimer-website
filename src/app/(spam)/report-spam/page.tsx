@@ -207,10 +207,15 @@ export default function ReportSpamPage() {
     const lookupUrl = phoneDigits
       ? `https://directory.youmail.com/phone/${phoneDigits}`
       : "https://www.youmail.com/features/reverse-phone-number-lookup/";
+    const lookupLabel = phoneDigits
+      ? "See what we know about this number"
+      : "Try reverse phone lookup";
 
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16"
-        style={{ background: "linear-gradient(160deg, #eef2fb 0%, #dde8f8 100%)" }}>
+      <div
+        className="min-h-screen flex flex-col items-center justify-center px-4 py-16"
+        style={{ background: "linear-gradient(160deg, #eef2fb 0%, #dde8f8 100%)" }}
+      >
         <div className="w-full max-w-lg bg-white rounded-3xl shadow-xl p-10 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -231,7 +236,7 @@ export default function ReportSpamPage() {
               onMouseEnter={e => (e.currentTarget.style.background = "#1d4ed8")}
               onMouseLeave={e => (e.currentTarget.style.background = "#2563eb")}
             >
-              See what else we know about this number
+              {lookupLabel}
             </a>
             <button
               onClick={handleReset}
@@ -261,18 +266,26 @@ export default function ReportSpamPage() {
           style={{ background: "linear-gradient(180deg, #dbeafe 0%, #eef2fb 100%)" }}
         >
           <div className="mx-auto max-w-3xl">
-            <span className="inline-block mb-6 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase"
-              style={{ background: "#dbeafe", color: "#1d4ed8" }}>
+            <span
+              className="inline-block mb-6 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase"
+              style={{ background: "#dbeafe", color: "#1d4ed8" }}
+            >
               National Spam Reporting Center
             </span>
-            <h1 className="text-5xl sm:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+            <h1 className="text-5xl sm:text-6xl font-extrabold text-gray-900 leading-tight mb-5">
               Report spam phone<br />numbers in seconds
             </h1>
-            <p className="text-xl text-gray-500 leading-relaxed max-w-xl mx-auto mb-3">
+            <p className="text-lg font-semibold text-blue-600 mb-4">
+              Free. Anonymous. Takes less than 10 seconds.
+            </p>
+            <p className="text-base text-gray-500 leading-relaxed max-w-xl mx-auto mb-4">
               Help protect millions by reporting suspicious calls, texts, and scam numbers
             </p>
-            <p className="text-sm text-gray-400">
-              A telecommunications industry initiative powered by YouMail
+            <p className="text-sm text-gray-500 mb-2">
+              Powered by YouMail, helping protect millions from spam and scam calls.
+            </p>
+            <p className="text-xs text-gray-400">
+              YouMail is a private company. This is not a government website.
             </p>
           </div>
         </section>
@@ -525,34 +538,68 @@ export default function ReportSpamPage() {
           </div>
         </section>
 
-        {/* ── WHY REPORT ── */}
+        {/* ── WHAT HAPPENS AFTER YOU REPORT ── */}
         <section className="px-4 py-20">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">
+              What happens after you report a spam call?
+            </h2>
+            <ul className="space-y-4">
+              {[
+                "Your report helps label suspicious phone numbers",
+                "Reports contribute to spam detection across networks",
+                "Other users can avoid the same scam",
+                "You help improve caller identification systems",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-4 bg-white rounded-xl px-6 py-4 shadow-sm border border-gray-100">
+                  <span className="mt-0.5 w-5 h-5 flex-shrink-0 rounded-full flex items-center justify-center" style={{ background: "#dbeafe" }}>
+                    <svg className="w-3 h-3" fill="none" stroke="#2563eb" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </span>
+                  <span className="text-gray-700 text-sm leading-relaxed">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* ── WHY REPORT HERE ── */}
+        <section className="px-4 py-20" style={{ background: "#f0f4ff" }}>
           <div className="mx-auto max-w-5xl">
-            <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">Why report here</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <h2 className="text-3xl font-bold text-gray-900 text-center mb-4">Why report here</h2>
+            <p className="text-center text-gray-500 text-base mb-12 max-w-xl mx-auto">
+              The fastest way to report a spam call — no account, no friction, part of a large spam intelligence network.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
-                  icon: "👥",
-                  title: "Powered by 13+ million users",
-                  body: "A vast, growing network working together to fight fraud.",
+                  icon: "⚡",
+                  title: "Fastest way to report",
+                  body: "Submit in under 10 seconds.",
                 },
                 {
                   icon: "🔒",
-                  title: "Anonymous reporting",
-                  body: "No account required. Submit in seconds.",
+                  title: "No account required",
+                  body: "Completely anonymous. No personal info needed.",
+                },
+                {
+                  icon: "👥",
+                  title: "Helps protect millions",
+                  body: "Powered by 13+ million users fighting fraud together.",
                 },
                 {
                   icon: "📡",
-                  title: "Strengthens national spam intelligence",
-                  body: "Your report helps improve detection systems.",
+                  title: "Spam intelligence network",
+                  body: "Your report strengthens detection across carriers.",
                 },
               ].map((card) => (
                 <div
                   key={card.title}
-                  className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
                 >
                   <div className="text-3xl mb-4">{card.icon}</div>
-                  <h3 className="text-base font-bold text-gray-900 mb-2">{card.title}</h3>
+                  <h3 className="text-sm font-bold text-gray-900 mb-2">{card.title}</h3>
                   <p className="text-sm text-gray-500 leading-relaxed">{card.body}</p>
                 </div>
               ))}
@@ -560,8 +607,8 @@ export default function ReportSpamPage() {
           </div>
         </section>
 
-        {/* ── HOW IT WORKS ── */}
-        <section className="px-4 py-20" style={{ background: "#f0f4ff" }}>
+        {/* ── HOW YOUR REPORT MAKES A DIFFERENCE ── */}
+        <section className="px-4 py-20">
           <div className="mx-auto max-w-5xl">
             <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
               How your report makes a difference
@@ -599,6 +646,118 @@ export default function ReportSpamPage() {
           </div>
         </section>
 
+        {/* ── NOT SURE WHO CALLED YOU ── */}
+        <section className="px-4 py-20" style={{ background: "#f0f4ff" }}>
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Not sure who called you?</h2>
+            <p className="text-gray-500 text-base mb-8">
+              You can check if a number is spam before or after reporting.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="https://www.youmail.com/features/reverse-phone-number-lookup/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all"
+                style={{ background: "#2563eb" }}
+                onMouseEnter={e => (e.currentTarget.style.background = "#1d4ed8")}
+                onMouseLeave={e => (e.currentTarget.style.background = "#2563eb")}
+              >
+                Reverse phone lookup
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+              <a
+                href="https://directory.youmail.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold border border-gray-300 text-gray-700 hover:bg-white transition-all"
+              >
+                Check who called you
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* ── WHERE ELSE TO REPORT ── */}
+        <section className="px-4 py-20">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-3xl font-bold text-gray-900 text-center mb-4">
+              Where else can you report spam or scam calls?
+            </h2>
+            <p className="text-gray-500 text-base text-center mb-10 max-w-xl mx-auto">
+              For certain types of fraud or telemarketing violations, you may also want to report to official agencies.
+            </p>
+            <div className="space-y-4">
+              {[
+                {
+                  agency: "FTC",
+                  label: "Federal Trade Commission",
+                  desc: "Report fraud and scam calls to the FTC.",
+                  href: "https://reportfraud.ftc.gov/",
+                  cta: "Report to the FTC",
+                },
+                {
+                  agency: "DNC",
+                  label: "National Do Not Call Registry",
+                  desc: "File a complaint about unwanted telemarketing calls.",
+                  href: "https://www.donotcall.gov/",
+                  cta: "File a DNC complaint",
+                },
+                {
+                  agency: "FCC",
+                  label: "Federal Communications Commission",
+                  desc: "Get guidance on reporting robocalls and spam texts.",
+                  href: "https://consumercomplaints.fcc.gov/",
+                  cta: "Report to the FCC",
+                },
+              ].map((item) => (
+                <div key={item.agency} className="bg-white rounded-xl px-6 py-5 border border-gray-100 shadow-sm flex items-center justify-between gap-4 flex-wrap">
+                  <div>
+                    <p className="text-sm font-bold text-gray-900">{item.label}</p>
+                    <p className="text-sm text-gray-500 mt-0.5">{item.desc}</p>
+                  </div>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold text-blue-600 hover:text-blue-800 whitespace-nowrap flex-shrink-0"
+                  >
+                    {item.cta} →
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── ROBOCALL DATA ── */}
+        <section className="px-4 py-20" style={{ background: "#f0f4ff" }}>
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Spam calls are still a major problem
+            </h2>
+            <p className="text-gray-500 text-base leading-relaxed mb-6 max-w-xl mx-auto">
+              Billions of robocalls are made every month. Reporting helps identify and stop them faster.
+            </p>
+            <a
+              href="https://www.youmail.com/robocall-index"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800 transition-colors text-sm"
+            >
+              See the latest Robocall Index
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </section>
+
         {/* ── SOCIAL PROOF ── */}
         <section className="px-4 py-16 text-center">
           <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-8">
@@ -621,7 +780,7 @@ export default function ReportSpamPage() {
             </h2>
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 px-8">
               <FAQItem
-                q="How do I report a spam call?"
+                q="Where do I report spam calls?"
                 a="You can report spam or scam calls using the National Spam Reporting Center. Submissions help strengthen the telecommunications industry's spam intelligence network."
               />
               <FAQItem
@@ -640,16 +799,28 @@ export default function ReportSpamPage() {
                 q="What happens after I submit a report?"
                 a="Your report is added to the national spam intelligence network, helping carriers and technology providers identify and block harmful numbers faster."
               />
+              <FAQItem
+                q="Should I also report to the FTC or FCC?"
+                a="If your call involves fraud, scams, or telemarketing violations, you may also want to report it to official government agencies like the FTC or FCC."
+              />
+              <FAQItem
+                q="Will reporting stop the calls?"
+                a="Reporting helps improve detection and labeling, but additional protection like call blocking apps can further reduce unwanted calls."
+              />
             </div>
           </div>
         </section>
 
-        {/* ── FOOTER ── */}
+        {/* ── PAGE FOOTER ── */}
         <section className="px-4 py-10 text-center border-t border-gray-200">
           <p className="text-sm text-gray-400">
             © {new Date().getFullYear()} National Spam Reporting Center · Powered by{" "}
-            <a href="https://www.youmail.com" target="_blank" rel="noopener noreferrer"
-              className="text-blue-500 hover:underline">
+            <a
+              href="https://www.youmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
               YouMail
             </a>
           </p>
