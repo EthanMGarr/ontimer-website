@@ -275,8 +275,8 @@ export default function ReportSpamPage() {
         >
           <div className="mx-auto max-w-3xl">
             <span
-              className="inline-block mb-6 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase"
-              style={{ background: "#dbeafe", color: "#1d4ed8" }}
+              className="inline-flex items-center mb-6 px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide border border-blue-200"
+              style={{ background: "#eff6ff", color: "#2563eb" }}
             >
               National Spam Reporting Center
             </span>
