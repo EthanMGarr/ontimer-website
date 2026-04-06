@@ -204,12 +204,12 @@ export default function ReportSpamPage() {
 
   if (submitted) {
     const phoneDigits = submittedPhone.replace(/\D/g, "");
-    const lookupUrl = phoneDigits
-      ? `https://directory.youmail.com/phone/${phoneDigits}`
-      : "https://www.youmail.com/features/reverse-phone-number-lookup/";
-    const lookupLabel = phoneDigits
-      ? "See what we know about this number"
-      : "Try reverse phone lookup";
+    const formattedPhone = phoneDigits.length === 10
+      ? `${phoneDigits.slice(0, 3)}-${phoneDigits.slice(3, 6)}-${phoneDigits.slice(6)}`
+      : phoneDigits;
+    const lookupUrl = formattedPhone
+      ? `https://directory.youmail.com/phone/${formattedPhone}`
+      : "https://directory.youmail.com/";
 
     return (
       <div
@@ -222,9 +222,9 @@ export default function ReportSpamPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">Report submitted</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">Thanks for Reporting!</h2>
           <p className="text-gray-500 text-base leading-relaxed mb-8">
-            Thank you for helping protect others. Your report has been recorded.
+            Your report helps us stop spammers &amp; scammers.
           </p>
           <div className="flex flex-col gap-3">
             <a
@@ -236,7 +236,7 @@ export default function ReportSpamPage() {
               onMouseEnter={e => (e.currentTarget.style.background = "#1d4ed8")}
               onMouseLeave={e => (e.currentTarget.style.background = "#2563eb")}
             >
-              {lookupLabel}
+              See what others have reported
             </a>
             <button
               onClick={handleReset}
@@ -244,6 +244,14 @@ export default function ReportSpamPage() {
             >
               Report another number
             </button>
+            <a
+              href="https://www.youmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 px-6 rounded-xl font-semibold border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all text-center block"
+            >
+              Get free spam protection
+            </a>
           </div>
         </div>
       </div>
