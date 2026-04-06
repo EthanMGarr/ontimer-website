@@ -769,7 +769,7 @@ export default function ReportSpamPage() {
         {/* ── SOCIAL PROOF ── */}
         <section className="px-4 py-16 text-center">
           <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-8">
-            We have been featured on
+            YouMail has been featured on
           </p>
           <div className="flex items-center justify-center gap-10 flex-wrap">
             {["Los Angeles Times", "NBC News", "Chicago Tribune"].map((name) => (
