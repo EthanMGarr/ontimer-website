@@ -1,0 +1,465 @@
+<!-- National Spam Reporting Center Widget — paste into WordPress Custom HTML block -->
+<div id="srw-root" style="max-width:680px;margin:0 auto;padding:40px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;"></div>
+
+<style>
+#srw-root *{box-sizing:border-box;}
+#srw-root input[type=radio]{accent-color:#2563eb;}
+#srw-root input[type=datetime-local]{width:100%;padding:12px 16px;border-radius:12px;border:1px solid #e5e7eb;font-size:14px;color:#374151;outline:none;}
+#srw-root input[type=datetime-local]:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.15);}
+</style>
+
+<script>
+(function(){
+  var ROOT = document.getElementById('srw-root');
+  if(!ROOT) return;
+
+  // ── State ─────────────────────────────────────────────────────────────────
+
+  var state = {
+    phoneNumber: '',
+    file: null,
+    showDetails: false,
+    encounterType: null,
+    occurredAt: '',
+    whenOption: null,
+    category: null,
+    showExactTime: false,
+    error: '',
+    loading: false,
+    submitted: false,
+    submittedPhone: ''
+  };
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+
+  function formatPhone(raw){
+    var d = raw.replace(/\D/g,'').slice(0,10);
+    if(d.length<=3) return d;
+    if(d.length<=6) return '('+d.slice(0,3)+') '+d.slice(3);
+    return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);
+  }
+
+  function dateFromDaysAgo(n){
+    var d = new Date();
+    d.setDate(d.getDate()-n);
+    var p = function(x){return String(x).padStart(2,'0');};
+    return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());
+  }
+
+  function el(tag, attrs, children){
+    var e = document.createElement(tag);
+    if(attrs) Object.keys(attrs).forEach(function(k){
+      if(k==='style' && typeof attrs[k]==='object'){
+        Object.assign(e.style, attrs[k]);
+      } else if(k.startsWith('on')){
+        e.addEventListener(k.slice(2).toLowerCase(), attrs[k]);
+      } else {
+        e.setAttribute(k, attrs[k]);
+      }
+    });
+    (children||[]).forEach(function(c){
+      if(c===null||c===undefined) return;
+      e.appendChild(typeof c==='string' ? document.createTextNode(c) : c);
+    });
+    return e;
+  }
+
+  function btn(text, styles, onClick, type){
+    var b = document.createElement('button');
+    b.textContent = text;
+    b.type = type||'button';
+    Object.assign(b.style, {
+      padding:'13px 20px', borderRadius:'12px', fontSize:'15px', fontWeight:'600',
+      cursor:'pointer', border:'none', transition:'opacity .15s', width:'100%',
+    }, styles);
+    b.addEventListener('click', onClick);
+    b.addEventListener('mouseover', function(){ this.style.opacity='.88'; });
+    b.addEventListener('mouseout', function(){ this.style.opacity='1'; });
+    return b;
+  }
+
+  // ── Render ────────────────────────────────────────────────────────────────
+
+  function render(){
+    ROOT.innerHTML = '';
+    ROOT.appendChild(state.submitted ? renderSuccess() : renderForm());
+  }
+
+  // ── SUCCESS ───────────────────────────────────────────────────────────────
+
+  function renderSuccess(){
+    var digits = state.submittedPhone.replace(/\D/g,'');
+    var formatted = digits.length===10
+      ? digits.slice(0,3)+'-'+digits.slice(3,6)+'-'+digits.slice(6)
+      : digits;
+    var lookupUrl = formatted
+      ? 'https://directory.youmail.com/phone/'+formatted
+      : 'https://directory.youmail.com/';
+
+    var wrap = el('div',{style:{textAlign:'center',padding:'32px 0'}});
+
+    var icon = el('div',{style:{
+      width:'64px',height:'64px',borderRadius:'50%',background:'#dcfce7',
+      display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px'
+    }});
+    icon.innerHTML = '<svg width="32" height="32" fill="none" stroke="#16a34a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
+
+    var h2 = el('h2',{style:{fontSize:'22px',fontWeight:'700',color:'#111827',margin:'0 0 8px'}},[
+      'Thanks for Reporting!'
+    ]);
+    var p = el('p',{style:{color:'#6b7280',fontSize:'15px',margin:'0 0 28px'}},[
+      'Your report helps us stop spammers & scammers.'
+    ]);
+
+    var btnWrap = el('div',{style:{display:'flex',flexDirection:'column',gap:'12px'}});
+
+    var a1 = el('a',{
+      href: lookupUrl, target:'_blank', rel:'noopener noreferrer',
+      style:{
+        display:'block',padding:'13px 20px',borderRadius:'12px',fontWeight:'600',
+        fontSize:'15px',color:'#fff',background:'#2563eb',textDecoration:'none',
+        textAlign:'center'
+      }
+    },['See what others have reported']);
+    a1.addEventListener('mouseover', function(){ this.style.background='#1d4ed8'; });
+    a1.addEventListener('mouseout',  function(){ this.style.background='#2563eb'; });
+
+    var b2 = btn('Report another number',{
+      background:'#fff', color:'#374151', border:'1px solid #e5e7eb'
+    }, function(){
+      state = {
+        phoneNumber:'', file:null, showDetails:false, encounterType:null,
+        occurredAt:'', whenOption:null, category:null, showExactTime:false,
+        error:'', loading:false, submitted:false, submittedPhone:''
+      };
+      render();
+    });
+
+    var a3 = el('a',{
+      href:'https://www.youmail.com', target:'_blank', rel:'noopener noreferrer',
+      style:{
+        display:'block',padding:'13px 20px',borderRadius:'12px',fontWeight:'600',
+        fontSize:'15px',color:'#374151',background:'#fff',
+        border:'1px solid #e5e7eb',textDecoration:'none',textAlign:'center'
+      }
+    },['Get free spam protection']);
+    a3.addEventListener('mouseover', function(){ this.style.background='#f9fafb'; });
+    a3.addEventListener('mouseout',  function(){ this.style.background='#fff'; });
+
+    btnWrap.append(a1, b2, a3);
+    wrap.append(icon, h2, p, btnWrap);
+    return wrap;
+  }
+
+  // ── FORM ──────────────────────────────────────────────────────────────────
+
+  function renderForm(){
+    var card = el('div',{style:{
+      background:'#fff',borderRadius:'16px',
+      boxShadow:'0 4px 24px rgba(0,0,0,0.08)',padding:'36px'
+    }});
+
+    // Phone
+    card.appendChild(el('label',{
+      for:'srw-phone',
+      style:{display:'block',fontSize:'14px',fontWeight:'600',color:'#374151',marginBottom:'8px'}
+    },['Enter Phone Number']));
+    var phoneInput = el('input',{
+      id:'srw-phone', type:'tel', placeholder:'(555) 555-5555',
+      value: state.phoneNumber,
+      style:{
+        width:'100%',padding:'12px 16px',borderRadius:'12px',
+        border:'1px solid #e5e7eb',fontSize:'16px',color:'#111827',outline:'none',
+        marginBottom:'20px',display:'block'
+      }
+    });
+    phoneInput.addEventListener('input', function(){
+      state.phoneNumber = formatPhone(this.value);
+      this.value = state.phoneNumber;
+      state.error = '';
+      updateError();
+    });
+    phoneInput.addEventListener('focus', function(){ this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.15)'; });
+    phoneInput.addEventListener('blur',  function(){ this.style.borderColor='#e5e7eb'; this.style.boxShadow='none'; });
+    card.appendChild(phoneInput);
+
+    // OR divider
+    var div = el('div',{style:{display:'flex',alignItems:'center',gap:'16px',marginBottom:'20px'}});
+    div.appendChild(el('div',{style:{flex:'1',height:'1px',background:'#e5e7eb'}}));
+    div.appendChild(el('span',{style:{fontSize:'13px',color:'#9ca3af',fontWeight:'500'}},['OR']));
+    div.appendChild(el('div',{style:{flex:'1',height:'1px',background:'#e5e7eb'}}));
+    card.appendChild(div);
+
+    // File upload
+    card.appendChild(el('label',{
+      style:{display:'block',fontSize:'14px',fontWeight:'600',color:'#374151',marginBottom:'6px'}
+    },['Share an image']));
+    card.appendChild(el('p',{
+      style:{fontSize:'12px',color:'#9ca3af',marginBottom:'10px',marginTop:'0'}
+    },['Upload a JPG, PNG, or PDF showing the number that contacted you (text message, call log, email, etc.)']));
+
+    var fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/jpeg,image/png,application/pdf';
+    fileInput.style.display = 'none';
+    fileInput.id = 'srw-file';
+
+    var uploadBtn = el('button',{
+      type:'button',
+      style:{
+        width:'100%',display:'flex',flexDirection:'column',alignItems:'center',
+        justifyContent:'center',gap:'8px',padding:'24px 16px',borderRadius:'12px',
+        border:'2px dashed #e5e7eb',background:'#fff',cursor:'pointer',
+        marginBottom:'24px',transition:'border-color .15s, background .15s'
+      }
+    });
+    uploadBtn.addEventListener('mouseover', function(){ this.style.borderColor='#93c5fd'; this.style.background='#eff6ff'; });
+    uploadBtn.addEventListener('mouseout',  function(){ this.style.borderColor= state.file ? '#3b82f6' : '#e5e7eb'; this.style.background='#fff'; });
+    uploadBtn.addEventListener('click', function(){ fileInput.click(); });
+
+    function refreshUploadBtn(){
+      uploadBtn.innerHTML = '';
+      if(state.file){
+        uploadBtn.style.borderColor = '#3b82f6';
+        uploadBtn.innerHTML = '<svg width="22" height="22" fill="none" stroke="#3b82f6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>';
+        var nm = el('span',{style:{fontSize:'13px',fontWeight:'600',color:'#2563eb'}},[state.file.name]);
+        var sz = el('span',{style:{fontSize:'12px',color:'#9ca3af'}},[(state.file.size/1024/1024).toFixed(2)+' MB — click to change']);
+        uploadBtn.appendChild(nm);
+        uploadBtn.appendChild(sz);
+      } else {
+        uploadBtn.style.borderColor = '#e5e7eb';
+        uploadBtn.innerHTML = '<svg width="22" height="22" fill="none" stroke="#9ca3af" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg><span style="font-size:13px;color:#6b7280">Click to upload</span><span style="font-size:12px;color:#9ca3af">JPG, PNG, PDF — max 10 MB</span>';
+      }
+    }
+    refreshUploadBtn();
+
+    fileInput.addEventListener('change', function(){
+      var f = this.files[0]||null;
+      if(f && f.size > 10*1024*1024){ state.error='File must be under 10 MB.'; updateError(); return; }
+      state.file = f;
+      state.error = '';
+      updateError();
+      refreshUploadBtn();
+    });
+
+    card.appendChild(uploadBtn);
+    card.appendChild(fileInput);
+
+    // More info toggle
+    var toggleBtn = el('button',{
+      type:'button',
+      style:{
+        display:'flex',alignItems:'center',gap:'6px',fontSize:'14px',fontWeight:'600',
+        color:'#2563eb',background:'none',border:'none',cursor:'pointer',
+        padding:'0',marginBottom:'24px'
+      }
+    });
+    var chevron = el('span',{style:{
+      display:'inline-block',transition:'transform .15s',
+      transform: state.showDetails ? 'rotate(90deg)' : 'rotate(0deg)'
+    }});
+    chevron.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
+    toggleBtn.appendChild(chevron);
+    toggleBtn.appendChild(document.createTextNode('Provide More Info About the Call'));
+    toggleBtn.addEventListener('click', function(){
+      state.showDetails = !state.showDetails;
+      if(state.showDetails && !state.whenOption){
+        state.whenOption = 'today';
+        state.occurredAt = dateFromDaysAgo(0);
+      }
+      render();
+    });
+    card.appendChild(toggleBtn);
+
+    // Expandable details
+    if(state.showDetails){
+      var details = el('div',{style:{marginBottom:'24px',display:'flex',flexDirection:'column',gap:'24px'}});
+
+      // Encounter type
+      var enc = el('div');
+      enc.appendChild(el('p',{style:{fontSize:'14px',fontWeight:'600',color:'#374151',margin:'0 0 12px'}},['How did you encounter this phone number']));
+      [
+        {v:'phone_call',l:'Phone call'},
+        {v:'voicemail',l:'Voicemail'},
+        {v:'text_sms',l:'Text message (SMS)'},
+        {v:'imessage',l:'iMessage'},
+        {v:'rcs',l:'RCS (WhatsApp, Messenger, etc.)'},
+        {v:'email',l:'Email'},
+        {v:'other',l:'Other'}
+      ].forEach(function(opt){
+        var active = state.encounterType===opt.v;
+        var lbl = el('label',{style:{
+          display:'flex',alignItems:'center',gap:'12px',padding:'11px 16px',
+          borderRadius:'12px',cursor:'pointer',marginBottom:'8px',
+          border:'1px solid '+(active?'#3b82f6':'#e5e7eb'),
+          background: active?'#eff6ff':'#fff'
+        }});
+        var radio = document.createElement('input');
+        radio.type='radio'; radio.name='srw_encounter'; radio.value=opt.v;
+        radio.checked = active;
+        radio.style.accentColor='#2563eb';
+        radio.addEventListener('change', function(){ state.encounterType=opt.v; render(); });
+        lbl.appendChild(radio);
+        lbl.appendChild(el('span',{style:{fontSize:'14px',color:'#374151'}},[opt.l]));
+        enc.appendChild(lbl);
+      });
+      details.appendChild(enc);
+
+      // When
+      var when = el('div');
+      when.appendChild(el('p',{style:{fontSize:'14px',fontWeight:'600',color:'#374151',margin:'0 0 12px'}},['When did this happen?']));
+      var whenGrid = el('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px',marginBottom:'12px'}});
+      [
+        {v:'today',l:'Today',d:0},
+        {v:'last_few_days',l:'In the last few days',d:3},
+        {v:'last_week',l:'Last week',d:7},
+        {v:'not_sure',l:'Not sure',d:null}
+      ].forEach(function(opt){
+        var active = state.whenOption===opt.v;
+        var b = el('button',{
+          type:'button',
+          style:{
+            padding:'10px 12px',borderRadius:'12px',fontSize:'14px',fontWeight:'500',
+            border:'1px solid '+(active?'#3b82f6':'#e5e7eb'),
+            background: active?'#eff6ff':'#fff',
+            color: active?'#1d4ed8':'#4b5563', cursor:'pointer'
+          }
+        },[opt.l]);
+        b.addEventListener('click', function(){
+          state.whenOption = opt.v;
+          if(opt.v==='not_sure'){ state.occurredAt=''; state.showExactTime=false; }
+          else if(opt.d!==null){ state.occurredAt=dateFromDaysAgo(opt.d); }
+          render();
+        });
+        whenGrid.appendChild(b);
+      });
+      when.appendChild(whenGrid);
+
+      if(state.whenOption && state.whenOption!=='not_sure'){
+        if(!state.showExactTime){
+          var exactLink = el('button',{
+            type:'button',
+            style:{fontSize:'12px',color:'#3b82f6',background:'none',border:'none',cursor:'pointer',padding:'0'}
+          },['Specify exact date and time']);
+          exactLink.addEventListener('click', function(){ state.showExactTime=true; render(); });
+          when.appendChild(exactLink);
+        } else {
+          var dtInput = document.createElement('input');
+          dtInput.type='datetime-local';
+          dtInput.value=state.occurredAt;
+          dtInput.addEventListener('change', function(){ state.occurredAt=this.value; });
+          when.appendChild(dtInput);
+        }
+      }
+      details.appendChild(when);
+
+      // Category
+      var cat = el('div');
+      cat.appendChild(el('p',{style:{fontSize:'14px',fontWeight:'600',color:'#374151',margin:'0 0 12px'}},['Tell us about the call']));
+      [
+        {v:'spam_marketing',l:'It was a spam or marketing call'},
+        {v:'scam',l:'Scam attempt'},
+        {v:'threat_harassment',l:'Threat or harassment'},
+        {v:'unsure',l:'Unsure'}
+      ].forEach(function(opt){
+        var active = state.category===opt.v;
+        var lbl = el('label',{style:{
+          display:'flex',alignItems:'center',gap:'12px',padding:'11px 16px',
+          borderRadius:'12px',cursor:'pointer',marginBottom:'8px',
+          border:'1px solid '+(active?'#3b82f6':'#e5e7eb'),
+          background: active?'#eff6ff':'#fff'
+        }});
+        var radio = document.createElement('input');
+        radio.type='radio'; radio.name='srw_category'; radio.value=opt.v;
+        radio.checked=active;
+        radio.style.accentColor='#2563eb';
+        radio.addEventListener('change', function(){ state.category=opt.v; render(); });
+        lbl.appendChild(radio);
+        lbl.appendChild(el('span',{style:{fontSize:'14px',color:'#374151'}},[opt.l]));
+        cat.appendChild(lbl);
+      });
+      details.appendChild(cat);
+      card.appendChild(details);
+    }
+
+    // Divider
+    card.appendChild(el('div',{style:{height:'1px',background:'#f3f4f6',margin:'0 0 20px'}}));
+
+    // Error
+    var errorDiv = el('div',{
+      id:'srw-error',
+      style:{
+        display: state.error?'block':'none',
+        marginBottom:'16px',padding:'12px 16px',borderRadius:'12px',
+        border:'1px solid #fecaca',background:'#fef2f2',fontSize:'14px',color:'#dc2626'
+      }
+    },[state.error||'']);
+    card.appendChild(errorDiv);
+
+    // Helper text
+    card.appendChild(el('p',{style:{fontSize:'12px',textAlign:'center',color:'#9ca3af',margin:'0 0 14px'}},['No account required. Reporting takes seconds.']));
+
+    // Submit button
+    var submitBtn = el('button',{
+      type:'button',
+      style:{
+        width:'100%',padding:'16px 24px',borderRadius:'12px',fontWeight:'700',
+        fontSize:'16px',color:'#fff',background:'#2563eb',border:'none',cursor:'pointer',
+        transition:'background .15s'
+      }
+    },[state.loading ? 'Submitting…' : 'Submit Spam Report']);
+    submitBtn.disabled = state.loading;
+    submitBtn.addEventListener('mouseover', function(){ if(!state.loading) this.style.background='#1d4ed8'; });
+    submitBtn.addEventListener('mouseout',  function(){ if(!state.loading) this.style.background='#2563eb'; });
+    submitBtn.addEventListener('click', function(){ handleSubmit(); });
+    card.appendChild(submitBtn);
+
+    card.appendChild(el('p',{style:{fontSize:'12px',textAlign:'center',color:'#9ca3af',margin:'16px 0 0'}},['🔒 Your report is confidential and protected']));
+
+    return card;
+  }
+
+  function updateError(){
+    var e = document.getElementById('srw-error');
+    if(!e) return;
+    e.style.display = state.error ? 'block' : 'none';
+    e.textContent = state.error;
+  }
+
+  // ── Submit ────────────────────────────────────────────────────────────────
+
+  function handleSubmit(){
+    if(!state.phoneNumber.trim() && !state.file){
+      state.error = 'Please enter a phone number or upload an image.';
+      updateError();
+      return;
+    }
+    state.loading = true;
+    state.error = '';
+    render();
+
+    var body = new FormData();
+    if(state.phoneNumber.trim()) body.append('phone_number', state.phoneNumber.trim());
+    if(state.file) body.append('file', state.file);
+    if(state.encounterType) body.append('encounter_type', state.encounterType);
+    if(state.occurredAt && state.whenOption!=='not_sure') body.append('occurred_at', state.occurredAt);
+    if(state.category) body.append('category', state.category);
+
+    fetch('https://www.ontimer.app/api/spam-report', { method:'POST', body:body })
+      .then(function(res){ return res.json().then(function(j){ return {ok:res.ok,json:j}; }); })
+      .then(function(r){
+        if(!r.ok){ state.loading=false; state.error=r.json.error||'Something went wrong. Please try again.'; render(); }
+        else { state.submittedPhone=state.phoneNumber; state.loading=false; state.submitted=true; render(); }
+      })
+      .catch(function(){
+        state.loading=false;
+        state.error='Network error. Please check your connection and try again.';
+        render();
+      });
+  }
+
+  // ── Boot ──────────────────────────────────────────────────────────────────
+
+  render();
+})();
+</script>
