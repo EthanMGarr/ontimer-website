@@ -28,8 +28,47 @@ interface GuideEntry {
   date?: string;
 }
 
-const guides: GuideEntry[] = [
-  // ── New articles (dated, newest first) ──────────────────────────────────
+// ── Section 1: Running Late or Missed a Meeting ──────────────────────────────
+const urgentGuides: GuideEntry[] = [
+  {
+    href: "/running-late-to-meeting",
+    title: "Running Late to a Meeting? Here's Exactly What to Do (and What Not to Say)",
+    description:
+      "You're late right now. Here's exactly what to say — and what not to say — to handle it professionally.",
+    date: "2026-04-20",
+  },
+  {
+    href: "/missed-meeting-what-to-say",
+    title: "Missed a Meeting? What to Say (Email + Slack Templates)",
+    description:
+      "Copy-paste apology messages for email and Slack — and how to decide when to reschedule vs recover.",
+    date: "2026-04-21",
+  },
+  {
+    href: "/slept-through-meeting-what-to-do",
+    title: "Slept Through a Meeting? Here's What to Do Next",
+    description:
+      "Don't panic. Here's exactly what to say and how to recover professionally when you oversleep a meeting.",
+    date: "2026-04-22",
+  },
+  {
+    href: "/join-meeting-late-etiquette",
+    title: "Joining a Meeting Late? Etiquette Rules No One Tells You",
+    description:
+      "What to do with your camera, mic, and apology when you join a meeting already in progress.",
+    date: "2026-04-23",
+  },
+  {
+    href: "/how-late-is-too-late-meeting",
+    title: "How Late Is Too Late to Join a Meeting?",
+    description:
+      "2 minutes? Fine. 10 minutes? Maybe not. Here's exactly when you should join, skip, or reschedule.",
+    date: "2026-04-24",
+  },
+];
+
+// ── Section 2: Never Be Late Again ───────────────────────────────────────────
+const systemGuides: GuideEntry[] = [
   {
     href: "/what-to-say-when-late-to-meeting",
     title: "What to Say When You're Late to a Meeting (Exact Scripts)",
@@ -41,45 +80,9 @@ const guides: GuideEntry[] = [
     href: "/why-am-i-always-late-to-meetings",
     title: "Why Am I Always Late to Meetings? (And How to Fix It)",
     description:
-      "Understand the behavioral and system causes of chronic lateness — and build a setup that fixes it for good.",
+      "If you're always late, it's not a discipline problem. Here's what's actually going wrong — and how to fix it.",
     date: "2026-04-25",
   },
-  {
-    href: "/how-late-is-too-late-meeting",
-    title: "How Late Is Too Late to Join a Meeting?",
-    description:
-      "Use these time thresholds to decide whether to join late, skip entirely, or reschedule — based on context.",
-    date: "2026-04-24",
-  },
-  {
-    href: "/join-meeting-late-etiquette",
-    title: "Joining a Meeting Late? Etiquette Rules No One Tells You",
-    description:
-      "What to do with your camera, mic, and apology when you join a meeting already in progress.",
-    date: "2026-04-23",
-  },
-  {
-    href: "/slept-through-meeting-what-to-do",
-    title: "Slept Through a Meeting? Here's What to Do Next",
-    description:
-      "Don't panic. Here's exactly what to say and how to recover professionally when you oversleep a meeting.",
-    date: "2026-04-22",
-  },
-  {
-    href: "/missed-meeting-what-to-say",
-    title: "Missed a Meeting? What to Say (Email + Slack Templates)",
-    description:
-      "Copy-paste apology messages for email and Slack — and how to decide when to reschedule vs recover.",
-    date: "2026-04-21",
-  },
-  {
-    href: "/running-late-to-meeting",
-    title: "Running Late to a Meeting? Here's Exactly What to Do (and What Not to Say)",
-    description:
-      "Running late to a meeting? Use exact messages, simple rules, and learn how to handle it professionally — and prevent it from happening again.",
-    date: "2026-04-20",
-  },
-  // ── Existing articles ────────────────────────────────────────────────────
   {
     href: "/alarm-didnt-go-off-late-for-work",
     title: "Alarm Didn't Go Off? How to Build a Fail-Safe Meeting Reminder System",
@@ -122,12 +125,36 @@ const guides: GuideEntry[] = [
   },
 ];
 
+function GuideCard({ href, title, description, date }: GuideEntry) {
+  return (
+    <article className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition-colors hover:border-green-500/40">
+      {date && (
+        <time className="text-xs font-semibold uppercase tracking-widest text-green-500">
+          {formatDate(date)}
+        </time>
+      )}
+      <h3
+        className={`${date ? "mt-2" : ""} text-lg font-bold text-white transition-colors group-hover:text-green-400`}
+      >
+        <Link href={href}>{title}</Link>
+      </h3>
+      <p className="mt-2 text-sm leading-relaxed text-zinc-400">{description}</p>
+      <Link
+        href={href}
+        className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-green-500 transition-colors hover:text-green-400"
+      >
+        Read more →
+      </Link>
+    </article>
+  );
+}
+
 export default function BlogPage() {
   const posts = getSortedPosts();
 
   return (
     <>
-      {/* Hero */}
+      {/* ── Hero ── */}
       <section className="border-b border-zinc-800 py-20 text-center">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl">
@@ -136,50 +163,55 @@ export default function BlogPage() {
           <p className="mt-5 text-lg text-zinc-400">
             Guides and tools to help you never miss meetings, appointments, or important events.
           </p>
+          <p className="mt-3 text-base text-zinc-500">
+            Running late? Missed a meeting?{" "}
+            <span className="text-zinc-400">
+              These guides show you exactly what to say — and how to make sure it never happens again.
+            </span>
+          </p>
         </div>
       </section>
 
-      {/* Guides */}
+      {/* ── Section 1: Running Late or Missed a Meeting ── */}
       <section className="border-b border-zinc-800 py-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="mb-8 text-2xl font-black text-white">Guides</h2>
-          <div className="space-y-6">
-            {guides.map(({ href, title, description, date }) => (
-              <article
-                key={href}
-                className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition-colors hover:border-green-500/40"
-              >
-                {date && (
-                  <time className="text-xs font-semibold uppercase tracking-widest text-green-500">
-                    {formatDate(date)}
-                  </time>
-                )}
-                <h3
-                  className={`${date ? "mt-2" : ""} text-lg font-bold text-white transition-colors group-hover:text-green-400`}
-                >
-                  <Link href={href}>{title}</Link>
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-zinc-400">{description}</p>
-                <Link
-                  href={href}
-                  className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-green-500 transition-colors hover:text-green-400"
-                >
-                  Read more →
-                </Link>
-              </article>
+          <h2 className="mb-8 text-2xl font-black text-white">
+            Running Late or Missed a Meeting?
+          </h2>
+          <div className="space-y-4">
+            {urgentGuides.map((guide, index) => {
+              if (index === 0) {
+                return (
+                  <div key={guide.href}>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-green-500">
+                      Start Here
+                    </p>
+                    <GuideCard {...guide} />
+                  </div>
+                );
+              }
+              return <GuideCard key={guide.href} {...guide} />;
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Section 2: Never Be Late Again ── */}
+      <section className="border-b border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-8 text-2xl font-black text-white">Never Be Late Again</h2>
+          <div className="space-y-4">
+            {systemGuides.map((guide) => (
+              <GuideCard key={guide.href} {...guide} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Posts */}
-      <section className="py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          {posts.length === 0 ? (
-            <p className="text-center text-zinc-400">
-              No posts yet. Check back soon.
-            </p>
-          ) : (
+      {/* ── Markdown Posts ── */}
+      {posts.length > 0 && (
+        <section className="py-16">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6">
             <div className="space-y-8">
               {posts.map((post) => (
                 <article
@@ -192,9 +224,7 @@ export default function BlogPage() {
                   <h2 className="mt-3 text-2xl font-black text-white transition-colors group-hover:text-green-400">
                     <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                   </h2>
-                  <p className="mt-3 leading-relaxed text-zinc-400">
-                    {post.description}
-                  </p>
+                  <p className="mt-3 leading-relaxed text-zinc-400">{post.description}</p>
                   <Link
                     href={`/blog/${post.slug}`}
                     className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-green-500 transition-colors hover:text-green-400"
@@ -204,9 +234,9 @@ export default function BlogPage() {
                 </article>
               ))}
             </div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
     </>
   );
 }
