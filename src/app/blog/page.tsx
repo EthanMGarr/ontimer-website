@@ -31,6 +31,13 @@ interface GuideEntry {
 const guides: GuideEntry[] = [
   // ── New articles (dated, newest first) ──────────────────────────────────
   {
+    href: "/what-to-say-when-late-to-meeting",
+    title: "What to Say When You're Late to a Meeting (Exact Scripts)",
+    description:
+      "Exact scripts for what to say when you're late to a meeting — by chat, text, or out loud. Templates for every scenario plus a decision framework.",
+    date: "2026-04-26",
+  },
+  {
     href: "/why-am-i-always-late-to-meetings",
     title: "Why Am I Always Late to Meetings? (And How to Fix It)",
     description:
