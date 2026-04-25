@@ -6,31 +6,100 @@ import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
 export const metadata: Metadata = {
   title: "How to Never Be Late to Meetings Again | OnTimer",
   description:
-    "Stop missing meetings. Learn why calendar reminders fail and how automatic alarms before events ensure you're never late again.",
+    "Most people know when their meetings are but still run late. Here's why — the last 5 minutes problem, virtual meeting traps, and how to fix it for good.",
 };
 
-const faqs = [
-  {
-    q: "Does OnTimer replace my calendar?",
-    a: "No. OnTimer reads your existing calendar — it doesn't replace it. You keep scheduling events the same way you always have. OnTimer just makes sure an alarm fires before each one.",
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "How to Never Be Late to Meetings Again",
+  description:
+    "Most people know when their meetings are but still run late. The problem is the gap between knowing and leaving. Here's why it happens and how to close it.",
+  datePublished: "2025-01-01",
+  dateModified: "2026-04-20",
+  author: { "@type": "Organization", name: "OnTimer" },
+  publisher: {
+    "@type": "Organization",
+    name: "OnTimer",
+    url: "https://www.ontimer.app",
   },
-  {
-    q: "Does it work with Google Calendar?",
-    a: "Yes. OnTimer works with any calendar that syncs to your iPhone's native Calendar app, including Google Calendar, iCloud, Outlook, and Exchange. If it shows up in your iPhone Calendar, OnTimer can use it.",
-  },
-  {
-    q: "Is the app free?",
-    a: "Yes. OnTimer is free to download with no subscription required. The core alarm functionality — calendar sync, automatic alarms, and smart alerts — is fully available at no cost.",
-  },
-  {
-    q: "Can I customize the alarm timing?",
-    a: "Yes. You choose how much lead time you want before events — 15 minutes, 30 minutes, an hour, or more. You can also set different lead times for different types of events, and mute alarms for individual events you don't need them for.",
-  },
-];
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Why do I keep being late to meetings even though I know about them?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Knowing about a meeting and actually stopping to leave are two different cognitive steps. Calendar notifications inform you — they don't interrupt you. The gap between a reminder and the moment you need to leave is where lateness happens. The fix is a departure-time alarm, not a meeting-start reminder.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What is the last 5 minutes problem?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "The last 5 minutes problem is the tendency to underestimate how long it takes to wrap up a current task and transition to a meeting. You're focused on something, the reminder fires, you think 'just one more minute' — and then you're late. The fix is building a transition buffer into your alarm timing.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Why do I miss Zoom meetings even when I'm at my desk?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Virtual meetings are deceptive because there's no commute forcing a transition. You assume you can join 'in just a minute' and stay in your current task too long. A strong alarm that fires 10–15 minutes before creates the transition signal that the lack of commute removes.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How does ADHD time blindness affect meeting punctuality?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Time blindness — common with ADHD — makes it genuinely difficult to feel how much time has passed. A reminder that fires and disappears isn't enough to interrupt hyperfocus. Loud, persistent alarms that don't go away until acknowledged are significantly more effective.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Does OnTimer replace my calendar?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "No. OnTimer reads your existing calendar — it doesn't replace it. You keep scheduling events the same way you always have. OnTimer just makes sure an alarm fires before each one.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is OnTimer free?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. OnTimer is free to download. The core alarm functionality — calendar sync, automatic alarms, and persistent alerts — is fully available at no cost. Time To Leave alerts (departure-time alerts based on travel time) are a paid feature.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can I customize the alarm timing?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. You choose how much lead time you want before events — 15 minutes, 30 minutes, an hour, or more. You can also mute alarms for individual events you don't need them for.",
+      },
+    },
+  ],
+};
 
 export default function NeverBeLateToMeetingsPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
       {/* Hero */}
       <section className="border-b border-zinc-800 py-16 md:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
@@ -41,42 +110,72 @@ export default function NeverBeLateToMeetingsPage() {
           <p className="mt-5 text-lg leading-relaxed text-zinc-400">
             Most people know when their meetings are. They still run late. The
             problem isn&apos;t your calendar — it&apos;s the gap between knowing
-            a meeting is coming and actually leaving in time to make it. This
-            page explains why that gap exists and how to close it for good.
+            a meeting is coming and actually leaving in time to make it.
           </p>
         </div>
       </section>
 
-      {/* Body content */}
       <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
 
-        {/* Section 1: Why reminders don't work */}
+        {/* Direct Answer */}
+        <section className="mb-14 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-green-500">
+            Direct Answer
+          </p>
+          <p className="text-zinc-200 leading-relaxed">
+            To never be late to meetings: set your alarm for when you need to{" "}
+            <strong className="text-white">leave</strong>, not when the meeting
+            starts. Add a 15–20 minute buffer, make the alert impossible to
+            ignore, and automate it so you never have to remember to set it. The
+            single biggest change is shifting from &quot;meeting starts at
+            2:00&quot; to &quot;I need to leave at 1:30.&quot;
+          </p>
+        </section>
+
+        {/* Section 1: Why people are late */}
         <section className="mb-14">
           <h2 className="mb-4 text-2xl font-black tracking-tight text-white sm:text-3xl">
-            Why Calendar Reminders Don&apos;t Work
+            Why People Are Actually Late to Meetings
           </h2>
+          <p className="mb-4 text-zinc-400 leading-relaxed">
+            Being late to meetings is rarely about not knowing the schedule. It
+            happens for predictable, structural reasons:
+          </p>
+          <ul className="mb-6 space-y-2">
+            {[
+              "Underestimating how long it takes to wrap up the current task",
+              "Relying on a single quiet notification that disappears",
+              "Having back-to-back meetings with no transition buffer",
+              "Underestimating travel time or forgetting logistics",
+              "Time blindness — genuinely not sensing how quickly time is passing",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-3 text-zinc-400">
+                <span className="mt-1 flex-shrink-0 text-green-500">•</span>
+                {item}
+              </li>
+            ))}
+          </ul>
           <div className="space-y-4 text-zinc-400 leading-relaxed">
             <p>
+              The deepest issue is the{" "}
+              <strong className="text-white">last 5 minutes problem</strong>:
+              you&apos;re focused on something, a reminder fires, you think
+              &quot;just one more minute&quot; — and then you&apos;re late. The
+              reminder was informative. It wasn&apos;t imperative enough to
+              actually interrupt you.
+            </p>
+            <p>
               Calendar apps send reminders as notifications — a banner that
-              slides in, sits there for a few seconds, and disappears. You might
-              glance at it and think <em className="text-zinc-300">&quot;got it, meeting in 30 minutes&quot;</em> and
-              then keep doing what you were doing. Thirty minutes later,
-              you&apos;re still at your desk when you should already be
-              walking out the door.
-            </p>
-            <p>
-              The problem is that reminders are <strong className="text-white">informative</strong>, not{" "}
-              <strong className="text-white">imperative</strong>. They tell you something is coming. They
-              don&apos;t actually interrupt what you&apos;re doing or create the
-              urgency to stop and leave. They&apos;re easy to dismiss with one
-              tap and just as easy to mentally file away and forget.
-            </p>
-            <p>
-              There&apos;s also a timing problem. Most people set reminders for
-              when a meeting <em className="text-zinc-300">starts</em>, not for when they need to{" "}
-              <em className="text-zinc-300">leave</em>. A 2:00 PM meeting reminder at 2:00 PM doesn&apos;t help
-              you — you needed to leave at 1:45. By the time the reminder fires,
-              you&apos;re already running behind.
+              slides in and disappears. They&apos;re easy to swipe away and just
+              as easy to mentally file away and forget.{" "}
+              <Link
+                href="/why-calendar-reminders-fail"
+                className="text-green-500 hover:text-green-400"
+              >
+                Why calendar reminders fail
+              </Link>{" "}
+              comes down to this: they tell you something is coming. They
+              don&apos;t actually stop you from doing what you&apos;re doing.
             </p>
           </div>
         </section>
@@ -84,7 +183,7 @@ export default function NeverBeLateToMeetingsPage() {
         {/* Section 2: What actually works */}
         <section className="mb-14">
           <h2 className="mb-4 text-2xl font-black tracking-tight text-white sm:text-3xl">
-            What Actually Works: Alarms Before Meetings
+            What Actually Works: Alarms, Not Reminders
           </h2>
           <div className="space-y-4 text-zinc-400 leading-relaxed">
             <p>
@@ -92,37 +191,72 @@ export default function NeverBeLateToMeetingsPage() {
               You use an alarm — because alarms are loud, persistent, and hard
               to ignore. The same logic applies to meetings.
             </p>
-            <p>
-              An alarm that fires 20 or 30 minutes before a meeting, timed to
-              when you actually need to start wrapping up and heading out, is
-              fundamentally different from a notification you can swipe away.
-              It creates a clear signal: <strong className="text-white">stop what you&apos;re doing.
-              It&apos;s time to go.</strong>
-            </p>
-            <p>
-              The key shift is planning around <strong className="text-white">departure time</strong>, not
-              meeting start time. Your alarm should fire when you need to leave
-              — accounting for travel, parking, getting settled — not at the
-              moment the meeting begins. Once you make that shift, the constant
-              low-level anxiety of &quot;wait, when do I need to leave?&quot;
-              disappears.
-            </p>
+            <p>A better system requires:</p>
           </div>
+          <ul className="my-4 space-y-2">
+            {[
+              "More than one reminder — at least a 30-min and a 5-min alert",
+              "Stronger transition cues that actually interrupt what you're doing",
+              "Enough buffer before the meeting to wrap up and get ready",
+              "A leave-time signal for in-person events — accounting for travel",
+              "An alarm that stays loud until you acknowledge it",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-3 text-zinc-400">
+                <span className="mt-1 flex-shrink-0 text-green-500">✓</span>
+                {item}
+              </li>
+            ))}
+          </ul>
 
           <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900 p-5 text-sm text-zinc-400">
             <p className="font-semibold text-white">The departure-first rule:</p>
             <p className="mt-1">
               Instead of &quot;my meeting is at 2:00 PM,&quot; think &quot;I
-              need to leave at 1:30 PM.&quot; Set your alarm for 1:30. That&apos;s
-              the only time that matters.
+              need to leave at 1:30 PM.&quot; Set your alarm for 1:30.
+              That&apos;s the only time that matters. For virtual meetings,
+              &quot;leave at 1:55&quot; means &quot;close this tab, find the
+              Zoom link, and have water.&quot;
             </p>
           </div>
         </section>
 
-        {/* Section 3: How OnTimer solves this */}
+        {/* Section 3: Virtual meetings */}
         <section className="mb-14">
           <h2 className="mb-4 text-2xl font-black tracking-tight text-white sm:text-3xl">
-            How OnTimer Solves This
+            Why Zoom, Google Meet, and Teams Calls Are Especially Easy to Miss
+          </h2>
+          <div className="space-y-4 text-zinc-400 leading-relaxed">
+            <p>
+              Virtual meetings are deceptive. There&apos;s no commute to force a
+              transition. People assume they can join &quot;in just a minute,&quot;
+              stay in the current task too long, and then scramble for the link
+              while the call has already started.
+            </p>
+            <p>
+              The lack of a physical departure is exactly what makes virtual
+              meetings easier to miss — not harder. Without the friction of
+              &quot;I need to get in the car,&quot; there&apos;s no built-in cue
+              to stop what you&apos;re doing. Standard calendar notifications are{" "}
+              <Link
+                href="/calendar-notifications-not-working"
+                className="text-green-500 hover:text-green-400"
+              >
+                not enough to create that cue
+              </Link>
+              .
+            </p>
+            <p>
+              The fix is a strong pre-meeting alarm that fires 10–15 minutes
+              before every call — enough time to finish the sentence you&apos;re
+              writing, find the link, and join composed.
+            </p>
+          </div>
+        </section>
+
+        {/* Section 4: How OnTimer solves this */}
+        <section className="mb-14">
+          <h2 className="mb-4 text-2xl font-black tracking-tight text-white sm:text-3xl">
+            How OnTimer Automates This
           </h2>
           <p className="mb-6 text-zinc-400 leading-relaxed">
             Setting manual departure alarms for every meeting is better than
@@ -174,7 +308,7 @@ export default function NeverBeLateToMeetingsPage() {
             >
               See all features →
             </Link>
-            <span className="text-zinc-400">·</span>
+            <span className="text-zinc-600">·</span>
             <Link
               href="/how-it-works"
               className="text-sm font-semibold text-green-500 hover:text-green-400"
@@ -184,7 +318,7 @@ export default function NeverBeLateToMeetingsPage() {
           </div>
         </section>
 
-        {/* Section 4: Use cases */}
+        {/* Section 5: Who this helps most */}
         <section className="mb-14">
           <h2 className="mb-4 text-2xl font-black tracking-tight text-white sm:text-3xl">
             Who This Helps Most
@@ -200,18 +334,22 @@ export default function NeverBeLateToMeetingsPage() {
               {
                 label: "Back-to-back meeting days",
                 body: "When you're going from one call to the next, it's easy to lose track of time. OnTimer alarms for each transition so you can focus on the current meeting without watching the clock.",
+                link: null,
               },
               {
                 label: "ADHD and time blindness",
                 body: "Time blindness — the difficulty sensing how much time has passed — is common with ADHD. OnTimer's loud, persistent alarms cut through hyperfocus and signal when it's genuinely time to stop.",
+                link: { href: "/adhd-time-blindness-tools", label: "ADHD time blindness tools →" },
               },
               {
                 label: "Busy professionals",
                 body: "When you're deep in work, a meeting can sneak up fast. OnTimer removes the need to manually track your schedule by making your calendar do the work for you.",
+                link: null,
               },
               {
                 label: "Remote workers",
                 body: "Without a commute to force routine, remote workers often shift meetings later and later. OnTimer keeps you honest about when virtual meetings start — no more rushing to find the Zoom link at 10:03.",
+                link: null,
               },
             ].map((item) => (
               <div
@@ -220,13 +358,22 @@ export default function NeverBeLateToMeetingsPage() {
               >
                 <p className="mb-1.5 font-bold text-white">{item.label}</p>
                 <p className="text-sm text-zinc-400">{item.body}</p>
+                {item.link && (
+                  <Link
+                    href={item.link.href}
+                    className="mt-2 inline-block text-xs font-semibold text-green-500 hover:text-green-400"
+                  >
+                    {item.link.label}
+                  </Link>
+                )}
               </div>
             ))}
           </div>
         </section>
+
       </div>
 
-      {/* Screenshots — full bleed bg */}
+      {/* Screenshots */}
       <section className="border-y border-zinc-800 bg-zinc-900/40 py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <h2 className="mb-10 text-center text-2xl font-black tracking-tight text-white sm:text-3xl">
@@ -234,40 +381,23 @@ export default function NeverBeLateToMeetingsPage() {
           </h2>
           <div className="flex justify-center gap-4 overflow-x-auto pb-2">
             {[
-              {
-                src: "/images/NeverBeLateAgain.png",
-                alt: "Never be late again",
-              },
-              {
-                src: "/images/AutomaticAlarms.png",
-                alt: "Automatic alarms from your calendar",
-              },
-              {
-                src: "/images/CantMissAlerts.png",
-                alt: "Can't-miss persistent alerts",
-              },
-              {
-                src: "/images/RelaxYourOnTime.png",
-                alt: "Relax — you're on time",
-              },
+              { src: "/images/NeverBeLateAgain.png", alt: "Never be late again" },
+              { src: "/images/AutomaticAlarms.png", alt: "Automatic alarms from your calendar" },
+              { src: "/images/CantMissAlerts.png", alt: "Can't-miss persistent alerts" },
+              { src: "/images/RelaxYourOnTime.png", alt: "Relax — you're on time" },
             ].map((shot) => (
               <div
                 key={shot.alt}
                 className="relative h-[420px] w-[193px] flex-shrink-0 overflow-hidden rounded-[1.75rem] border border-zinc-700 shadow-xl"
               >
-                <Image
-                  src={shot.src}
-                  alt={shot.alt}
-                  fill
-                  className="object-cover"
-                />
+                <Image src={shot.src} alt={shot.alt} fill className="object-cover" />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Airport Calculator Callout */}
+      {/* Airport calculator callout */}
       <section className="border-t border-zinc-800 py-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <p className="text-zinc-400 leading-relaxed">
@@ -277,9 +407,50 @@ export default function NeverBeLateToMeetingsPage() {
               className="text-green-500 hover:text-green-400 transition-colors"
             >
               Airport Time-to-Leave Calculator
-            </Link>
-            {" "}to figure out when to leave for the airport based on traffic, security time, and your flight type.
+            </Link>{" "}
+            to figure out when to leave for the airport based on traffic, security
+            time, and your flight type.
           </p>
+        </div>
+      </section>
+
+      {/* Related guides */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-6 text-xl font-bold text-white">Related guides</h2>
+          <ul className="space-y-3">
+            {[
+              {
+                href: "/why-calendar-reminders-fail",
+                label: "Why Calendar Reminders Fail (and What to Use Instead)",
+              },
+              {
+                href: "/calendar-alarm-app",
+                label: "Best Calendar Alarm Apps for iPhone",
+              },
+              {
+                href: "/loud-calendar-alerts-iphone",
+                label: "How to Get Loud Calendar Alerts on iPhone",
+              },
+              {
+                href: "/adhd-time-blindness-tools",
+                label: "ADHD Time Blindness Tools",
+              },
+              {
+                href: "/time-to-leave-reminders",
+                label: "How to Get a Reminder When It's Time to Leave",
+              },
+            ].map(({ href, label }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-green-500 hover:text-green-400 transition-colors"
+                >
+                  {label} →
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -287,10 +458,39 @@ export default function NeverBeLateToMeetingsPage() {
       <section className="py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="mb-8 text-2xl font-black tracking-tight text-white sm:text-3xl">
-            Frequently asked questions
+            Frequently Asked Questions
           </h2>
           <div className="space-y-px">
-            {faqs.map((item) => (
+            {[
+              {
+                q: "Why do I keep being late to meetings even though I know about them?",
+                a: "Knowing about a meeting and actually stopping to leave are two different steps. Calendar notifications inform you — they don't interrupt you. The gap between a reminder and the moment you need to leave is where lateness happens. The fix is a departure-time alarm, not a meeting-start reminder.",
+              },
+              {
+                q: "What is the last 5 minutes problem?",
+                a: "The last 5 minutes problem is the tendency to underestimate how long it takes to wrap up a current task and transition to a meeting. You're focused on something, the reminder fires, you think 'just one more minute' — and then you're late. The fix is building a transition buffer into your alarm timing.",
+              },
+              {
+                q: "Why do I miss Zoom meetings even when I'm at my desk?",
+                a: "Virtual meetings are deceptive because there's no commute forcing a transition. You assume you can join 'in just a minute' and stay in your current task too long. A strong alarm that fires 10–15 minutes before creates the transition signal that the lack of commute removes.",
+              },
+              {
+                q: "How does ADHD affect meeting punctuality?",
+                a: "Time blindness — common with ADHD — makes it genuinely difficult to feel how much time has passed. A reminder that fires and disappears isn't enough to interrupt hyperfocus. Loud, persistent alarms that don't go away until acknowledged are significantly more effective.",
+              },
+              {
+                q: "Does OnTimer replace my calendar?",
+                a: "No. OnTimer reads your existing calendar — it doesn't replace it. You keep scheduling events the same way you always have. OnTimer just makes sure an alarm fires before each one.",
+              },
+              {
+                q: "Is OnTimer free?",
+                a: "Yes. OnTimer is free to download. The core alarm functionality — calendar sync, automatic alarms, and persistent alerts — is fully available at no cost. Time To Leave alerts (departure-time alerts based on travel time) are a paid feature.",
+              },
+              {
+                q: "Can I customize the alarm timing?",
+                a: "Yes. You choose how much lead time you want before events — 15 minutes, 30 minutes, an hour, or more. You can also mute alarms for individual events you don't need them for.",
+              },
+            ].map((item) => (
               <div
                 key={item.q}
                 className="border-b border-zinc-800 py-5 last:border-0"

@@ -22,6 +22,16 @@ const nextConfig: NextConfig = {
         destination: "https://ontimer.app/OnTimer_Terms_of_Service.html",
         permanent: true,
       },
+      {
+        source: "/how-to-never-be-late-to-meetings",
+        destination: "/never-be-late-to-meetings",
+        permanent: true,
+      },
+      {
+        source: "/stop-missing-calendar-meetings",
+        destination: "/never-be-late-to-meetings",
+        permanent: true,
+      },
     ];
   },
 };

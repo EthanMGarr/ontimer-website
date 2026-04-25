@@ -68,6 +68,27 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
+      {/* What this fixes */}
+      <section className="border-b border-zinc-800 bg-zinc-900/50 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
+            What this fixes
+          </p>
+          <p className="text-lg text-zinc-400 leading-relaxed">
+            The problem with most reminder systems is not that people forget
+            about meetings. It&apos;s that they fail to{" "}
+            <em>switch modes at the right time</em> — to stop what they&apos;re
+            doing, wrap up, and leave. A quiet notification that fires and
+            disappears doesn&apos;t create that switch.
+          </p>
+          <p className="mt-3 text-lg text-zinc-400 leading-relaxed">
+            OnTimer replaces passive notifications with real alarms — timed to
+            when you need to leave, not when the meeting starts. Here&apos;s
+            exactly how it works:
+          </p>
+        </div>
+      </section>
+
       {/* Steps */}
       <section className="py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">

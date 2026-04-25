@@ -140,11 +140,11 @@ const steps = [
 ];
 
 const popularGuides = [
-  { label: "How to Never Be Late to Meetings", href: "/how-to-never-be-late-to-meetings" },
+  { label: "How to Never Be Late to Meetings Again", href: "/never-be-late-to-meetings" },
   { label: "How to Get Loud Calendar Alerts on iPhone", href: "/loud-calendar-alerts-iphone" },
   { label: "How to Get a Reminder When It's Time to Leave for a Meeting", href: "/time-to-leave-reminders" },
-  { label: "How to Stop Missing Zoom, Google Meet, and Other Calendar Meetings", href: "/stop-missing-calendar-meetings" },
   { label: "Best Apps to Remind You About Meetings on iPhone", href: "/best-meeting-reminder-apps-iphone" },
+  { label: "Why Calendar Reminders Fail (and What to Use Instead)", href: "/why-calendar-reminders-fail" },
 ];
 
 export default function Home() {
@@ -537,7 +537,7 @@ export default function Home() {
                 back-to-back meetings, people who miss normal reminders, and
                 people who struggle with time blindness or{" "}
                 <Link
-                  href="/how-to-never-be-late-to-meetings"
+                  href="/never-be-late-to-meetings"
                   className="text-green-500 hover:text-green-400"
                 >
                   chronic lateness patterns

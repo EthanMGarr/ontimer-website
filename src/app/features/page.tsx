@@ -112,6 +112,32 @@ export default function FeaturesPage() {
         </div>
       </section>
 
+      {/* Why this exists */}
+      <section className="border-b border-zinc-800 bg-zinc-900/50 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
+            Why this exists
+          </p>
+          <p className="text-lg text-zinc-400 leading-relaxed">
+            Calendar notifications are passive. They appear, you acknowledge
+            them, and then they disappear. Most people see the reminder — and
+            still show up late.
+          </p>
+          <p className="mt-3 text-lg text-zinc-400 leading-relaxed">
+            The problem isn&apos;t forgetting the meeting. It&apos;s the gap
+            between knowing you have a meeting and actually stopping what
+            you&apos;re doing to leave. OnTimer is built around that gap —{" "}
+            <Link
+              href="/never-be-late-to-meetings"
+              className="text-green-500 hover:text-green-400"
+            >
+              learn why calendar reminders fail and how alarms fix it
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
+
       {/* Feature sections */}
       <section className="py-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">

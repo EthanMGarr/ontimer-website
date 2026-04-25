@@ -74,6 +74,30 @@ const faqJsonLd = {
     },
     {
       "@type": "Question",
+      name: "Why do I still miss meetings even when I remember them?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Knowing about a meeting and leaving on time are two separate steps. The gap between a reminder and the moment you need to stop working and leave is where lateness happens. Calendar notifications inform you — they don't interrupt you. The fix is an alarm timed to when you need to leave, not when the meeting starts.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Why don't calendar notifications work reliably?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Most calendar notifications are passive — they appear, you tap away, and they disappear. There's no persistence, no escalation, and no interruption of what you're focused on. Do Not Disturb, Focus modes, and notification volume settings can all silently block them on top of that.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How is OnTimer different from setting alarms manually?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Manual alarms require you to remember to set them, update them when meetings change, and delete them when events get cancelled. OnTimer reads your calendar and creates, updates, and removes alarms automatically. When a meeting is rescheduled, your alarm moves too — with no action from you.",
+      },
+    },
+    {
+      "@type": "Question",
       name: "Does OnTimer upload my calendar data anywhere?",
       acceptedAnswer: {
         "@type": "Answer",
@@ -136,6 +160,49 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
     question: "Who is OnTimer best for?",
     answer:
       "OnTimer is especially useful for busy professionals, people with back-to-back meetings, people who miss standard notifications, and people who struggle with time blindness or chronic lateness.",
+  },
+  {
+    question: "Why do I still miss meetings even when I remember them?",
+    answer: (
+      <>
+        Knowing about a meeting and leaving on time are two separate steps. The
+        gap between a reminder and the moment you need to stop working and leave
+        is where lateness happens. Calendar notifications inform you — they
+        don&apos;t interrupt you. The fix is an alarm timed to when you need to
+        leave, not when the meeting starts.{" "}
+        <Link
+          href="/never-be-late-to-meetings"
+          className="text-green-500 hover:text-green-400 transition-colors"
+        >
+          See why this gap exists and how to close it
+        </Link>
+        .
+      </>
+    ),
+  },
+  {
+    question: "Why don't calendar notifications work reliably?",
+    answer: (
+      <>
+        Most calendar notifications are passive — they appear, you tap away, and
+        they disappear. There&apos;s no persistence, no escalation, and no
+        interruption of what you&apos;re focused on. Do Not Disturb, Focus
+        modes, and notification volume settings can all silently block them on
+        top of that.{" "}
+        <Link
+          href="/why-calendar-reminders-fail"
+          className="text-green-500 hover:text-green-400 transition-colors"
+        >
+          Full breakdown: why calendar reminders fail
+        </Link>
+        .
+      </>
+    ),
+  },
+  {
+    question: "How is OnTimer different from setting alarms manually?",
+    answer:
+      "Manual alarms require you to remember to set them, update them when meetings change, and delete them when events get cancelled. OnTimer reads your calendar and creates, updates, and removes alarms automatically. When a meeting is rescheduled, your alarm moves too — with no action from you.",
   },
   {
     question: "Does OnTimer upload my calendar data anywhere?",
