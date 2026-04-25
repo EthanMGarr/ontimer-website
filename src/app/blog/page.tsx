@@ -31,6 +31,13 @@ interface GuideEntry {
 // ── Section 1: Running Late or Missed a Meeting ──────────────────────────────
 const urgentGuides: GuideEntry[] = [
   {
+    href: "/how-to-apologize-for-missing-a-meeting",
+    title: "How to Apologize for Missing a Meeting (Templates + Rules)",
+    description:
+      "The formula, exact email and Slack templates, and a step-by-step recovery framework — for every context from colleague to client.",
+    date: "2026-04-27",
+  },
+  {
     href: "/running-late-to-meeting",
     title: "Running Late to a Meeting? Here's Exactly What to Do (and What Not to Say)",
     description:
