@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Best Tools for ADHD Time Blindness | Calendar Alarm Apps and Strategies",
+  title: "ADHD Time Blindness: Tools That Actually Help You Stay On Time",
   description:
     "Struggling with ADHD time blindness? Learn how alarms, reminders, and calendar tools can help you stay on schedule.",
 };
@@ -21,39 +21,39 @@ const timeBlindnessTools = [
   {
     name: "Visual timers",
     description:
-      "Physical or digital timers that show time passing visually. Help make the passage of time concrete.",
+      "Physical or digital timers that show time passing visually. Help make the passage of time concrete and harder to ignore. Limitation: they only work if you're actively looking at them.",
   },
   {
     name: "Time blocking",
     description:
-      "Structuring your day into explicit time blocks on your calendar so you always know what should be happening.",
+      "Structuring your day into explicit time blocks so you always know what should be happening. Limitation: it doesn't alert you when a block is about to start — you still have to notice.",
   },
   {
     name: "Alarm-based calendar apps",
     description:
-      "Apps that turn calendar events into persistent alarms — not just notifications — so meetings can't be ignored.",
+      "Apps that turn calendar events into persistent alarms — not just notifications — so meetings can't be ignored. The alarm requires a response; it doesn't wait for you to notice it.",
   },
   {
     name: "External cues",
     description:
-      "Sounds, vibrations, or visual alerts that interrupt you and bring your attention back to time-sensitive tasks.",
+      "Sounds, vibrations, or visual alerts that interrupt you and bring your attention back to time-sensitive tasks. The key word is interrupt — not remind.",
   },
 ];
 
 const whyRemindersFailAdhd = [
-  "ADHD makes it harder to notice the passage of time",
-  "notifications disappear too quickly to register",
-  "hyperfocus can block out even loud alerts",
-  "multiple reminders create noise that gets tuned out",
-  "passive alerts require self-interruption, which is harder with ADHD",
+  "you think you have more time than you do — and genuinely believe it",
+  "the notification fires, you see it, and you keep working anyway",
+  "hyperfocus makes it impossible to sense that a deadline is close",
+  "when you set three alarms, they all blur into background noise",
+  "there is nothing forcing you to stop — you have to choose to interrupt yourself, and you don't",
 ];
 
 const howOntimperHelps = [
-  "Connects to Google Calendar and Outlook — no manual entry",
-  "Fires a persistent alarm before every meeting",
-  "Alarm stays on screen until dismissed — can't be ignored",
-  "Works automatically based on your existing schedule",
-  "Customizable lead time so the alarm fires early enough to prepare",
+  "Connects to Google Calendar and Outlook — no manual entry required",
+  "Fires a loud alarm before every meeting — not a notification, an alarm",
+  "Alarm stays on screen until you dismiss it — it does not go away on its own",
+  "Responds to schedule changes automatically — no updating alarms by hand",
+  "Fires early enough to actually prepare — not at the moment the meeting starts",
 ];
 
 export default function AdhdTimeBlindnessTools() {
@@ -73,14 +73,24 @@ export default function AdhdTimeBlindnessTools() {
             <span className="text-green-500">ADHD Time Blindness</span>
           </h1>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
+            You know about the meeting. You set the reminder. You still ran
+            late.
+          </p>
+          <p className="mt-3 text-base text-zinc-500 leading-relaxed">
+            The pattern is almost always the same: you check the time, see that
+            you have a few minutes, tell yourself you just need to finish one
+            thing — and then it&apos;s too late. That&apos;s not a memory
+            problem. It&apos;s a time blindness problem.
+          </p>
+          <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
             Time blindness — difficulty perceiving the passage of time — is one
             of the most common challenges for people with ADHD. It makes it easy
             to lose track of meetings, deadlines, and appointments, even when
             reminders are set.
           </p>
-          <p className="mt-4 text-lg text-zinc-400 leading-relaxed">
-            This guide covers practical tools and strategies that work, and why
-            alarm-based calendar apps are especially effective.
+          <p className="mt-4 text-base text-zinc-500 leading-relaxed">
+            This guide covers the tools that actually help — and why most
+            standard advice doesn&apos;t.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <AppStoreButton size="lg" />
@@ -114,6 +124,10 @@ export default function AdhdTimeBlindnessTools() {
               This isn&apos;t a motivation problem. It&apos;s a neurological one
               — and it requires tools that don&apos;t rely solely on self-
               awareness.
+            </p>
+            <p className="italic text-zinc-300">
+              &ldquo;I didn&apos;t forget the meeting. I just didn&apos;t switch
+              to it in time.&rdquo;
             </p>
           </div>
         </div>
@@ -167,6 +181,10 @@ export default function AdhdTimeBlindnessTools() {
               doing, with the intention of joining in a minute — which never
               comes.
             </p>
+            <p>
+              Calendar reminders assume you will stop yourself. Time blindness
+              means you often won&apos;t.
+            </p>
           </div>
         </div>
       </section>
@@ -177,9 +195,13 @@ export default function AdhdTimeBlindnessTools() {
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             Tools That Help Manage Time Blindness
           </h2>
-          <p className="mt-4 text-zinc-400">
-            The most effective tools for time blindness share one trait: they
-            make time visible or impossible to ignore.
+          <p className="mt-4 text-zinc-400 leading-relaxed">
+            Most advice focuses on awareness. The tools that actually work focus
+            on interruption.
+          </p>
+          <p className="mt-3 text-zinc-400 leading-relaxed">
+            The most effective tools share one trait: they make time visible or
+            impossible to ignore.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {timeBlindnessTools.map((tool) => (
@@ -226,6 +248,32 @@ export default function AdhdTimeBlindnessTools() {
         </div>
       </section>
 
+      {/* ── WHAT THIS ACTUALLY LOOKS LIKE ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            What This Actually Looks Like
+          </h2>
+          <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-950 p-6 space-y-3 text-zinc-400 leading-relaxed">
+            <p>It&apos;s 9:52am. You have a meeting at 10:00.</p>
+            <p>
+              You check the time. Eight minutes. Enough to finish the thing
+              you&apos;re in the middle of.
+            </p>
+            <p>You keep working. At some point you look up. It&apos;s 10:07.</p>
+          </div>
+          <p className="mt-6 text-zinc-400 leading-relaxed">
+            Most failures happen in the last 5 minutes before a meeting — not
+            because people forgot, but because they thought they had more time
+            than they did.
+          </p>
+          <p className="mt-4 text-zinc-400 leading-relaxed">
+            The problem isn&apos;t the calendar. It&apos;s what happens between
+            awareness and action.
+          </p>
+        </div>
+      </section>
+
       {/* ── HOW ONTIMER HELPS ── */}
       <section className="py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
@@ -233,6 +281,10 @@ export default function AdhdTimeBlindnessTools() {
             How OnTimer Helps With Time Awareness
           </h2>
           <div className="mt-4 space-y-4 text-zinc-400 leading-relaxed">
+            <p>
+              Instead of relying on you to notice time, OnTimer takes over the
+              moment where things usually break.
+            </p>
             <p>
               <Link href="/" className="text-green-500 hover:text-green-400">
                 OnTimer
@@ -303,11 +355,10 @@ export default function AdhdTimeBlindnessTools() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-2xl px-4 text-center sm:px-6">
           <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
-            Stay On Time With OnTimer
+            Stop relying on noticing time.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            Stop missing meetings due to time blindness. OnTimer handles the
-            interruption so you don&apos;t have to.
+            Use a system that interrupts you when it matters.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <AppStoreButton size="lg" />
