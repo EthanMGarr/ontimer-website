@@ -140,11 +140,11 @@ const steps = [
 ];
 
 const popularGuides = [
-  { label: "How to Never Be Late to Meetings Again", href: "/never-be-late-to-meetings" },
-  { label: "How to Get Loud Calendar Alerts on iPhone", href: "/loud-calendar-alerts-iphone" },
-  { label: "How to Get a Reminder When It's Time to Leave for a Meeting", href: "/time-to-leave-reminders" },
-  { label: "Best Apps to Remind You About Meetings on iPhone", href: "/best-meeting-reminder-apps-iphone" },
-  { label: "Why Calendar Reminders Fail (and What to Use Instead)", href: "/why-calendar-reminders-fail" },
+  { label: "Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
+  { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
+  { label: "Calendar Alarm App", href: "/calendar-alarm-app" },
+  { label: "What Time Should I Leave", href: "/what-time-should-i-leave" },
+  { label: "Why Calendar Reminders Fail", href: "/why-calendar-reminders-fail" },
 ];
 
 export default function Home() {
@@ -178,6 +178,16 @@ export default function Home() {
                 OnTimer connects to your calendar and triggers loud, persistent
                 alarms before meetings, calls, and appointments so they do not
                 sneak up on you.
+              </p>
+              <p className="mt-3 max-w-xl text-sm text-zinc-500 leading-relaxed">
+                If being late to meetings is a recurring problem,{" "}
+                <Link
+                  href="/never-be-late-to-meetings"
+                  className="text-green-500 hover:text-green-400"
+                >
+                  start with this guide
+                </Link>
+                .
               </p>
 
               <div className="mt-8">
@@ -545,6 +555,47 @@ export default function Home() {
                 .
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── START HERE ── */}
+      <section className="border-t border-zinc-800 py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8">
+            <h2 className="text-xl font-black text-white">
+              Struggling to be on time?
+            </h2>
+            <p className="mt-3 text-sm text-zinc-400">If you&apos;ve ever:</p>
+            <ul className="mt-2 space-y-1.5">
+              {[
+                "seen \"are you joining?\" and realized you're late",
+                "remembered the meeting but got distracted right before",
+                "set multiple alarms just to stay on track",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm text-zinc-400">
+                  <span className="mt-0.5 flex-shrink-0 text-zinc-600">—</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-5 text-sm font-semibold text-white">Start here:</p>
+            <ul className="mt-3 space-y-2">
+              {[
+                { label: "Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
+                { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
+                { label: "What Time Should I Leave", href: "/what-time-should-i-leave" },
+              ].map(({ label, href }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="text-sm font-semibold text-green-500 hover:text-green-400 transition-colors"
+                  >
+                    → {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
