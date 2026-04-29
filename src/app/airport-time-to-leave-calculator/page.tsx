@@ -4,18 +4,18 @@ import { AppStoreButton } from "@/components/CTAButton";
 import AirportCalculator from "./AirportCalculator";
 
 export const metadata: Metadata = {
-  title: "What Time Should I Leave for the Airport? Calculator",
+  title: "What Time Should I Leave for the Airport? (Free Calculator)",
   description:
-    "Find exactly what time to leave for the airport based on traffic, security, and flight timing. Avoid being late or missing your flight.",
+    "Calculate exactly when to leave for the airport based on your flight time, traffic, and security. Avoid being late or missing your flight.",
   openGraph: {
-    title: "What Time Should I Leave for the Airport? Calculator",
+    title: "What Time Should I Leave for the Airport? (Free Calculator)",
     description:
-      "Find exactly what time to leave for the airport based on traffic, security, and flight timing. Avoid being late or missing your flight.",
+      "Calculate exactly when to leave for the airport based on your flight time, traffic, and security. Avoid being late or missing your flight.",
   },
   twitter: {
-    title: "What Time Should I Leave for the Airport? Calculator",
+    title: "What Time Should I Leave for the Airport? (Free Calculator)",
     description:
-      "Find exactly what time to leave for the airport based on traffic, security, and flight timing. Avoid being late or missing your flight.",
+      "Calculate exactly when to leave for the airport based on your flight time, traffic, and security. Avoid being late or missing your flight.",
   },
 };
 
@@ -130,7 +130,7 @@ export default function AirportTimeToLeaveCalculator() {
         </div>
       </nav>
 
-      {/* ── HERO ── */}
+      {/* ── HERO (compressed — calculator below) ── */}
       <section className="relative overflow-hidden pb-5 pt-9 md:pt-12">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
@@ -144,76 +144,27 @@ export default function AirportTimeToLeaveCalculator() {
           <div className="mt-4 max-w-xl rounded-xl border border-green-500/30 bg-green-500/5 p-4">
             <p className="text-sm leading-relaxed text-zinc-300">
               Most flights require you to leave for the airport 2–3 hours before
-              departure. The exact time depends on traffic, airport size, and
-              security wait times. Use the calculator below to get your exact
+              departure. Your exact leave time depends on traffic, airport size,
+              and security lines. Use the calculator below to get your exact
               departure time.
             </p>
           </div>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-400">
             If you&apos;re wondering what time to leave for the airport, the
             general rule is to arrive 2–3 hours before your flight. That means
-            your actual departure time depends on how long it takes to get there,
-            plus buffer for traffic and delays.
+            your leave time depends on how long it takes to get there, plus
+            buffer for traffic and delays.
           </p>
           <p className="mt-3 max-w-xl text-base leading-relaxed text-zinc-400">
             For example, if your flight boards at 3:00 PM and it takes 45
-            minutes to drive to the airport, you should leave around 11:15 AM to
-            stay safe.
+            minutes to drive to the airport, you may need to leave around
+            11:15 AM to stay safe.
           </p>
           <p className="mt-3 max-w-xl text-base leading-relaxed text-zinc-400">
             But every trip is different. Traffic, airport size, time of day, and
             security lines can all affect your timing. That&apos;s why using a
             calculator is the most reliable way to avoid cutting it too close.
           </p>
-          <p className="mt-3 max-w-xl text-sm text-zinc-400">
-            Use the calculator below to get your exact &ldquo;leave time&rdquo;
-            based on your specific trip.
-          </p>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            <a
-              href="#calculator"
-              className="inline-flex items-center gap-2 rounded-full bg-green-500 px-5 py-2 text-sm font-semibold text-black transition-colors hover:bg-green-400"
-            >
-              Calculate leave time
-            </a>
-            <Link
-              href="/time-to-leave-reminders"
-              className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors"
-            >
-              Want this automated? →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── HOW EARLY SHOULD YOU LEAVE ── */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-10">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
-            How Early Should You Leave for the Airport?
-          </h2>
-          <div className="mt-5 space-y-4 text-zinc-400 leading-relaxed">
-            <p>Most airlines recommend arriving at the airport:</p>
-            <ul className="space-y-2">
-              <li className="flex items-start gap-3">
-                <span className="mt-0.5 flex-shrink-0 text-green-500">•</span>
-                2 hours before domestic flights
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="mt-0.5 flex-shrink-0 text-green-500">•</span>
-                3 hours before international flights
-              </li>
-            </ul>
-            <p>
-              However, that&apos;s your arrival time — not when you should leave
-              your house.
-            </p>
-            <p>
-              To figure out when to leave, you need to subtract your travel time
-              and add a buffer for traffic. That&apos;s where most people
-              underestimate and end up rushing or arriving late.
-            </p>
-          </div>
         </div>
       </section>
 
@@ -230,6 +181,149 @@ export default function AirportTimeToLeaveCalculator() {
               Try the Airport Theory Calculator →
             </Link>
           </p>
+        </div>
+      </section>
+
+      {/* ── SEO #1: How Early Should You Leave ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            How Early Should You Leave for the Airport?
+          </h2>
+          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+            <p>For most flights, you should plan your airport arrival time first:</p>
+            <ul className="space-y-2">
+              {[
+                "Domestic flights: arrive 2 hours before departure",
+                "International flights: arrive 3 hours before departure",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <span className="mt-0.5 flex-shrink-0 text-green-500">•</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p>
+              However, this is your arrival time — not when you should leave
+              your house.
+            </p>
+            <p>
+              To determine when to leave, subtract your travel time and add
+              buffer for traffic, parking, and delays.
+            </p>
+            <p>
+              Most people underestimate how early they need to leave —
+              especially during peak travel times.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SEO #2: Leave Time by Flight Time ── */}
+      <section className="py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            When Should You Leave for the Airport Based on Your Flight Time?
+          </h2>
+          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+            <p>
+              Your ideal leave time depends heavily on when your flight departs:
+            </p>
+            <ul className="space-y-2">
+              {[
+                "Morning flights often require earlier departure due to rush hour traffic",
+                "Afternoon flights can be impacted by both traffic and longer security lines",
+                "Evening flights may have lighter traffic but still require full airport buffer time",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <span className="mt-0.5 flex-shrink-0 text-green-500">•</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p>
+              The safest approach is to calculate your leave time based on your
+              specific route and departure time, rather than relying on a fixed
+              rule.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SEO #3: When should you leave ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            When should you leave for the airport?
+          </h2>
+          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+            <p>
+              There is no single right answer, but a few factors always matter:
+              whether you&apos;re flying domestic or international, how long
+              security will take, whether you&apos;re checking a bag, and how
+              long the drive actually is at the time you&apos;re leaving. Security
+              time in particular varies widely depending on TSA wait times, time
+              of day, and airport traffic.
+            </p>
+            <p>
+              Most people underestimate at least one of these. They check traffic
+              on Google Maps and assume a 35-minute drive, but forget that
+              they&apos;re leaving during rush hour, need to find parking, and
+              still have to get through a bag drop line. The math compounds
+              quickly.
+            </p>
+            <p>
+              A reliable estimate works backwards from your departure time:
+              subtract the airport arrival buffer first, then subtract travel
+              time. The result is the latest reasonable moment to walk out the
+              door. The calculator above automates that math using real-world
+              inputs like TSA wait times and travel conditions.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SEO #4: Why airport timing is harder ── */}
+      <section className="py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            Why airport timing is harder than it looks
+          </h2>
+          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+            <p>
+              Most people have a rough sense of how far the airport is. What
+              they underestimate is how many places in the chain can absorb time
+              unexpectedly.
+            </p>
+            <p>
+              Traffic changes. A drive that takes 30 minutes on Sunday morning
+              takes 55 minutes on a Tuesday at 5 PM. If you pulled your estimate
+              from earlier in the day, you may already be behind before you
+              leave.
+            </p>
+            <p>
+              Parking adds time in ways that are easy to overlook. Finding a
+              spot, waiting for the shuttle, riding to the terminal — economy
+              parking at a major airport can easily absorb 20 to 30 minutes that
+              most people do not budget for.
+            </p>
+            <p>
+              Bag check has a hard cutoff. Miss it and you lose your checked bag
+              for the trip or miss the flight entirely. That cutoff does not care
+              how close you are to the airport.
+            </p>
+            <p>
+              Security lines are unpredictable and heavily influenced by TSA
+              wait times, staffing, and checkpoint volume. Even with TSA
+              PreCheck, a busy period can add meaningful delay.
+            </p>
+            <p>
+              The biggest factor is overconfidence. Most people who miss flights
+              were not planning to cut it close. They just ran through the math
+              too optimistically. A small buffer in every step of the chain is
+              cheap insurance.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -264,120 +358,7 @@ export default function AirportTimeToLeaveCalculator() {
         </div>
       </section>
 
-      {/* ── SEO CONTENT ── */}
-      <section className="py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            When should you leave for the airport?
-          </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
-            <p>
-              There is no single right answer, but a few factors always matter:
-              whether you&apos;re flying domestic or international, how long
-              security will take, whether you&apos;re checking a bag, and how
-              long the drive actually is at the time you&apos;re leaving. Security
-              time in particular varies widely depending on TSA wait times, time
-              of day, and airport traffic.
-            </p>
-            <p>
-              Most people underestimate at least one of these. They check traffic
-              on Google Maps and assume a 35-minute drive, but forget that they&apos;re
-              leaving during rush hour, need to find parking, and still have to get
-              through a bag drop line. The math compounds quickly.
-            </p>
-            <p>
-              A reliable estimate works backwards from your departure time: subtract
-              the airport arrival buffer first, then subtract travel time. The result
-              is the latest reasonable moment to walk out the door. The calculator
-              above automates that math using real-world inputs like TSA wait
-              times and travel conditions.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            How early should you arrive at the airport?
-          </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
-            <p>
-              The TSA and most major airlines recommend the following as a starting
-              point:
-            </p>
-            <ul className="mt-4 space-y-2">
-              {[
-                "Domestic flights: arrive 2 hours before departure",
-                "International flights: arrive 3 hours before departure",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex-shrink-0 text-green-500">•</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <p>
-              These are starting points, not guarantees. TSA wait times can vary
-              significantly by airport and time of day, which is why static rules
-              often break down in real-world conditions. A small regional airport
-              with no lines is very different from a major hub on a holiday weekend.
-              TSA PreCheck and Global Entry can meaningfully reduce security time.
-              Checking a bag adds time at the counter and imposes hard cutoffs —
-              most airlines stop accepting checked bags 30 to 45 minutes before
-              departure.
-            </p>
-            <p>
-              When in doubt, add 15 minutes. Being early at an airport is an
-              inconvenience. Missing your flight is expensive.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Why airport timing is harder than it looks
-          </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
-            <p>
-              Most people have a rough sense of how far the airport is. What they
-              underestimate is how many places in the chain can absorb time
-              unexpectedly.
-            </p>
-            <p>
-              Traffic changes. A drive that takes 30 minutes on Sunday morning
-              takes 55 minutes on a Tuesday at 5 PM. If you pulled your estimate
-              from earlier in the day, you may already be behind before you leave.
-            </p>
-            <p>
-              Parking adds time in ways that are easy to overlook. Finding a spot,
-              waiting for the shuttle, riding to the terminal — economy parking at
-              a major airport can easily absorb 20 to 30 minutes that most people
-              do not budget for.
-            </p>
-            <p>
-              Bag check has a hard cutoff. Miss it and you lose your checked bag
-              for the trip or miss the flight entirely. That cutoff does not care
-              how close you are to the airport.
-            </p>
-            <p>
-              Security lines are unpredictable and heavily influenced by TSA wait
-              times, staffing, and checkpoint volume. Even with TSA PreCheck, a
-              busy period can add meaningful delay.
-            </p>
-            <p>
-              The biggest factor is overconfidence. Most people who miss flights
-              were not planning to cut it close. They just ran through the math
-              too optimistically. A small buffer in every step of the chain is
-              cheap insurance.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-20">
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             A better way to avoid missing flights
