@@ -131,17 +131,17 @@ export default function AirportTimeToLeaveCalculator() {
       </nav>
 
       {/* ── HERO (compressed — calculator below) ── */}
-      <section className="relative overflow-hidden pb-5 pt-9 md:pt-12">
+      <section className="relative overflow-hidden pb-3 pt-5 md:pt-7">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-green-500">
+          <p className="mb-1.5 text-sm font-semibold uppercase tracking-wider text-green-500">
             Free calculator
           </p>
-          <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
+          <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
             What Time Should I Leave for the{" "}
             <span className="text-green-500">Airport?</span>
           </h1>
-          <div className="mt-4 max-w-xl rounded-xl border border-green-500/30 bg-green-500/5 p-4">
+          <div className="mt-3 max-w-xl rounded-xl border border-green-500/30 bg-green-500/5 p-3">
             <p className="text-sm leading-relaxed text-zinc-300">
               Most flights require you to leave for the airport 2–3 hours before
               departure. Your exact leave time depends on traffic, airport size,
@@ -149,28 +149,34 @@ export default function AirportTimeToLeaveCalculator() {
               departure time.
             </p>
           </div>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-400">
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400">
             If you&apos;re wondering what time to leave for the airport, the
             general rule is to arrive 2–3 hours before your flight. That means
             your leave time depends on how long it takes to get there, plus
             buffer for traffic and delays.
           </p>
-          <p className="mt-3 max-w-xl text-base leading-relaxed text-zinc-400">
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
             For example, if your flight boards at 3:00 PM and it takes 45
             minutes to drive to the airport, you may need to leave around
             11:15 AM to stay safe.
           </p>
-          <p className="mt-3 max-w-xl text-base leading-relaxed text-zinc-400">
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
             But every trip is different. Traffic, airport size, time of day, and
             security lines can all affect your timing. That&apos;s why using a
             calculator is the most reliable way to avoid cutting it too close.
+          </p>
+          <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+            Use the calculator below to get your exact leave time:
           </p>
         </div>
       </section>
 
       {/* ── CALCULATOR ── */}
-      <section id="calculator" className="border-t border-zinc-800 py-6 md:py-8">
+      <section id="calculator" className="border-t border-zinc-800 pt-3 pb-6 md:pb-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+            Airport Leave Time Calculator
+          </p>
           <AirportCalculator />
           <p className="mt-5 text-center text-sm text-zinc-400">
             Want to see how far you can push it?{" "}
