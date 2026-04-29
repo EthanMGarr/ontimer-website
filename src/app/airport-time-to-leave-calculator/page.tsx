@@ -4,18 +4,18 @@ import { AppStoreButton } from "@/components/CTAButton";
 import AirportCalculator from "./AirportCalculator";
 
 export const metadata: Metadata = {
-  title: "Airport Time-to-Leave Calculator | OnTimer",
+  title: "What Time Should I Leave for the Airport? Calculator",
   description:
-    "Calculate exactly when to leave for the airport — using TSA wait times, real-time traffic, and flight-specific buffers. Enter your details and get your leave time.",
+    "Find exactly what time to leave for the airport based on traffic, security, and flight timing. Avoid being late or missing your flight.",
   openGraph: {
-    title: "Airport Time-to-Leave Calculator | OnTimer",
+    title: "What Time Should I Leave for the Airport? Calculator",
     description:
-      "Calculate exactly when to leave for the airport — using TSA wait times, real-time traffic, and flight-specific buffers. Enter your details and get your leave time.",
+      "Find exactly what time to leave for the airport based on traffic, security, and flight timing. Avoid being late or missing your flight.",
   },
   twitter: {
-    title: "Airport Time-to-Leave Calculator | OnTimer",
+    title: "What Time Should I Leave for the Airport? Calculator",
     description:
-      "Calculate exactly when to leave for the airport — using TSA wait times, real-time traffic, and flight-specific buffers.",
+      "Find exactly what time to leave for the airport based on traffic, security, and flight timing. Avoid being late or missing your flight.",
   },
 };
 
@@ -138,15 +138,36 @@ export default function AirportTimeToLeaveCalculator() {
             Free calculator
           </p>
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
-            Airport{" "}
-            <span className="text-green-500">Time-to-Leave</span>{" "}
-            Calculator
+            What Time Should I Leave for the{" "}
+            <span className="text-green-500">Airport?</span>
           </h1>
-          <p className="mt-2.5 text-base leading-relaxed text-zinc-400 max-w-xl">
-            Enter your flight details and get the exact time you need to leave — based on TSA wait times, travel time, and airport-specific conditions.
+          <div className="mt-4 max-w-xl rounded-xl border border-green-500/30 bg-green-500/5 p-4">
+            <p className="text-sm leading-relaxed text-zinc-300">
+              Most flights require you to leave for the airport 2–3 hours before
+              departure. The exact time depends on traffic, airport size, and
+              security wait times. Use the calculator below to get your exact
+              departure time.
+            </p>
+          </div>
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-400">
+            If you&apos;re wondering what time to leave for the airport, the
+            general rule is to arrive 2–3 hours before your flight. That means
+            your actual departure time depends on how long it takes to get there,
+            plus buffer for traffic and delays.
+          </p>
+          <p className="mt-3 max-w-xl text-base leading-relaxed text-zinc-400">
+            For example, if your flight boards at 3:00 PM and it takes 45
+            minutes to drive to the airport, you should leave around 11:15 AM to
+            stay safe.
+          </p>
+          <p className="mt-3 max-w-xl text-base leading-relaxed text-zinc-400">
+            But every trip is different. Traffic, airport size, time of day, and
+            security lines can all affect your timing. That&apos;s why using a
+            calculator is the most reliable way to avoid cutting it too close.
           </p>
           <p className="mt-3 max-w-xl text-sm text-zinc-400">
-            Use this airport time-to-leave calculator to determine exactly when you should leave for the airport based on your departure time, travel time, and arrival buffer.
+            Use the calculator below to get your exact &ldquo;leave time&rdquo;
+            based on your specific trip.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <a
@@ -161,6 +182,37 @@ export default function AirportTimeToLeaveCalculator() {
             >
               Want this automated? →
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── HOW EARLY SHOULD YOU LEAVE ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-10">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
+            How Early Should You Leave for the Airport?
+          </h2>
+          <div className="mt-5 space-y-4 text-zinc-400 leading-relaxed">
+            <p>Most airlines recommend arriving at the airport:</p>
+            <ul className="space-y-2">
+              <li className="flex items-start gap-3">
+                <span className="mt-0.5 flex-shrink-0 text-green-500">•</span>
+                2 hours before domestic flights
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-0.5 flex-shrink-0 text-green-500">•</span>
+                3 hours before international flights
+              </li>
+            </ul>
+            <p>
+              However, that&apos;s your arrival time — not when you should leave
+              your house.
+            </p>
+            <p>
+              To figure out when to leave, you need to subtract your travel time
+              and add a buffer for traffic. That&apos;s where most people
+              underestimate and end up rushing or arriving late.
+            </p>
           </div>
         </div>
       </section>
@@ -404,7 +456,7 @@ export default function AirportTimeToLeaveCalculator() {
                 label: "How to Get a Reminder When It's Time to Leave →",
               },
               {
-                href: "/how-to-never-be-late-to-meetings",
+                href: "/never-be-late-to-meetings",
                 label: "How to Never Be Late to Meetings →",
               },
               {
