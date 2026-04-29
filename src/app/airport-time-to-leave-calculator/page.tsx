@@ -151,19 +151,12 @@ export default function AirportTimeToLeaveCalculator() {
           </div>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400">
             If you&apos;re wondering what time to leave for the airport, the
-            general rule is to arrive 2–3 hours before your flight. That means
-            your leave time depends on how long it takes to get there, plus
-            buffer for traffic and delays.
+            general rule is to arrive 2–3 hours before your flight. Your exact
+            leave time depends on travel time, traffic, and airport conditions.
           </p>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
-            For example, if your flight boards at 3:00 PM and it takes 45
-            minutes to drive to the airport, you may need to leave around
-            11:15 AM to stay safe.
-          </p>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
-            But every trip is different. Traffic, airport size, time of day, and
-            security lines can all affect your timing. That&apos;s why using a
-            calculator is the most reliable way to avoid cutting it too close.
+            For example, a 3:00 PM flight with a 45-minute drive may require
+            leaving around 11:15 AM to stay safe.
           </p>
           <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
             Use the calculator below to get your exact leave time:
@@ -197,6 +190,11 @@ export default function AirportTimeToLeaveCalculator() {
             How Early Should You Leave for the Airport?
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+            <p>
+              Every trip is different. Traffic, airport size, time of day, and
+              security lines can all affect your timing. That&apos;s why using a
+              calculator is the most reliable way to avoid cutting it too close.
+            </p>
             <p>For most flights, you should plan your airport arrival time first:</p>
             <ul className="space-y-2">
               {[
