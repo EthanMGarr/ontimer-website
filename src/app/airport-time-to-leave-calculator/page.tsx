@@ -158,8 +158,8 @@ export default function AirportTimeToLeaveCalculator() {
             For example, a 3:00 PM flight with a 45-minute drive may require
             leaving around 11:15 AM to stay safe.
           </p>
-          <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-            Use the calculator below to get your exact leave time:
+          <p className="mt-3 text-sm text-zinc-500">
+            Get your exact leave time below.
           </p>
         </div>
       </section>
@@ -167,8 +167,8 @@ export default function AirportTimeToLeaveCalculator() {
       {/* ── CALCULATOR ── */}
       <section id="calculator" className="border-t border-zinc-800 pt-3 pb-6 md:pb-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-            Airport Leave Time Calculator
+          <p className="mb-3 text-sm font-semibold text-zinc-400">
+            Calculate your exact airport leave time
           </p>
           <AirportCalculator />
           <p className="mt-5 text-center text-sm text-zinc-400">
