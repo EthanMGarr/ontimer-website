@@ -6,7 +6,7 @@ import type { CalculatorState, CalculatorAction } from '../types/calculator';
 interface ConnectPanelProps {
   state: CalculatorState;
   dispatch: React.Dispatch<CalculatorAction>;
-  onConnect: (apiKey: string) => Promise<void>;
+  onConnect: (apiKey: string, projectId: string) => Promise<void>;
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -24,15 +24,19 @@ const MANUAL_LABELS: Record<string, string> = {
 
 export default function ConnectPanel({ state, dispatch, onConnect }: ConnectPanelProps) {
   const [localKey, setLocalKey] = useState('');
-  const { connectionStatus, connectionError, apiPulledFields, availableProjects, projectId } = state;
+  const [localProjectId, setLocalProjectId] = useState('');
+  const { connectionStatus, connectionError, apiPulledFields } = state;
 
   const isConnecting = connectionStatus === 'connecting';
   const isConnected = connectionStatus === 'connected';
 
   async function handleConnect() {
-    if (!localKey.trim()) return;
-    dispatch({ type: 'SET_API_KEY', payload: localKey });
-    await onConnect(localKey);
+    const key = localKey.trim();
+    const pid = localProjectId.trim();
+    if (!key || !pid) return;
+    dispatch({ type: 'SET_API_KEY', payload: key });
+    dispatch({ type: 'SET_PROJECT_ID', payload: pid });
+    await onConnect(key, pid);
   }
 
   function handleSkip() {
@@ -40,11 +44,8 @@ export default function ConnectPanel({ state, dispatch, onConnect }: ConnectPane
     dispatch({ type: 'SET_ACTIVE_SECTION', payload: 2 });
   }
 
-  function handleProjectSelect(id: string) {
-    dispatch({ type: 'SET_PROJECT_ID', payload: id });
-  }
-
   const allFields = Object.keys(STATUS_LABELS);
+  const canConnect = localKey.trim().length > 0 && localProjectId.trim().length > 0;
 
   return (
     <div style={{ maxWidth: 640 }}>
@@ -53,18 +54,17 @@ export default function ConnectPanel({ state, dispatch, onConnect }: ConnectPane
       </h2>
       <div style={{ width: 48, height: 3, background: '#FF5B23', marginBottom: 24 }} />
 
-      <p style={{ color: '#1A1A2E', marginBottom: 24, lineHeight: 1.6 }}>
-        Enter your RevenueCat Secret API key to auto-fill your subscriber data.
+      <p style={{ color: '#1A1A2E', marginBottom: 28, lineHeight: 1.6 }}>
+        Enter your Secret API key and Project ID to auto-fill your subscriber data.
         Your key is only used in your browser session and never stored.
       </p>
-      <div style={{ fontSize: 13, color: '#555', marginBottom: 24, lineHeight: 1.7, background: '#f8f9fb', padding: '14px 16px', borderLeft: '3px solid #3A39FF' }}>
-        <strong>How to get your Secret API key:</strong><br />
-        RevenueCat dashboard → <strong>Apps &amp; providers</strong> → <strong>API keys</strong> → click <strong>+ New secret API key</strong><br />
-        <span style={{ fontSize: 12, color: '#888' }}>Note: SDK (public) API keys won&apos;t work — you need a Secret API key, which you may need to create.</span>
-      </div>
 
-      {(connectionStatus === 'idle' || connectionStatus === 'error' || connectionStatus === 'connecting') && (
-        <div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+      {/* API Key */}
+      {!isConnected && (
+        <div style={{ marginBottom: 20 }}>
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#1A1A2E', marginBottom: 6 }}>
+            Secret API key
+          </label>
           <input
             type="password"
             placeholder="sk_live_..."
@@ -72,8 +72,8 @@ export default function ConnectPanel({ state, dispatch, onConnect }: ConnectPane
             onChange={(e) => setLocalKey(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleConnect()}
             style={{
-              flex: 1,
-              minWidth: 220,
+              width: '100%',
+              boxSizing: 'border-box',
               padding: '12px 16px',
               background: '#FFF1D4',
               border: '1.5px solid #e0c870',
@@ -84,56 +84,80 @@ export default function ConnectPanel({ state, dispatch, onConnect }: ConnectPane
               outline: 'none',
             }}
           />
+          <p style={{ fontSize: 12, color: '#888', marginTop: 6, lineHeight: 1.5 }}>
+            <strong>Apps &amp; providers</strong> → <strong>API keys</strong> → <strong>+ New secret API key</strong>
+            <br />SDK/public keys won&apos;t work — you need a Secret key.
+          </p>
+        </div>
+      )}
+
+      {/* Project ID */}
+      {!isConnected && (
+        <div style={{ marginBottom: 24 }}>
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#1A1A2E', marginBottom: 6 }}>
+            Project ID
+          </label>
+          <input
+            type="text"
+            placeholder="e.g. 6e761e40"
+            value={localProjectId}
+            onChange={(e) => setLocalProjectId(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleConnect()}
+            style={{
+              width: '100%',
+              boxSizing: 'border-box',
+              padding: '12px 16px',
+              background: '#FFF1D4',
+              border: '1.5px solid #e0c870',
+              borderRadius: 0,
+              fontFamily: 'monospace',
+              fontSize: 14,
+              color: '#1A1A2E',
+              outline: 'none',
+            }}
+          />
+          <p style={{ fontSize: 12, color: '#888', marginTop: 6, lineHeight: 1.5 }}>
+            Found in your dashboard URL:{' '}
+            <span style={{ fontFamily: 'monospace', background: '#f0f0f0', padding: '1px 4px' }}>
+              app.revenuecat.com/projects/<strong>[YOUR-PROJECT-ID]</strong>/...
+            </span>
+          </p>
+        </div>
+      )}
+
+      {/* Error */}
+      {connectionStatus === 'error' && (
+        <div style={{ padding: '12px 16px', background: '#fff0f0', border: '1px solid #fca5a5', marginBottom: 16, color: '#dc2626', fontSize: 14, lineHeight: 1.5 }}>
+          {connectionError}
+        </div>
+      )}
+
+      {/* Connect button */}
+      {!isConnected && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 20 }}>
           <button
             onClick={handleConnect}
-            disabled={isConnecting || !localKey.trim()}
+            disabled={isConnecting || !canConnect}
             style={{
-              padding: '12px 24px',
-              background: isConnecting ? '#ccc' : '#FF5B23',
+              padding: '12px 28px',
+              background: isConnecting || !canConnect ? '#ccc' : '#FF5B23',
               color: '#fff',
               border: 'none',
               borderRadius: 0,
               fontWeight: 700,
               fontSize: 14,
-              cursor: isConnecting ? 'default' : 'pointer',
+              cursor: isConnecting || !canConnect ? 'default' : 'pointer',
               whiteSpace: 'nowrap',
             }}
           >
             {isConnecting ? 'Connecting…' : 'Connect →'}
           </button>
-        </div>
-      )}
-
-      {connectionStatus === 'error' && (
-        <div style={{ padding: '12px 16px', background: '#fff0f0', border: '1px solid #fca5a5', marginBottom: 16, color: '#dc2626', fontSize: 14 }}>
-          {connectionError}
-        </div>
-      )}
-
-      {/* Project selector */}
-      {availableProjects.length > 1 && connectionStatus !== 'connected' && (
-        <div style={{ marginBottom: 20 }}>
-          <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#3A39FF', marginBottom: 8 }}>
-            Select a project
-          </label>
-          <select
-            value={projectId ?? ''}
-            onChange={(e) => handleProjectSelect(e.target.value)}
-            style={{
-              padding: '10px 14px',
-              background: '#FFF1D4',
-              border: '1.5px solid #e0c870',
-              borderRadius: 0,
-              fontSize: 14,
-              width: '100%',
-              color: '#1A1A2E',
-            }}
+          <button
+            onClick={handleSkip}
+            style={{ background: 'none', border: 'none', color: '#3A39FF', cursor: 'pointer', fontSize: 14, textDecoration: 'underline', padding: 0 }}
           >
-            <option value="">Choose a project…</option>
-            {availableProjects.map((p) => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
+            Skip — enter data manually →
+          </button>
         </div>
       )}
 
@@ -163,45 +187,13 @@ export default function ConnectPanel({ state, dispatch, onConnect }: ConnectPane
         </div>
       )}
 
-      {(connectionStatus === 'idle' || connectionStatus === 'error') && (
-        <button
-          onClick={handleSkip}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#3A39FF',
-            cursor: 'pointer',
-            fontSize: 14,
-            textDecoration: 'underline',
-            padding: 0,
-          }}
-        >
-          Or skip and enter data manually →
-        </button>
-      )}
-
       {isConnected && (
         <button
           onClick={() => dispatch({ type: 'SET_ACTIVE_SECTION', payload: 2 })}
-          style={{
-            padding: '12px 28px',
-            background: '#3A39FF',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 0,
-            fontWeight: 700,
-            fontSize: 15,
-            cursor: 'pointer',
-          }}
+          style={{ padding: '12px 28px', background: '#3A39FF', color: '#fff', border: 'none', borderRadius: 0, fontWeight: 700, fontSize: 15, cursor: 'pointer' }}
         >
           Continue →
         </button>
-      )}
-
-      {connectionStatus === 'manual' && (
-        <div style={{ padding: '12px 16px', background: '#f0f0ff', border: '1px solid #c7c7ff', fontSize: 14, color: '#3A39FF' }}>
-          Manual mode — fill in your numbers below.
-        </div>
       )}
     </div>
   );

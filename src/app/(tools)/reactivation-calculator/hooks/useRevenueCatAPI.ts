@@ -128,15 +128,21 @@ export async function fetchRevenueCatData(apiKey: string, projectId: string): Pr
   return { prefill, pulledFields, projects: [], error };
 }
 
-export async function fetchProjects(apiKey: string): Promise<{ projects: Array<{ id: string; name: string }>; error: string | null }> {
+export async function validateApiKey(apiKey: string, projectId: string): Promise<{ ok: boolean; error: string | null }> {
+  // Validate by attempting a lightweight metrics call. If it fails with 401, key is bad.
+  // 403 means key is valid but metrics endpoint requires a higher plan — that's fine, we'll fall back per-field.
   try {
-    const data = await proxyFetch('projects', apiKey);
-    const items: Array<{ id: string; name: string }> = data?.items ?? [];
-    return { projects: items, error: null };
+    await proxyFetch(`projects/${projectId}/metrics/overview`, apiKey);
+    return { ok: true, error: null };
   } catch (err: unknown) {
     const e = err as { status?: number };
-    if (e.status === 401) return { projects: [], error: 'Invalid API key. Make sure you\'re using a Secret API key (not an SDK/public key). Go to Apps & providers → API keys → + New secret API key.' };
-    if (e.status === 403) return { projects: [], error: 'Live data requires a RevenueCat Pro plan. You can still use the calculator manually.' };
-    return { projects: [], error: 'Could not connect to RevenueCat. Check your API key and try again.' };
+    if (e.status === 401) {
+      return { ok: false, error: 'Invalid API key. Make sure you\'re using a Secret API key (not an SDK/public key) from Apps & providers → API keys.' };
+    }
+    if (e.status === 404) {
+      return { ok: false, error: 'Project ID not found. Check the ID in your dashboard URL: app.revenuecat.com/projects/[YOUR-PROJECT-ID]/...' };
+    }
+    // 403 or other — key+project are valid, metrics may be limited. Proceed anyway.
+    return { ok: true, error: null };
   }
 }

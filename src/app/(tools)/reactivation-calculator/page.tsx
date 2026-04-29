@@ -4,7 +4,7 @@ import { useReducer, useRef, useEffect } from 'react';
 import type { CalculatorState, CalculatorAction } from './types/calculator';
 import { DEFAULT_GEO_MIX } from './data/sosa2026';
 import { useCalculator } from './hooks/useCalculator';
-import { fetchProjects, fetchRevenueCatData } from './hooks/useRevenueCatAPI';
+import { validateApiKey, fetchRevenueCatData } from './hooks/useRevenueCatAPI';
 import ConnectPanel from './components/ConnectPanel';
 import CategoryPricing from './components/CategoryPricing';
 import GeographyMixer from './components/GeographyMixer';
@@ -203,27 +203,19 @@ export default function ReactivationCalculatorPage() {
     }
   }, [state.activeSubscribers, state.monthlyChurnRate]);
 
-  async function handleConnect(apiKey: string) {
+  async function handleConnect(apiKey: string, projectId: string) {
     dispatch({ type: 'SET_CONNECTION_STATUS', payload: 'connecting' });
     dispatch({ type: 'SET_CONNECTION_ERROR', payload: '' });
 
-    const { projects, error } = await fetchProjects(apiKey);
-    if (error) {
+    const { ok, error } = await validateApiKey(apiKey, projectId);
+    if (!ok) {
       dispatch({ type: 'SET_CONNECTION_STATUS', payload: 'error' });
-      dispatch({ type: 'SET_CONNECTION_ERROR', payload: error });
-      return;
-    }
-    if (projects.length === 0) {
-      dispatch({ type: 'SET_CONNECTION_STATUS', payload: 'error' });
-      dispatch({ type: 'SET_CONNECTION_ERROR', payload: 'No projects found for this API key.' });
+      dispatch({ type: 'SET_CONNECTION_ERROR', payload: error ?? 'Connection failed.' });
       return;
     }
 
-    dispatch({ type: 'SET_PROJECTS', payload: projects });
-    const targetProjectId = projects[0].id;
-    dispatch({ type: 'SET_PROJECT_ID', payload: targetProjectId });
-
-    const { prefill, pulledFields } = await fetchRevenueCatData(apiKey, targetProjectId);
+    // Fetch whatever data is available — each endpoint fails gracefully if not accessible
+    const { prefill, pulledFields } = await fetchRevenueCatData(apiKey, projectId);
     dispatch({ type: 'PREFILL_FROM_API', payload: prefill });
     dispatch({ type: 'SET_API_PULLED_FIELDS', payload: pulledFields });
     dispatch({ type: 'SET_CONNECTION_STATUS', payload: 'connected' });
