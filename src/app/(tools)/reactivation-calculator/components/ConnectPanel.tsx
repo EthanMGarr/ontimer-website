@@ -57,9 +57,11 @@ export default function ConnectPanel({ state, dispatch, onConnect }: ConnectPane
         Enter your RevenueCat Secret API key to auto-fill your subscriber data.
         Your key is only used in your browser session and never stored.
       </p>
-      <p style={{ fontSize: 12, color: '#666', marginBottom: 24, lineHeight: 1.5 }}>
-        Find your key: RevenueCat dashboard → Project Settings → API Keys → Secret keys
-      </p>
+      <div style={{ fontSize: 13, color: '#555', marginBottom: 24, lineHeight: 1.7, background: '#f8f9fb', padding: '14px 16px', borderLeft: '3px solid #3A39FF' }}>
+        <strong>How to get your Secret API key:</strong><br />
+        RevenueCat dashboard → <strong>Apps &amp; providers</strong> → <strong>API keys</strong> → click <strong>+ New secret API key</strong><br />
+        <span style={{ fontSize: 12, color: '#888' }}>Note: SDK (public) API keys won&apos;t work — you need a Secret API key, which you may need to create.</span>
+      </div>
 
       {(connectionStatus === 'idle' || connectionStatus === 'error' || connectionStatus === 'connecting') && (
         <div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>

@@ -135,7 +135,7 @@ export async function fetchProjects(apiKey: string): Promise<{ projects: Array<{
     return { projects: items, error: null };
   } catch (err: unknown) {
     const e = err as { status?: number };
-    if (e.status === 401) return { projects: [], error: 'Invalid API key — check your RevenueCat project settings' };
+    if (e.status === 401) return { projects: [], error: 'Invalid API key. Make sure you\'re using a Secret API key (not an SDK/public key). Go to Apps & providers → API keys → + New secret API key.' };
     if (e.status === 403) return { projects: [], error: 'Live data requires a RevenueCat Pro plan. You can still use the calculator manually.' };
     return { projects: [], error: 'Could not connect to RevenueCat. Check your API key and try again.' };
   }
