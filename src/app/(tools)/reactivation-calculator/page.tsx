@@ -278,7 +278,12 @@ export default function ReactivationCalculatorPage() {
 
         {/* Section 1: Connect */}
         <Section n={1} title="Connect" active sectionRef={undefined}>
-          <ConnectPanel state={state} dispatch={dispatch} onConnect={handleConnect} />
+          <ConnectPanel
+            state={state}
+            dispatch={dispatch}
+            onConnect={handleConnect}
+            onContinue={() => sec2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          />
         </Section>
 
         {/* Section 2: Your App */}

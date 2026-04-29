@@ -7,6 +7,7 @@ interface ConnectPanelProps {
   state: CalculatorState;
   dispatch: React.Dispatch<CalculatorAction>;
   onConnect: (apiKey: string, projectId: string) => Promise<void>;
+  onContinue: () => void;
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -22,7 +23,7 @@ const MANUAL_LABELS: Record<string, string> = {
   category: 'App category',
 };
 
-export default function ConnectPanel({ state, dispatch, onConnect }: ConnectPanelProps) {
+export default function ConnectPanel({ state, dispatch, onConnect, onContinue }: ConnectPanelProps) {
   const [localKey, setLocalKey] = useState('');
   const [localProjectId, setLocalProjectId] = useState('');
   const { connectionStatus, connectionError, apiPulledFields } = state;
@@ -99,7 +100,7 @@ export default function ConnectPanel({ state, dispatch, onConnect }: ConnectPane
           </label>
           <input
             type="text"
-            placeholder="e.g. 6e761e40"
+            placeholder="e.g. a1b2c3d4"
             value={localProjectId}
             onChange={(e) => setLocalProjectId(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleConnect()}
@@ -189,7 +190,7 @@ export default function ConnectPanel({ state, dispatch, onConnect }: ConnectPane
 
       {isConnected && (
         <button
-          onClick={() => dispatch({ type: 'SET_ACTIVE_SECTION', payload: 2 })}
+          onClick={onContinue}
           style={{ padding: '12px 28px', background: '#3A39FF', color: '#fff', border: 'none', borderRadius: 0, fontWeight: 700, fontSize: 15, cursor: 'pointer' }}
         >
           Continue →
