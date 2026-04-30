@@ -112,8 +112,11 @@ function fmtDate(d: Date) {
 
 /** "HH:MM" → "8:00 PM" */
 function fmtDepartureTime(timeStr: string): string {
-  const [h, m] = timeStr.split(":").map(Number);
-  if (isNaN(h)) return "";
+  const parts = timeStr.split(":");
+  if (parts.length < 2) return "";
+  const h = Number(parts[0]);
+  const m = Number(parts[1]);
+  if (isNaN(h) || isNaN(m)) return "";
   const hour = h % 12 || 12;
   const ampm = h < 12 ? "AM" : "PM";
   return m === 0 ? `${hour} ${ampm}` : `${hour}:${m.toString().padStart(2, "0")} ${ampm}`;
@@ -274,6 +277,11 @@ export default function AirportCalculator() {
   const [error, setError] = useState<string | null>(null);
 
   const securityDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  // ── Clear validation error when user edits any input ─────────────────────
+  useEffect(() => {
+    setError(null);
+  }, [departureDate, departureTime, origin, airport, flightType, arrivalMode, hasCheckedBag, manualTravelMinutes, hasPreCheck, hasClear, customBuffer, customSecurityMinutes]);
 
   // ── Auto-fetch security estimate when relevant inputs change ───────────────
   useEffect(() => {
