@@ -32,10 +32,10 @@ export const SOSA_CATEGORY_DATA: Record<string, { monthly: number; annual: numbe
 
 // SOSA 2026 price tier reactivation rates by plan type
 export const SOSA_PRICE_TIERS = {
-  monthly: { low: 0.154, mid: 0.124, high: 0.289 },
-  annual:  { low: 0.058, mid: 0.056, high: 0.044 },
-  weekly:  { low: 0.084, mid: 0.094, high: 0.087 },
-  quarterly: { low: 0.154, mid: 0.124, high: 0.289 }, // use monthly as proxy
+  monthly:   { low: 0.154, mid: 0.124, high: 0.289 },
+  annual:    { low: 0.058, mid: 0.056, high: 0.044 },
+  weekly:    { low: 0.084, mid: 0.094, high: 0.087 },
+  quarterly: { low: 0.154, mid: 0.124, high: 0.289 }, // monthly as proxy
 } as const;
 
 // Price tier thresholds
@@ -43,31 +43,13 @@ export const PRICE_TIER_THRESHOLDS = {
   monthly:   { low: 7,  high: 13.50 },
   annual:    { low: 20, high: 58 },
   weekly:    { low: 4,  high: 8 },
-  quarterly: { low: 20, high: 58 }, // annualise ×4 then use annual thresholds
+  quarterly: { low: 20, high: 58 }, // annualised ×4 → annual thresholds
 } as const;
 
-// SOSA 2026 regional reactivation benchmarks
-export const SOSA_GEO_DATA: Record<string, { monthly: number; annual: number }> = {
-  'Asia-Pacific':   { monthly: 0.239, annual: 0.051 },
-  'IN / SEA':       { monthly: 0.212, annual: 0.055 },
-  'Latin America':  { monthly: 0.197, annual: 0.049 },
-  'MEA':            { monthly: 0.213, annual: 0.033 },
-  'North America':  { monthly: 0.180, annual: 0.050 },
-  'ROW':            { monthly: 0.228, annual: 0.059 },
-  'Western Europe': { monthly: 0.217, annual: 0.054 },
-};
-
-export const GEO_REGIONS = Object.keys(SOSA_GEO_DATA);
-
-// Default equal-split geo mix
-export const DEFAULT_GEO_MIX: Record<string, number> = Object.fromEntries(
-  GEO_REGIONS.map((r) => [r, parseFloat((1 / GEO_REGIONS.length).toFixed(4))])
-);
-
-// Hold period assumptions post-reactivation (in months, except annual = full price)
+// Hold period assumptions post-reactivation (months; annual = full price, multiplier = 1)
 export const HOLD_PERIOD_MONTHS = {
-  monthly: 4,
-  annual: 1,   // multiplier is 1 — annual price used directly (full price, no hold multiplier)
-  weekly: 2,
+  monthly:   4,
+  annual:    1,
+  weekly:    2,
   quarterly: 3,
 } as const;

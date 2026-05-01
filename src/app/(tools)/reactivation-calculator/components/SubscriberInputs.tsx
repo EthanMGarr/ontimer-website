@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import type { CalculatorState, CalculatorAction, PlanType } from '../types/calculator';
 
 interface SubscriberInputsProps {
@@ -8,186 +9,210 @@ interface SubscriberInputsProps {
 }
 
 const PLAN_LABELS: Record<PlanType, string> = {
-  monthly: 'Monthly',
-  annual: 'Annual',
-  weekly: 'Weekly',
-  quarterly: 'Quarterly',
+  monthly: 'Monthly', annual: 'Annual', weekly: 'Weekly', quarterly: 'Quarterly',
 };
-
 const PLAN_ORDER: PlanType[] = ['monthly', 'annual', 'weekly', 'quarterly'];
 
-function InputField({
-  label, value, onChange, placeholder, suffix, hint, monospace,
-}: {
-  label: string;
-  value: string | number;
-  onChange: (v: string) => void;
-  placeholder?: string;
-  suffix?: string;
-  hint?: string;
-  monospace?: boolean;
-}) {
+function HowTo({ title, children }: { title: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <label style={{ fontSize: 12, fontWeight: 600, color: '#666', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-        {label}
-      </label>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <input
-          type="number"
-          min="0"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          style={{
-            width: '100%',
-            padding: '10px 12px',
-            background: '#FFF1D4',
-            border: '1.5px solid #e0c870',
-            borderRadius: 0,
-            fontSize: 15,
-            fontFamily: monospace ? 'monospace' : 'inherit',
-            color: '#1A1A2E',
-          }}
-        />
-        {suffix && <span style={{ fontSize: 13, color: '#666', whiteSpace: 'nowrap' }}>{suffix}</span>}
-      </div>
-      {hint && <p style={{ fontSize: 11, color: '#888', margin: 0, lineHeight: 1.4 }}>{hint}</p>}
+    <div style={{ marginTop: 6 }}>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        style={{ background: 'none', border: 'none', padding: 0, color: '#3A39FF', fontSize: 12, cursor: 'pointer', fontWeight: 600 }}
+      >
+        {open ? '▾' : '▸'} How to find this in RevenueCat
+      </button>
+      {open && (
+        <div style={{ marginTop: 8, padding: '12px 14px', background: '#f8f9fb', borderLeft: '3px solid #ADE6ED', fontSize: 12, color: '#444', lineHeight: 1.7 }}>
+          <strong style={{ color: '#1A1A2E' }}>{title}</strong>
+          <div style={{ marginTop: 6 }}>{children}</div>
+        </div>
+      )}
     </div>
   );
 }
 
+function IntInput({
+  value, onChange, placeholder,
+}: { value: number; onChange: (v: string) => void; placeholder?: string }) {
+  return (
+    <input
+      type="number"
+      min="0"
+      step="1"
+      value={value || ''}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder ?? '0'}
+      style={{
+        width: '100%',
+        padding: '10px 12px',
+        background: '#FFF1D4',
+        border: '1.5px solid #e0c870',
+        borderRadius: 0,
+        fontSize: 15,
+        fontFamily: 'monospace',
+        color: '#1A1A2E',
+        boxSizing: 'border-box',
+      }}
+    />
+  );
+}
+
 export default function SubscriberInputs({ state, dispatch }: SubscriberInputsProps) {
-  const { prices, activeSubscribers, monthlyChurnRate, actualReactivationRate, apiPulledFields } = state;
+  const { prices, activeSubscribers, avgChurnedPerMonth, avgReactivatedPerMonth } = state;
+  const activePlans = PLAN_ORDER.filter((p) => prices[p] !== null && (prices[p] as number) > 0);
 
-  const activePlans = PLAN_ORDER.filter((p) => prices[p] !== null && prices[p] !== undefined);
-
-  function setSubscribers(plan: PlanType, raw: string) {
-    const val = raw === '' ? 0 : parseInt(raw, 10);
-    dispatch({ type: 'SET_ACTIVE_SUBSCRIBERS', payload: { [plan]: isNaN(val) ? 0 : val } });
+  function setSubs(plan: PlanType, raw: string) {
+    const v = parseInt(raw, 10);
+    dispatch({ type: 'SET_ACTIVE_SUBSCRIBERS', payload: { [plan]: isNaN(v) ? 0 : v } });
+  }
+  function setChurned(plan: PlanType, raw: string) {
+    const v = parseInt(raw, 10);
+    dispatch({ type: 'SET_AVG_CHURNED', payload: { [plan]: isNaN(v) ? 0 : v } });
+  }
+  function setReactivated(plan: PlanType, raw: string) {
+    const v = parseInt(raw, 10);
+    dispatch({ type: 'SET_AVG_REACTIVATED', payload: { [plan]: isNaN(v) ? 0 : v } });
   }
 
-  function setChurn(plan: PlanType, raw: string) {
-    const val = raw === '' ? 0 : parseFloat(raw) / 100;
-    dispatch({ type: 'SET_MONTHLY_CHURN', payload: { [plan]: isNaN(val) ? 0 : val } });
+  function derivedRateLabel(plan: PlanType): { text: string; fromData: boolean } {
+    const c = avgChurnedPerMonth[plan] ?? 0;
+    const r = avgReactivatedPerMonth[plan] ?? 0;
+    if (c > 0 && r > 0) {
+      return { text: `Your current reactivation rate: ${((r / c) * 100).toFixed(1)}%`, fromData: true };
+    }
+    // show benchmark
+    const { SOSA_CATEGORY_DATA, SOSA_PRICE_TIERS, PRICE_TIER_THRESHOLDS } = require('../data/sosa2026');
+    const catData = SOSA_CATEGORY_DATA[state.category] ?? SOSA_CATEGORY_DATA['All Categories'];
+    const baseRate = plan === 'quarterly' ? catData.monthly : catData[plan] ?? catData.monthly;
+    const price = prices[plan];
+    let tierMult = 1;
+    if (price) {
+      const effectivePrice = plan === 'quarterly' ? price * 4 : price;
+      const thresholds = plan === 'quarterly' ? PRICE_TIER_THRESHOLDS.annual : PRICE_TIER_THRESHOLDS[plan];
+      const tier = effectivePrice < thresholds.low ? 'low' : effectivePrice > thresholds.high ? 'high' : 'mid';
+      const tierKey = plan === 'quarterly' ? 'monthly' : plan;
+      const rates = SOSA_PRICE_TIERS[tierKey];
+      tierMult = rates[tier] / rates['mid'];
+    }
+    const bench = baseRate * tierMult;
+    return { text: `Using SOSA 2026 benchmark: ${(bench * 100).toFixed(1)}%`, fromData: false };
   }
 
-  function setActualRate(plan: PlanType, raw: string) {
-    const val = raw === '' ? null : parseFloat(raw) / 100;
-    dispatch({ type: 'SET_ACTUAL_REACTIVATION', payload: { [plan]: val === null ? null : isNaN(val) ? null : val } });
+  if (activePlans.length === 0) {
+    return <p style={{ color: '#d97706', fontSize: 14 }}>Go back and enter at least one plan price to unlock this section.</p>;
   }
 
-  const subsPulled = apiPulledFields.includes('activeSubscribers');
-  const churnPulled = apiPulledFields.includes('monthlyChurnRate');
-  const reactPulled = apiPulledFields.includes('actualReactivationRate');
+  const colWidth = `${Math.floor(80 / activePlans.length)}%`;
 
   return (
     <div>
-      <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 24, fontWeight: 700, color: '#3A39FF', marginBottom: 8 }}>
-        Your numbers
-      </h2>
-      <div style={{ width: 48, height: 3, background: '#FF5B23', marginBottom: 24 }} />
-
-      {activePlans.length === 0 && (
-        <p style={{ color: '#d97706', fontSize: 14 }}>Go back and enter at least one plan price to unlock this section.</p>
-      )}
-
-      {activePlans.length > 0 && (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 480 }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign: 'left', padding: '8px 0', fontSize: 13, fontWeight: 700, color: '#1A1A2E', borderBottom: '2px solid #e5e7eb', width: 220 }}></th>
-                {activePlans.map((plan) => (
-                  <th key={plan} style={{ textAlign: 'center', padding: '8px 12px', fontSize: 13, fontWeight: 700, color: '#3A39FF', borderBottom: '2px solid #e5e7eb' }}>
-                    {PLAN_LABELS[plan]}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {/* Active subscribers */}
-              <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                <td style={{ padding: '16px 0', verticalAlign: 'top' }}>
-                  <div style={{ fontWeight: 600, fontSize: 14, color: '#1A1A2E' }}>
-                    Active subscribers
-                    {subsPulled && <span style={{ marginLeft: 8, color: '#16a34a', fontSize: 11 }}>✓ API</span>}
-                  </div>
-                  <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>RevenueCat → Overview → Active Subscriptions</div>
-                </td>
-                {activePlans.map((plan) => (
-                  <td key={plan} style={{ padding: '16px 12px', verticalAlign: 'top' }}>
-                    <InputField
-                      label=""
-                      value={activeSubscribers[plan] || ''}
-                      onChange={(v) => setSubscribers(plan, v)}
-                      placeholder="0"
-                      monospace
-                    />
-                  </td>
-                ))}
-              </tr>
-
-              {/* Monthly churn rate */}
-              <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                <td style={{ padding: '16px 0', verticalAlign: 'top' }}>
-                  <div style={{ fontWeight: 600, fontSize: 14, color: '#1A1A2E' }}>
-                    Monthly churn rate
-                    {churnPulled && <span style={{ marginLeft: 8, color: '#16a34a', fontSize: 11 }}>✓ API</span>}
-                  </div>
-                  <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>RevenueCat → Charts → Churn Rate</div>
-                  <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>Annual/quarterly: express as monthly equivalent</div>
-                </td>
-                {activePlans.map((plan) => (
-                  <td key={plan} style={{ padding: '16px 12px', verticalAlign: 'top' }}>
-                    <InputField
-                      label=""
-                      value={monthlyChurnRate[plan] ? (monthlyChurnRate[plan] * 100).toFixed(1) : ''}
-                      onChange={(v) => setChurn(plan, v)}
-                      placeholder="e.g. 5.2"
-                      suffix="%"
-                      monospace
-                    />
-                  </td>
-                ))}
-              </tr>
-
-              {/* Actual reactivation rate */}
-              <tr>
-                <td style={{ padding: '16px 0', verticalAlign: 'top' }}>
-                  <div style={{ fontWeight: 600, fontSize: 14, color: '#1A1A2E' }}>
-                    Actual reactivation rate
-                    {reactPulled && <span style={{ marginLeft: 8, color: '#16a34a', fontSize: 11 }}>✓ API</span>}
-                    <span style={{ marginLeft: 8, fontSize: 11, color: '#888', fontStyle: 'italic' }}>optional</span>
-                  </div>
-                  <div style={{ fontSize: 11, color: '#888', marginTop: 2, lineHeight: 1.4 }}>
-                    RevenueCat → Charts → Active Subscriptions Movement → Reactivated ÷ Churned (12mo)
-                  </div>
-                </td>
-                {activePlans.map((plan) => (
-                  <td key={plan} style={{ padding: '16px 12px', verticalAlign: 'top' }}>
-                    <InputField
-                      label=""
-                      value={actualReactivationRate[plan] !== null && actualReactivationRate[plan] !== undefined
-                        ? ((actualReactivationRate[plan] as number) * 100).toFixed(1)
-                        : ''}
-                      onChange={(v) => setActualRate(plan, v)}
-                      placeholder="—"
-                      suffix="%"
-                      monospace
-                    />
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      <div style={{ marginTop: 20, padding: '14px 18px', background: '#f0f0ff', borderLeft: '3px solid #3A39FF' }}>
-        <p style={{ fontSize: 13, color: '#1A1A2E', margin: 0, lineHeight: 1.6 }}>
-          <strong>Reactivation rate:</strong> If blank, we use the SOSA 2026 benchmark for your category, adjusted for your price tier and geography. Enter your actual rate to make the model more accurate.
+      {/* Tip box */}
+      <div style={{ padding: '14px 18px', background: '#ADE6ED', marginBottom: 32, borderLeft: '4px solid #3A39FF' }}>
+        <p style={{ margin: 0, fontSize: 13, color: '#1A1A2E', lineHeight: 1.6 }}>
+          <strong>Tip:</strong> For all inputs below, we recommend using a 3-month average for accuracy.
+          In RevenueCat, set your chart date range to <strong>Last 90 days</strong> with a <strong>monthly view</strong>,
+          then average the three months shown.
         </p>
+      </div>
+
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14, minWidth: 480 }}>
+          <thead>
+            <tr>
+              <th style={{ textAlign: 'left', padding: '8px 0 12px', fontWeight: 700, color: '#1A1A2E', borderBottom: '2px solid #e5e7eb', width: '30%' }} />
+              {activePlans.map((p) => (
+                <th key={p} style={{ textAlign: 'center', padding: '8px 12px 12px', fontWeight: 700, color: '#3A39FF', borderBottom: '2px solid #e5e7eb', width: colWidth }}>
+                  {PLAN_LABELS[p]}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+
+            {/* Active subscribers */}
+            <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+              <td style={{ padding: '16px 0', verticalAlign: 'top' }}>
+                <div style={{ fontWeight: 600, color: '#1A1A2E' }}>Active subscribers</div>
+                <HowTo title="Active subscribers — how to find this">
+                  Go to <strong>RevenueCat → Charts → Active Subscriptions</strong>. Set the date range to <strong>Last 90 days</strong>, view by month.
+                  To break down by plan duration, click <strong>Segment by → Product Duration</strong> (Monthly / Annual / Weekly / Quarterly).
+                  Take the most recent month&apos;s figure for each plan type.
+                </HowTo>
+              </td>
+              {activePlans.map((p) => (
+                <td key={p} style={{ padding: '16px 12px', verticalAlign: 'top' }}>
+                  <IntInput value={activeSubscribers[p]} onChange={(v) => setSubs(p, v)} />
+                </td>
+              ))}
+            </tr>
+
+            {/* Avg churned */}
+            <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+              <td style={{ padding: '16px 0', verticalAlign: 'top' }}>
+                <div style={{ fontWeight: 600, color: '#1A1A2E' }}>Avg churned / month</div>
+                <HowTo title="Churned subscribers — how to find this">
+                  Go to <strong>RevenueCat → Charts → Active Subscriptions Movement</strong>. Set date range to <strong>Last 90 days</strong>, view by month.
+                  To break down by plan duration, click <strong>Segment by → Product Duration</strong>.
+                  Look at the <strong>Churned</strong> row. Take the last 3 months, add them up, divide by 3.
+                  Enter that average here.
+                </HowTo>
+              </td>
+              {activePlans.map((p) => (
+                <td key={p} style={{ padding: '16px 12px', verticalAlign: 'top' }}>
+                  <IntInput value={avgChurnedPerMonth[p]} onChange={(v) => setChurned(p, v)} />
+                </td>
+              ))}
+            </tr>
+
+            {/* Avg reactivated */}
+            <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+              <td style={{ padding: '16px 0', verticalAlign: 'top' }}>
+                <div style={{ fontWeight: 600, color: '#1A1A2E' }}>Avg reactivated / month</div>
+                <HowTo title="Reactivated subscribers — how to find this">
+                  Go to <strong>RevenueCat → Charts → Active Subscriptions Movement</strong>. Set date range to <strong>Last 90 days</strong>, view by month.
+                  To break down by plan duration, click <strong>Filter by → Product Duration</strong> and select the relevant plan type.
+                  Look at the <strong>Reactivated</strong> row. Take the last 3 months, add them up, divide by 3.
+                  <br /><br />
+                  <em>Note: reactivations use <strong>Filter</strong>, not Segment — this is different from the churn step above.</em>
+                </HowTo>
+              </td>
+              {activePlans.map((p) => (
+                <td key={p} style={{ padding: '16px 12px', verticalAlign: 'top' }}>
+                  <IntInput value={avgReactivatedPerMonth[p]} onChange={(v) => setReactivated(p, v)} />
+                </td>
+              ))}
+            </tr>
+
+            {/* Derived reactivation rate */}
+            <tr>
+              <td style={{ padding: '12px 0', verticalAlign: 'top' }}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#666', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Derived rate
+                </div>
+              </td>
+              {activePlans.map((p) => {
+                const { text, fromData } = derivedRateLabel(p);
+                return (
+                  <td key={p} style={{ padding: '12px 12px', verticalAlign: 'top' }}>
+                    <div style={{
+                      padding: '8px 10px',
+                      background: '#ADE6ED',
+                      fontSize: 12,
+                      fontFamily: 'monospace',
+                      color: '#1A1A2E',
+                      fontWeight: fromData ? 700 : 400,
+                    }}>
+                      {text}
+                    </div>
+                  </td>
+                );
+              })}
+            </tr>
+
+          </tbody>
+        </table>
       </div>
     </div>
   );

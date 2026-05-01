@@ -2,52 +2,32 @@
 
 import { useReducer, useRef, useEffect } from 'react';
 import type { CalculatorState, CalculatorAction } from './types/calculator';
-import { DEFAULT_GEO_MIX } from './data/sosa2026';
 import { useCalculator } from './hooks/useCalculator';
-import { validateApiKey, fetchRevenueCatData } from './hooks/useRevenueCatAPI';
-import ConnectPanel from './components/ConnectPanel';
 import CategoryPricing from './components/CategoryPricing';
-import GeographyMixer from './components/GeographyMixer';
 import SubscriberInputs from './components/SubscriberInputs';
 import ResultsPanel from './components/ResultsPanel';
 
 // ── State ────────────────────────────────────────────────────────────────────
 
 const initialState: CalculatorState = {
-  apiKey: '',
-  projectId: null,
-  availableProjects: [],
-  connectionStatus: 'idle',
-  connectionError: '',
-  apiPulledFields: [],
   category: '',
   prices: { monthly: null, annual: null, weekly: null, quarterly: null },
-  geoMix: { ...DEFAULT_GEO_MIX },
   activeSubscribers: { monthly: 0, annual: 0, weekly: 0, quarterly: 0 },
-  monthlyChurnRate: { monthly: 0, annual: 0, weekly: 0, quarterly: 0 },
-  actualReactivationRate: { monthly: null, annual: null, weekly: null, quarterly: null },
+  avgChurnedPerMonth: { monthly: 0, annual: 0, weekly: 0, quarterly: 0 },
+  avgReactivatedPerMonth: { monthly: 0, annual: 0, weekly: 0, quarterly: 0 },
   campaignTargetRate: 0.35,
   activeSection: 1,
 };
 
 function reducer(state: CalculatorState, action: CalculatorAction): CalculatorState {
   switch (action.type) {
-    case 'SET_API_KEY': return { ...state, apiKey: action.payload };
-    case 'SET_CONNECTION_STATUS': return { ...state, connectionStatus: action.payload };
-    case 'SET_CONNECTION_ERROR': return { ...state, connectionError: action.payload };
-    case 'SET_PROJECTS': return { ...state, availableProjects: action.payload };
-    case 'SET_PROJECT_ID': return { ...state, projectId: action.payload };
-    case 'SET_API_PULLED_FIELDS': return { ...state, apiPulledFields: action.payload };
     case 'SET_CATEGORY': return { ...state, category: action.payload };
     case 'SET_PRICE': return { ...state, prices: { ...state.prices, [action.payload.plan]: action.payload.value } };
-    case 'SET_GEO_MIX': return { ...state, geoMix: action.payload };
-    case 'SET_GEO_REGION': return { ...state, geoMix: { ...state.geoMix, [action.payload.region]: action.payload.value } };
     case 'SET_ACTIVE_SUBSCRIBERS': return { ...state, activeSubscribers: { ...state.activeSubscribers, ...action.payload } };
-    case 'SET_MONTHLY_CHURN': return { ...state, monthlyChurnRate: { ...state.monthlyChurnRate, ...action.payload } };
-    case 'SET_ACTUAL_REACTIVATION': return { ...state, actualReactivationRate: { ...state.actualReactivationRate, ...action.payload } };
+    case 'SET_AVG_CHURNED': return { ...state, avgChurnedPerMonth: { ...state.avgChurnedPerMonth, ...action.payload } };
+    case 'SET_AVG_REACTIVATED': return { ...state, avgReactivatedPerMonth: { ...state.avgReactivatedPerMonth, ...action.payload } };
     case 'SET_CAMPAIGN_TARGET': return { ...state, campaignTargetRate: action.payload };
     case 'SET_ACTIVE_SECTION': return { ...state, activeSection: action.payload };
-    case 'PREFILL_FROM_API': return { ...state, ...action.payload };
     default: return state;
   }
 }
@@ -55,10 +35,9 @@ function reducer(state: CalculatorState, action: CalculatorAction): CalculatorSt
 // ── Progress indicator ────────────────────────────────────────────────────────
 
 const SECTIONS = [
-  { n: 1, label: 'Connect' },
-  { n: 2, label: 'Your App' },
-  { n: 3, label: 'Your Numbers' },
-  { n: 4, label: 'Your Opportunity' },
+  { n: 1, label: 'Your App' },
+  { n: 2, label: 'Your Numbers' },
+  { n: 3, label: 'Your Opportunity' },
 ] as const;
 
 function ProgressBar({ activeSection }: { activeSection: number }) {
@@ -155,18 +134,15 @@ function Section({
 // ── Section gate logic ────────────────────────────────────────────────────────
 
 function canSeeSection2(state: CalculatorState) {
-  return state.connectionStatus === 'connected' || state.connectionStatus === 'manual';
-}
-function canSeeSection3(state: CalculatorState) {
   const hasCategory = !!state.category;
   const hasPrice = Object.values(state.prices).some((p) => p !== null && (p as number) > 0);
-  const geoTotal = Math.round(Object.values(state.geoMix).reduce((s, v) => s + v, 0) * 100);
-  return canSeeSection2(state) && hasCategory && hasPrice && geoTotal === 100;
+  return hasCategory && hasPrice;
 }
-function canSeeSection4(state: CalculatorState) {
+
+function canSeeSection3(state: CalculatorState) {
   const hasAnySubs = Object.values(state.activeSubscribers).some((v) => v > 0);
-  const hasAnyChurn = Object.values(state.monthlyChurnRate).some((v) => v > 0);
-  return canSeeSection3(state) && hasAnySubs && hasAnyChurn;
+  const hasAnyChurn = Object.values(state.avgChurnedPerMonth).some((v) => v > 0);
+  return canSeeSection2(state) && hasAnySubs && hasAnyChurn;
 }
 
 // ── Main page ─────────────────────────────────────────────────────────────────
@@ -177,60 +153,28 @@ export default function ReactivationCalculatorPage() {
 
   const sec2Ref = useRef<HTMLDivElement>(null);
   const sec3Ref = useRef<HTMLDivElement>(null);
-  const sec4Ref = useRef<HTMLDivElement>(null);
 
-  // Scroll to next section when it becomes active
   useEffect(() => {
-    if (state.activeSection === 2) sec2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, [state.activeSection]);
-
-  // Auto-advance section when conditions met
-  useEffect(() => {
-    if (state.activeSection < 2 && canSeeSection2(state)) dispatch({ type: 'SET_ACTIVE_SECTION', payload: 2 });
-  }, [state.connectionStatus]);
+    if (state.activeSection < 2 && canSeeSection2(state)) {
+      dispatch({ type: 'SET_ACTIVE_SECTION', payload: 2 });
+      setTimeout(() => sec2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+  }, [state.category, state.prices]);
 
   useEffect(() => {
     if (state.activeSection < 3 && canSeeSection3(state)) {
       dispatch({ type: 'SET_ACTIVE_SECTION', payload: 3 });
       setTimeout(() => sec3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     }
-  }, [state.category, state.prices, state.geoMix]);
-
-  useEffect(() => {
-    if (state.activeSection < 4 && canSeeSection4(state)) {
-      dispatch({ type: 'SET_ACTIVE_SECTION', payload: 4 });
-      setTimeout(() => sec4Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-    }
-  }, [state.activeSubscribers, state.monthlyChurnRate]);
-
-  async function handleConnect(apiKey: string, projectId: string) {
-    dispatch({ type: 'SET_CONNECTION_STATUS', payload: 'connecting' });
-    dispatch({ type: 'SET_CONNECTION_ERROR', payload: '' });
-
-    const { ok, error } = await validateApiKey(apiKey, projectId);
-    if (!ok) {
-      dispatch({ type: 'SET_CONNECTION_STATUS', payload: 'error' });
-      dispatch({ type: 'SET_CONNECTION_ERROR', payload: error ?? 'Connection failed.' });
-      return;
-    }
-
-    // Fetch whatever data is available — each endpoint fails gracefully if not accessible
-    const { prefill, pulledFields } = await fetchRevenueCatData(apiKey, projectId);
-    dispatch({ type: 'PREFILL_FROM_API', payload: prefill });
-    dispatch({ type: 'SET_API_PULLED_FIELDS', payload: pulledFields });
-    dispatch({ type: 'SET_CONNECTION_STATUS', payload: 'connected' });
-    dispatch({ type: 'SET_ACTIVE_SECTION', payload: 2 });
-  }
+  }, [state.activeSubscribers, state.avgChurnedPerMonth]);
 
   const show2 = canSeeSection2(state) || state.activeSection >= 2;
   const show3 = canSeeSection3(state) || state.activeSection >= 3;
-  const show4 = canSeeSection4(state) || state.activeSection >= 4;
 
   return (
     <div style={{
       minHeight: '100vh',
       background: '#fff',
-      // Growth Waves palette
       '--butter': '#FFF1D4',
       '--mist': '#ADE6ED',
       '--burnt-rose': '#FF5B23',
@@ -238,10 +182,8 @@ export default function ReactivationCalculatorPage() {
       '--dark': '#1A1A2E',
     } as React.CSSProperties}>
 
-      {/* Load Tiempos + Geist fonts via next/font or link */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;600;700&display=swap');
-        /* Hide OnTimer chrome — this page is a standalone embedded calculator */
         body { margin: 0 !important; background: #fff !important; color: #1A1A2E !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
         header, footer { display: none !important; }
         main { padding: 0 !important; flex: unset !important; }
@@ -276,49 +218,31 @@ export default function ReactivationCalculatorPage() {
       {/* Main content */}
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 40px 80px' }}>
 
-        {/* Section 1: Connect */}
-        <Section n={1} title="Connect" active sectionRef={undefined}>
-          <ConnectPanel
-            state={state}
-            dispatch={dispatch}
-            onConnect={handleConnect}
-            onContinue={() => sec2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-          />
+        {/* Section 1: Your App */}
+        <Section n={1} title="Your App" active>
+          <CategoryPricing state={state} dispatch={dispatch} />
         </Section>
 
-        {/* Section 2: Your App */}
+        {/* Section 2: Your Numbers */}
         {show2 && (
           <div ref={sec2Ref}>
-            <Section n={2} title="Your App" active>
-              <div style={{ marginBottom: 48 }}>
-                <CategoryPricing state={state} dispatch={dispatch} />
-              </div>
-              <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', marginBottom: 40 }} />
-              <GeographyMixer state={state} dispatch={dispatch} />
-            </Section>
-          </div>
-        )}
-
-        {/* Section 3: Your Numbers */}
-        {show3 && (
-          <div ref={sec3Ref}>
             <hr style={{ border: 'none', borderTop: '1px solid #e5e7eb', marginBottom: 56 }} />
-            <Section n={3} title="Your Numbers" active>
+            <Section n={2} title="Your Numbers" active>
               <SubscriberInputs state={state} dispatch={dispatch} />
-              {canSeeSection3(state) && !canSeeSection4(state) && (
+              {canSeeSection2(state) && !canSeeSection3(state) && (
                 <div style={{ marginTop: 28, padding: '14px 18px', background: '#f0f0ff', borderLeft: '3px solid #3A39FF', fontSize: 13, color: '#3A39FF' }}>
-                  Enter at least one plan&apos;s active subscribers and churn rate to see your results.
+                  Enter at least one plan&apos;s active subscribers and avg churned/month to see your results.
                 </div>
               )}
             </Section>
           </div>
         )}
 
-        {/* Section 4: Results */}
-        {show4 && (
-          <div ref={sec4Ref}>
+        {/* Section 3: Your Opportunity */}
+        {show3 && (
+          <div ref={sec3Ref}>
             <hr style={{ border: 'none', borderTop: '2px solid #1A1A2E', marginBottom: 56 }} />
-            <Section n={4} title="Your Opportunity" active>
+            <Section n={3} title="Your Opportunity" active>
               <ResultsPanel state={state} dispatch={dispatch} results={results} />
             </Section>
           </div>
