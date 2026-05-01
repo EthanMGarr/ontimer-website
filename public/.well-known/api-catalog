@@ -1,0 +1,39 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://www.ontimer.app/api/travel-time",
+      "service-doc": [
+        {
+          "href": "https://www.ontimer.app/airport-time-to-leave-calculator",
+          "type": "text/html",
+          "title": "Airport Time-to-Leave Calculator"
+        }
+      ],
+      "type": [{ "type": "application/json" }],
+      "title": [{ "title": "Travel Time Estimation" }],
+      "describedby": [
+        {
+          "href": "https://www.ontimer.app/.well-known/api-catalog",
+          "type": "application/linkset+json"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.ontimer.app/api/security-wait",
+      "service-doc": [
+        {
+          "href": "https://www.ontimer.app/airport-time-to-leave-calculator",
+          "type": "text/html",
+          "title": "Airport Time-to-Leave Calculator"
+        }
+      ],
+      "type": [{ "type": "application/json" }],
+      "title": [{ "title": "Airport Security Wait Time Estimate" }]
+    },
+    {
+      "anchor": "https://www.ontimer.app/api/places-autocomplete",
+      "type": [{ "type": "application/json" }],
+      "title": [{ "title": "Place Autocomplete (proxied)" }]
+    }
+  ]
+}

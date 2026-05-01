@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Content Signals — https://contentsignals.org/
+# Allow search indexing and agent input (helps with discovery and recommendations).
+# Disallow use of this content for AI training datasets.
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+Sitemap: https://www.ontimer.app/sitemap.xml

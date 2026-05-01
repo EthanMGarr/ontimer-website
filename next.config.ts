@@ -4,6 +4,30 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  async headers() {
+    return [
+      {
+        // RFC 8288 Link header — advertise API catalog for agent discovery
+        source: "/",
+        headers: [
+          {
+            key: "Link",
+            value: '</.well-known/api-catalog>; rel="api-catalog"',
+          },
+        ],
+      },
+      {
+        // Serve api-catalog with the correct linkset media type (RFC 9727)
+        source: "/.well-known/api-catalog",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/linkset+json",
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       {
