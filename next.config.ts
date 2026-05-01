@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // RFC 8288 Link header — advertise API catalog for agent discovery
-        source: "/",
+        // RFC 8288 Link header — advertise API catalog on every page for agent discovery
+        source: "/(.*)",
         headers: [
           {
             key: "Link",
