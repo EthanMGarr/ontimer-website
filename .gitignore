@@ -1,3 +1,6 @@
 node_modules
 .next
 .env*
+# Duplicate dist files (macOS copies)
+dist/* 2.*
+dist/**/* 2.*
