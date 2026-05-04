@@ -36,19 +36,27 @@ function zeroPlan(): Record<PlanType, number> {
   return { monthly: 0, annual: 0, weekly: 0, quarterly: 0 };
 }
 
+interface BenchmarkResult {
+  adjustedBenchmark: number;
+  blendedCategoryBenchmark: number;
+  blendedPriceTierMultiplier: number;
+  weights: Record<PlanType, number>;
+}
+
 /**
  * Blended, price-tier-adjusted SOSA 2026 reactivation benchmark weighted by the user's plan mix.
  * Returns null when no plans have both a price and active subscribers > 0.
  *
  * Verification example:
- *   Health & Fitness, 4000 monthly ($12.99 mid) + 1000 annual ($69.99)
+ *   Health & Fitness, 4000 monthly ($12.99 mid) + 1000 annual ($49.99 mid)
  *   → blendedCategoryBenchmark = 0.80×0.124 + 0.20×0.048 = 0.1088 (10.88%)
+ *   → blendedPriceTierMultiplier = 1.0, adjustedBenchmark = 10.88%
  */
 export function calculateAdjustedBenchmark(inputs: {
   category: string;
   prices: PlanValues<number | null>;
   activeSubscribers: PlanValues<number>;
-}): number | null {
+}): BenchmarkResult | null {
   // Step 1 — qualifying plan weights (price > 0 AND active subscribers > 0)
   const qualifying = PLANS.filter(
     (p) => (inputs.prices[p] ?? 0) > 0 && (inputs.activeSubscribers[p] ?? 0) > 0
@@ -112,7 +120,7 @@ export function calculateAdjustedBenchmark(inputs: {
   });
   console.groupEnd();
 
-  return adjustedBenchmark;
+  return { adjustedBenchmark, blendedCategoryBenchmark, blendedPriceTierMultiplier, weights };
 }
 
 export function calculateResults(state: CalculatorState): CalcResults {
@@ -159,7 +167,24 @@ export function calculateResults(state: CalculatorState): CalcResults {
   const totalAdditionalReactivations = PLANS.reduce((s, p) => s + additionalReactivations[p], 0);
   const totalAdditionalRevenue       = PLANS.reduce((s, p) => s + additionalRevenue[p], 0);
 
-  const adjustedBenchmark = calculateAdjustedBenchmark({ category, prices, activeSubscribers });
+  // Adjusted benchmark + components
+  const benchmarkResult = calculateAdjustedBenchmark({ category, prices, activeSubscribers });
+  const adjustedBenchmark        = benchmarkResult?.adjustedBenchmark        ?? null;
+  const blendedCategoryBenchmark = benchmarkResult?.blendedCategoryBenchmark ?? null;
+  const blendedPriceTierMultiplier = benchmarkResult?.blendedPriceTierMultiplier ?? null;
+  const weights                  = benchmarkResult?.weights ?? { monthly: 0, annual: 0, weekly: 0, quarterly: 0 };
+
+  // Current blended reactivation rate — only plans with price + churned + reactivated all > 0
+  const plansWithFullData = PLANS.filter(
+    (p) => (avgChurnedPerMonth[p] ?? 0) > 0 && (avgReactivatedPerMonth[p] ?? 0) > 0 && (prices[p] ?? 0) > 0
+  );
+  const totalWeightWithData = plansWithFullData.reduce((s, p) => s + weights[p], 0);
+  const currentBlendedRate = totalWeightWithData > 0
+    ? plansWithFullData.reduce(
+        (s, p) => s + (weights[p] / totalWeightWithData) * ((avgReactivatedPerMonth[p] ?? 0) / (avgChurnedPerMonth[p] ?? 1)),
+        0
+      )
+    : null;
 
   return {
     benchmarkRate:    benchmarkRate    as CalcResults['benchmarkRate'],
@@ -176,6 +201,9 @@ export function calculateResults(state: CalculatorState): CalcResults {
     totalAdditionalRevenue,
     totalRecoverable: totalOrganicRevenue + totalAdditionalRevenue,
     adjustedBenchmark,
+    blendedCategoryBenchmark,
+    blendedPriceTierMultiplier,
+    currentBlendedRate,
   };
 }
 

@@ -51,4 +51,9 @@ export interface CalcResults {
 
   // Weighted, price-tier-adjusted benchmark from SOSA 2026. Null if no qualifying plans.
   adjustedBenchmark: number | null;
+  // Intermediate benchmark components (for methodology display)
+  blendedCategoryBenchmark: number | null;
+  blendedPriceTierMultiplier: number | null;
+  // User's own current rate, weighted by plan mix. Null if not enough data entered.
+  currentBlendedRate: number | null;
 }

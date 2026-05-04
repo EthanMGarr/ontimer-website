@@ -164,7 +164,7 @@ export default function ReactivationCalculatorPage() {
   useEffect(() => {
     if (state.activeSection < 3 && canSeeSection3(state)) {
       dispatch({ type: 'SET_ACTIVE_SECTION', payload: 3 });
-      setTimeout(() => sec3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      // No auto-scroll — user must click "See my opportunity" button
     }
   }, [state.activeSubscribers, state.avgChurnedPerMonth]);
 
@@ -231,7 +231,27 @@ export default function ReactivationCalculatorPage() {
               <SubscriberInputs state={state} dispatch={dispatch} />
               {canSeeSection2(state) && !canSeeSection3(state) && (
                 <div style={{ marginTop: 28, padding: '14px 18px', background: '#f0f0ff', borderLeft: '3px solid #3A39FF', fontSize: 13, color: '#3A39FF' }}>
-                  Enter at least one plan&apos;s active subscribers and avg churned/month to see your results.
+                  Enter at least one plan&apos;s active subscribers and avg churned / month to see your results.
+                </div>
+              )}
+              {canSeeSection3(state) && (
+                <div style={{ marginTop: 28, display: 'flex', justifyContent: 'flex-end' }}>
+                  <button
+                    onClick={() => sec3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                    style={{
+                      padding: '12px 28px',
+                      background: '#FF5B23',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: 0,
+                      fontWeight: 700,
+                      fontSize: 15,
+                      cursor: 'pointer',
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    See my opportunity →
+                  </button>
                 </div>
               )}
             </Section>

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import type { CalculatorState, CalculatorAction, PlanType } from '../types/calculator';
 import type { CalcResults } from '../types/calculator';
-import { calculateResults } from '../hooks/useCalculator';
+import { calculateResults, getPriceTier } from '../hooks/useCalculator';
 import { SOSA_CATEGORY_DATA } from '../data/sosa2026';
 import HeroNumber from './HeroNumber';
 
@@ -17,27 +17,53 @@ interface ResultsPanelProps {
 const PLAN_LABELS: Record<PlanType, string> = {
   monthly: 'Monthly', annual: 'Annual', weekly: 'Weekly', quarterly: 'Quarterly',
 };
+const PLAN_LABELS_LOWER: Record<PlanType, string> = {
+  monthly: 'monthly', annual: 'annual', weekly: 'weekly', quarterly: 'quarterly',
+};
 const PLAN_ORDER: PlanType[] = ['monthly', 'annual', 'weekly', 'quarterly'];
 
 function fmt(n: number) { return Math.round(n).toLocaleString(); }
 function fmtUSD(n: number) { return '$' + Math.round(n).toLocaleString(); }
 function fmtPct(n: number) { return (n * 100).toFixed(1) + '%'; }
+function capitalize(s: string) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-function SliderWarning({ rate, optimisticRate }: { rate: number; optimisticRate: number }) {
-  if (rate <= 0 || rate <= optimisticRate) return null;
-  if (rate <= optimisticRate * 1.5) {
-    return (
-      <div style={{ marginTop: 10, padding: '10px 14px', background: '#fffbeb', border: '1px solid #fcd34d', fontSize: 13, color: '#92400e', lineHeight: 1.5 }}>
-        ⚠ Above your Optimistic scenario ({(optimisticRate * 100).toFixed(1)}%) — treat as an upper-bound estimate.
-      </div>
-    );
-  }
+// ── Rate summary block (Change 2) ─────────────────────────────────────────────
+
+function RateSummary({ results }: { results: CalcResults }) {
+  const current = results.currentBlendedRate;
+  const adj     = results.adjustedBenchmark;
+
   return (
-    <div style={{ marginTop: 10, padding: '10px 14px', background: '#fff7ed', border: '1px solid #fb923c', fontSize: 13, color: '#9a3412', lineHeight: 1.5 }}>
-      ⚠ This rate is highly unlikely in practice. Use for hypothetical modelling only — do not present to stakeholders as a realistic target.
+    <div style={{
+      marginBottom: 32,
+      padding: '16px 20px',
+      background: 'rgba(173,230,237,0.25)',
+      borderLeft: '3px solid #3A39FF',
+    }}>
+      {current !== null && (
+        <div style={{ marginBottom: 8, fontSize: 14, color: '#1A1A2E' }}>
+          <strong>Your current blended reactivation rate:</strong>{' '}
+          <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#1A1A2E' }}>
+            {(current * 100).toFixed(1)}%
+          </span>
+        </div>
+      )}
+      <div style={{ fontSize: 14, color: '#1A1A2E' }}>
+        <strong>Category + price tier adjusted benchmark:</strong>{' '}
+        <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#1A1A2E' }}>
+          {adj !== null ? (adj * 100).toFixed(1) + '%' : '—'}
+        </span>
+      </div>
+      {current === null && (
+        <div style={{ marginTop: 8, fontSize: 12, fontStyle: 'italic', color: '#666' }}>
+          Enter avg reactivated / month in Section 2 to calculate your current rate.
+        </div>
+      )}
     </div>
   );
 }
+
+// ── Scenario card ─────────────────────────────────────────────────────────────
 
 function ScenarioCard({
   label, rate, state, highlight, note,
@@ -89,11 +115,12 @@ function ScenarioCard({
   );
 }
 
-function ScenarioCards({ state, results, customRate, onSliderChange }: {
+// ── Four scenario cards (no slider inside — Change 6) ─────────────────────────
+
+function ScenarioCards({ state, results, customRate }: {
   state: CalculatorState;
   results: CalcResults;
   customRate: number;
-  onSliderChange: (rate: number) => void;
 }) {
   const adj = results.adjustedBenchmark;
   if (adj === null) return null;
@@ -106,7 +133,7 @@ function ScenarioCards({ state, results, customRate, onSliderChange }: {
   const customAlreadyAbove = results.totalAdditionalReactivations === 0;
 
   return (
-    <div style={{ marginBottom: 48 }}>
+    <div style={{ marginBottom: 8 }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
         <ScenarioCard label="Conservative" rate={conservativeRate} state={state} highlight={false} />
         <ScenarioCard label="Realistic"    rate={realisticRate}    state={state} highlight={true} />
@@ -118,24 +145,13 @@ function ScenarioCards({ state, results, customRate, onSliderChange }: {
           note="Based on 20% above category benchmark"
         />
 
-        {/* Custom card */}
+        {/* Custom card — display only, slider is standalone below (Change 6) */}
         <div style={{ background: '#f0f0ff', border: '2px solid #3A39FF', padding: '24px 20px' }}>
           <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#3A39FF', marginBottom: 4 }}>
             Custom
           </div>
-          <div style={{ marginBottom: 12 }}>
-            <input
-              type="range"
-              min={1}
-              max={Math.round(sliderMax * 100)}
-              step={1}
-              value={Math.max(1, Math.round(clampedRate * 100))}
-              onChange={(e) => onSliderChange(parseInt(e.target.value) / 100)}
-              style={{ width: '100%', accentColor: '#FF5B23', cursor: 'pointer' }}
-            />
-            <div style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: 18, color: '#FF5B23', textAlign: 'center' }}>
-              {(clampedRate * 100).toFixed(1)}%
-            </div>
+          <div style={{ fontSize: 13, color: '#3A39FF', marginBottom: 16 }}>
+            {(clampedRate * 100).toFixed(1)}% target
           </div>
           {customAlreadyAbove ? (
             <div style={{ fontSize: 12, color: '#888', fontStyle: 'italic', lineHeight: 1.5, paddingTop: 4 }}>
@@ -156,8 +172,6 @@ function ScenarioCards({ state, results, customRate, onSliderChange }: {
         </div>
       </div>
 
-      <SliderWarning rate={clampedRate} optimisticRate={optimisticRate} />
-
       <p style={{ fontSize: 12, color: '#888', marginTop: 12, fontStyle: 'italic' }}>
         * Optimistic is 20% above your category-adjusted benchmark. Use as an upper-bound estimate only.
       </p>
@@ -165,45 +179,128 @@ function ScenarioCards({ state, results, customRate, onSliderChange }: {
   );
 }
 
+// ── Standalone custom slider (Change 6) ───────────────────────────────────────
+
+function CustomSlider({ customRate, sliderMax, optimisticRate, onSliderChange }: {
+  customRate: number;
+  sliderMax: number;
+  optimisticRate: number;
+  onSliderChange: (rate: number) => void;
+}) {
+  const clampedRate = Math.min(customRate, sliderMax);
+  const aboveOptimistic = clampedRate > optimisticRate;
+
+  return (
+    <div style={{ margin: '24px 0 40px', padding: '20px 24px', background: '#f8f9fb', border: '1px solid #e5e7eb' }}>
+      <div style={{ fontSize: 14, fontWeight: 600, color: '#1A1A2E', marginBottom: 12 }}>
+        Custom target rate:{' '}
+        <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#FF5B23' }}>
+          {(clampedRate * 100).toFixed(1)}%
+        </span>
+      </div>
+      <input
+        type="range"
+        min={1}
+        max={Math.round(sliderMax * 100)}
+        step={1}
+        value={Math.max(1, Math.round(clampedRate * 100))}
+        onChange={(e) => onSliderChange(parseInt(e.target.value) / 100)}
+        style={{ width: '100%', accentColor: '#FF5B23', cursor: 'pointer', marginBottom: 4 }}
+      />
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#999', marginBottom: aboveOptimistic ? 10 : 0 }}>
+        <span>0%</span>
+        <span>{(optimisticRate * 100).toFixed(1)}% optimistic</span>
+        <span>{(sliderMax * 100).toFixed(0)}%</span>
+      </div>
+      {aboveOptimistic && (
+        <div style={{ padding: '8px 12px', background: '#fffbeb', border: '1px solid #fcd34d', fontSize: 13, color: '#92400e', lineHeight: 1.5 }}>
+          ⚠ Above the optimistic scenario rate — treat as hypothetical
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Methodology summary (Change 3) ───────────────────────────────────────────
+
 function MethodologyBox({ state, results }: { state: CalculatorState; results: CalcResults }) {
   const [open, setOpen] = useState(false);
-  const textRef = useRef<HTMLTextAreaElement>(null);
   const [copied, setCopied] = useState(false);
 
   const catData = SOSA_CATEGORY_DATA[state.category] ?? SOSA_CATEGORY_DATA['All Categories'];
-  const activePlans = PLAN_ORDER.filter((p) => state.prices[p] !== null && (state.prices[p] as number) > 0);
 
-  const firstPlan = activePlans[0] as PlanType | undefined;
-  const fromData = firstPlan
-    && (state.avgReactivatedPerMonth[firstPlan] > 0)
-    && (state.avgChurnedPerMonth[firstPlan] > 0);
-  const effectiveRatePct = firstPlan ? (results.effectiveRate[firstPlan] * 100).toFixed(1) : '—';
-  const rateSource = fromData ? 'based on your data' : 'SOSA 2026 benchmark';
+  // Active plans (price > 0 AND active subscribers > 0)
+  const activePlans = PLAN_ORDER.filter(
+    (p) => (state.prices[p] ?? 0) > 0 && state.activeSubscribers[p] > 0
+  );
+  const totalSubs = activePlans.reduce((s, p) => s + state.activeSubscribers[p], 0);
 
-  const { getPriceTier } = require('../hooks/useCalculator');
-  const monthlyTier = state.prices.monthly ? getPriceTier('monthly', state.prices.monthly) : '—';
-  const annualTier  = state.prices.annual  ? getPriceTier('annual',  state.prices.annual)  : '—';
-
-  const realisticRatePct = results.adjustedBenchmark !== null
-    ? (results.adjustedBenchmark * 100).toFixed(1)
+  // Subscription mix string: "80% monthly / 20% annual"
+  const mixStr = totalSubs > 0
+    ? activePlans.map((p) => `${Math.round((state.activeSubscribers[p] / totalSubs) * 100)}% ${PLAN_LABELS_LOWER[p]}`).join(' / ')
     : '—';
+
+  // Price tier string: "Mid monthly / High annual"
+  const tierStr = activePlans.map((p) => {
+    const price = state.prices[p];
+    const tier = price ? getPriceTier(p, price) : '—';
+    return `${capitalize(tier)} ${PLAN_LABELS_LOWER[p]}`;
+  }).join(' / ');
+
+  // Plans with full data (for current rate explanation)
+  const plansWithFullData = PLAN_ORDER.filter(
+    (p) => (state.avgChurnedPerMonth[p] ?? 0) > 0 && (state.avgReactivatedPerMonth[p] ?? 0) > 0 && (state.prices[p] ?? 0) > 0
+  );
+  const totalReactivated = plansWithFullData.reduce((s, p) => s + (state.avgReactivatedPerMonth[p] ?? 0), 0);
+  const totalChurned     = plansWithFullData.reduce((s, p) => s + (state.avgChurnedPerMonth[p] ?? 0), 0);
+
+  // SOSA category rates for active plans
+  const sosaRatesStr = activePlans.map((p) => {
+    const rate = p === 'quarterly' ? catData.monthly : catData[p as keyof typeof catData];
+    return `${PLAN_LABELS_LOWER[p]} ${((rate as number) * 100).toFixed(1)}%`;
+  }).join(' / ');
+
+  // Benchmark values
+  const adj     = results.adjustedBenchmark;
+  const bCat    = results.blendedCategoryBenchmark;
+  const bTier   = results.blendedPriceTierMultiplier;
+  const current = results.currentBlendedRate;
+
+  const conservativeRate = adj !== null ? adj * 0.80 : null;
+  const realisticRate    = adj;
+  const optimisticRate   = adj !== null ? adj * 1.20 : null;
+
+  const baselineRate   = current ?? adj;
+  const baselineSrc    = current !== null ? 'your current blended rate' : 'the SOSA 2026 adjusted benchmark';
+  const baselineStr    = baselineRate !== null ? (baselineRate * 100).toFixed(1) + '%' : '—';
 
   const paragraph = `Reactivation Opportunity Estimate — Methodology Note
 
-This estimate was calculated using the Reactivation Revenue Opportunity Calculator, based on RevenueCat's State of Subscription Apps 2026 data (115,000+ apps, $16B in revenue).
+This estimate was calculated using the Reactivation Revenue Opportunity Calculator, based on RevenueCat's State of Subscription Apps 2026 (115,000+ apps, $16B in revenue).
 
 Inputs used:
-• App category: ${state.category || '(not set)'} — SOSA 2026 monthly reactivation benchmark: ${(catData.monthly * 100).toFixed(1)}%
-• Price tier: ${monthlyTier} monthly / ${annualTier} annual
-• Current reactivation rate: ${effectiveRatePct}% (${rateSource})
-• Churned subscribers modelled: ${fmt(results.totalChurnedPool)} over 12 months
+- App category: ${state.category || '(not set)'}
+- Subscription mix: ${mixStr}
+- Price tier: ${tierStr}
+- Current blended reactivation rate: ${current !== null
+    ? `${(current * 100).toFixed(1)}% — calculated from your data (${totalReactivated}/month ÷ ${totalChurned}/month, weighted by subscription mix)`
+    : 'not entered — scenarios use SOSA 2026 benchmarks only'}
+- Churned subscribers modelled: ${fmt(results.totalChurnedPool)} over 12 months
 
-How the estimate was calculated:
-The SOSA 2026 benchmark rate for ${state.category || 'this category'} apps was weighted by plan mix and adjusted for price tier, giving a category-adjusted benchmark of ${realisticRatePct}%.${fromData ? ` Your actual trailing reactivation rate of ${effectiveRatePct}% was used for the current-state baseline.` : ''}
+How the benchmark was calculated:
+The SOSA 2026 reactivation benchmark for ${state.category || 'this category'} is: ${sosaRatesStr}
+Weighted by your subscription mix, the blended category benchmark is ${bCat !== null ? (bCat * 100).toFixed(2) + '%' : '—'}.
+A price tier adjustment of ${bTier !== null ? bTier.toFixed(4) : '—'}× was applied based on your pricing profile, giving an adjusted benchmark of ${adj !== null ? (adj * 100).toFixed(2) + '%' : '—'}.
 
-The additional opportunity (Realistic scenario) represents the gap between ${effectiveRatePct}% (current rate) and ${realisticRatePct}% (category benchmark), applied to a churned pool of ${fmt(results.totalChurnedPool)} subscribers. Revenue is estimated using average hold periods post-reactivation: monthly plans ~4 months, annual plans ~12 months, weekly plans ~2 months, quarterly plans ~3 months.
+How the scenarios were calculated:
+- Conservative (${conservativeRate !== null ? (conservativeRate * 100).toFixed(1) + '%' : '—'}): adjusted benchmark × 0.80
+- Realistic (${realisticRate !== null ? (realisticRate * 100).toFixed(1) + '%' : '—'}): adjusted benchmark — the SOSA 2026 rate for apps with your category and pricing profile
+- Optimistic (${optimisticRate !== null ? (optimisticRate * 100).toFixed(1) + '%' : '—'}): adjusted benchmark × 1.20
 
-Important: This is an estimate. Actual results will vary based on the quality of win-back campaigns, timing, segmentation, and product improvements. SOSA 2026 reactivation rates reflect the share of churned subscribers that returned to active status within 12 months, across all apps — regardless of whether those apps ran active win-back campaigns.`;
+The additional opportunity in each scenario represents the gap between ${baselineStr} (${baselineSrc}) and the scenario target rate, applied to a churned pool of ${fmt(results.totalChurnedPool)} subscribers.
+Revenue is estimated using average hold periods post-reactivation: monthly ~4 months · annual ~12 months · weekly ~2 months · quarterly ~3 months
+
+Important: This is an estimate. The SOSA 2026 benchmark reflects actual reactivation rates across apps in your category — some of which run active win-back campaigns and some of which do not. Actual results will vary based on campaign quality, timing, segmentation, and product improvements.`;
 
   function handleCopy() {
     navigator.clipboard.writeText(paragraph).then(() => {
@@ -227,10 +324,9 @@ Important: This is an estimate. Actual results will vary based on the quality of
       {open && (
         <div style={{ marginTop: 20 }}>
           <textarea
-            ref={textRef}
             readOnly
             value={paragraph}
-            rows={22}
+            rows={24}
             style={{
               width: '100%',
               boxSizing: 'border-box',
@@ -267,6 +363,8 @@ Important: This is an estimate. Actual results will vary based on the quality of
   );
 }
 
+// ── Main panel ────────────────────────────────────────────────────────────────
+
 export default function ResultsPanel({ state, dispatch, results }: ResultsPanelProps) {
   const { prices, campaignTargetRate } = state;
   const activePlans = PLAN_ORDER.filter((p) => prices[p] !== null && (prices[p] as number) > 0);
@@ -292,6 +390,11 @@ export default function ResultsPanel({ state, dispatch, results }: ResultsPanelP
     dispatch({ type: 'SET_CAMPAIGN_TARGET', payload: rate });
   }
 
+  const adj          = results.adjustedBenchmark;
+  const sliderMax    = adj !== null ? Math.min(adj * 2, 0.75) : 0.75;
+  const optimisticRate = adj !== null ? adj * 1.20 : 0.5;
+  const clampedRate  = Math.min(campaignTargetRate, sliderMax);
+
   const chartData = activePlans.map((plan) => ({
     name: PLAN_LABELS[plan],
     organic: Math.round(results.organicRevenue[plan]),
@@ -305,16 +408,29 @@ export default function ResultsPanel({ state, dispatch, results }: ResultsPanelP
       </h2>
       <div style={{ width: 48, height: 3, background: '#FF5B23', marginBottom: 32 }} />
 
+      {/* Change 2 — rate summary */}
+      <RateSummary results={results} />
+
+      {/* Scenario cards (no slider inside) */}
       <ScenarioCards
         state={state}
         results={results}
-        customRate={campaignTargetRate}
-        onSliderChange={handleSliderChange}
+        customRate={clampedRate}
       />
+
+      {/* Change 6 — standalone custom slider */}
+      {adj !== null && (
+        <CustomSlider
+          customRate={clampedRate}
+          sliderMax={sliderMax}
+          optimisticRate={optimisticRate}
+          onSliderChange={handleSliderChange}
+        />
+      )}
 
       {/* Breakdown table */}
       <h3 style={{ fontFamily: 'Georgia, serif', fontSize: 18, fontWeight: 700, color: '#1A1A2E', marginBottom: 16 }}>
-        Breakdown — Custom scenario ({(campaignTargetRate * 100).toFixed(1)}%)
+        Breakdown — Custom scenario ({(clampedRate * 100).toFixed(1)}%)
       </h3>
       <div style={{ overflowX: 'auto', marginBottom: 40 }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
@@ -395,6 +511,7 @@ export default function ResultsPanel({ state, dispatch, results }: ResultsPanelP
         SOSA rates reflect all apps in each category regardless of whether they ran active win-back campaigns.
       </p>
 
+      {/* Change 3 — methodology */}
       <MethodologyBox state={state} results={results} />
     </div>
   );

@@ -91,9 +91,25 @@ export default function CategoryPricing({ state, dispatch }: CategoryPricingProp
 
       {/* 2b: Pricing */}
       <div>
-        <h3 style={{ fontFamily: 'Georgia, serif', fontSize: 20, fontWeight: 700, color: '#3A39FF', marginBottom: 8 }}>
+        <h3 style={{ fontFamily: 'Georgia, serif', fontSize: 20, fontWeight: 700, color: '#3A39FF', marginBottom: 12 }}>
           2b. Your pricing
         </h3>
+
+        {/* Change 8 — price tier context note */}
+        <div style={{
+          marginBottom: 20,
+          padding: '12px 16px',
+          background: 'rgba(173,230,237,0.25)',
+          borderLeft: '3px solid #3A39FF',
+          fontSize: 14,
+          color: '#1A1A2E',
+          lineHeight: 1.6,
+        }}>
+          Pricing affects your reactivation benchmark. SOSA 2026 data shows high-priced monthly apps
+          reactivate at nearly double the rate of low-priced apps (28.9% vs 15.4%). We use your price
+          tier to adjust the category benchmark in your scenario results.
+        </div>
+
         <p style={{ fontSize: 13, color: '#666', marginBottom: 20, fontStyle: 'italic' }}>
           RevenueCat doesn&apos;t expose pricing via API — enter your prices below. Leave unused plan types blank.
         </p>
@@ -107,8 +123,9 @@ export default function CategoryPricing({ state, dispatch }: CategoryPricingProp
             return (
               <div key={plan} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <label style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E' }}>{PLAN_LABELS[plan]}</label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontWeight: 700, color: '#1A1A2E' }}>$</span>
+                {/* Change 7B — flex row with min-width 120px input + tier badge beside it */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'nowrap' }}>
+                  <span style={{ fontWeight: 700, color: '#1A1A2E', flexShrink: 0 }}>$</span>
                   <input
                     type="number"
                     min="0"
@@ -116,8 +133,11 @@ export default function CategoryPricing({ state, dispatch }: CategoryPricingProp
                     placeholder="—"
                     value={price ?? ''}
                     onChange={(e) => handlePrice(plan, e.target.value)}
+                    /* Change 7A — prevent scroll-to-change */
+                    onWheel={(e) => (e.target as HTMLInputElement).blur()}
                     style={{
-                      width: 90,
+                      minWidth: 120,
+                      width: 120,
                       padding: '10px 12px',
                       background: '#FFF1D4',
                       border: '1.5px solid #e0c870',
@@ -125,6 +145,7 @@ export default function CategoryPricing({ state, dispatch }: CategoryPricingProp
                       fontSize: 15,
                       fontFamily: 'monospace',
                       color: '#1A1A2E',
+                      flexShrink: 0,
                     }}
                   />
                   {tierStyle && (
@@ -135,6 +156,8 @@ export default function CategoryPricing({ state, dispatch }: CategoryPricingProp
                       fontSize: 12,
                       fontWeight: 700,
                       borderRadius: 2,
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0,
                     }}>
                       {tierStyle.label}
                     </span>

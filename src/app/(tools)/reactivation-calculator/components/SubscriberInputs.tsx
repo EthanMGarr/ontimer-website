@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { CalculatorState, CalculatorAction, PlanType } from '../types/calculator';
 
 interface SubscriberInputsProps {
@@ -30,6 +30,55 @@ function HowTo({ title, children }: { title: string; children: React.ReactNode }
         </div>
       )}
     </div>
+  );
+}
+
+const TOOLTIP_TEXT = 'Derived rate — your current reactivation rate for this plan, calculated as: avg reactivated per month ÷ avg churned per month. For example, if 20 subscribers reactivate each month from a pool of 100 who churned, your derived rate is 20%. If you haven\'t entered reactivated subscribers yet, this shows the SOSA 2026 benchmark for your category and price tier.';
+
+function InfoTooltip() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (!visible) return;
+    function dismiss() { setVisible(false); }
+    document.addEventListener('click', dismiss);
+    return () => document.removeEventListener('click', dismiss);
+  }, [visible]);
+
+  return (
+    <>
+      <style>{`@keyframes tipFadeIn { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+      <span style={{ position: 'relative', display: 'inline-block', marginLeft: 5 }}>
+        <span
+          onMouseEnter={() => setVisible(true)}
+          onMouseLeave={() => setVisible(false)}
+          onClick={(e) => { e.stopPropagation(); setVisible((v) => !v); }}
+          style={{ cursor: 'help', fontSize: 11, color: '#999', userSelect: 'none', verticalAlign: 'middle', lineHeight: 1 }}
+        >
+          ⓘ
+        </span>
+        {visible && (
+          <div style={{
+            position: 'absolute',
+            bottom: '100%',
+            left: 0,
+            marginBottom: 8,
+            zIndex: 200,
+            width: 280,
+            padding: '12px 14px',
+            background: '#1A1A2E',
+            color: '#fff',
+            fontSize: 12,
+            lineHeight: 1.6,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
+            animation: 'tipFadeIn 130ms ease',
+            pointerEvents: 'none',
+          }}>
+            {TOOLTIP_TEXT}
+          </div>
+        )}
+      </span>
+    </>
   );
 }
 
@@ -188,8 +237,8 @@ export default function SubscriberInputs({ state, dispatch }: SubscriberInputsPr
             {/* Derived reactivation rate */}
             <tr>
               <td style={{ padding: '12px 0', verticalAlign: 'top' }}>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#666', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Derived rate
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#666', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center' }}>
+                  Derived rate<InfoTooltip />
                 </div>
               </td>
               {activePlans.map((p) => {
