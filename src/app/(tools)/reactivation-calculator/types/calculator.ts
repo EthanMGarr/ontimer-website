@@ -48,4 +48,7 @@ export interface CalcResults {
   totalAdditionalReactivations: number;
   totalAdditionalRevenue: number;
   totalRecoverable: number;
+
+  // Weighted, price-tier-adjusted benchmark from SOSA 2026. Null if no qualifying plans.
+  adjustedBenchmark: number | null;
 }

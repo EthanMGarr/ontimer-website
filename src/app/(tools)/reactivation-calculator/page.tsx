@@ -15,7 +15,7 @@ const initialState: CalculatorState = {
   activeSubscribers: { monthly: 0, annual: 0, weekly: 0, quarterly: 0 },
   avgChurnedPerMonth: { monthly: 0, annual: 0, weekly: 0, quarterly: 0 },
   avgReactivatedPerMonth: { monthly: 0, annual: 0, weekly: 0, quarterly: 0 },
-  campaignTargetRate: 0.35,
+  campaignTargetRate: 0,
   activeSection: 1,
 };
 

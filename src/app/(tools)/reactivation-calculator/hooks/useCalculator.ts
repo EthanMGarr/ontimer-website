@@ -5,7 +5,7 @@ import {
   PRICE_TIER_THRESHOLDS,
   HOLD_PERIOD_MONTHS,
 } from '../data/sosa2026';
-import type { CalculatorState, CalcResults, PlanType } from '../types/calculator';
+import type { CalculatorState, CalcResults, PlanType, PlanValues } from '../types/calculator';
 
 const PLANS: PlanType[] = ['monthly', 'annual', 'weekly', 'quarterly'];
 
@@ -36,42 +36,116 @@ function zeroPlan(): Record<PlanType, number> {
   return { monthly: 0, annual: 0, weekly: 0, quarterly: 0 };
 }
 
+/**
+ * Blended, price-tier-adjusted SOSA 2026 reactivation benchmark weighted by the user's plan mix.
+ * Returns null when no plans have both a price and active subscribers > 0.
+ *
+ * Verification example:
+ *   Health & Fitness, 4000 monthly ($12.99 mid) + 1000 annual ($69.99)
+ *   → blendedCategoryBenchmark = 0.80×0.124 + 0.20×0.048 = 0.1088 (10.88%)
+ */
+export function calculateAdjustedBenchmark(inputs: {
+  category: string;
+  prices: PlanValues<number | null>;
+  activeSubscribers: PlanValues<number>;
+}): number | null {
+  // Step 1 — qualifying plan weights (price > 0 AND active subscribers > 0)
+  const qualifying = PLANS.filter(
+    (p) => (inputs.prices[p] ?? 0) > 0 && (inputs.activeSubscribers[p] ?? 0) > 0
+  );
+  const totalActive = qualifying.reduce((s, p) => s + (inputs.activeSubscribers[p] ?? 0), 0);
+  if (totalActive === 0) return null;
+
+  const weights: Record<PlanType, number> = { monthly: 0, annual: 0, weekly: 0, quarterly: 0 };
+  for (const p of qualifying) {
+    weights[p] = (inputs.activeSubscribers[p] ?? 0) / totalActive;
+  }
+
+  // Step 2 — category rates (quarterly proxied to monthly — no SOSA quarterly data)
+  const catData = SOSA_CATEGORY_DATA[inputs.category] ?? SOSA_CATEGORY_DATA['All Categories'];
+  const categoryRatesWithQuarterly = {
+    monthly:   catData.monthly,
+    annual:    catData.annual,
+    weekly:    catData.weekly,
+    quarterly: catData.monthly,
+  };
+
+  // Step 3 — blended category benchmark
+  const blendedCategoryBenchmark = PLANS.reduce(
+    (s, p) => s + weights[p] * categoryRatesWithQuarterly[p],
+    0
+  );
+
+  // Step 4 — price tier multipliers per plan
+  const priceTierMultipliers: Record<PlanType, number> = { monthly: 1, annual: 1, weekly: 1, quarterly: 1 };
+  for (const p of PLANS) {
+    priceTierMultipliers[p] = getPriceTierMultiplier(p, inputs.prices[p] ?? null);
+  }
+
+  // Step 5 — blended price tier multiplier
+  const blendedPriceTierMultiplier = PLANS.reduce(
+    (s, p) => s + weights[p] * priceTierMultipliers[p],
+    0
+  );
+
+  // Step 6 — adjusted benchmark
+  const adjustedBenchmark = blendedCategoryBenchmark * blendedPriceTierMultiplier;
+
+  // Step 7 — scenario rates (for logging)
+  const scenarios = {
+    conservative: adjustedBenchmark * 0.80,
+    realistic:    adjustedBenchmark,
+    optimistic:   adjustedBenchmark * 1.20,
+  };
+
+  console.group('Benchmark Calculation');
+  console.log('Plan weights:', weights);
+  console.log('Category rates:', categoryRatesWithQuarterly);
+  console.log('Blended category benchmark:', (blendedCategoryBenchmark * 100).toFixed(2) + '%');
+  console.log('Price tier multipliers per plan:', priceTierMultipliers);
+  console.log('Blended price tier multiplier:', blendedPriceTierMultiplier.toFixed(4));
+  console.log('Adjusted benchmark:', (adjustedBenchmark * 100).toFixed(2) + '%');
+  console.log('Scenarios:', {
+    conservative: (scenarios.conservative * 100).toFixed(2) + '%',
+    realistic:    (scenarios.realistic * 100).toFixed(2) + '%',
+    optimistic:   (scenarios.optimistic * 100).toFixed(2) + '%',
+  });
+  console.groupEnd();
+
+  return adjustedBenchmark;
+}
+
 export function calculateResults(state: CalculatorState): CalcResults {
   const { category, prices, activeSubscribers, avgChurnedPerMonth, avgReactivatedPerMonth, campaignTargetRate } = state;
 
-  const benchmarkRate    = zeroPlan();
-  const effectiveRate    = zeroPlan();
-  const churnedPool      = zeroPlan();
-  const organicReactivations  = zeroPlan();
-  const organicRevenue        = zeroPlan();
-  const additionalReactivations = zeroPlan();
-  const additionalRevenue       = zeroPlan();
+  const benchmarkRate             = zeroPlan();
+  const effectiveRate             = zeroPlan();
+  const churnedPool               = zeroPlan();
+  const organicReactivations      = zeroPlan();
+  const organicRevenue            = zeroPlan();
+  const additionalReactivations   = zeroPlan();
+  const additionalRevenue         = zeroPlan();
 
   for (const plan of PLANS) {
     const price = prices[plan];
     if (price === null) continue;
 
-    // Benchmark = category base rate × price tier multiplier (no geo)
     benchmarkRate[plan] = getCategoryRate(category || 'All Categories', plan)
       * getPriceTierMultiplier(plan, price);
 
-    // Effective rate: derive from user's own data if both fields entered, else SOSA benchmark
     const churned     = avgChurnedPerMonth[plan] ?? 0;
     const reactivated = avgReactivatedPerMonth[plan] ?? 0;
     effectiveRate[plan] = (reactivated > 0 && churned > 0)
       ? reactivated / churned
       : benchmarkRate[plan];
 
-    // Churned pool over 12 months from absolute monthly average
     churnedPool[plan] = churned * 12;
 
-    // Organic reactivations & revenue
     organicReactivations[plan] = Math.round(churnedPool[plan] * effectiveRate[plan]);
     organicRevenue[plan] = plan === 'annual'
       ? organicReactivations[plan] * price
       : organicReactivations[plan] * price * HOLD_PERIOD_MONTHS[plan];
 
-    // Campaign uplift
     const incrementalRate = Math.max(0, campaignTargetRate - effectiveRate[plan]);
     additionalReactivations[plan] = Math.round(churnedPool[plan] * incrementalRate);
     additionalRevenue[plan] = plan === 'annual'
@@ -79,11 +153,13 @@ export function calculateResults(state: CalculatorState): CalcResults {
       : additionalReactivations[plan] * price * HOLD_PERIOD_MONTHS[plan];
   }
 
-  const totalChurnedPool            = PLANS.reduce((s, p) => s + churnedPool[p], 0);
-  const totalOrganicReactivations   = PLANS.reduce((s, p) => s + organicReactivations[p], 0);
-  const totalOrganicRevenue         = PLANS.reduce((s, p) => s + organicRevenue[p], 0);
+  const totalChurnedPool             = PLANS.reduce((s, p) => s + churnedPool[p], 0);
+  const totalOrganicReactivations    = PLANS.reduce((s, p) => s + organicReactivations[p], 0);
+  const totalOrganicRevenue          = PLANS.reduce((s, p) => s + organicRevenue[p], 0);
   const totalAdditionalReactivations = PLANS.reduce((s, p) => s + additionalReactivations[p], 0);
   const totalAdditionalRevenue       = PLANS.reduce((s, p) => s + additionalRevenue[p], 0);
+
+  const adjustedBenchmark = calculateAdjustedBenchmark({ category, prices, activeSubscribers });
 
   return {
     benchmarkRate:    benchmarkRate    as CalcResults['benchmarkRate'],
@@ -99,6 +175,7 @@ export function calculateResults(state: CalculatorState): CalcResults {
     totalAdditionalReactivations,
     totalAdditionalRevenue,
     totalRecoverable: totalOrganicRevenue + totalAdditionalRevenue,
+    adjustedBenchmark,
   };
 }
 
