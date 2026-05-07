@@ -74,7 +74,60 @@ const urgentGuides: GuideEntry[] = [
   },
 ];
 
-// ── Section 2: Never Be Late Again ───────────────────────────────────────────
+// ── Section 2: Medication Reminders ──────────────────────────────────────────
+const medicationGuides: GuideEntry[] = [
+  {
+    href: "/how-to-remember-medication-on-time",
+    title: "How to Remember to Take Your Medication on Time (Even If You Keep Missing It)",
+    description:
+      "Most people miss medication not because they forget — but because of what happens after the reminder fires. Set up a system that closes the gap. Includes a free schedule generator.",
+    date: "2026-05-07",
+  },
+  {
+    href: "/why-medication-reminders-fail",
+    title: "Why Medication Reminders Fail (And What Actually Works)",
+    description:
+      "A single notification is easy to defer. Here's why standard reminders break down in the last 5 minutes — and what to use instead.",
+    date: "2026-05-07",
+  },
+  {
+    href: "/medication-schedule-calendar-setup",
+    title: "How to Set Up a Medication Schedule Using Your Calendar",
+    description:
+      "Your calendar is already the system you use. Here's how to add medication to it — step by step — and download a ready-made schedule file.",
+    date: "2026-05-07",
+  },
+  {
+    href: "/how-to-set-medication-reminders-iphone",
+    title: "How to Set Medication Reminders on iPhone",
+    description:
+      "Calendar app, Health app, Siri — all the iPhone options explained, plus what to do when notifications still aren't enough.",
+    date: "2026-05-07",
+  },
+  {
+    href: "/adhd-medication-timing",
+    title: "ADHD and Medication Timing: Why the Last 5 Minutes Matters",
+    description:
+      "Time blindness makes deferring a reminder effortless. Here's why ADHD makes standard alerts fail — and what actually interrupts the pattern.",
+    date: "2026-05-07",
+  },
+  {
+    href: "/help-elderly-parent-remember-medication",
+    title: "How to Help an Elderly Parent Remember Their Medication",
+    description:
+      "A caregiver's guide to setting up a medication system that works independently — without requiring you to be the reminder.",
+    date: "2026-05-07",
+  },
+  {
+    href: "/pet-medication-schedule",
+    title: "How to Remember Your Pet's Medication Schedule",
+    description:
+      "Pets won't remind you. Here's how to set up recurring calendar events for flea prevention, heartworm, prescriptions, and more.",
+    date: "2026-05-07",
+  },
+];
+
+// ── Section 3: Never Be Late Again ───────────────────────────────────────────
 const systemGuides: GuideEntry[] = [
   {
     href: "/what-to-say-when-late-to-meeting",
@@ -203,7 +256,29 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* ── Section 2: Never Be Late Again ── */}
+      {/* ── Section 2: Medication Reminders ── */}
+      <section className="border-b border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-8 text-2xl font-black text-white">Medication Reminders</h2>
+          <div className="space-y-4">
+            {medicationGuides.map((guide, index) => {
+              if (index === 0) {
+                return (
+                  <div key={guide.href}>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-green-500">
+                      Start Here
+                    </p>
+                    <GuideCard {...guide} />
+                  </div>
+                );
+              }
+              return <GuideCard key={guide.href} {...guide} />;
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Section 3: Never Be Late Again ── */}
       <section className="border-b border-zinc-800 py-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="mb-8 text-2xl font-black text-white">Never Be Late Again</h2>
