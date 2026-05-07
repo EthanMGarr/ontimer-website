@@ -20,7 +20,7 @@ import { AppStoreButton } from "@/components/CTAButton";
 import { generateICS, downloadICS } from "@/lib/ics";
 
 type Frequency = 1 | 2 | 3;
-type Duration = 7 | 10 | 14 | 30;
+type Duration = 7 | 10 | 14 | 30 | "custom";
 
 const FREQ_OPTIONS: { label: string; value: Frequency }[] = [
   { label: "Once daily", value: 1 },
@@ -33,6 +33,7 @@ const DURATION_OPTIONS: { label: string; value: Duration }[] = [
   { label: "10 days", value: 10 },
   { label: "14 days", value: 14 },
   { label: "30 days", value: 30 },
+  { label: "Custom", value: "custom" },
 ];
 
 const FREQ_LABELS: Record<Frequency, string> = {
@@ -107,6 +108,7 @@ export default function MedicationScheduleGenerator() {
   const [startTime, setStartTime] = useState("08:00");
   const [startDate, setStartDate] = useState(todayISO());
   const [duration, setDuration] = useState<Duration>(30);
+  const [customDays, setCustomDays] = useState<number>(60);
   const [times, setTimes] = useState<string[]>([]);
   const [generated, setGenerated] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
@@ -115,13 +117,13 @@ export default function MedicationScheduleGenerator() {
     setTimes(generateTimes(startTime, frequency));
     setGenerated(true);
     setDownloaded(false);
-    track("medication_schedule_generated", { frequency, duration });
+    track("medication_schedule_generated", { frequency, duration: effectiveDuration });
   }
 
   function handleDownload() {
     const medTimes = times.map((t) => ({ name: medName.trim() || "Medication", time: t }));
     const start = new Date(startDate + "T00:00:00");
-    const content = generateICS(medTimes, start, duration);
+    const content = generateICS(medTimes, start, effectiveDuration);
     downloadICS(content, "medication-schedule.ics");
     setDownloaded(true);
     track("medication_ics_downloaded");
@@ -139,7 +141,8 @@ export default function MedicationScheduleGenerator() {
     setTimes((prev) => [...prev, "08:00"]);
   }
 
-  const totalReminders = times.length * duration;
+  const effectiveDuration = duration === "custom" ? (customDays >= 1 ? customDays : 1) : duration;
+  const totalReminders = times.length * effectiveDuration;
   const freqLabel = `${FREQ_LABELS[frequency]} per day`;
 
   return (
@@ -204,7 +207,7 @@ export default function MedicationScheduleGenerator() {
 
         {/* Duration */}
         <div>
-          <FieldLabel>How many days?</FieldLabel>
+          <FieldLabel>How long will you take this?</FieldLabel>
           <div className="flex flex-wrap gap-2">
             {DURATION_OPTIONS.map((opt) => (
               <Pill
@@ -216,6 +219,20 @@ export default function MedicationScheduleGenerator() {
               />
             ))}
           </div>
+          {duration === "custom" && (
+            <div className="mt-3">
+              <input
+                type="number"
+                min={1}
+                max={365}
+                value={customDays}
+                onChange={(e) => setCustomDays(Math.min(365, Math.max(1, Number(e.target.value))))}
+                placeholder="Enter number of days"
+                className="w-40 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white focus:border-green-500 focus:outline-none"
+              />
+              <span className="ml-2 text-sm text-zinc-500">days (max 365)</span>
+            </div>
+          )}
         </div>
 
         {/* Generate */}
@@ -236,7 +253,7 @@ export default function MedicationScheduleGenerator() {
           <div>
             <p className="text-lg font-black text-white">Your schedule is ready</p>
             <p className="mt-1 text-sm text-zinc-400">
-              {freqLabel} for {duration} days &mdash; <span className="text-white font-medium">{totalReminders} reminders total</span>
+              {freqLabel} for {effectiveDuration} days &mdash; <span className="text-white font-medium">{totalReminders} reminders total</span>
             </p>
           </div>
 
@@ -273,7 +290,7 @@ export default function MedicationScheduleGenerator() {
               >
                 + Add time
               </button>
-              <p className="text-xs text-zinc-500">Repeats daily for {duration} days</p>
+              <p className="text-xs text-zinc-500">Repeats daily for {effectiveDuration} days</p>
             </div>
           </div>
 
