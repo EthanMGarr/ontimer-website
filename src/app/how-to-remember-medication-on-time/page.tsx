@@ -263,7 +263,7 @@ export default function Page() {
               {[
                 "You don't just see the reminder",
                 "You don't lose the moment",
-                "You actually follow through",
+                "You're more likely to follow through",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3">
                   <span className="mt-1 text-green-500 font-bold">✓</span>
@@ -324,13 +324,13 @@ export default function Page() {
       </section>
 
       {/* Disclaimer */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-10">
+      <section className="border-t-2 border-zinc-700 bg-zinc-900/50 py-10">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="text-xs text-zinc-500 leading-relaxed">
-            <strong className="text-zinc-400">Disclaimer:</strong> OnTimer is not a medical device
-            and does not guarantee medication adherence. This tool is for organizational purposes
-            only and does not replace medical advice or prescribed treatment schedules. Always
-            follow your healthcare provider&apos;s instructions.
+          <p className="text-sm text-zinc-300 leading-relaxed">
+            <strong className="text-white">Disclaimer:</strong> OnTimer is not a medical device and
+            does not guarantee medication adherence or outcomes. This tool is for organizational
+            purposes only and does not replace medical advice or prescribed treatment schedules.
+            Always follow your healthcare provider&apos;s instructions.
           </p>
         </div>
       </section>

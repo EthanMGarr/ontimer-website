@@ -153,6 +153,9 @@ export default function MedicationScheduleGenerator() {
       <p className="mt-2 text-sm text-zinc-400">
         Set it up in under a minute. Adds directly to any calendar app.
       </p>
+      <p className="mt-2 text-sm text-zinc-300 italic">
+        For organization only. Always follow your prescribed instructions.
+      </p>
 
       <div className="mt-6 space-y-6">
         {/* Medication Name */}
@@ -293,6 +296,11 @@ export default function MedicationScheduleGenerator() {
               <p className="text-xs text-zinc-500">Repeats daily for {effectiveDuration} days</p>
             </div>
           </div>
+
+          {/* Tool result disclaimer */}
+          <p className="text-sm text-zinc-300 italic">
+            This schedule is for planning purposes only and does not replace medical instructions.
+          </p>
 
           {/* PRIMARY CTA: Add to Calendar */}
           <div>

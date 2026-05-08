@@ -121,6 +121,14 @@ export default function Page() {
         </div>
       </section>
 
+      <section className="border-t-2 border-zinc-700 bg-zinc-900/50 py-8">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="text-sm text-zinc-300 leading-relaxed">
+            <strong className="text-white">Disclaimer:</strong> OnTimer is not a medical device and does not guarantee medication adherence or outcomes. This content is for organizational purposes only and does not replace medical advice or prescribed treatment schedules. Always follow your healthcare provider&apos;s instructions.
+          </p>
+        </div>
+      </section>
+
       <section className="border-t border-zinc-800 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-xl font-black tracking-tight text-white">Related</h2>
