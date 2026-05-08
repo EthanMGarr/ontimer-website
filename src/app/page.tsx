@@ -140,11 +140,13 @@ const steps = [
 ];
 
 const popularGuides = [
+  { label: "Turn Calendar Events Into Alarms", href: "/turn-calendar-events-into-alarms" },
+  { label: "Persistent Calendar Reminders", href: "/persistent-calendar-reminders" },
+  { label: "Calendar Notifications vs Alarms", href: "/calendar-notifications-vs-alarms" },
+  { label: "Best Calendar Alarm App", href: "/calendar-alarm-app" },
   { label: "Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
-  { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
-  { label: "Calendar Alarm App", href: "/calendar-alarm-app" },
-  { label: "What Time Should I Leave", href: "/what-time-should-i-leave" },
   { label: "Why Calendar Reminders Fail", href: "/why-calendar-reminders-fail" },
+  { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
 ];
 
 export default function Home() {
@@ -175,20 +177,22 @@ export default function Home() {
                 <span className="text-green-500">meeting again</span>
               </h1>
               <p className="mt-6 max-w-xl text-lg text-zinc-400 lg:text-xl leading-relaxed">
-                OnTimer connects to your calendar and triggers loud, persistent
-                alarms before meetings, calls, and appointments so they do not
-                sneak up on you.
+                OnTimer turns your Google Calendar and Outlook events into
+                persistent alarms on iPhone — not notifications that disappear.
+                Every meeting gets an alarm that stays until you act.
               </p>
-              <p className="mt-3 max-w-xl text-sm text-zinc-500 leading-relaxed">
-                If being late to meetings is a recurring problem,{" "}
-                <Link
-                  href="/never-be-late-to-meetings"
-                  className="text-green-500 hover:text-green-400"
-                >
-                  start with this guide
-                </Link>
-                .
-              </p>
+              <ul className="mt-4 max-w-xl space-y-1.5">
+                {[
+                  "Works with Google Calendar & Microsoft 365 / Outlook",
+                  "Alarms that stay on screen until dismissed",
+                  "No manual setup — your calendar is the source of truth",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-zinc-400">
+                    <span className="mt-0.5 flex-shrink-0 text-green-500">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
 
               <div className="mt-8">
                 <div className="flex flex-wrap items-center gap-4">
@@ -582,6 +586,7 @@ export default function Home() {
             <p className="mt-5 text-sm font-semibold text-white">Start here:</p>
             <ul className="mt-3 space-y-2">
               {[
+                { label: "Turn Calendar Events Into Alarms", href: "/turn-calendar-events-into-alarms" },
                 { label: "Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
                 { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
                 { label: "What Time Should I Leave", href: "/what-time-should-i-leave" },

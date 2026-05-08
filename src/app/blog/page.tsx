@@ -74,7 +74,39 @@ const urgentGuides: GuideEntry[] = [
   },
 ];
 
-// ── Section 2: Medication Reminders ──────────────────────────────────────────
+// ── Section 2: Calendar Alarm Guides ─────────────────────────────────────────
+const calendarAlarmGuides: GuideEntry[] = [
+  {
+    href: "/turn-calendar-events-into-alarms",
+    title: "How to Turn Calendar Events Into Real Alarms",
+    description:
+      "Google Calendar and Outlook send notifications. Notifications disappear. OnTimer turns every event in your calendar into a persistent alarm — automatically, for both Google and Outlook.",
+    date: "2026-05-08",
+  },
+  {
+    href: "/persistent-calendar-reminders",
+    title: "How to Make Calendar Reminders Persistent",
+    description:
+      "Standard reminders vanish after a few seconds whether you act or not. A persistent reminder stays on your screen until you dismiss it. Here's what that means and how to set it up.",
+    date: "2026-05-08",
+  },
+  {
+    href: "/calendar-alarm-app",
+    title: "Best Calendar Alarm App for Google & Outlook Calendars",
+    description:
+      "OnTimer connects to your Google Calendar and Microsoft 365 / Outlook calendar and fires a persistent alarm for every event — not a notification that disappears.",
+    date: "2026-05-08",
+  },
+  {
+    href: "/calendar-notifications-vs-alarms",
+    title: "Calendar Notifications vs Alarms: Why Most Reminders Fail",
+    description:
+      "Notifications inform. Alarms interrupt. Understanding this difference explains why most calendar reminders fail — and what to use instead for Google and Outlook calendars.",
+    date: "2026-05-08",
+  },
+];
+
+// ── Section 3: Medication Reminders ──────────────────────────────────────────
 const medicationGuides: GuideEntry[] = [
   {
     href: "/how-to-remember-medication-on-time",
@@ -256,7 +288,31 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* ── Section 2: Medication Reminders ── */}
+      {/* ── Section 2: Calendar Alarm Guides ── */}
+      <section className="border-b border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-green-500">New</p>
+          <h2 className="mb-2 text-2xl font-black text-white">Calendar Alarm Guides</h2>
+          <p className="mb-8 text-sm text-zinc-500">
+            Turn Google Calendar and Outlook events into persistent alarms — not notifications that disappear.
+          </p>
+          <div className="space-y-4">
+            {calendarAlarmGuides.map((guide, index) => {
+              if (index === 0) {
+                return (
+                  <div key={guide.href}>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-green-500">Start Here</p>
+                    <GuideCard {...guide} />
+                  </div>
+                );
+              }
+              return <GuideCard key={guide.href} {...guide} />;
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Section 3: Medication Reminders ── */}
       <section className="border-b border-zinc-800 py-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="mb-8 text-2xl font-black text-white">Medication Reminders</h2>
@@ -278,7 +334,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* ── Section 3: Never Be Late Again ── */}
+      {/* ── Section 4: Never Be Late Again ── */}
       <section className="border-b border-zinc-800 py-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="mb-8 text-2xl font-black text-white">Never Be Late Again</h2>

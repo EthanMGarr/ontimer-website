@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-20 sm:px-8">
 
         {/* ── Main grid ── */}
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-5 lg:gap-10">
 
           {/* Col 1 — Brand */}
           <div>
@@ -65,7 +65,28 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 4 — Support & Legal */}
+          {/* Col 4 — Calendar Alarm Guides */}
+          <div>
+            <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-zinc-300">
+              Calendar Alarms
+            </h3>
+            <ul className="space-y-3">
+              {[
+                { href: "/turn-calendar-events-into-alarms", label: "Turn Events Into Alarms" },
+                { href: "/persistent-calendar-reminders",    label: "Persistent Reminders"    },
+                { href: "/calendar-alarm-app",               label: "Calendar Alarm App"      },
+                { href: "/calendar-notifications-vs-alarms", label: "Notifications vs Alarms" },
+              ].map(({ href, label }) => (
+                <li key={href}>
+                  <Link href={href} className="text-sm text-zinc-400 transition-colors hover:text-white">
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Col 5 — Support & Legal */}
           <div>
             <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-zinc-300">
               Support
