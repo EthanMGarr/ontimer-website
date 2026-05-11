@@ -98,6 +98,22 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "How to Turn Calendar Events Into Real Alarms",
+            description: "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google or Outlook calendar events into persistent alarms that are impossible to miss.",
+            author: { "@type": "Organization", name: "OnTimer" },
+            publisher: { "@type": "Organization", name: "OnTimer" },
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-11",
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/turn-calendar-events-into-alarms" },
+          }),
+        }}
+      />
 
       {/* Hero */}
       <section className="relative overflow-hidden pb-16 pt-20 md:pt-28">

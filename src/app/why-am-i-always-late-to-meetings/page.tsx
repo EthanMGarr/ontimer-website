@@ -68,6 +68,15 @@ export default function WhyAmIAlwaysLateMeetings() {
     })),
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
+      { "@type": "ListItem", position: 2, name: "Why Am I Always Late to Meetings", item: "https://www.ontimer.app/why-am-i-always-late-to-meetings" },
+    ],
+  };
+
   return (
     <>
       <script
@@ -77,6 +86,10 @@ export default function WhyAmIAlwaysLateMeetings() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       {/* ── HERO ── */}
@@ -89,8 +102,9 @@ export default function WhyAmIAlwaysLateMeetings() {
           </h1>
           <p className="mt-4 text-sm text-zinc-400">By OnTimer</p>
 
-          <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-            <p className="leading-relaxed text-zinc-300">
+          <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
+            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
+            <p className="leading-relaxed text-zinc-200">
               Chronic meeting lateness usually has two root causes: behavioral patterns (underestimating time,
               back-to-back scheduling) and system failures (passive reminders, notification blindness). Both are
               fixable — but fixing behavior without fixing your alert system rarely sticks.

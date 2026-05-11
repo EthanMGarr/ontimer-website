@@ -8,14 +8,23 @@ export const metadata: Metadata = {
     "Struggling with ADHD time blindness? Learn how alarms, reminders, and calendar tools can help you stay on schedule.",
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: "Tools That Help With ADHD Time Blindness",
-  description:
-    "A guide to tools and strategies for managing ADHD time blindness, including calendar alarm apps.",
-  url: "https://www.ontimer.app/adhd-time-blindness-tools",
-};
+const faqItems = [
+  {
+    question: "Why do people with ADHD miss meetings despite setting reminders?",
+    answer:
+      "ADHD impairs time perception — known as time blindness. People see the reminder, intend to act, get absorbed in the current task, and the moment passes without them noticing. It isn't a memory problem or a willpower failure; it's a neurological difficulty perceiving how quickly time is moving.",
+  },
+  {
+    question: "What tools actually help with ADHD time blindness?",
+    answer:
+      "Tools that work best for ADHD time blindness are those that interrupt rather than just notify: persistent alarms that stay on screen and require active dismissal, visual timers that make time concrete, and external cues that break hyperfocus. Standard calendar notifications — which disappear whether you act or not — are not effective for most people with ADHD.",
+  },
+  {
+    question: "What is the best meeting reminder app for ADHD?",
+    answer:
+      "The best reminder app for ADHD is one that fires a persistent, hard-to-dismiss alarm — not a passive notification banner. An app that connects to your calendar and requires active dismissal interrupts hyperfocus in a way that a standard push notification cannot.",
+  },
+];
 
 const timeBlindnessTools = [
   {
@@ -61,7 +70,46 @@ export default function AdhdTimeBlindnessTools() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqItems.map((item) => ({
+              "@type": "Question",
+              name: item.question,
+              acceptedAnswer: { "@type": "Answer", text: item.answer },
+            })),
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "ADHD Time Blindness: Tools That Actually Help You Stay On Time",
+            description: "Struggling with ADHD time blindness? Learn how alarms, reminders, and calendar tools can help you stay on schedule.",
+            author: { "@type": "Organization", name: "OnTimer" },
+            publisher: { "@type": "Organization", name: "OnTimer" },
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-11",
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/adhd-time-blindness-tools" },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
+              { "@type": "ListItem", position: 2, name: "ADHD Time Blindness Tools", item: "https://www.ontimer.app/adhd-time-blindness-tools" },
+            ],
+          }),
+        }}
       />
 
       {/* ── HERO ── */}
@@ -92,6 +140,12 @@ export default function AdhdTimeBlindnessTools() {
             This guide covers the tools that actually help — and why most
             standard advice doesn&apos;t.
           </p>
+          <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
+            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
+            <p className="text-zinc-200 leading-relaxed">
+              Standard calendar reminders don&apos;t work well for ADHD time blindness because they require you to notice and react — which doesn&apos;t interrupt hyperfocus. The tools that actually work force interruption: persistent alarms that stay on screen and require active dismissal, making it impossible to drift past the moment without responding.
+            </p>
+          </div>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <AppStoreButton size="lg" />
             <AndroidWaitlistButton size="lg" />
@@ -318,6 +372,24 @@ export default function AdhdTimeBlindnessTools() {
       </section>
 
       {/* ── RELATED GUIDES ── */}
+      {/* ── FAQ ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Frequently Asked Questions</h2>
+          <div className="mt-8 space-y-4">
+            {faqItems.map((item) => (
+              <details key={item.question} className="group rounded-xl border border-zinc-800 bg-zinc-900">
+                <summary className="flex cursor-pointer items-center justify-between p-5 text-sm font-semibold text-white">
+                  {item.question}
+                  <span className="ml-4 shrink-0 text-zinc-500 group-open:rotate-180 transition-transform">▾</span>
+                </summary>
+                <p className="px-5 pb-5 text-sm text-zinc-400 leading-relaxed">{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="border-t border-zinc-800 py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="mb-6 text-xl font-bold text-white">Related Guides</h2>

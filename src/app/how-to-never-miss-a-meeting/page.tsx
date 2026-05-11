@@ -51,6 +51,35 @@ export default function HowToNeverMissAMeeting() {
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "How to Never Miss a Meeting Again (Even If Your Calendar Fails)",
+            description: "Learn a simple reminder system that ensures you never miss meetings, calls, or appointments — even if calendar notifications fail.",
+            author: { "@type": "Person", name: "Ethan Garr" },
+            publisher: { "@type": "Organization", name: "OnTimer" },
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-11",
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/how-to-never-miss-a-meeting" },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
+              { "@type": "ListItem", position: 2, name: "Never Miss a Meeting", item: "https://www.ontimer.app/how-to-never-miss-a-meeting" },
+            ],
+          }),
+        }}
+      />
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden pb-20 pt-24 md:pt-32">
@@ -67,6 +96,12 @@ export default function HowToNeverMissAMeeting() {
           <p className="mt-4 text-zinc-400 leading-relaxed">
             The fix isn&apos;t better intentions. It&apos;s a better system.
           </p>
+          <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
+            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
+            <p className="text-zinc-200 leading-relaxed">
+              The most reliable approach combines three independent reminder layers: a calendar alert 15 minutes before the meeting, a separate backup alarm set independently of your calendar, and a persistent alarm app that reads your calendar directly and requires active dismissal. Redundancy is the key — any single layer can fail, but it&apos;s unlikely all three fail at once.
+            </p>
+          </div>
         </div>
       </section>
 

@@ -65,6 +65,22 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "How to Set Medication Reminders on iPhone",
+            description: "Step-by-step guide to setting up medication reminders on iPhone using the Calendar app, Health app, and OnTimer.",
+            author: { "@type": "Organization", name: "OnTimer" },
+            publisher: { "@type": "Organization", name: "OnTimer" },
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-11",
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/how-to-set-medication-reminders-iphone" },
+          }),
+        }}
+      />
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">

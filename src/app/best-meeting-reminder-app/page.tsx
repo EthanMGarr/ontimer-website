@@ -8,14 +8,23 @@ export const metadata: Metadata = {
     "Looking for the best meeting reminder app? Compare reminder apps and learn why persistent calendar alarms work better than standard notifications.",
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: "Best Meeting Reminder Apps for Professionals",
-  description:
-    "Compare meeting reminder approaches and learn why alarm-based calendar apps work better than standard notifications for professionals.",
-  url: "https://www.ontimer.app/best-meeting-reminder-app",
-};
+const faqItems = [
+  {
+    question: "What is the best meeting reminder app?",
+    answer:
+      "The best meeting reminder app is one that fires a persistent alarm — not a passive notification — connected directly to your calendar. Persistent alarms require active dismissal and can't be swiped away on autopilot. For professionals with busy schedules, this distinction determines whether they actually show up to meetings.",
+  },
+  {
+    question: "What is the difference between a meeting reminder and a meeting alarm?",
+    answer:
+      "A meeting reminder is a passive notification that appears briefly and disappears whether or not you act. A meeting alarm stays on screen, keeps alerting you, and requires acknowledgment before it stops — like a morning alarm. For high-stakes meetings, you want an alarm, not a reminder.",
+  },
+  {
+    question: "Does OnTimer work with Google Calendar and Outlook?",
+    answer:
+      "Yes. OnTimer connects to both Google Calendar and Microsoft Outlook, reads your upcoming events, and automatically creates persistent alarms before each meeting. No manual setup required — every calendar event is covered.",
+  },
+];
 
 const reminderComparison = [
   {
@@ -61,7 +70,45 @@ export default function BestMeetingReminderApp() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqItems.map((item) => ({
+              "@type": "Question",
+              name: item.question,
+              acceptedAnswer: { "@type": "Answer", text: item.answer },
+            })),
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "OnTimer",
+            operatingSystem: "iOS",
+            applicationCategory: "ProductivityApplication",
+            description: "Calendar alarm app that turns Google Calendar and Outlook events into persistent alarms professionals can't miss.",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+            url: "https://www.ontimer.app",
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
+              { "@type": "ListItem", position: 2, name: "Best Meeting Reminder App", item: "https://www.ontimer.app/best-meeting-reminder-app" },
+            ],
+          }),
+        }}
       />
 
       {/* ── HERO ── */}
@@ -78,6 +125,12 @@ export default function BestMeetingReminderApp() {
             the difference, and why alarm-based reminders consistently work
             better for professionals.
           </p>
+          <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
+            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
+            <p className="text-zinc-200 leading-relaxed">
+              The best meeting reminder app fires a persistent alarm — not a passive notification — connected directly to your calendar. Passive notifications disappear on their own; persistent alarms require active dismissal and can&apos;t be swiped away on autopilot. For professionals who can&apos;t afford to miss meetings, this distinction is what determines reliability.
+            </p>
+          </div>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <AppStoreButton size="lg" />
             <AndroidWaitlistButton size="lg" />
@@ -246,6 +299,24 @@ export default function BestMeetingReminderApp() {
             >
               How it works →
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Frequently Asked Questions</h2>
+          <div className="mt-8 space-y-4">
+            {faqItems.map((item) => (
+              <details key={item.question} className="group rounded-xl border border-zinc-800 bg-zinc-900">
+                <summary className="flex cursor-pointer items-center justify-between p-5 text-sm font-semibold text-white">
+                  {item.question}
+                  <span className="ml-4 shrink-0 text-zinc-500 group-open:rotate-180 transition-transform">▾</span>
+                </summary>
+                <p className="px-5 pb-5 text-sm text-zinc-400 leading-relaxed">{item.answer}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>

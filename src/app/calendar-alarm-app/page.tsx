@@ -105,6 +105,22 @@ export default function CalendarAlarmApp() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "Best Calendar Alarm App for Google & Outlook Calendars",
+            description: "OnTimer is a calendar alarm app for iPhone that turns Google Calendar and Microsoft Outlook events into persistent alarms — not notifications that disappear.",
+            author: { "@type": "Organization", name: "OnTimer" },
+            publisher: { "@type": "Organization", name: "OnTimer" },
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-11",
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/calendar-alarm-app" },
+          }),
+        }}
+      />
 
       {/* Hero */}
       <section className="relative overflow-hidden pb-20 pt-24 md:pt-32">

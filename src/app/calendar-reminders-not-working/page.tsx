@@ -44,9 +44,86 @@ const steps = [
   },
 ];
 
+const faqItems = [
+  {
+    question: "Why aren't my calendar reminders working?",
+    answer:
+      "Calendar reminders stop working because they are passive notifications — they appear briefly and disappear whether or not you act. Focus mode, battery optimization settings, or notification permissions being reset by an app update can also silently suppress them. The underlying issue is that notifications were never designed to guarantee action.",
+  },
+  {
+    question: "What is the difference between a calendar reminder and a calendar alarm?",
+    answer:
+      "A calendar reminder is a passive notification that appears and disappears. A calendar alarm works like a phone alarm: it stays on screen, plays audio, and requires active dismissal. For people who miss meetings despite having reminders set, the distinction is critical.",
+  },
+  {
+    question: "Which calendar alarm app works with Google Calendar and Outlook?",
+    answer:
+      "OnTimer connects to both Google Calendar and Microsoft Outlook, reads your upcoming events, and fires persistent alarms before meetings. Unlike calendar notifications, these alarms require active dismissal and stay on screen until you respond.",
+  },
+];
+
 export default function CalendarRemindersNotWorking() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqItems.map((item) => ({
+              "@type": "Question",
+              name: item.question,
+              acceptedAnswer: { "@type": "Answer", text: item.answer },
+            })),
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "OnTimer",
+            operatingSystem: "iOS",
+            applicationCategory: "ProductivityApplication",
+            description: "Calendar alarm app that turns Google Calendar and Outlook events into persistent alarms you can't miss.",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+            url: "https://www.ontimer.app",
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
+              { "@type": "ListItem", position: 2, name: "Calendar Reminders Not Working", item: "https://www.ontimer.app/calendar-reminders-not-working" },
+            ],
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "Calendar Reminders Not Working? Try a Real Calendar Alarm App",
+            description: "Missing meetings because calendar reminders are easy to ignore? Learn why Google Calendar and Outlook reminders fail — and how a calendar alarm app fixes the problem.",
+            author: { "@type": "Organization", name: "OnTimer" },
+            publisher: { "@type": "Organization", name: "OnTimer" },
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-11",
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/calendar-reminders-not-working" },
+          }),
+        }}
+      />
+
       {/* ── HERO ── */}
       <section className="relative overflow-hidden pb-20 pt-24 md:pt-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.15),transparent)]" />
@@ -69,6 +146,12 @@ export default function CalendarRemindersNotWorking() {
             <p>
               This happens to people who rely heavily on their calendars every
               day.
+            </p>
+          </div>
+          <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
+            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
+            <p className="text-zinc-200 leading-relaxed">
+              Calendar reminders stop working because they&apos;re passive notifications — they appear briefly and disappear whether or not you act on them. If you&apos;re focused on something else, they&apos;re easy to miss or dismiss on autopilot. A calendar alarm app works differently: it fires a persistent alarm that stays on screen and requires active dismissal, making it much harder to miss a meeting.
             </p>
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -256,6 +339,24 @@ export default function CalendarRemindersNotWorking() {
               OnTimer features →
             </Link>
           </p>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Frequently Asked Questions</h2>
+          <div className="mt-8 space-y-4">
+            {faqItems.map((item) => (
+              <details key={item.question} className="group rounded-xl border border-zinc-800 bg-zinc-900">
+                <summary className="flex cursor-pointer items-center justify-between p-5 text-sm font-semibold text-white">
+                  {item.question}
+                  <span className="ml-4 shrink-0 text-zinc-500 group-open:rotate-180 transition-transform">▾</span>
+                </summary>
+                <p className="px-5 pb-5 text-sm text-zinc-400 leading-relaxed">{item.answer}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 

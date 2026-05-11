@@ -43,6 +43,22 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "Why Medication Reminders Fail (And What Actually Works)",
+            description: "Most medication reminders fail not because you forget — but because of what happens after the alert.",
+            author: { "@type": "Organization", name: "OnTimer" },
+            publisher: { "@type": "Organization", name: "OnTimer" },
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-11",
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/why-medication-reminders-fail" },
+          }),
+        }}
+      />
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
@@ -105,6 +121,23 @@ export default function Page() {
           </div>
           <div className="mt-8">
             <AppStoreButton size="md" location="why_reminders_fail_cta" />
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Frequently Asked Questions</h2>
+          <div className="mt-8 space-y-4">
+            {faqJsonLd.mainEntity.map((item) => (
+              <details key={item.name} className="group rounded-xl border border-zinc-800 bg-zinc-900">
+                <summary className="flex cursor-pointer items-center justify-between p-5 text-sm font-semibold text-white">
+                  {item.name}
+                  <span className="ml-4 shrink-0 text-zinc-500 group-open:rotate-180 transition-transform">▾</span>
+                </summary>
+                <p className="px-5 pb-5 text-sm text-zinc-400 leading-relaxed">{item.acceptedAnswer.text}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>

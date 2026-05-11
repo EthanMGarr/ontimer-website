@@ -54,6 +54,35 @@ export default function MissedAppointmentFee() {
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "Missed Appointment Fee? How to Prevent Costly No-Shows",
+            description: "Missed an appointment and got charged a fee? Learn how to prevent no-shows with a simple reminder system that ensures you never miss important appointments again.",
+            author: { "@type": "Person", name: "Ethan Garr" },
+            publisher: { "@type": "Organization", name: "OnTimer" },
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-11",
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/missed-appointment-fee-how-to-prevent-no-shows" },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
+              { "@type": "ListItem", position: 2, name: "Missed Appointment Fee", item: "https://www.ontimer.app/missed-appointment-fee-how-to-prevent-no-shows" },
+            ],
+          }),
+        }}
+      />
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden pb-20 pt-24 md:pt-32">
@@ -70,6 +99,12 @@ export default function MissedAppointmentFee() {
           <p className="mt-4 text-zinc-400 leading-relaxed">
             The right multi-stage reminder structure makes missing an appointment almost impossible.
           </p>
+          <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
+            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
+            <p className="text-zinc-200 leading-relaxed">
+              Missed appointment fees typically range from $25–$200 and are legally enforceable if the policy was disclosed at intake. If you&apos;ve just missed an appointment, call immediately and ask about a first-time waiver — most offices are more flexible than their written policy suggests, especially if you reschedule on the same call. To prevent future no-shows, use a multi-stage reminder: 24 hours before, 2 hours before, and a persistent alarm 30 minutes before your departure time.
+            </p>
+          </div>
         </div>
       </section>
 

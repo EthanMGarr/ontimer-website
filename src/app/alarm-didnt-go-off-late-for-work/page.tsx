@@ -59,6 +59,35 @@ export default function AlarmDidntGoOff() {
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "Alarm Didn't Go Off? How to Build a Fail-Safe Meeting Reminder System",
+            description: "Alarm didn't go off and you were late? Learn why phone alarms fail and how to build a fail-safe reminder system that prevents missed meetings and appointments.",
+            author: { "@type": "Person", name: "Ethan Garr" },
+            publisher: { "@type": "Organization", name: "OnTimer" },
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-11",
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/alarm-didnt-go-off-late-for-work" },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
+              { "@type": "ListItem", position: 2, name: "Alarm Didn't Go Off", item: "https://www.ontimer.app/alarm-didnt-go-off-late-for-work" },
+            ],
+          }),
+        }}
+      />
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden pb-20 pt-24 md:pt-32">
@@ -75,6 +104,12 @@ export default function AlarmDidntGoOff() {
           <p className="mt-4 text-zinc-400 leading-relaxed">
             If your alarm didn&apos;t go off and you were late, you&apos;re not alone — and there are specific, fixable reasons it happens.
           </p>
+          <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
+            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
+            <p className="text-zinc-200 leading-relaxed">
+              The most common causes are Focus mode silencing the alarm, the ringer switch set to silent, or notification permissions that were reset by an app or iOS update. Battery optimization on Android can kill alarm apps before they fire. To prevent recurrence, build a three-layer system: calendar alert + separate backup alarm + a persistent meeting reminder app that reads your calendar directly. Each layer covers the others&apos; failure modes.
+            </p>
+          </div>
         </div>
       </section>
 

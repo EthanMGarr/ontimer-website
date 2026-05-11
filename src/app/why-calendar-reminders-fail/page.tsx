@@ -56,6 +56,35 @@ export default function WhyCalendarRemindersFail() {
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "Why Calendar Reminders Fail (And How to Make Them Reliable)",
+            description: "Calendar reminders often fail because of phone settings, notification limits, and dismissed alerts. Learn how to build a reliable reminder system.",
+            author: { "@type": "Person", name: "Ethan Garr" },
+            publisher: { "@type": "Organization", name: "OnTimer" },
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-11",
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/why-calendar-reminders-fail" },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
+              { "@type": "ListItem", position: 2, name: "Why Calendar Reminders Fail", item: "https://www.ontimer.app/why-calendar-reminders-fail" },
+            ],
+          }),
+        }}
+      />
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden pb-20 pt-24 md:pt-32">
@@ -72,6 +101,12 @@ export default function WhyCalendarRemindersFail() {
           <p className="mt-4 text-zinc-400 leading-relaxed">
             Understanding why they fail is the first step to building a system that actually works.
           </p>
+          <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
+            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
+            <p className="text-zinc-200 leading-relaxed">
+              Calendar reminders fail because they are passive notifications that fire once and disappear — competing with dozens of other alerts. Focus mode, notification permission changes, and battery optimization can all suppress them silently, with no warning. The fix is redundancy: multiple reminder stages through independent delivery paths, so any single failure has a fallback.
+            </p>
+          </div>
         </div>
       </section>
 

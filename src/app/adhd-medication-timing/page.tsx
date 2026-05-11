@@ -43,6 +43,36 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "ADHD and Medication Timing: Why the Last 5 Minutes Matters",
+            description: "ADHD time blindness makes the last 5 minutes after a reminder the most dangerous window for missed doses. Here's how to build a system that closes the gap.",
+            author: { "@type": "Organization", name: "OnTimer" },
+            publisher: { "@type": "Organization", name: "OnTimer" },
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-11",
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/adhd-medication-timing" },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
+              { "@type": "ListItem", position: 2, name: "Medication Reminders", item: "https://www.ontimer.app/how-to-remember-medication-on-time" },
+              { "@type": "ListItem", position: 3, name: "ADHD & Timing", item: "https://www.ontimer.app/adhd-medication-timing" },
+            ],
+          }),
+        }}
+      />
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">

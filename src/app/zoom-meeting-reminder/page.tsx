@@ -8,14 +8,23 @@ export const metadata: Metadata = {
     "Missing Zoom meetings because reminders disappear? Learn how persistent meeting alarms help remote workers stay on schedule.",
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: "Never Miss a Zoom Meeting Again",
-  description:
-    "How persistent meeting alarms help remote workers avoid missing Zoom calls and Teams meetings.",
-  url: "https://www.ontimer.app/zoom-meeting-reminder",
-};
+const faqItems = [
+  {
+    question: "Why do I keep missing Zoom meetings?",
+    answer:
+      "Zoom and calendar notifications are passive — they appear briefly and disappear whether or not you act. Remote work removes the physical cues (people walking to the conference room) that naturally signal it's time to stop and join. Without travel pressure, it's easy to stay in the current task too long.",
+  },
+  {
+    question: "How do I stop missing Zoom calls?",
+    answer:
+      "Use a persistent alarm app that connects to your calendar and fires an alarm — not just a notification — before each meeting. A persistent alarm stays on screen and requires active dismissal, making it much harder to ignore during focused work.",
+  },
+  {
+    question: "Does OnTimer work with Zoom meetings?",
+    answer:
+      "Yes. OnTimer reads your Google Calendar and Microsoft Outlook events — including meetings with Zoom, Google Meet, or Teams links — and fires a persistent alarm before each one. No manual setup required; every calendar event is covered automatically.",
+  },
+];
 
 const remoteWorkProblems = [
   {
@@ -49,7 +58,45 @@ export default function ZoomMeetingReminder() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqItems.map((item) => ({
+              "@type": "Question",
+              name: item.question,
+              acceptedAnswer: { "@type": "Answer", text: item.answer },
+            })),
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "OnTimer",
+            operatingSystem: "iOS",
+            applicationCategory: "ProductivityApplication",
+            description: "Calendar alarm app that fires persistent alarms before Zoom, Google Meet, and Teams meetings so you never miss a call.",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+            url: "https://www.ontimer.app",
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
+              { "@type": "ListItem", position: 2, name: "Zoom Meeting Reminder", item: "https://www.ontimer.app/zoom-meeting-reminder" },
+            ],
+          }),
+        }}
       />
 
       {/* ── HERO ── */}
@@ -69,6 +116,12 @@ export default function ZoomMeetingReminder() {
           <p className="mt-4 text-lg text-zinc-400 leading-relaxed">
             Persistent meeting alarms fix this. Here&apos;s how.
           </p>
+          <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
+            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
+            <p className="text-zinc-200 leading-relaxed">
+              Zoom meeting reminders get missed because they&apos;re passive notifications — they disappear whether or not you act. Remote work removes the physical cues that force you to stop. The fix is a persistent alarm app that reads your calendar and fires an alarm that stays on screen until you dismiss it, regardless of what you&apos;re doing.
+            </p>
+          </div>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <AppStoreButton size="lg" />
             <AndroidWaitlistButton size="lg" />
@@ -213,6 +266,24 @@ export default function ZoomMeetingReminder() {
             <Link href="/how-it-works" className="text-sm font-semibold text-green-500 hover:text-green-400">
               How it works →
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Frequently Asked Questions</h2>
+          <div className="mt-8 space-y-4">
+            {faqItems.map((item) => (
+              <details key={item.question} className="group rounded-xl border border-zinc-800 bg-zinc-900">
+                <summary className="flex cursor-pointer items-center justify-between p-5 text-sm font-semibold text-white">
+                  {item.question}
+                  <span className="ml-4 shrink-0 text-zinc-500 group-open:rotate-180 transition-transform">▾</span>
+                </summary>
+                <p className="px-5 pb-5 text-sm text-zinc-400 leading-relaxed">{item.answer}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
