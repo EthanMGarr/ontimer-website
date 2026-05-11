@@ -3,17 +3,18 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "How to Make Calendar Reminders Persistent | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/persistent-calendar-reminders" },
+  title: "How to Make Calendar Reminders Persistent",
   description:
     "Standard calendar reminders disappear after a few seconds. Persistent calendar reminders stay on screen until you act. Here's why the difference matters — and how to set it up.",
   openGraph: {
-    title: "How to Make Calendar Reminders Persistent | OnTimer",
+    title: "How to Make Calendar Reminders Persistent",
     description:
       "Standard calendar reminders disappear. Persistent reminders stay on screen until you act. Here's how to set them up for Google Calendar and Outlook.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "How to Make Calendar Reminders Persistent | OnTimer",
+    title: "How to Make Calendar Reminders Persistent",
     description:
       "Standard calendar reminders disappear. Persistent reminders stay on screen until you act.",
   },

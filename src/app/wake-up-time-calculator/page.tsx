@@ -4,11 +4,12 @@ import { AppStoreButton } from "@/components/CTAButton";
 import WakeUpCalculator from "./WakeUpCalculator";
 
 export const metadata: Metadata = {
-  title: "Wake-Up Time Calculator | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/wake-up-time-calculator" },
+  title: "Wake-Up Time Calculator — What Time Should I Set My Alarm?",
   description:
     "Calculate what time to wake up based on your arrival time, travel time, and how long you need to get ready. Free wake-up time calculator.",
   openGraph: {
-    title: "Wake-Up Time Calculator | OnTimer",
+    title: "Wake-Up Time Calculator — What Time Should I Set My Alarm?",
     description:
       "Calculate what time to wake up based on your arrival time, travel time, and how long you need to get ready.",
   },
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 const softwareJsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "Wake-Up Time Calculator",
+  name: "Wake-Up Time Calculator — What Time Should I Set My Alarm?",
   applicationCategory: "ProductivityApplication",
   operatingSystem: "Web",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
@@ -74,7 +75,7 @@ const breadcrumbJsonLd = {
     {
       "@type": "ListItem",
       position: 3,
-      name: "Wake-Up Time Calculator",
+      name: "Wake-Up Time Calculator — What Time Should I Set My Alarm?",
       item: "https://www.ontimer.app/wake-up-time-calculator",
     },
   ],
@@ -110,7 +111,7 @@ export default function WakeUpTimeCalculatorPage() {
               <span className="text-zinc-400">Tools</span>
             </li>
             <li aria-hidden="true">›</li>
-            <li className="text-zinc-300">Wake-Up Time Calculator</li>
+            <li className="text-zinc-300">Wake-Up Time Calculator — What Time Should I Set My Alarm?</li>
           </ol>
         </div>
       </nav>

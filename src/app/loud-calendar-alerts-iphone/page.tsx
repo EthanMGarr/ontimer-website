@@ -3,9 +3,15 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "How to Get Loud Calendar Alerts on iPhone | OnTimer",
+  title: "Loud Calendar Alerts on iPhone (Step-by-Step Fix)",
   description:
     "Looking for louder iPhone calendar alerts? Here is why normal reminders get missed and what to use instead.",
+  alternates: { canonical: "https://www.ontimer.app/loud-calendar-alerts-iphone" },
+  openGraph: {
+    title: "Loud Calendar Alerts on iPhone (Step-by-Step Fix)",
+    description: "Looking for louder iPhone calendar alerts? Here is why normal reminders get missed and what to use instead.",
+    url: "https://www.ontimer.app/loud-calendar-alerts-iphone",
+  },
 };
 
 const faqItems = [

@@ -4,11 +4,12 @@ import { AppStoreButton } from "@/components/CTAButton";
 import LeaveTimeCalculator from "./LeaveTimeCalculator";
 
 export const metadata: Metadata = {
-  title: "What Time Should I Leave? Calculator | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/what-time-should-i-leave" },
+  title: "What Time Should I Leave? Free Leave-Time Calculator",
   description:
     "Calculate exactly what time to leave based on your arrival time, travel time, and buffer. Free calculator for meetings, appointments, and any destination.",
   openGraph: {
-    title: "What Time Should I Leave? Calculator | OnTimer",
+    title: "What Time Should I Leave? Free Leave-Time Calculator",
     description:
       "Calculate exactly what time to leave based on your arrival time, travel time, and buffer.",
   },

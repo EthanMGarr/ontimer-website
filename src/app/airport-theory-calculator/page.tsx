@@ -26,7 +26,8 @@ import { AppStoreButton } from "@/components/CTAButton";
 import AirportTheoryCalculator from "./AirportTheoryCalculator";
 
 export const metadata: Metadata = {
-  title: "Airport Theory Calculator | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/airport-theory-calculator" },
+  title: "Airport Theory Calculator — How Late Can You Leave?",
   description:
     "Calculate the absolute minimum time you can leave for the airport at three aggression levels — Responsible Adult, Cutting It Close, and Absolute Maniac. Warning: this is a terrible idea.",
   openGraph: {

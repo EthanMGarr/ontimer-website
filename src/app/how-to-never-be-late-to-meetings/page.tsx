@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "How to Never Be Late to Meetings | OnTimer",
+  title: "How to Never Be Late to Meetings",
   description:
     "Practical ways to stop being late to meetings, plus how louder, more persistent calendar alarms can help.",
 };

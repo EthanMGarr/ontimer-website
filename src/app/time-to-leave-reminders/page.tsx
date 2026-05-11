@@ -3,9 +3,15 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "How to Get a Reminder When It's Time to Leave for a Meeting | OnTimer",
+  title: "Time-to-Leave Reminders for Meetings on iPhone",
   description:
-    "Learn why leave-time reminders matter and how traffic-aware alerts can help you arrive on time.",
+    "Standard calendar reminders fire X minutes before the meeting — not when you need to leave. Traffic-aware time-to-leave alerts fix that. Here is how.",
+  alternates: { canonical: "https://www.ontimer.app/time-to-leave-reminders" },
+  openGraph: {
+    title: "Time-to-Leave Reminders for Meetings on iPhone",
+    description: "Standard calendar reminders fire X minutes before the meeting — not when you need to leave. Traffic-aware time-to-leave alerts fix that. Here is how.",
+    url: "https://www.ontimer.app/time-to-leave-reminders",
+  },
 };
 
 const faqItems = [

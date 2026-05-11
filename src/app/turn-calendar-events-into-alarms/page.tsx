@@ -3,17 +3,19 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "How to Turn Calendar Events Into Real Alarms | OnTimer",
+  title: "Turn Google Calendar & Outlook Events Into Real Alarms",
   description:
     "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google or Outlook calendar events into persistent alarms that are impossible to miss.",
+  alternates: { canonical: "https://www.ontimer.app/turn-calendar-events-into-alarms" },
   openGraph: {
-    title: "How to Turn Calendar Events Into Real Alarms | OnTimer",
+    title: "Turn Google Calendar & Outlook Events Into Real Alarms",
     description:
       "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google or Outlook calendar events into persistent alarms.",
+    url: "https://www.ontimer.app/turn-calendar-events-into-alarms",
   },
   twitter: {
     card: "summary_large_image",
-    title: "How to Turn Calendar Events Into Real Alarms | OnTimer",
+    title: "Turn Google Calendar & Outlook Events Into Real Alarms",
     description:
       "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google or Outlook calendar events into persistent alarms.",
   },

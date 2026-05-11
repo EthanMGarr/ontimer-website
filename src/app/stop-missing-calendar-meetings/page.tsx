@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "How to Stop Missing Zoom, Google Meet, and Other Calendar Meetings | OnTimer",
+  title: "How to Stop Missing Zoom, Google Meet, and Other Calendar Meetings",
   description:
     "Missing virtual meetings is still common. Here is why standard reminders fail and how to make them harder to miss.",
 };

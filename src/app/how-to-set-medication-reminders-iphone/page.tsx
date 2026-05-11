@@ -3,11 +3,12 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "How to Set Medication Reminders on iPhone | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/how-to-set-medication-reminders-iphone" },
+  title: "How to Set Medication Reminders on iPhone",
   description:
     "Step-by-step guide to setting up medication reminders on iPhone using the Calendar app, Health app, and OnTimer for persistent alarms that actually work.",
   openGraph: {
-    title: "How to Set Medication Reminders on iPhone | OnTimer",
+    title: "How to Set Medication Reminders on iPhone",
     description:
       "Step-by-step guide to setting up medication reminders on iPhone — plus how to make them impossible to ignore.",
   },

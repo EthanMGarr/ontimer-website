@@ -90,12 +90,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/how-to-never-be-late-to-meetings`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/loud-calendar-alerts-iphone`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
@@ -103,12 +97,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/time-to-leave-reminders`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/stop-missing-calendar-meetings`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,

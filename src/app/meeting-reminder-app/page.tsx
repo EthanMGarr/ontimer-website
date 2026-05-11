@@ -3,12 +3,12 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Best Meeting Reminder App for iPhone | Never Miss a Meeting Again",
+  title: "Meeting Reminder App for iPhone: Alarms, Not Pings",
   description:
     "OnTimer turns calendar reminders into real alarms so you never miss meetings, Zoom calls, or appointments again.",
   alternates: { canonical: "https://www.ontimer.app/meeting-reminder-app" },
   openGraph: {
-    title: "Best Meeting Reminder App for iPhone | Never Miss a Meeting Again",
+    title: "Meeting Reminder App for iPhone: Alarms, Not Pings",
     description:
       "OnTimer turns calendar reminders into real alarms so you never miss meetings, Zoom calls, or appointments again.",
     url: "https://www.ontimer.app/meeting-reminder-app",
@@ -301,6 +301,26 @@ export default function MeetingReminderApp() {
               How to Never Miss a Meeting
             </Link>
             .
+          </p>
+          <p className="text-zinc-400 leading-relaxed">
+            Need a reminder that works specifically for Zoom calls? See the{" "}
+            <Link
+              href="/zoom-meeting-reminder"
+              className="text-green-500 hover:text-green-400 transition-colors"
+            >
+              Zoom Meeting Reminder That Won&apos;t Let You Miss the Call
+            </Link>
+            {" "}for a Zoom-specific setup guide.
+          </p>
+          <p className="text-zinc-400 leading-relaxed">
+            Comparing options?{" "}
+            <Link
+              href="/best-meeting-reminder-app"
+              className="text-green-500 hover:text-green-400 transition-colors"
+            >
+              Best Meeting Reminder App for iPhone
+            </Link>
+            {" "}breaks down what separates a solid meeting reminder from a basic notification.
           </p>
         </div>
       </section>

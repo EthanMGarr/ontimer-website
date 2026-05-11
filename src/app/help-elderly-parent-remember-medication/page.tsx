@@ -3,11 +3,12 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "How to Help an Elderly Parent Remember Their Medication | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/help-elderly-parent-remember-medication" },
+  title: "How to Help an Elderly Parent Remember Their Medication",
   description:
     "A practical guide for caregivers: how to set up a medication system for an elderly parent that works reliably without requiring constant supervision.",
   openGraph: {
-    title: "How to Help an Elderly Parent Remember Their Medication | OnTimer",
+    title: "How to Help an Elderly Parent Remember Their Medication",
     description:
       "A practical guide for caregivers: set up a medication system for an elderly parent that works reliably.",
   },

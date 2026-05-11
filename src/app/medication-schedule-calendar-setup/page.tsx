@@ -3,11 +3,12 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "How to Set Up a Medication Schedule Using Your Calendar | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/medication-schedule-calendar-setup" },
+  title: "How to Set Up a Medication Schedule Using Your Calendar",
   description:
     "Use your calendar as a medication system. Step-by-step guide to creating recurring events that keep you on schedule — plus a free ICS schedule generator.",
   openGraph: {
-    title: "How to Set Up a Medication Schedule Using Your Calendar | OnTimer",
+    title: "How to Set Up a Medication Schedule Using Your Calendar",
     description:
       "Use your calendar as a medication system. Step-by-step guide to creating recurring events that keep you on schedule.",
   },

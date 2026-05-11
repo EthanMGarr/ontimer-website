@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-20 sm:px-8">
 
         {/* ── Main grid ── */}
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-5 lg:gap-10">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-6 lg:gap-8">
 
           {/* Col 1 — Brand */}
           <div>
@@ -86,7 +86,29 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 5 — Support & Legal */}
+          {/* Col 5 — Medication Guides */}
+          <div>
+            <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-zinc-300">
+              Medication
+            </h3>
+            <ul className="space-y-3">
+              {[
+                { href: "/how-to-remember-medication-on-time", label: "Remember Medication"        },
+                { href: "/why-medication-reminders-fail",      label: "Why Reminders Fail"        },
+                { href: "/how-to-set-medication-reminders-iphone", label: "iPhone Setup Guide"    },
+                { href: "/help-elderly-parent-remember-medication", label: "Elderly Parent Guide" },
+                { href: "/pet-medication-schedule",            label: "Pet Medication Schedule"   },
+              ].map(({ href, label }) => (
+                <li key={href}>
+                  <Link href={href} className="text-sm text-zinc-400 transition-colors hover:text-white">
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Col 6 — Support & Legal */}
           <div>
             <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-zinc-300">
               Support

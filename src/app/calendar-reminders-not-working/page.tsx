@@ -3,7 +3,8 @@ import Link from "next/link";
 import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Calendar Reminders Not Working? Try a Real Calendar Alarm App | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/calendar-reminders-not-working" },
+  title: "Calendar Reminders Not Working? Try a Real Calendar Alarm App",
   description:
     "Missing meetings because calendar reminders are easy to ignore? Learn why Google Calendar and Outlook reminders fail — and how a calendar alarm app fixes the problem.",
 };

@@ -3,11 +3,12 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Why Medication Reminders Fail (And What Actually Works) | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/why-medication-reminders-fail" },
+  title: "Why Medication Reminders Fail (And What Actually Works)",
   description:
     "Most medication reminders fail not because you forget — but because of what happens after the alert. Here's why single notifications don't work and what does.",
   openGraph: {
-    title: "Why Medication Reminders Fail (And What Actually Works) | OnTimer",
+    title: "Why Medication Reminders Fail (And What Actually Works)",
     description:
       "Most medication reminders fail not because you forget — but because of what happens after the alert.",
   },

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "https://www.ontimer.app/adhd-time-blindness-tools" },
   title: "ADHD Time Blindness: Tools That Actually Help You Stay On Time",
   description:
     "Struggling with ADHD time blindness? Learn how alarms, reminders, and calendar tools can help you stay on schedule.",

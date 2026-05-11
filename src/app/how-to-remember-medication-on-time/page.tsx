@@ -1,4 +1,4 @@
-/// Anchor SEO page — How to Remember to Take Your Medication on Time.
+/// Anchor SEO page — How to Remember Your Medication (The Last 5 Minutes Fix).
 ///
 /// ## Purpose
 /// Drives high-intent medication reminder search traffic to OnTimer via content + embedded tool.
@@ -18,13 +18,15 @@ import { AppStoreButton } from "@/components/CTAButton";
 import MedicationScheduleGenerator from "./MedicationScheduleGenerator";
 
 export const metadata: Metadata = {
-  title: "How to Remember to Take Your Medication on Time | OnTimer",
+  title: "How to Remember Your Medication (The Last 5 Minutes Fix)",
   description:
     "If you keep missing your medication, the problem isn't forgetting — it's what happens in the moment. Set up a system that actually works.",
+  alternates: { canonical: "https://www.ontimer.app/how-to-remember-medication-on-time" },
   openGraph: {
-    title: "How to Remember to Take Your Medication on Time | OnTimer",
+    title: "How to Remember Your Medication (The Last 5 Minutes Fix)",
     description:
       "If you keep missing your medication, the problem isn't forgetting — it's what happens in the moment. Set up a system that actually works.",
+    url: "https://www.ontimer.app/how-to-remember-medication-on-time",
   },
 };
 
@@ -124,7 +126,7 @@ export default function Page() {
           </nav>
 
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl leading-tight">
-            How to Remember to Take Your Medication on Time
+            How to Remember Your Medication (The Last 5 Minutes Fix)
             <span className="text-zinc-400"> (Even If You Keep Missing It)</span>
           </h1>
 

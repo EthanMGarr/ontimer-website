@@ -3,11 +3,12 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "ADHD and Medication Timing: Why the Last 5 Minutes Matters | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/adhd-medication-timing" },
+  title: "ADHD and Medication Timing: Why the Last 5 Minutes Matters",
   description:
     "ADHD time blindness makes the last 5 minutes after a reminder the most dangerous window for missed doses. Here's how to build a system that closes the gap.",
   openGraph: {
-    title: "ADHD and Medication Timing: Why the Last 5 Minutes Matters | OnTimer",
+    title: "ADHD and Medication Timing: Why the Last 5 Minutes Matters",
     description:
       "ADHD time blindness makes the last 5 minutes after a reminder the most dangerous window. Here's how to close the gap.",
   },

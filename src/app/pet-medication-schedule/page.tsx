@@ -3,11 +3,12 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "How to Remember Your Pet's Medication Schedule | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/pet-medication-schedule" },
+  title: "How to Remember Your Pet's Medication Schedule",
   description:
     "Pets can't remind you. Here's how to set up a reliable system for your pet's medication schedule — flea prevention, heartworm, prescriptions, and more.",
   openGraph: {
-    title: "How to Remember Your Pet's Medication Schedule | OnTimer",
+    title: "How to Remember Your Pet's Medication Schedule",
     description:
       "Pets can't remind you. Here's how to set up a reliable system for your pet's medication schedule.",
   },

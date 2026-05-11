@@ -3,17 +3,18 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Calendar Notifications vs Alarms: Why Most Reminders Fail | OnTimer",
+  alternates: { canonical: "https://www.ontimer.app/calendar-notifications-vs-alarms" },
+  title: "Calendar Notifications vs Alarms: Why Most Reminders Fail",
   description:
     "Notifications inform. Alarms interrupt. Understanding this difference explains why most calendar reminders fail — and what to use instead for Google and Outlook calendars.",
   openGraph: {
-    title: "Calendar Notifications vs Alarms: Why Most Reminders Fail | OnTimer",
+    title: "Calendar Notifications vs Alarms: Why Most Reminders Fail",
     description:
       "Notifications inform. Alarms interrupt. Understanding this difference explains why most calendar reminders fail.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Calendar Notifications vs Alarms: Why Most Reminders Fail | OnTimer",
+    title: "Calendar Notifications vs Alarms: Why Most Reminders Fail",
     description:
       "Notifications inform. Alarms interrupt. Understanding this difference explains why most calendar reminders fail.",
   },

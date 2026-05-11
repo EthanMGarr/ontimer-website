@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Best Apps to Remind You About Meetings on iPhone | OnTimer",
+  title: "Best Apps to Remind You About Meetings on iPhone",
   description:
     "What to look for in a meeting reminder app on iPhone, including persistent alarms, leave-time alerts, and multi-calendar support.",
 };

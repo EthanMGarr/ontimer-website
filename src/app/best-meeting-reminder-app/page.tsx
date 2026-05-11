@@ -3,9 +3,15 @@ import Link from "next/link";
 import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Best Meeting Reminder Apps for Professionals in 2026 | OnTimer",
+  title: "Best Meeting Reminder Apps for Professionals in 2026",
   description:
     "Looking for the best meeting reminder app? Compare reminder apps and learn why persistent calendar alarms work better than standard notifications.",
+  alternates: { canonical: "https://www.ontimer.app/best-meeting-reminder-app" },
+  openGraph: {
+    title: "Best Meeting Reminder Apps for Professionals in 2026",
+    description: "Looking for the best meeting reminder app? Compare reminder apps and learn why persistent calendar alarms work better than standard notifications.",
+    url: "https://www.ontimer.app/best-meeting-reminder-app",
+  },
 };
 
 const faqItems = [

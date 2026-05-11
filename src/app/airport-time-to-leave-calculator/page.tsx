@@ -4,6 +4,7 @@ import { AppStoreButton } from "@/components/CTAButton";
 import AirportCalculator from "./AirportCalculator";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "https://www.ontimer.app/airport-time-to-leave-calculator" },
   title: "What Time Should I Leave for the Airport? (Free Calculator)",
   description:
     "Calculate exactly when to leave for the airport based on your flight time, traffic, and security. Avoid being late or missing your flight.",

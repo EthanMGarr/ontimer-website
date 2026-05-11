@@ -36,7 +36,6 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://www.ontimer.app",
     siteName: "OnTimer",
-    title: "OnTimer — Calendar Alarm App to Never Be Late for Meetings",
     description:
       "OnTimer connects to your calendar and automatically sets alarms before meetings so you're never late again. Free iPhone app.",
     images: [
@@ -50,7 +49,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "OnTimer — Calendar Alarm App to Never Be Late for Meetings",
     description:
       "OnTimer connects to your calendar and automatically sets alarms before meetings so you're never late again. Free iPhone app.",
     images: ["/images/NeverBeLateAgain.png"],

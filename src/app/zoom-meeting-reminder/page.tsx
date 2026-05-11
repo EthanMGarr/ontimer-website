@@ -3,9 +3,15 @@ import Link from "next/link";
 import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Never Miss a Zoom Meeting Again | Meeting Alarm Apps",
+  title: "Zoom Meeting Reminder That Won't Let You Miss the Call",
   description:
     "Missing Zoom meetings because reminders disappear? Learn how persistent meeting alarms help remote workers stay on schedule.",
+  alternates: { canonical: "https://www.ontimer.app/zoom-meeting-reminder" },
+  openGraph: {
+    title: "Zoom Meeting Reminder That Won't Let You Miss the Call",
+    description: "Missing Zoom meetings because reminders disappear? Learn how persistent meeting alarms help remote workers stay on schedule.",
+    url: "https://www.ontimer.app/zoom-meeting-reminder",
+  },
 };
 
 const faqItems = [

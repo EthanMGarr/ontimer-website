@@ -4,9 +4,15 @@ import Link from "next/link";
 import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "How to Never Be Late to Meetings Again | OnTimer",
+  title: "How to Never Be Late to Meetings (The Last 5 Minutes Fix)",
   description:
     "Most people know when their meetings are but still run late. Here's why — the last 5 minutes problem, virtual meeting traps, and how to fix it for good.",
+  alternates: { canonical: "https://www.ontimer.app/never-be-late-to-meetings" },
+  openGraph: {
+    title: "How to Never Be Late to Meetings (The Last 5 Minutes Fix)",
+    description: "Most people know when their meetings are but still run late. Here's why — the last 5 minutes problem, virtual meeting traps, and how to fix it for good.",
+    url: "https://www.ontimer.app/never-be-late-to-meetings",
+  },
 };
 
 const articleJsonLd = {

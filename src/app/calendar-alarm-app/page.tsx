@@ -3,17 +3,19 @@ import Link from "next/link";
 import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Best Calendar Alarm App for Google & Outlook Calendars | OnTimer",
+  title: "Best Calendar Alarm App for Google & Outlook (iPhone)",
   description:
     "OnTimer is a calendar alarm app for iPhone that turns Google Calendar and Microsoft Outlook events into persistent alarms — not notifications that disappear.",
+  alternates: { canonical: "https://www.ontimer.app/calendar-alarm-app" },
   openGraph: {
-    title: "Best Calendar Alarm App for Google & Outlook Calendars | OnTimer",
+    title: "Best Calendar Alarm App for Google & Outlook (iPhone)",
     description:
       "Turn your Google Calendar and Outlook events into persistent alarms. OnTimer is the calendar alarm app built for iPhone.",
+    url: "https://www.ontimer.app/calendar-alarm-app",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Best Calendar Alarm App for Google & Outlook Calendars | OnTimer",
+    title: "Best Calendar Alarm App for Google & Outlook (iPhone)",
     description:
       "Turn your Google Calendar and Outlook events into persistent alarms. OnTimer is the calendar alarm app built for iPhone.",
   },
@@ -111,7 +113,7 @@ export default function CalendarAlarmApp() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            headline: "Best Calendar Alarm App for Google & Outlook Calendars",
+            headline: "Best Calendar Alarm App for Google & Outlook (iPhone)",
             description: "OnTimer is a calendar alarm app for iPhone that turns Google Calendar and Microsoft Outlook events into persistent alarms — not notifications that disappear.",
             author: { "@type": "Organization", name: "OnTimer" },
             publisher: { "@type": "Organization", name: "OnTimer" },

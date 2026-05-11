@@ -4,9 +4,15 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "OnTimer | Loud Calendar Alarms for Meetings on iPhone",
+  title: "OnTimer — Persistent Calendar Alarms for iPhone & Outlook",
   description:
     "OnTimer is an iPhone app that connects to your calendar and creates loud, persistent alarms before meetings and events so they are harder to miss.",
+  alternates: { canonical: "https://www.ontimer.app" },
+  openGraph: {
+    title: "OnTimer — Persistent Calendar Alarms for iPhone & Outlook",
+    description: "OnTimer is an iPhone app that connects to your calendar and creates loud, persistent alarms before meetings and events so they are harder to miss.",
+    url: "https://www.ontimer.app",
+  },
 };
 
 const softwareJsonLd = {
@@ -147,6 +153,18 @@ const popularGuides = [
   { label: "Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
   { label: "Why Calendar Reminders Fail", href: "/why-calendar-reminders-fail" },
   { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
+  { label: "Zoom Meeting Reminder That Won't Let You Miss the Call", href: "/zoom-meeting-reminder" },
+  { label: "Best Meeting Reminder App for iPhone", href: "/best-meeting-reminder-app" },
+];
+
+const medicationGuides = [
+  { label: "How to Remember Your Medication", href: "/how-to-remember-medication-on-time" },
+  { label: "Why Medication Reminders Fail", href: "/why-medication-reminders-fail" },
+  { label: "How to Set Medication Reminders on iPhone", href: "/how-to-set-medication-reminders-iphone" },
+  { label: "Medication Schedule Calendar Setup", href: "/medication-schedule-calendar-setup" },
+  { label: "ADHD Medication Timing", href: "/adhd-medication-timing" },
+  { label: "Help an Elderly Parent Remember Medication", href: "/help-elderly-parent-remember-medication" },
+  { label: "Pet Medication Schedule", href: "/pet-medication-schedule" },
 ];
 
 export default function Home() {
@@ -193,6 +211,13 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
+
+              <div className="mt-6 max-w-xl rounded-xl border border-green-500/30 bg-green-500/5 p-5">
+                <p className="text-xs font-semibold uppercase tracking-widest text-green-500 mb-2">Direct Answer</p>
+                <p className="text-sm leading-relaxed text-zinc-200">
+                  OnTimer is a free iPhone app that turns Google Calendar and Microsoft Outlook events into persistent alarms — alerts that stay on your screen until you dismiss them, instead of disappearing like standard notifications. Connect your calendar once; every meeting gets an alarm automatically.
+                </p>
+              </div>
 
               <div className="mt-8">
                 <div className="flex flex-wrap items-center gap-4">
@@ -613,6 +638,28 @@ export default function Home() {
           </h2>
           <ul className="space-y-3">
             {popularGuides.map(({ label, href }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-green-500 hover:text-green-400 transition-colors"
+                >
+                  {label} →
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ── MEDICATION GUIDES ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/30 py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="mb-2 text-2xl font-black tracking-tight text-white">
+            Medication reminder guides
+          </h2>
+          <p className="mb-6 text-sm text-zinc-400">OnTimer works for any scheduled event — including medication reminders set as calendar entries.</p>
+          <ul className="space-y-3">
+            {medicationGuides.map(({ label, href }) => (
               <li key={href}>
                 <Link
                   href={href}
