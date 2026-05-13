@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "How to Stop Missing Zoom, Google Meet, and Other Calendar Meetings",
@@ -92,7 +92,7 @@ export default function StopMissingCalendarMeetings() {
             </p>
           </div>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>
@@ -276,7 +276,7 @@ export default function StopMissingCalendarMeetings() {
             Download OnTimer for iPhone.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>

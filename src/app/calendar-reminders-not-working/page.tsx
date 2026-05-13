@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
+import { AndroidWaitlistButton, AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/calendar-reminders-not-working" },
@@ -156,7 +156,7 @@ export default function CalendarRemindersNotWorking() {
             </p>
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
             <AndroidWaitlistButton size="lg" />
           </div>
         </div>
@@ -417,7 +417,7 @@ export default function CalendarRemindersNotWorking() {
             never sneak up on you.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
           <p className="mt-6 text-sm text-zinc-400">
             Android version coming soon —{" "}

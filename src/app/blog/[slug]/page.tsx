@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPostBySlug, getAllSlugs } from "@/lib/blog";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -87,7 +87,7 @@ export default async function BlogPostPage({ params }: Props) {
             Download OnTimer free and let your calendar work for you.
           </p>
           <div className="mt-6">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>

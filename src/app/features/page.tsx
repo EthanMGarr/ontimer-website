@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Features | OnTimer Calendar Alarm App for iPhone",
@@ -107,7 +107,7 @@ export default function FeaturesPage() {
             miss.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>
@@ -229,7 +229,7 @@ export default function FeaturesPage() {
             calendar.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Time-to-Leave Reminders for Meetings on iPhone",
@@ -98,7 +98,7 @@ export default function TimeToLeaveReminders() {
             </p>
           </div>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>
@@ -282,7 +282,7 @@ export default function TimeToLeaveReminders() {
             Download OnTimer and get traffic-aware departure alerts from your calendar.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>

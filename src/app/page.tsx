@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "OnTimer — Persistent Calendar Alarms for iPhone & Outlook",
@@ -221,7 +221,7 @@ export default function Home() {
 
               <div className="mt-8">
                 <div className="flex flex-wrap items-center gap-4">
-                  <AppStoreButton size="lg" location="hero" />
+                  <AppStoreCTA location="hero" />
                   <a
                     href="https://docs.google.com/forms/d/e/1FAIpQLSeaZ-qd4P9xZgC0WUiQDn9WH9QLZFomHJDJ5hD3F0IpqbM-kw/viewform"
                     target="_blank"
@@ -685,7 +685,7 @@ export default function Home() {
             alarm.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>

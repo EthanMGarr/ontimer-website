@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Missed Appointment Fee? How to Prevent Costly No-Shows",
@@ -399,7 +399,7 @@ export default function MissedAppointmentFee() {
             Try OnTimer — the meeting reminder system designed to make sure you&apos;re never late again.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="missed-appointment-fee" />
+            <AppStoreCTA location="missed-appointment-fee" />
           </div>
         </div>
       </section>

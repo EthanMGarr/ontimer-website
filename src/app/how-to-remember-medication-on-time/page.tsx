@@ -14,7 +14,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreButton, AppStoreCTA } from "@/components/CTAButton";
 import MedicationScheduleGenerator from "./MedicationScheduleGenerator";
 
 export const metadata: Metadata = {
@@ -278,7 +278,7 @@ export default function Page() {
             </p>
           </div>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="medication_article_ontimer_cta" />
+            <AppStoreCTA location="medication_article_ontimer_cta" />
           </div>
         </div>
       </section>

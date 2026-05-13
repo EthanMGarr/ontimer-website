@@ -1,4 +1,4 @@
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 const WAITLIST_URL = "https://forms.gle/96FxjQbUokqZcjKE8";
 
@@ -90,7 +90,7 @@ export default function AndroidPage() {
             OnTimer is available right now on iOS. Start being on time today.
           </p>
           <div className="mt-6">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>

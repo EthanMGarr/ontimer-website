@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
+import { AndroidWaitlistButton, AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Best Calendar Alarm App for Google & Outlook (iPhone)",
@@ -141,7 +141,7 @@ export default function CalendarAlarmApp() {
             every appointment gets an alarm that stays on your screen until you act.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <AppStoreButton size="lg" location="calendar_alarm_app_hero" />
+            <AppStoreCTA location="calendar_alarm_app_hero" />
             <AndroidWaitlistButton size="lg" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Free · Works with Google Calendar &amp; Microsoft 365 / Outlook</p>
@@ -307,7 +307,7 @@ export default function CalendarAlarmApp() {
             — OnTimer just makes sure you can&apos;t ignore it.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="calendar_alarm_app_how_it_works" />
+            <AppStoreCTA location="calendar_alarm_app_how_it_works" />
           </div>
           <div className="mt-6 flex flex-wrap gap-4">
             <Link href="/features" className="text-sm font-semibold text-green-500 hover:text-green-400">See all features →</Link>
@@ -365,7 +365,7 @@ export default function CalendarAlarmApp() {
             Works with Google Calendar and Microsoft Outlook.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <AppStoreButton size="lg" location="calendar_alarm_app_final_cta" />
+            <AppStoreCTA location="calendar_alarm_app_final_cta" />
           </div>
           <p className="mt-6 text-sm text-zinc-400">
             Android coming soon —{" "}

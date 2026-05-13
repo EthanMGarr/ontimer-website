@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/persistent-calendar-reminders" },
@@ -99,7 +99,7 @@ export default function Page() {
             distinction means and how to actually set it up.
           </p>
           <div className="mt-8 flex flex-wrap gap-4 items-center">
-            <AppStoreButton size="lg" location="persistent_reminders_hero" />
+            <AppStoreCTA location="persistent_reminders_hero" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Works with Google Calendar &amp; Microsoft 365 / Outlook</p>
         </div>
@@ -231,7 +231,7 @@ export default function Page() {
             ))}
           </div>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="persistent_reminders_how_it_works" />
+            <AppStoreCTA location="persistent_reminders_how_it_works" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft 365 / Outlook</p>
         </div>
@@ -314,7 +314,7 @@ export default function Page() {
             Download OnTimer and replace dismissible notifications with persistent alarms.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="persistent_reminders_final_cta" />
+            <AppStoreCTA location="persistent_reminders_final_cta" />
           </div>
           <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar &amp; Microsoft Outlook</p>
         </div>

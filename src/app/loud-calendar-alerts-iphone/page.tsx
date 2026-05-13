@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Loud Calendar Alerts on iPhone (Step-by-Step Fix)",
@@ -98,7 +98,7 @@ export default function LoudCalendarAlertsIphone() {
             </p>
           </div>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>
@@ -281,7 +281,7 @@ export default function LoudCalendarAlertsIphone() {
             Download OnTimer for iPhone.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>

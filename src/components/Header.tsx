@@ -3,9 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-
-const APP_STORE_URL =
-  "https://apps.apple.com/us/app/ontimer-never-be-late/id6755317601";
+import { APP_STORE_URL } from "@/lib/constants";
 
 const navLinks = [
   { href: "/features", label: "Features" },

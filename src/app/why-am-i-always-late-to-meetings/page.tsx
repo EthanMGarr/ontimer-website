@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Why Am I Always Late to Meetings? (And How to Fix It)",
@@ -443,7 +443,7 @@ export default function WhyAmIAlwaysLateMeetings() {
             late without having to think about it.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="why-always-late-cta" />
+            <AppStoreCTA location="why-always-late-cta" />
           </div>
         </div>
       </section>

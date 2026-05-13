@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
+import { AndroidWaitlistButton, AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "How to Never Be Late to Meetings (The Last 5 Minutes Fix)",
@@ -530,7 +530,7 @@ export default function NeverBeLateToMeetingsPage() {
             late to.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
             <AndroidWaitlistButton size="lg" />
           </div>
           <p className="mt-3 text-xs text-zinc-400">

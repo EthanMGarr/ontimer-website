@@ -22,7 +22,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 import AirportTheoryCalculator from "./AirportTheoryCalculator";
 
 export const metadata: Metadata = {
@@ -244,7 +244,7 @@ export default function AirportTheoryPage() {
               OnTimer tells you when to leave — for flights, meetings, appointments, anything on your calendar with a location. You pick the buffer; OnTimer fires the alarm.
             </p>
             <div className="mt-8 flex flex-col items-center gap-4">
-              <AppStoreButton size="lg" location="airport_theory_cta" />
+              <AppStoreCTA location="airport_theory_cta" />
               <Link
                 href="/airport-time-to-leave-calculator"
                 className="text-sm text-zinc-400 underline underline-offset-4 hover:text-zinc-300"

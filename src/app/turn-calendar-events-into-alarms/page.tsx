@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Turn Google Calendar & Outlook Events Into Real Alarms",
@@ -138,7 +138,7 @@ export default function Page() {
             every event in your calendar into an alarm — automatically.
           </p>
           <div className="mt-8 flex flex-wrap gap-4 items-center">
-            <AppStoreButton size="lg" location="turn_events_into_alarms_hero" />
+            <AppStoreCTA location="turn_events_into_alarms_hero" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">
             Works with Google Calendar &amp; Microsoft 365 / Outlook Calendar
@@ -293,7 +293,7 @@ export default function Page() {
             </p>
           </div>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="turn_events_into_alarms_how_it_works" />
+            <AppStoreCTA location="turn_events_into_alarms_how_it_works" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Free download · Works with Google &amp; Outlook calendars</p>
         </div>
@@ -385,7 +385,7 @@ export default function Page() {
             Free for iPhone. Works with Google Calendar and Microsoft Outlook.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="turn_events_into_alarms_final_cta" />
+            <AppStoreCTA location="turn_events_into_alarms_final_cta" />
           </div>
         </div>
       </section>

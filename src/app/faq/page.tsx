@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 const faqJsonLd = {
   "@context": "https://schema.org",
@@ -310,7 +310,7 @@ export default function FAQPage() {
             calendar.
           </p>
           <div className="mt-6">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>

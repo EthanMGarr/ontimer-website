@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 import WakeUpCalculator from "./WakeUpCalculator";
 
 export const metadata: Metadata = {
@@ -184,7 +184,7 @@ export default function WakeUpTimeCalculatorPage() {
             ))}
           </ul>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="wakeup_calculator_conversion" />
+            <AppStoreCTA location="wakeup_calculator_conversion" />
           </div>
         </div>
       </section>
@@ -344,7 +344,7 @@ export default function WakeUpTimeCalculatorPage() {
             appointments, and every event in your calendar.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="wakeup_calculator_final_cta" />
+            <AppStoreCTA location="wakeup_calculator_final_cta" />
           </div>
         </div>
       </section>

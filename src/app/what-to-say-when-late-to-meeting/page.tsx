@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "What to Say When You're Late to a Meeting (Exact Scripts)",
@@ -675,7 +675,7 @@ export default function WhatToSayWhenLateMeeting() {
             on time and never need a recovery script.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="what-to-say-late-cta" />
+            <AppStoreCTA location="what-to-say-late-cta" />
           </div>
         </div>
       </section>

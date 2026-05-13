@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Best Apps to Remind You About Meetings on iPhone",
@@ -50,7 +50,7 @@ export default function BestMeetingReminderAppsIphone() {
             before it is too late.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>
@@ -248,7 +248,7 @@ export default function BestMeetingReminderAppsIphone() {
             Download OnTimer for iPhone.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>

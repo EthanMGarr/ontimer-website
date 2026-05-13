@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
+import { AndroidWaitlistButton, AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/adhd-time-blindness-tools" },
@@ -148,7 +148,7 @@ export default function AdhdTimeBlindnessTools() {
             </p>
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
             <AndroidWaitlistButton size="lg" />
           </div>
         </div>
@@ -434,7 +434,7 @@ export default function AdhdTimeBlindnessTools() {
             Use a system that interrupts you when it matters.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
           <p className="mt-6 text-sm text-zinc-400">
             Android coming soon —{" "}

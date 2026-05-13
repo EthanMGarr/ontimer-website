@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Calendar Notifications Not Working? 8 Fixes for iPhone and Google Calendar",
@@ -335,7 +335,7 @@ export default function CalendarNotificationsNotWorking() {
             Try OnTimer — a meeting reminder system designed to make sure you&apos;re never late again.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="calendar-notifications-not-working" />
+            <AppStoreCTA location="calendar-notifications-not-working" />
           </div>
         </div>
       </section>

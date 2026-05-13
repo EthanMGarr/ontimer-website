@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "How to Never Be Late to Meetings",
@@ -78,7 +78,7 @@ export default function HowToNeverBeLateToMeetings() {
             time gets underestimated.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>
@@ -283,7 +283,7 @@ export default function HowToNeverBeLateToMeetings() {
             Download OnTimer and make your calendar harder to ignore.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" />
+            <AppStoreCTA />
           </div>
         </div>
       </section>

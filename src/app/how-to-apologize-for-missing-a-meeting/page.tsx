@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "How to Apologize for Missing a Meeting (Templates + Rules)",
@@ -596,7 +596,7 @@ export default function HowToApologizeForMissingMeeting() {
             have to write another apology.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="apologize-missing-meeting-cta" />
+            <AppStoreCTA location="apologize-missing-meeting-cta" />
           </div>
         </div>
       </section>

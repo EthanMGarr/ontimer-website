@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "How Late Is Too Late to Join a Meeting?",
@@ -410,7 +410,7 @@ export default function HowLateIsTooLateMeeting() {
             no lateness math required.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="how-late-too-late-cta" />
+            <AppStoreCTA location="how-late-too-late-cta" />
           </div>
         </div>
       </section>

@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { APP_STORE_URL } from "@/lib/constants";
 
-const APP_STORE_URL =
-  "https://apps.apple.com/us/app/ontimer-never-be-late/id6755317601";
+export { AppStoreCTA } from "./AppStoreCTA";
 
 interface CTAButtonProps {
   size?: "sm" | "md" | "lg";

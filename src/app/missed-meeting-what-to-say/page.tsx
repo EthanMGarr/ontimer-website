@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Missed a Meeting? What to Say (Email + Slack Templates)",
@@ -485,7 +485,7 @@ export default function MissedMeetingWhatToSay() {
             send another apology.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="missed-meeting-cta" />
+            <AppStoreCTA location="missed-meeting-cta" />
           </div>
         </div>
       </section>

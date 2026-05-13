@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/calendar-notifications-vs-alarms" },
@@ -111,7 +111,7 @@ export default function Page() {
             miss meetings despite having reminders set.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <AppStoreButton size="lg" location="notif_vs_alarms_hero" />
+            <AppStoreCTA location="notif_vs_alarms_hero" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Works with Google Calendar &amp; Microsoft Outlook</p>
         </div>
@@ -299,7 +299,7 @@ export default function Page() {
             ))}
           </div>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="notif_vs_alarms_solution" />
+            <AppStoreCTA location="notif_vs_alarms_solution" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft 365 / Outlook</p>
         </div>
@@ -357,7 +357,7 @@ export default function Page() {
             OnTimer turns your Google and Outlook calendar events into persistent alarms.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="notif_vs_alarms_final_cta" />
+            <AppStoreCTA location="notif_vs_alarms_final_cta" />
           </div>
         </div>
       </section>

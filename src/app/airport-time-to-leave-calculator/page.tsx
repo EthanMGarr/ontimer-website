@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 import AirportCalculator from "./AirportCalculator";
 
 export const metadata: Metadata = {
@@ -358,7 +358,7 @@ export default function AirportTimeToLeaveCalculator() {
             ))}
           </ul>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="airport_calculator_conversion" />
+            <AppStoreCTA location="airport_calculator_conversion" />
           </div>
         </div>
       </section>
@@ -388,7 +388,7 @@ export default function AirportTimeToLeaveCalculator() {
             </p>
           </div>
           <div className="mt-8 flex flex-wrap gap-4">
-            <AppStoreButton size="lg" location="airport_calculator_seo_cta" />
+            <AppStoreCTA location="airport_calculator_seo_cta" />
             <Link
               href="/time-to-leave-reminders"
               className="inline-flex items-center gap-2 rounded-full border border-zinc-700 px-6 py-3 text-sm font-semibold text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white"
@@ -479,7 +479,7 @@ export default function AirportTimeToLeaveCalculator() {
             meetings, and every event in your calendar.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="airport_calculator_final_cta" />
+            <AppStoreCTA location="airport_calculator_final_cta" />
           </div>
         </div>
       </section>

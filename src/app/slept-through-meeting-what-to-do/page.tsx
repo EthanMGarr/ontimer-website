@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Slept Through a Meeting? Here's What to Do Next",
@@ -395,7 +395,7 @@ export default function SleptThroughMeetingWhatToDo() {
             won&apos;t let you roll over and ignore them.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="slept-through-meeting-cta" />
+            <AppStoreCTA location="slept-through-meeting-cta" />
           </div>
         </div>
       </section>

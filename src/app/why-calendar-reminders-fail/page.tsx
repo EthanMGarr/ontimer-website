@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Why Calendar Reminders Fail (And How to Make Them Reliable)",
@@ -327,7 +327,7 @@ export default function WhyCalendarRemindersFail() {
             Try OnTimer — a meeting reminder system designed to make sure you&apos;re never late again.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="why-calendar-reminders-fail" />
+            <AppStoreCTA location="why-calendar-reminders-fail" />
           </div>
         </div>
       </section>

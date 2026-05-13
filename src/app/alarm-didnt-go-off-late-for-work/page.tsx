@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Alarm Didn't Go Off? How to Build a Fail-Safe Meeting Reminder System",
@@ -411,7 +411,7 @@ export default function AlarmDidntGoOff() {
             Try OnTimer — the meeting reminder system designed to make sure you&apos;re never late again.
           </p>
           <div className="mt-8">
-            <AppStoreButton size="lg" location="alarm-didnt-go-off" />
+            <AppStoreCTA location="alarm-didnt-go-off" />
           </div>
         </div>
       </section>
