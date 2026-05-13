@@ -3,20 +3,20 @@ import Link from "next/link";
 import { AppStoreButton, AndroidWaitlistButton } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Best Reminder App for Frequent Alerts (Every 5–10 Minutes)",
+  title: "Best Reminder Apps That Repeat Every 5–10 Minutes (iPhone)",
   description:
     "Looking for an app that sends frequent or persistent reminders? Compare the best options and find a solution that actually gets your attention.",
   alternates: {
     canonical: "https://www.ontimer.app/best-reminder-app-for-frequent-reminders",
   },
   openGraph: {
-    title: "Best Reminder App for Frequent Alerts (Every 5–10 Minutes)",
+    title: "Best Reminder Apps That Repeat Every 5–10 Minutes (iPhone)",
     description:
       "Looking for an app that sends frequent or persistent reminders? Compare the best options and find a solution that actually gets your attention.",
     url: "https://www.ontimer.app/best-reminder-app-for-frequent-reminders",
   },
   twitter: {
-    title: "Best Reminder App for Frequent Alerts (Every 5–10 Minutes)",
+    title: "Best Reminder Apps That Repeat Every 5–10 Minutes (iPhone)",
     description:
       "Looking for an app that sends frequent or persistent reminders? Compare the best options and find a solution that actually gets your attention.",
   },
@@ -160,7 +160,7 @@ export default function BestReminderAppForFrequentRemindersPage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
             Best Reminder Apps for{" "}
-            <span className="text-green-500">Frequent or Persistent Alerts</span>
+            <span className="text-green-500">Frequent or Persistent Alerts on iPhone</span>
           </h1>
 
           {/* Direct Answer Block */}
@@ -170,8 +170,8 @@ export default function BestReminderAppForFrequentRemindersPage() {
             </p>
             <p className="text-base leading-relaxed text-zinc-200">
               If you need reminders every 5–10 minutes, most standard apps won&apos;t work reliably.
-              The best solutions either support repeating alerts or use persistent alarms that
-              don&apos;t stop until you acknowledge them.
+              The best solutions either repeat every few minutes or use alarms that don&apos;t
+              stop until you acknowledge them.
             </p>
           </div>
 
@@ -183,6 +183,49 @@ export default function BestReminderAppForFrequentRemindersPage() {
             If you&apos;ve ever set a reminder, seen it, and still forgotten — you&apos;re
             dealing with a system that isn&apos;t built to interrupt you. That&apos;s the real
             problem.
+          </p>
+        </div>
+      </section>
+
+      {/* ── EVERY 5-10 MINUTES ── */}
+      <section className="border-t border-zinc-800 py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            Apps That Can Remind You Every 5–10 Minutes
+          </h2>
+          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+            <p>
+              If you specifically need reminders every 5–10 minutes, your options are
+              limited. Most apps don&apos;t support true short-interval repetition.
+            </p>
+            <p>The closest solutions are:</p>
+          </div>
+          <ul className="mt-4 space-y-2">
+            {[
+              "Alarm apps (manual setup, but reliable)",
+              "Apps like Due that repeat until dismissed",
+              "Systems that use persistent alarms instead of repeating notifications",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-3 text-zinc-400">
+                <span className="mt-1 flex-shrink-0 text-green-500">•</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 text-zinc-400 leading-relaxed">
+            For most people, the goal isn&apos;t just repetition — it&apos;s making sure
+            the reminder actually gets your attention.
+          </p>
+          <p className="mt-4 text-zinc-400 leading-relaxed">
+            For time-based events like meetings or flights, tools like a{" "}
+            <Link href="/what-time-should-i-leave" className="text-green-500 hover:text-green-400">
+              leave-time calculator
+            </Link>{" "}
+            or{" "}
+            <Link href="/airport-time-to-leave-calculator" className="text-green-500 hover:text-green-400">
+              airport timing calculator
+            </Link>{" "}
+            are often more reliable than repeating reminders.
           </p>
         </div>
       </section>
