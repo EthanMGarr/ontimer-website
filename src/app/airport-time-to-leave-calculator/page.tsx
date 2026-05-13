@@ -144,10 +144,10 @@ export default function AirportTimeToLeaveCalculator() {
           </h1>
           <div className="mt-3 max-w-xl rounded-xl border border-green-500/30 bg-green-500/5 p-3">
             <p className="text-sm leading-relaxed text-zinc-300">
-              Most flights require you to leave for the airport 2–3 hours before
-              departure. Your exact leave time depends on traffic, airport size,
-              and security lines. Use the calculator below to get your exact
-              departure time.
+              Most flights require you to arrive at the airport 2–3 hours before
+              departure. To figure out when to leave, you need to account for
+              travel time, traffic, airport size, and security lines. Use the
+              calculator below to get your exact leave time.
             </p>
           </div>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400">
