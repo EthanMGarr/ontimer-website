@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { APP_STORE_URL } from "@/lib/constants";
+import { AppStoreQRPopover } from "./AppStoreQRPopover";
 
 const navLinks = [
   { href: "/features", label: "Features" },
@@ -58,14 +59,16 @@ export default function Header() {
           </nav>
 
           {/* Desktop CTA */}
-          <a
-            href={APP_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-green-400 md:block"
-          >
-            Download Free
-          </a>
+          <AppStoreQRPopover placement="below" location="header_desktop">
+            <a
+              href={APP_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-green-400 md:block"
+            >
+              Download Free
+            </a>
+          </AppStoreQRPopover>
 
           {/* Mobile hamburger */}
           <button
@@ -99,14 +102,16 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <a
-                href={APP_STORE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-block w-fit rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-black"
-              >
-                Download Free
-              </a>
+              <AppStoreQRPopover placement="below" location="header_mobile_menu">
+                <a
+                  href={APP_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-block w-fit rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-black"
+                >
+                  Download Free
+                </a>
+              </AppStoreQRPopover>
             </nav>
           </div>
         )}
