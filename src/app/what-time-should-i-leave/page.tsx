@@ -5,13 +5,18 @@ import LeaveTimeCalculator from "./LeaveTimeCalculator";
 
 export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/what-time-should-i-leave" },
-  title: "What Time Should I Leave? Free Leave-Time Calculator",
+  title: "What Time Should I Leave? Get the Exact Time (Never Be Late)",
   description:
-    "Calculate exactly what time to leave based on your arrival time, travel time, and buffer. Free calculator for meetings, appointments, and any destination.",
+    "Find the exact time to leave based on traffic, travel time, and buffer. Avoid being late with a precise, real-world estimate.",
   openGraph: {
-    title: "What Time Should I Leave? Free Leave-Time Calculator",
+    title: "What Time Should I Leave? Get the Exact Time (Never Be Late)",
     description:
-      "Calculate exactly what time to leave based on your arrival time, travel time, and buffer.",
+      "Find the exact time to leave based on traffic, travel time, and buffer. Avoid being late with a precise, real-world estimate.",
+  },
+  twitter: {
+    title: "What Time Should I Leave? Get the Exact Time (Never Be Late)",
+    description:
+      "Find the exact time to leave based on traffic, travel time, and buffer. Avoid being late with a precise, real-world estimate.",
   },
 };
 
@@ -128,11 +133,13 @@ export default function WhatTimeShouldILeavePage() {
             <span className="text-green-500">I Leave?</span>
           </h1>
           <p className="mt-2.5 max-w-xl text-base leading-relaxed text-zinc-400">
-            Calculate when to leave based on your arrival time, travel time, and extra
-            buffer so you can get there on time.
+            Know exactly when to leave so you&apos;re not late.
           </p>
           <p className="mt-3 max-w-xl text-sm text-zinc-400">
-            Use this leave-time calculator to determine exactly when you should leave for a meeting, appointment, interview, class, or event based on your arrival time, travel time, and extra buffer.
+            Enter your destination, arrival time, and buffer. This calculator uses real travel time and traffic to determine the exact time to walk out the door.
+          </p>
+          <p className="mt-3 max-w-xl text-sm text-zinc-500">
+            Works for meetings, appointments, interviews, classes, and any destination.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <a
@@ -145,7 +152,7 @@ export default function WhatTimeShouldILeavePage() {
               href="/time-to-leave-reminders"
               className="text-sm text-zinc-400 transition-colors hover:text-zinc-300"
             >
-              Want this automated? →
+              Never calculate this again → Get automatic leave-time alerts
             </Link>
           </div>
         </div>
