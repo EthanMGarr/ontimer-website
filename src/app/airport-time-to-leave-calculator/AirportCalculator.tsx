@@ -280,6 +280,7 @@ export default function AirportCalculator() {
 
   // ── Refinement state (collapsed by default) ─────────────────────────────────
   const [showRefinements, setShowRefinements] = useState(false);
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
   const [hasPreCheck, setHasPreCheck] = useState(false);
   const [hasClear, setHasClear] = useState(false);
   const [hasCheckedBag, setHasCheckedBag] = useState(false);
@@ -863,31 +864,40 @@ export default function AirportCalculator() {
 
               {/* Primary CTA: Add to Calendar */}
               <div className="mt-5 border-t border-zinc-700 pt-5">
+                <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                  Next step
+                </p>
                 <a
                   href={buildGCalLink(computedResult.leaveTime, airport)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => track("calendar_link_clicked")}
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-zinc-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-zinc-600"
+                  className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-zinc-600 bg-zinc-700 px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:border-zinc-500 hover:bg-zinc-600"
                 >
-                  📅 Add Leave Time to Calendar
+                  <span className="text-base">📅</span>
+                  <span>Add Leave Time to Calendar</span>
                 </a>
+                <p className="mt-2 text-center text-xs text-zinc-500">
+                  Adds a 15-minute reminder in Google Calendar
+                </p>
               </div>
 
-              {/* Secondary CTA: App */}
+              {/* Automation bridge */}
               <div className="mt-4 rounded-xl border border-green-900/40 bg-green-950/20 p-4">
-                <p className="mb-1 text-sm font-semibold text-green-400">
+                <p className="text-sm font-bold text-green-400">
                   Never Miss The Moment To Leave.
                 </p>
-                <p className="mb-3 text-xs text-zinc-400">
-                  Want this automatically every time?
+                <p className="mt-1 text-xs text-zinc-300">
+                  Want this to happen automatically?
                 </p>
-                <ul className="mb-3 space-y-1">
+
+                <ul className="mt-3 space-y-1.5">
                   {[
+                    "watches your calendar for upcoming events",
                     "calculates when you should leave",
-                    "adjusts for real-time traffic",
+                    "adjusts for traffic automatically",
                     "alerts you at the right moment",
-                    "works for flights, meetings, and more",
+                    "works for flights, meetings, and appointments",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-2 text-xs text-zinc-400">
                       <span className="flex-shrink-0 text-green-500">✓</span>
@@ -895,14 +905,58 @@ export default function AirportCalculator() {
                     </li>
                   ))}
                 </ul>
-                <AppStoreButton size="sm" location="airport_calculator_result" />
-                <a
-                  href="/features"
-                  className="mt-3 block text-xs text-zinc-400 transition-colors hover:text-zinc-300"
-                  onClick={() => track("airport_calculator_feature_click")}
+
+                {/* How it works expandable */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowHowItWorks(!showHowItWorks);
+                    if (!showHowItWorks) track("how_it_works_expanded");
+                  }}
+                  className="mt-3 flex items-center gap-1.5 text-xs text-zinc-400 transition-colors hover:text-zinc-300"
                 >
-                  See how OnTimer works →
-                </a>
+                  <span className="text-[10px]">{showHowItWorks ? "▾" : "▸"}</span>
+                  See how automatic leave alerts work
+                </button>
+
+                {showHowItWorks && (
+                  <div className="mt-3 space-y-3 border-t border-zinc-700/60 pt-3">
+                    {[
+                      {
+                        n: "1",
+                        title: "Connect your calendar",
+                        desc: "OnTimer syncs with Google Calendar and Outlook automatically.",
+                      },
+                      {
+                        n: "2",
+                        title: "OnTimer calculates your leave time",
+                        desc: "Live traffic, your starting location, and how you travel — all factored in.",
+                      },
+                      {
+                        n: "3",
+                        title: "You get alerted at the right moment",
+                        desc: "A strong, unmissable alarm. Never cutting it close again.",
+                      },
+                    ].map((step) => (
+                      <div key={step.n} className="flex gap-3">
+                        <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-green-500/20 text-[10px] font-bold text-green-400">
+                          {step.n}
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-zinc-300">{step.title}</p>
+                          <p className="text-xs text-zinc-500">{step.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="mt-4 space-y-1.5">
+                  <p className="text-xs font-semibold text-zinc-300">
+                    Get automatic leave-time alerts, every trip
+                  </p>
+                  <AppStoreButton size="sm" location="airport_calculator_result" />
+                </div>
               </div>
             </div>
 
