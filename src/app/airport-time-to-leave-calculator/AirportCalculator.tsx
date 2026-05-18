@@ -16,6 +16,7 @@ interface ComputedResult {
   arrivalTime: Date;
   leaveTime: Date;
   bufferMinutes: number;
+  baseBufferMinutes: number;
   securityMinutes: number;
   travelMinutes: number;
   travelSource: TravelSource;
@@ -24,8 +25,6 @@ interface ComputedResult {
 }
 
 // ─── Buffer logic ─────────────────────────────────────────────────────────────
-// Security time handled separately via dynamic estimate.
-// Covers: gate transit, boarding window, bag drop, parking walk.
 
 function baseAirportBuffer(
   flightType: FlightType,
@@ -108,6 +107,13 @@ function fmtDate(d: Date) {
   return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
 }
 
+function fmtDuration(minutes: number): string {
+  if (minutes < 60) return `${minutes} min`;
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return m === 0 ? `${h} hr` : `${h} hr ${m} min`;
+}
+
 function fmtDepartureTime(timeStr: string): string {
   const parts = timeStr.split(":");
   if (parts.length < 2) return "";
@@ -119,7 +125,8 @@ function fmtDepartureTime(timeStr: string): string {
   return m === 0 ? `${hour} ${ampm}` : `${hour}:${m.toString().padStart(2, "0")} ${ampm}`;
 }
 
-// Client-side city to IATA code lookup
+// ─── Airport display ──────────────────────────────────────────────────────────
+
 const CITY_CODE_MAP: Record<string, string> = {
   newark: "EWR", "new york": "JFK", "los angeles": "LAX", chicago: "ORD",
   "san francisco": "SFO", miami: "MIA", atlanta: "ATL", dallas: "DFW",
@@ -153,6 +160,9 @@ function buildAirportShortDisplay(input: string): string {
 }
 
 // ─── Helper functions ─────────────────────────────────────────────────────────
+
+// Default assumed drive time shown before real traffic data is fetched
+const TYPICAL_TRAVEL_MINS = 30;
 
 function computeConfidence(bufferUsed: number, recommendedBuffer: number): Confidence {
   if (bufferUsed >= recommendedBuffer) return "comfortable";
@@ -280,7 +290,6 @@ export default function AirportCalculator() {
 
   // ── Refinement state (collapsed by default) ─────────────────────────────────
   const [showRefinements, setShowRefinements] = useState(false);
-  const [showHowItWorks, setShowHowItWorks] = useState(false);
   const [hasPreCheck, setHasPreCheck] = useState(false);
   const [hasClear, setHasClear] = useState(false);
   const [hasCheckedBag, setHasCheckedBag] = useState(false);
@@ -296,7 +305,7 @@ export default function AirportCalculator() {
   const [securityEstimate, setSecurityEstimate] = useState<SecurityEstimate | null>(null);
   const [isFetchingSecurityEstimate, setIsFetchingSecurityEstimate] = useState(false);
 
-  // ── Travel time state (replaces stored CalculatorResult) ────────────────────
+  // ── Travel time state ───────────────────────────────────────────────────────
   const [travelMins, setTravelMins] = useState<number | null>(null);
   const [travelSource, setTravelSource] = useState<TravelSource | null>(null);
   const [hasTrafficData, setHasTrafficData] = useState(false);
@@ -432,9 +441,10 @@ export default function AirportCalculator() {
     const secMins = showSecurityOverride && customSecurityMinutes
       ? parseInt(customSecurityMinutes, 10)
       : estimatedSecurityMins;
-    const bufMins = showBufferOverride && customBuffer
-      ? parseInt(customBuffer, 10)
-      : baseBuffer + secMins;
+    const baseBuf = showBufferOverride && customBuffer
+      ? Math.max(0, parseInt(customBuffer, 10) - secMins)
+      : baseBuffer;
+    const bufMins = baseBuf + secMins;
     if (isNaN(bufMins) || bufMins < 0) return null;
 
     const resolvedManual = parseInt(manualTravelMinutes, 10);
@@ -450,6 +460,7 @@ export default function AirportCalculator() {
       arrivalTime,
       leaveTime,
       bufferMinutes: bufMins,
+      baseBufferMinutes: baseBuf,
       securityMinutes: secMins,
       travelMinutes: effectiveTravelMins,
       travelSource: travelSource ?? "manual",
@@ -477,6 +488,13 @@ export default function AirportCalculator() {
     return new Date(dep.getTime() - bufMins * 60 * 1000);
   }, [departureDate, departureTime, computedResult, estimatedSecurityMins, baseBuffer,
       showSecurityOverride, customSecurityMinutes, showBufferOverride, customBuffer]);
+
+  // ── Estimated leave time preview (arrival time minus typical travel) ─────────
+  // Shows a useful leave-time estimate before real traffic data is fetched.
+  const leaveOnlyPreview = useMemo((): Date | null => {
+    if (!arrivalOnlyPreview) return null;
+    return new Date(arrivalOnlyPreview.getTime() - TYPICAL_TRAVEL_MINS * 60 * 1000);
+  }, [arrivalOnlyPreview]);
 
   // ── Manual recalculate (fallback / force-refresh) ───────────────────────────
   async function handleCalculate() {
@@ -506,7 +524,7 @@ export default function AirportCalculator() {
           setHasTrafficData(false);
           track("quota_fallback_used");
         } else {
-          setError("Could not estimate drive time. Open Refine estimate to enter drive time manually.");
+          setError("Could not estimate drive time. Open Customize Airport Timing to enter drive time manually.");
         }
       } finally {
         setIsFetchingTravel(false);
@@ -514,7 +532,7 @@ export default function AirportCalculator() {
     } else {
       const manual = parseInt(manualTravelMinutes, 10);
       if (isNaN(manual) || manual < 0) {
-        setError("Enter your starting location and airport, or open Refine estimate to enter drive time manually.");
+        setError("Enter your starting location and airport, or open Customize Airport Timing to enter drive time manually.");
         return;
       }
       setTravelMins(manual);
@@ -523,6 +541,13 @@ export default function AirportCalculator() {
     }
     track("calculator_used", { flight_type: flightType, arrival_mode: arrivalMode, trigger: "manual" });
   }
+
+  // Buffer context label for breakdown display
+  const bufferContextLabel = [
+    flightType === "international" ? "international flight" : "domestic flight",
+    arrivalMode === "parking" ? "parking" : null,
+    hasCheckedBag ? "bag drop" : null,
+  ].filter(Boolean).join(" · ");
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
@@ -604,7 +629,7 @@ export default function AirportCalculator() {
             >
               <span className="text-xs">{showRefinements ? "▾" : "▸"}</span>
               <span>
-                Refine estimate
+                Customize Airport Timing
                 {activeRefinementCount > 0 && !showRefinements && (
                   <span className="ml-1.5 rounded-full bg-green-500/20 px-2 py-0.5 text-xs font-semibold text-green-400">
                     {activeRefinementCount} active
@@ -690,7 +715,7 @@ export default function AirportCalculator() {
                   >
                     {showBufferOverride
                       ? "Use recommended buffer"
-                      : `Adjust airport arrival buffer (${defaultBuffer} min recommended)`}
+                      : `Adjust airport arrival buffer (${fmtDuration(defaultBuffer)} recommended)`}
                   </button>
                   {showBufferOverride && (
                     <div className="mt-3">
@@ -753,18 +778,26 @@ export default function AirportCalculator() {
             </p>
           )}
 
-          <button
-            type="button"
-            onClick={handleCalculate}
-            disabled={isFetchingTravel}
-            className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isFetchingTravel
-              ? "Estimating traffic…"
-              : computedResult
-              ? "Recalculate →"
-              : "Calculate leave time →"}
-          </button>
+          {/* Calculate button — primary before result, secondary after */}
+          {computedResult ? (
+            <button
+              type="button"
+              onClick={handleCalculate}
+              disabled={isFetchingTravel}
+              className="w-full rounded-full border border-zinc-700 bg-transparent px-6 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:border-zinc-600 hover:text-zinc-300 disabled:opacity-60"
+            >
+              {isFetchingTravel ? "Recalculating…" : "Recalculate →"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleCalculate}
+              disabled={isFetchingTravel}
+              className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isFetchingTravel ? "Estimating traffic…" : "Calculate leave time →"}
+            </button>
+          )}
         </div>
 
         {/* ── RIGHT COLUMN: Result panel ── */}
@@ -774,99 +807,92 @@ export default function AirportCalculator() {
             /* ── STATE: Complete — leave time known ── */
             <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-6 transition-all duration-300">
 
-              {/* Context line */}
+              {/* Context */}
               {departureTime && (
-                <p className="mb-1 text-xs text-zinc-500">
+                <p className="mb-3 text-xs text-zinc-500">
                   For your {fmtDepartureTime(departureTime)} flight
                 </p>
               )}
 
-              {/* Hero time */}
-              <p className="text-sm font-bold uppercase tracking-wider text-zinc-300">Leave by</p>
+              {/* Hero */}
+              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400">Leave by</p>
               <p className="mt-0.5 text-7xl font-black leading-none text-green-500">
                 {fmtTime(computedResult.leaveTime)}
               </p>
-              <p className="mt-1.5 text-sm text-zinc-400">{fmtDate(computedResult.leaveTime)}</p>
+              <p className="mt-2 text-sm text-zinc-400">{fmtDate(computedResult.leaveTime)}</p>
 
-              {/* Traffic source */}
-              {computedResult.travelSource === "google" ? (
-                <p className="mt-1.5 text-xs text-green-500">
-                  {computedResult.hasTrafficData ? "✓ Live traffic" : "✓ Route estimated"}
-                </p>
-              ) : (
-                <p className="mt-1.5 text-xs text-zinc-500">Based on manual drive time</p>
-              )}
-
-              {/* Confidence */}
-              <div className="mt-2">
+              {/* Status row */}
+              <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                {computedResult.travelSource === "google" ? (
+                  <span className="text-xs text-green-500">
+                    {computedResult.hasTrafficData ? "✓ Live traffic" : "✓ Route estimated"}
+                  </span>
+                ) : (
+                  <span className="text-xs text-zinc-500">Based on manual drive time</span>
+                )}
+                <span className="text-xs text-zinc-700">·</span>
                 <ConfidenceBadge confidence={computedResult.confidence} />
               </div>
 
               {/* Trust breakdown */}
               <div className="mt-5 border-t border-zinc-700 pt-4">
-                <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                  Based on
-                </p>
+                <p className="mb-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-600">Based on</p>
                 <div className="space-y-2.5">
-                  <div className="flex items-baseline justify-between">
+
+                  <div className="flex items-start justify-between gap-2">
                     <p className="text-xs text-zinc-400">Drive time</p>
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-white">
-                        {computedResult.travelMinutes} min
-                      </p>
+                      <p className="text-sm font-semibold text-white">{fmtDuration(computedResult.travelMinutes)}</p>
                       {computedResult.travelSource === "google" && (
-                        <p className="text-xs text-green-500">
-                          {computedResult.hasTrafficData ? "live traffic" : "estimated"}
+                        <p className="text-[10px] text-green-500">
+                          {computedResult.hasTrafficData ? "live traffic" : "estimated route"}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-baseline justify-between">
-                    <div className="flex items-center gap-1.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
                       <p className="text-xs text-zinc-400">Security wait</p>
-                      {securityState === "ready" && (
-                        <span className="rounded-full border border-green-900/50 bg-green-950/30 px-1.5 py-0.5 text-[10px] text-green-500">
-                          TSA
-                        </span>
-                      )}
-                      {securityState === "loading" && (
-                        <span className="text-[10px] text-zinc-500">estimating…</span>
+                      {securityEstimate && securityState === "ready" && airportShortDisplay && (
+                        <p className="text-[10px] text-zinc-500">
+                          {airportShortDisplay}: {fmtDuration(securityEstimate.min)}–{fmtDuration(securityEstimate.max)} typical
+                        </p>
                       )}
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-white">
-                        {computedResult.securityMinutes} min
-                      </p>
-                      {securityEstimate && securityState === "ready" && airportShortDisplay && (
-                        <p className="text-xs text-zinc-500">
-                          {airportShortDisplay} • {securityEstimate.min}–{securityEstimate.max} range
-                        </p>
+                      <p className="text-sm font-semibold text-white">{fmtDuration(computedResult.securityMinutes)}</p>
+                      {securityState === "ready" && (
+                        <p className="text-[10px] text-green-500">TSA estimate</p>
+                      )}
+                      {securityState === "loading" && (
+                        <p className="text-[10px] text-zinc-500">estimating…</p>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-baseline justify-between">
-                    <p className="text-xs text-zinc-400">Airport buffer</p>
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="text-xs text-zinc-400">Airport buffer</p>
+                      {bufferContextLabel && (
+                        <p className="text-[10px] text-zinc-500">{bufferContextLabel}</p>
+                      )}
+                    </div>
                     <p className="text-sm font-semibold text-white">
-                      {computedResult.bufferMinutes} min
+                      {fmtDuration(computedResult.baseBufferMinutes)}
                     </p>
                   </div>
 
                   <div className="flex items-baseline justify-between border-t border-zinc-700/60 pt-2">
                     <p className="text-xs text-zinc-400">Arrive at airport by</p>
-                    <p className="text-sm font-semibold text-white">
-                      {fmtTime(computedResult.arrivalTime)}
-                    </p>
+                    <p className="text-sm font-semibold text-white">{fmtTime(computedResult.arrivalTime)}</p>
                   </div>
                 </div>
               </div>
 
               {/* Primary CTA: Add to Calendar */}
               <div className="mt-5 border-t border-zinc-700 pt-5">
-                <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                  Next step
-                </p>
+                <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">Next step</p>
                 <a
                   href={buildGCalLink(computedResult.leaveTime, airport)}
                   target="_blank"
@@ -878,82 +904,42 @@ export default function AirportCalculator() {
                   <span>Add Leave Time to Calendar</span>
                 </a>
                 <p className="mt-2 text-center text-xs text-zinc-500">
-                  Adds a 15-minute reminder in Google Calendar
+                  Creates a leave-time reminder for this trip
                 </p>
               </div>
 
               {/* Automation bridge */}
               <div className="mt-4 rounded-xl border border-green-900/40 bg-green-950/20 p-4">
                 <p className="text-sm font-bold text-green-400">
-                  Never Miss The Moment To Leave.
+                  Let OnTimer Handle This Automatically.
                 </p>
-                <p className="mt-1 text-xs text-zinc-300">
-                  Want this to happen automatically?
+                <p className="mt-1 text-xs text-zinc-400">
+                  OnTimer watches your calendar and alerts you exactly when to leave — for every flight, meeting, and appointment.
                 </p>
 
-                <ul className="mt-3 space-y-1.5">
-                  {[
-                    "watches your calendar for upcoming events",
-                    "calculates when you should leave",
-                    "adjusts for traffic automatically",
-                    "alerts you at the right moment",
-                    "works for flights, meetings, and appointments",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-xs text-zinc-400">
-                      <span className="flex-shrink-0 text-green-500">✓</span>
-                      OnTimer {item}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* How it works expandable */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowHowItWorks(!showHowItWorks);
-                    if (!showHowItWorks) track("how_it_works_expanded");
-                  }}
-                  className="mt-3 flex items-center gap-1.5 text-xs text-zinc-400 transition-colors hover:text-zinc-300"
-                >
-                  <span className="text-[10px]">{showHowItWorks ? "▾" : "▸"}</span>
-                  See how automatic leave alerts work
-                </button>
-
-                {showHowItWorks && (
-                  <div className="mt-3 space-y-3 border-t border-zinc-700/60 pt-3">
-                    {[
-                      {
-                        n: "1",
-                        title: "Connect your calendar",
-                        desc: "OnTimer syncs with Google Calendar and Outlook automatically.",
-                      },
-                      {
-                        n: "2",
-                        title: "OnTimer calculates your leave time",
-                        desc: "Live traffic, your starting location, and how you travel — all factored in.",
-                      },
-                      {
-                        n: "3",
-                        title: "You get alerted at the right moment",
-                        desc: "A strong, unmissable alarm. Never cutting it close again.",
-                      },
-                    ].map((step) => (
-                      <div key={step.n} className="flex gap-3">
-                        <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-green-500/20 text-[10px] font-bold text-green-400">
-                          {step.n}
-                        </div>
-                        <div>
-                          <p className="text-xs font-semibold text-zinc-300">{step.title}</p>
-                          <p className="text-xs text-zinc-500">{step.desc}</p>
-                        </div>
+                {/* How it works flow */}
+                <div className="mt-3 space-y-0">
+                  {([
+                    ["📅", "Calendar event is added"],
+                    ["🧠", "OnTimer calculates your leave time"],
+                    ["🚦", "Traffic updates automatically"],
+                    ["⏰", "You get alerted when it's time to leave"],
+                  ] as [string, string][]).map(([icon, label], i, arr) => (
+                    <div key={i}>
+                      <div className="flex items-center gap-2.5 py-1">
+                        <span className="text-sm leading-none">{icon}</span>
+                        <span className="text-xs text-zinc-400">{label}</span>
                       </div>
-                    ))}
-                  </div>
-                )}
+                      {i < arr.length - 1 && (
+                        <div className="ml-[9px] h-3 w-px bg-zinc-700" />
+                      )}
+                    </div>
+                  ))}
+                </div>
 
                 <div className="mt-4 space-y-1.5">
                   <p className="text-xs font-semibold text-zinc-300">
-                    Get automatic leave-time alerts, every trip
+                    Automatically get leave-time alerts for every trip
                   </p>
                   <AppStoreButton size="sm" location="airport_calculator_result" />
                 </div>
@@ -964,98 +950,124 @@ export default function AirportCalculator() {
             /* ── STATE: Estimating ── */
             <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-6 transition-all duration-300">
               {departureTime && (
-                <p className="mb-1 text-xs text-zinc-500">
+                <p className="mb-3 text-xs text-zinc-500">
                   For your {fmtDepartureTime(departureTime)} flight
                 </p>
               )}
-              <p className="text-sm font-bold uppercase tracking-wider text-zinc-300">Leave by</p>
-              <p className="mt-0.5 text-4xl font-black leading-none text-zinc-500">
-                Estimating…
-              </p>
-              <p className="mt-2 text-sm text-zinc-500">Calculating traffic for your route</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400">Leave by</p>
+              <div className="mt-0.5 flex items-end gap-3">
+                <p className="text-7xl font-black leading-none text-zinc-600">
+                  {leaveOnlyPreview ? fmtTime(leaveOnlyPreview) : "—:—"}
+                </p>
+                <span className="mb-1.5 animate-pulse text-xs text-zinc-500">calculating…</span>
+              </div>
+              <p className="mt-2 text-xs text-zinc-500">Fetching live traffic for your route</p>
               {arrivalOnlyPreview && (
-                <div className="mt-5 border-t border-zinc-700 pt-4 space-y-2">
+                <div className="mt-5 space-y-2.5 border-t border-zinc-700 pt-4">
                   <div className="flex items-baseline justify-between">
                     <p className="text-xs text-zinc-400">Arrive at airport by</p>
                     <p className="text-sm font-semibold text-white">{fmtTime(arrivalOnlyPreview)}</p>
                   </div>
                   <div className="flex items-baseline justify-between">
                     <p className="text-xs text-zinc-400">Airport buffer</p>
-                    <p className="text-sm font-semibold text-white">{defaultBuffer} min</p>
+                    <p className="text-sm font-semibold text-white">{fmtDuration(defaultBuffer)}</p>
                   </div>
                 </div>
               )}
             </div>
 
           ) : arrivalOnlyPreview ? (
-            /* ── STATE: Partial — arrival time known, no travel time yet ── */
+            /* ── STATE: Partial — flight time set, travel time pending ── */
             <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-6 transition-all duration-300">
               {departureTime && (
-                <p className="mb-1 text-xs text-zinc-500">
+                <p className="mb-3 text-xs text-zinc-500">
                   For your {fmtDepartureTime(departureTime)} flight
                 </p>
               )}
-              <p className="text-sm font-bold uppercase tracking-wider text-zinc-300">
-                Arrive at airport by
+              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                Estimated leave time
               </p>
-              <p className="mt-0.5 text-6xl font-black leading-none text-green-500">
-                {fmtTime(arrivalOnlyPreview)}
+              <p className="mt-0.5 text-7xl font-black leading-none text-green-500">
+                {leaveOnlyPreview ? fmtTime(leaveOnlyPreview) : "—:—"}
               </p>
-              <p className="mt-1.5 text-sm text-zinc-400">{fmtDate(arrivalOnlyPreview)}</p>
-              <p className="mt-2 text-xs text-zinc-500">
-                Add starting location and airport to calculate your exact leave time automatically.
+              {leaveOnlyPreview && (
+                <p className="mt-2 text-sm text-zinc-400">{fmtDate(leaveOnlyPreview)}</p>
+              )}
+              <p className="mt-1.5 text-xs text-zinc-500">
+                Based on a typical {fmtDuration(defaultBuffer)} airport arrival buffer.
               </p>
 
-              {/* Security estimate in partial state */}
-              <div className="mt-5 border-t border-zinc-700 pt-4 space-y-2.5">
+              <div className="mt-4 rounded-lg border border-zinc-700/60 bg-zinc-700/30 px-4 py-3">
+                <p className="text-xs font-medium text-zinc-300">
+                  Add your starting location for a personalized estimate with live traffic.
+                </p>
+              </div>
+
+              {/* Partial breakdown */}
+              <div className="mt-4 space-y-2.5 border-t border-zinc-700 pt-4">
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-400">Airport buffer</p>
-                  <p className="text-sm font-semibold text-white">{defaultBuffer} min</p>
+                  <p className="text-xs text-zinc-400">Arrive at airport by</p>
+                  <p className="text-sm font-semibold text-white">{fmtTime(arrivalOnlyPreview)}</p>
                 </div>
+
                 {hasAirport && (
-                  <div className="flex items-baseline justify-between">
-                    <div className="flex items-center gap-1.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
                       <p className="text-xs text-zinc-400">Security wait</p>
-                      {securityState === "ready" && (
-                        <span className="rounded-full border border-green-900/50 bg-green-950/30 px-1.5 py-0.5 text-[10px] text-green-500">
-                          TSA
-                        </span>
-                      )}
-                      {securityState === "loading" && (
-                        <span className="text-[10px] text-zinc-500">estimating…</span>
-                      )}
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-white">
-                        {estimatedSecurityMins} min
-                      </p>
-                      {securityEstimate && securityState === "ready" && (
-                        <p className="text-xs text-zinc-500">
-                          {airportShortDisplay}{timeDisplay ? ` • ${timeDisplay}` : ""}
+                      {securityEstimate && securityState === "ready" && airportShortDisplay && (
+                        <p className="text-[10px] text-zinc-500">
+                          {airportShortDisplay}: {fmtDuration(securityEstimate.min)}–{fmtDuration(securityEstimate.max)} typical
                         </p>
                       )}
                     </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-white">{fmtDuration(estimatedSecurityMins)}</p>
+                      {securityState === "ready" && (
+                        <p className="text-[10px] text-green-500">TSA estimate</p>
+                      )}
+                      {securityState === "loading" && (
+                        <p className="text-[10px] text-zinc-500">estimating…</p>
+                      )}
+                    </div>
                   </div>
+                )}
+
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="text-xs text-zinc-400">Airport buffer</p>
+                    {bufferContextLabel && (
+                      <p className="text-[10px] text-zinc-500">{bufferContextLabel}</p>
+                    )}
+                  </div>
+                  <p className="text-sm font-semibold text-white">{fmtDuration(baseBuffer)}</p>
+                </div>
+
+                {timeDisplay && (
+                  <p className="text-[10px] text-zinc-500">
+                    {flightType === "international"
+                      ? "International flights recommended 3+ hours before departure."
+                      : null}
+                  </p>
                 )}
               </div>
             </div>
 
           ) : (
             /* ── STATE: Empty — no departure time ── */
-            <div className="rounded-xl border border-zinc-800 bg-zinc-800/40 p-8 text-center">
-              <div className="mb-3 text-4xl">✈️</div>
-              <p className="text-base font-semibold text-zinc-300">Enter your flight details</p>
-              <p className="mt-1.5 text-sm text-zinc-500">
-                Your leave time will calculate automatically.
+            <div className="rounded-xl border border-zinc-800 bg-zinc-800/40 p-8">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-500">
+                Your leave time
               </p>
-              <ul className="mx-auto mt-5 w-full max-w-xs space-y-2 text-left">
+              <p className="text-5xl font-black leading-none text-zinc-600">—:—</p>
+              <p className="mt-3 text-sm text-zinc-400">Enter your flight time to get started.</p>
+              <ul className="mt-5 space-y-2">
                 {[
-                  "Exact leave time based on real traffic",
-                  "Security wait from TSA data",
-                  "Airport buffer for your flight type",
+                  "Live traffic to your airport",
+                  "TSA wait time estimates",
+                  "Parking, bags, and terminal time",
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-xs text-zinc-400">
-                    <span className="mt-0.5 flex-shrink-0 text-green-500">✓</span>
+                  <li key={item} className="flex items-center gap-2 text-xs text-zinc-500">
+                    <span className="text-green-500">✓</span>
                     {item}
                   </li>
                 ))}
