@@ -5,18 +5,18 @@ import AirportCalculator from "./AirportCalculator";
 
 export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/airport-time-to-leave-calculator" },
-  title: "What Time Should I Leave for the Airport? (Free Calculator)",
+  title: "Airport Time-to-Leave Calculator | What Time Should I Leave?",
   description:
-    "Calculate exactly when to leave for the airport based on your flight time, traffic, and security. Avoid being late or missing your flight.",
+    "Calculate exactly when to leave for the airport based on traffic, TSA wait times, parking, drive time, and flight departure.",
   openGraph: {
-    title: "What Time Should I Leave for the Airport? (Free Calculator)",
+    title: "Airport Time-to-Leave Calculator | What Time Should I Leave?",
     description:
-      "Calculate exactly when to leave for the airport based on your flight time, traffic, and security. Avoid being late or missing your flight.",
+      "Calculate exactly when to leave for the airport based on traffic, TSA wait times, parking, drive time, and flight departure.",
   },
   twitter: {
-    title: "What Time Should I Leave for the Airport? (Free Calculator)",
+    title: "Airport Time-to-Leave Calculator | What Time Should I Leave?",
     description:
-      "Calculate exactly when to leave for the airport based on your flight time, traffic, and security. Avoid being late or missing your flight.",
+      "Calculate exactly when to leave for the airport based on traffic, TSA wait times, parking, drive time, and flight departure.",
   },
 };
 
@@ -74,7 +74,7 @@ const faqJsonLd = {
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "OnTimer Airport Time-to-Leave Calculator",
+  name: "Airport Time-to-Leave Calculator",
   applicationCategory: "TravelApplication",
   operatingSystem: "Web",
   offers: {
@@ -83,7 +83,7 @@ const softwareAppJsonLd = {
     priceCurrency: "USD",
   },
   description:
-    "A free calculator that estimates when you should leave for the airport based on your flight time, traffic, security buffer, bags, and arrival method.",
+    "A free airport departure time calculator that estimates when you should leave for the airport based on your flight time, traffic, TSA wait times, parking, and arrival method.",
   url: "https://www.ontimer.app/airport-time-to-leave-calculator",
   author: {
     "@type": "Organization",
@@ -98,7 +98,12 @@ const breadcrumbJsonLd = {
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
     { "@type": "ListItem", position: 2, name: "Tools", item: "https://www.ontimer.app/tools" },
-    { "@type": "ListItem", position: 3, name: "Airport Time-to-Leave Calculator", item: "https://www.ontimer.app/airport-time-to-leave-calculator" },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "Airport Time-to-Leave Calculator",
+      item: "https://www.ontimer.app/airport-time-to-leave-calculator",
+    },
   ],
 };
 
@@ -122,9 +127,15 @@ export default function AirportTimeToLeaveCalculator() {
       <nav aria-label="Breadcrumb" className="border-b border-zinc-800/50 bg-zinc-950">
         <div className="mx-auto max-w-3xl px-4 py-2.5 sm:px-6">
           <ol className="flex items-center gap-1.5 text-xs text-zinc-400">
-            <li><Link href="/" className="hover:text-zinc-300 transition-colors">Home</Link></li>
+            <li>
+              <Link href="/" className="transition-colors hover:text-zinc-300">
+                Home
+              </Link>
+            </li>
             <li aria-hidden="true">›</li>
-            <li><span className="text-zinc-400">Tools</span></li>
+            <li>
+              <span className="text-zinc-400">Tools</span>
+            </li>
             <li aria-hidden="true">›</li>
             <li className="text-zinc-300">Airport Time-to-Leave Calculator</li>
           </ol>
@@ -143,43 +154,46 @@ export default function AirportTimeToLeaveCalculator() {
             <span className="text-green-500">Airport?</span>
           </h1>
           <div className="mt-3 max-w-xl rounded-xl border border-green-500/30 bg-green-500/5 p-3">
-            <p className="text-sm leading-relaxed text-zinc-300">
-              Most flights require you to arrive at the airport 2–3 hours before
-              departure. To figure out when to leave, you need to account for
-              travel time, traffic, airport size, and security lines. Use the
-              calculator below to get your exact leave time.
+            <p className="text-sm font-semibold text-zinc-200">
+              What time should I leave for the airport?
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-zinc-300">
+              To calculate your airport departure time: start with your flight time, subtract the
+              airport arrival buffer (2 hours domestic, 3 hours international), then subtract your
+              drive time and add buffer for traffic and parking. The calculator below handles this
+              automatically with real traffic data.
             </p>
           </div>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400">
-            If you&apos;re wondering what time to leave for the airport, the
-            general rule is to arrive 2–3 hours before your flight. Your exact
-            leave time depends on travel time, traffic, and airport conditions.
+            If you&apos;re wondering what time to leave for the airport, the general rule is to
+            arrive 2–3 hours before your flight. Your exact departure time depends on travel time,
+            traffic, and airport conditions.
           </p>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
-            For example, a 3:00 PM flight with a 45-minute drive may require
-            leaving around 11:15 AM to stay safe.
+            For example, a 3:00 PM flight with a 45-minute drive may require leaving around 11:15
+            AM to stay safe.
           </p>
-          <p className="mt-3 text-sm text-zinc-500">
-            Get your exact leave time below.
-          </p>
+          <p className="mt-3 text-sm text-zinc-500">Get your exact leave time below.</p>
         </div>
       </section>
 
       {/* ── CALCULATOR ── */}
-      <section id="calculator" className="border-t border-zinc-800 pt-3 pb-6 md:pb-8">
+      <section id="calculator" className="border-t border-zinc-800 pb-6 pt-3 md:pb-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <p className="mb-3 text-sm font-semibold text-zinc-400">
-            Calculate your exact airport leave time
+            Calculate your exact airport departure time
           </p>
           <AirportCalculator />
           <p className="mt-5 text-center text-sm text-zinc-400">
-            Want to see how far you can push it?{" "}
+            This calculator is for realistic departure planning. For a fun take on risky airport
+            timing, see the{" "}
             <Link
               href="/airport-theory-calculator"
               className="text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-300"
             >
-              Try the Airport Theory Calculator →
+              Airport Theory Calculator (experimental)
             </Link>
+            .
           </p>
         </div>
       </section>
@@ -190,13 +204,13 @@ export default function AirportTimeToLeaveCalculator() {
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             How Early Should You Leave for the Airport?
           </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+          <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
-              Every trip is different. Traffic, airport size, time of day, and
-              security lines can all affect your timing. That&apos;s why using a
-              calculator is the most reliable way to avoid cutting it too close.
+              Every trip is different. Traffic, airport size, time of day, and security lines can
+              all affect your departure timing. That&apos;s why using a calculator is the most
+              reliable way to avoid cutting it too close.
             </p>
-            <p>For most flights, you should plan your airport arrival time first:</p>
+            <p>For most flights, plan your airport arrival time first:</p>
             <ul className="space-y-2">
               {[
                 "Domestic flights: arrive 2 hours before departure",
@@ -209,16 +223,15 @@ export default function AirportTimeToLeaveCalculator() {
               ))}
             </ul>
             <p>
-              However, this is your arrival time — not when you should leave
-              your house.
+              However, this is your arrival time, not when you should leave your house.
             </p>
             <p>
-              To determine when to leave, subtract your travel time and add
-              buffer for traffic, parking, and delays.
+              To determine your departure time, subtract your travel time and add buffer for
+              traffic, parking, and delays.
             </p>
             <p>
-              Most people underestimate how early they need to leave —
-              especially during peak travel times.
+              Most people underestimate how early they need to leave, especially during peak travel
+              times.
             </p>
           </div>
         </div>
@@ -230,10 +243,8 @@ export default function AirportTimeToLeaveCalculator() {
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             When Should You Leave for the Airport Based on Your Flight Time?
           </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
-            <p>
-              Your ideal leave time depends heavily on when your flight departs:
-            </p>
+          <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
+            <p>Your ideal departure time depends heavily on when your flight takes off:</p>
             <ul className="space-y-2">
               {[
                 "Morning flights often require earlier departure due to rush hour traffic",
@@ -247,9 +258,8 @@ export default function AirportTimeToLeaveCalculator() {
               ))}
             </ul>
             <p>
-              The safest approach is to calculate your leave time based on your
-              specific route and departure time, rather than relying on a fixed
-              rule.
+              The safest approach is to calculate your leave time based on your specific route and
+              departure time, rather than relying on a fixed rule.
             </p>
           </div>
         </div>
@@ -261,28 +271,25 @@ export default function AirportTimeToLeaveCalculator() {
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             When should you leave for the airport?
           </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+          <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
-              There is no single right answer, but a few factors always matter:
-              whether you&apos;re flying domestic or international, how long
-              security will take, whether you&apos;re checking a bag, and how
-              long the drive actually is at the time you&apos;re leaving. Security
-              time in particular varies widely depending on TSA wait times, time
-              of day, and airport traffic.
+              There is no single right answer, but a few factors always matter: whether you&apos;re
+              flying domestic or international, how long security will take, whether you&apos;re
+              checking a bag, and how long the drive actually is at the time you&apos;re leaving.
+              Security time in particular varies widely depending on TSA wait times, time of day,
+              and airport traffic.
             </p>
             <p>
-              Most people underestimate at least one of these. They check traffic
-              on Google Maps and assume a 35-minute drive, but forget that
-              they&apos;re leaving during rush hour, need to find parking, and
-              still have to get through a bag drop line. The math compounds
+              Most people underestimate at least one of these. They check traffic on Google Maps and
+              assume a 35-minute drive, but forget that they&apos;re leaving during rush hour, need
+              to find parking, and still have to get through a bag drop line. The math compounds
               quickly.
             </p>
             <p>
-              A reliable estimate works backwards from your departure time:
-              subtract the airport arrival buffer first, then subtract travel
-              time. The result is the latest reasonable moment to walk out the
-              door. The calculator above automates that math using real-world
-              inputs like TSA wait times and travel conditions.
+              A reliable departure time estimate works backwards from your flight: subtract the
+              airport arrival buffer first, then subtract travel time. The result is the latest
+              reasonable moment to walk out the door. The calculator above automates that math using
+              real-world inputs like TSA wait times and travel conditions.
             </p>
           </div>
         </div>
@@ -294,39 +301,33 @@ export default function AirportTimeToLeaveCalculator() {
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             Why airport timing is harder than it looks
           </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+          <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
-              Most people have a rough sense of how far the airport is. What
-              they underestimate is how many places in the chain can absorb time
-              unexpectedly.
+              Most people have a rough sense of how far the airport is. What they underestimate is
+              how many places in the chain can absorb time unexpectedly.
             </p>
             <p>
-              Traffic changes. A drive that takes 30 minutes on Sunday morning
-              takes 55 minutes on a Tuesday at 5 PM. If you pulled your estimate
-              from earlier in the day, you may already be behind before you
-              leave.
+              Traffic changes. A drive that takes 30 minutes on Sunday morning takes 55 minutes on a
+              Tuesday at 5 PM. If you pulled your estimate from earlier in the day, you may already
+              be behind before you leave.
             </p>
             <p>
-              Parking adds time in ways that are easy to overlook. Finding a
-              spot, waiting for the shuttle, riding to the terminal — economy
-              parking at a major airport can easily absorb 20 to 30 minutes that
-              most people do not budget for.
+              Parking adds time in ways that are easy to overlook. Finding a spot, waiting for the
+              shuttle, riding to the terminal: economy parking at a major airport can easily absorb
+              20 to 30 minutes that most people do not budget for.
             </p>
             <p>
-              Bag check has a hard cutoff. Miss it and you lose your checked bag
-              for the trip or miss the flight entirely. That cutoff does not care
-              how close you are to the airport.
+              Bag check has a hard cutoff. Miss it and you lose your checked bag for the trip or
+              miss the flight entirely. That cutoff does not care how close you are to the airport.
             </p>
             <p>
-              Security lines are unpredictable and heavily influenced by TSA
-              wait times, staffing, and checkpoint volume. Even with TSA
-              PreCheck, a busy period can add meaningful delay.
+              Security lines are unpredictable and heavily influenced by TSA wait times, staffing,
+              and checkpoint volume. Even with TSA PreCheck, a busy period can add meaningful delay.
             </p>
             <p>
-              The biggest factor is overconfidence. Most people who miss flights
-              were not planning to cut it close. They just ran through the math
-              too optimistically. A small buffer in every step of the chain is
-              cheap insurance.
+              The biggest factor is overconfidence. Most people who miss flights were not planning
+              to cut it close. They just ran through the departure timing math too optimistically. A
+              small buffer in every step of the chain is cheap insurance.
             </p>
           </div>
         </div>
@@ -339,9 +340,9 @@ export default function AirportTimeToLeaveCalculator() {
             Stop calculating this every trip
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-zinc-400">
-            OnTimer can automatically remind you when it&apos;s time to leave for
-            events with locations — flights, meetings, appointments, and more. No
-            more doing the math yourself before every trip.
+            OnTimer can automatically remind you when it&apos;s time to leave for flights,
+            meetings, appointments, and any event with a location. No more doing the math yourself
+            before every trip.
           </p>
           <ul className="mt-8 space-y-3">
             {[
@@ -368,23 +369,21 @@ export default function AirportTimeToLeaveCalculator() {
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             A better way to avoid missing flights
           </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+          <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
-              Calculating your leave time manually every trip works — until it
-              doesn&apos;t. You forget, you rush, you underestimate. The math is
-              not hard. The problem is remembering to do it, at the right moment,
-              with the right inputs.
+              Calculating your departure time manually every trip works, until it doesn&apos;t. You
+              forget, you rush, you underestimate. The math is not hard. The problem is remembering
+              to do it, at the right moment, with the right inputs.
             </p>
             <p>
-              OnTimer is an iPhone app designed to solve this automatically. It
-              calculates when you need to leave based on real-world conditions
-              like traffic and timing — so you don&apos;t have to rely on static
-              estimates or guesswork.
+              OnTimer is an iPhone app designed to solve this automatically. It calculates when you
+              need to leave based on real-world conditions like traffic and timing, so you
+              don&apos;t have to rely on static estimates or guesswork.
             </p>
             <p>
-              The same feature works for meetings, appointments, pickups, and
-              anything else in your calendar with a location. You stop having to
-              think about it. OnTimer handles the timing.
+              The same feature works for meetings, appointments, pickups, and anything else in your
+              calendar with a location. You stop having to think about it. OnTimer handles the
+              departure timing.
             </p>
           </div>
           <div className="mt-8 flex flex-wrap gap-4">
@@ -414,9 +413,7 @@ export default function AirportTimeToLeaveCalculator() {
                     +
                   </span>
                 </summary>
-                <p className="mt-4 text-sm leading-relaxed text-zinc-400">
-                  {item.answer}
-                </p>
+                <p className="mt-4 text-sm leading-relaxed text-zinc-400">{item.answer}</p>
               </details>
             ))}
           </div>
@@ -426,32 +423,32 @@ export default function AirportTimeToLeaveCalculator() {
       {/* ── RELATED LINKS ── */}
       <section className="border-t border-zinc-800 py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="mb-6 text-xl font-bold text-white">Related guides</h2>
+          <h2 className="mb-6 text-xl font-bold text-white">Related timing tools</h2>
           <ul className="space-y-3">
             {[
               {
                 href: "/what-time-should-i-leave",
-                label: "What Time Should I Leave Calculator →",
+                label: "Leave-Time Calculator: Commutes, Meetings, and Appointments →",
               },
               {
                 href: "/wake-up-time-calculator",
                 label: "Wake-Up Time Calculator →",
               },
               {
+                href: "/airport-theory-calculator",
+                label: "Airport Theory Calculator (experimental) →",
+              },
+              {
                 href: "/time-to-leave-reminders",
-                label: "How to Get a Reminder When It's Time to Leave →",
+                label: "Time-to-Leave Reminders: Automatic Departure Alerts →",
               },
               {
                 href: "/never-be-late-to-meetings",
                 label: "How to Never Be Late to Meetings →",
               },
               {
-                href: "/loud-calendar-alerts-iphone",
-                label: "How to Get Loud Calendar Alerts on iPhone →",
-              },
-              {
-                href: "/features",
-                label: "All OnTimer Features →",
+                href: "/adhd-time-blindness-tools",
+                label: "ADHD Time Blindness: Departure Planning Tools →",
               },
             ].map((link) => (
               <li key={link.href}>
@@ -475,8 +472,8 @@ export default function AirportTimeToLeaveCalculator() {
             Never cut it close again
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            Download OnTimer and get automatic leave-time reminders for flights,
-            meetings, and every event in your calendar.
+            Download OnTimer and get automatic leave-time reminders for flights, meetings, and
+            every event in your calendar.
           </p>
           <div className="mt-8">
             <AppStoreCTA location="airport_calculator_final_cta" />
