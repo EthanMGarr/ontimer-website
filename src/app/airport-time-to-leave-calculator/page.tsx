@@ -181,7 +181,7 @@ export default function AirportTimeToLeaveCalculator() {
       <section id="calculator" className="border-t border-zinc-800 pb-6 pt-3 md:pb-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <p className="mb-3 text-sm font-semibold text-zinc-400">
-            Calculate your exact airport departure time
+            Plan your airport departure
           </p>
           <AirportCalculator />
           <p className="mt-5 text-center text-sm text-zinc-400">
