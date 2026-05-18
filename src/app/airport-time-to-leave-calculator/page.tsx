@@ -153,36 +153,15 @@ export default function AirportTimeToLeaveCalculator() {
             What Time Should I Leave for the{" "}
             <span className="text-green-500">Airport?</span>
           </h1>
-          <div className="mt-3 max-w-xl rounded-xl border border-green-500/30 bg-green-500/5 p-3">
-            <p className="text-sm font-semibold text-zinc-200">
-              What time should I leave for the airport?
-            </p>
-            <p className="mt-1 text-sm leading-relaxed text-zinc-300">
-              To calculate your airport departure time: start with your flight time, subtract the
-              airport arrival buffer (2 hours domestic, 3 hours international), then subtract your
-              drive time and add buffer for traffic and parking. The calculator below handles this
-              automatically with real traffic data.
-            </p>
-          </div>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400">
-            If you&apos;re wondering what time to leave for the airport, the general rule is to
-            arrive 2–3 hours before your flight. Your exact departure time depends on travel time,
-            traffic, and airport conditions.
+            Get a personalized airport leave time using live traffic, TSA estimates, parking time, and airport timing.
           </p>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
-            For example, a 3:00 PM flight with a 45-minute drive may require leaving around 11:15
-            AM to stay safe.
-          </p>
-          <p className="mt-3 text-sm text-zinc-500">Get your exact leave time below.</p>
         </div>
       </section>
 
       {/* ── CALCULATOR ── */}
       <section id="calculator" className="border-t border-zinc-800 pb-6 pt-3 md:pb-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <p className="mb-3 text-sm font-semibold text-zinc-400">
-            Plan your airport departure
-          </p>
           <AirportCalculator />
           <p className="mt-5 text-center text-sm text-zinc-400">
             This calculator is for realistic departure planning. For a fun take on risky airport
