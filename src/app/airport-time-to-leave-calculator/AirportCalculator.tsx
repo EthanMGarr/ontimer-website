@@ -1002,57 +1002,38 @@ export default function AirportCalculator() {
                 )}
               </div>
 
-            ) : arrivalOnlyPreview ? (
-              /* ── CONTEXT PARTIAL — flight time set, no route yet ── */
-              <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5 transition-all duration-300">
-                <p className="text-xs text-zinc-500">
-                  Typical timing for a {fmtDepartureTime(departureTime)} {flightType} flight
+            ) : (
+              /* ── CAPABILITY STATE — no route inputs yet (default / initial) ── */
+              <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
+                <p className="text-sm font-semibold text-white">Get your personalized leave time</p>
+                <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+                  Add your starting location and airport — we&apos;ll calculate:
                 </p>
 
-                <div className="mt-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
-                    Recommended airport arrival
-                  </p>
-                  <p className="mt-1 text-4xl font-black text-white">
-                    {fmtTime(arrivalOnlyPreview)}
-                  </p>
-                  <p className="mt-1 text-xs text-zinc-500">
-                    {flightType === "domestic" ? "2 hours" : "3 hours"} before departure + security
-                  </p>
-                </div>
-
-                <div className="mt-5 rounded-lg border border-zinc-700/40 bg-zinc-800/60 px-4 py-3">
-                  <p className="text-xs font-medium text-zinc-300">
-                    Add your airport and starting location to calculate your exact leave time using:
-                  </p>
-                  <div className="mt-2 space-y-1">
-                    {["Live traffic", "TSA wait estimates", "Parking time"].map((f) => (
-                      <div key={f} className="flex items-center gap-2">
-                        <span className="h-1 w-1 flex-shrink-0 rounded-full bg-green-500/60" />
-                        <span className="text-xs text-zinc-400">{f}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-            ) : (
-              /* ── EMPTY ── */
-              <div className="rounded-xl border border-zinc-800 bg-zinc-800/30 p-6">
-                <p className="text-xs font-medium text-zinc-500">Your leave time</p>
-                <p className="mt-2 text-5xl font-black leading-none text-zinc-700">—:—</p>
-                <p className="mt-3 text-sm text-zinc-500">Enter your flight time to get started.</p>
                 <div className="mt-4 space-y-2">
                   {[
-                    "Live traffic to your airport",
-                    "TSA wait time estimates",
-                    "Parking, bags, and terminal time",
+                    "Real-time traffic conditions",
+                    "TSA wait estimates for your airport",
+                    "Parking and terminal timing",
+                    "Domestic vs international buffer",
                   ].map((item) => (
-                    <div key={item} className="flex items-center gap-2 text-xs text-zinc-600">
-                      <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-green-500/40" />
-                      {item}
+                    <div key={item} className="flex items-center gap-2">
+                      <span className="flex-shrink-0 text-xs text-green-500">✓</span>
+                      <span className="text-xs text-zinc-300">{item}</span>
                     </div>
                   ))}
+                </div>
+
+                {/* Example — clearly labeled, not the user's result */}
+                <div className="mt-5 rounded-lg border border-zinc-700/40 bg-zinc-800/60 px-4 py-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
+                    Example result
+                  </p>
+                  <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="text-xs text-zinc-500">1:00 PM · JFK departure</span>
+                    <span className="text-zinc-700">·</span>
+                    <span className="text-sm font-bold text-zinc-400">Leave by 8:43 AM</span>
+                  </div>
                 </div>
               </div>
             )}
