@@ -434,14 +434,15 @@ export default function AirportCalculator() {
     hasCheckedBag ? "bag drop" : null,
   ].filter(Boolean).join(" · ");
 
-  const smartAssumptions: string[] = [
-    hasAirport ? `TSA wait${airportShortDisplay ? ` (${airportShortDisplay})` : ""}` : "TSA estimates",
+  // Core trust signals shown in the collapsed smart-timing card (always visible)
+  const coreTrustSignals = [
+    hasAirport && airportShortDisplay
+      ? `TSA wait (${airportShortDisplay})`
+      : "TSA wait estimates",
     "Parking time",
     flightType === "international" ? "International timing" : "Domestic timing",
-    hasRouteInputs ? "Live traffic" : "",
-    hasCheckedBag ? "Bag drop" : "",
-    (hasPreCheck || hasClear) ? "PreCheck / CLEAR" : "",
-  ].filter(Boolean) as string[];
+    "Live traffic conditions",
+  ];
 
   // ── Computed result ─────────────────────────────────────────────────────────
   const computedResult = useMemo((): ComputedResult | null => {
@@ -621,35 +622,61 @@ export default function AirportCalculator() {
               </div>
             </div>
 
-            {/* Smart assumptions */}
-            <div className="rounded-xl border border-zinc-800 bg-zinc-800/30 p-4">
-              <p className="mb-2.5 text-xs font-semibold text-zinc-400">Smart assumptions included</p>
-              <div className="flex flex-wrap gap-x-3 gap-y-1.5">
-                {smartAssumptions.map((item) => (
-                  <span key={item} className="flex items-center gap-1.5 text-xs text-zinc-400">
-                    <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-green-500/60" />
-                    {item}
-                  </span>
-                ))}
+            {/* Smart airport timing card */}
+            <div className="rounded-xl border border-zinc-700 bg-zinc-800/70 p-4">
+
+              {/* Header */}
+              <div className="flex items-center gap-2">
+                <span className="text-base leading-none text-green-500">⚙</span>
+                <p className="text-sm font-semibold text-white">Smart airport timing enabled</p>
               </div>
+              <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+                We automatically account for the timing factors most travelers miss.
+              </p>
+
+              {/* Trust signals — 2-column grid */}
+              <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
+                {coreTrustSignals.map((item) => (
+                  <div key={item} className="flex items-center gap-1.5">
+                    <span className="flex-shrink-0 text-xs text-green-500">✓</span>
+                    <span className="text-xs text-zinc-300">{item}</span>
+                  </div>
+                ))}
+                {hasCheckedBag && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="flex-shrink-0 text-xs text-green-500">✓</span>
+                    <span className="text-xs text-zinc-300">Bag drop time</span>
+                  </div>
+                )}
+                {(hasPreCheck || hasClear) && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="flex-shrink-0 text-xs text-green-500">✓</span>
+                    <span className="text-xs text-zinc-300">PreCheck / CLEAR</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Expand button — visually interactive */}
               <button
                 type="button"
                 onClick={() => setShowRefinements(!showRefinements)}
-                className="mt-3 flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-400"
+                className="mt-4 flex w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:bg-zinc-700 hover:text-white"
               >
-                <span>{showRefinements ? "▾" : "▸"}</span>
-                <span>
-                  {showRefinements ? "Hide adjustments" : "Adjust assumptions"}
+                <span className="flex items-center gap-2">
+                  <span>{showRefinements ? "Hide assumptions" : "Customize timing assumptions"}</span>
                   {activeRefinementCount > 0 && !showRefinements && (
-                    <span className="ml-1.5 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-green-400">
+                    <span className="rounded-full bg-green-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-green-400">
                       {activeRefinementCount} modified
                     </span>
                   )}
                 </span>
+                <span className={`flex-shrink-0 text-xs text-zinc-400 transition-transform duration-200 ${showRefinements ? "rotate-180" : ""}`}>
+                  ▾
+                </span>
               </button>
 
               {showRefinements && (
-                <div className="mt-4 space-y-5 border-t border-zinc-800 pt-4">
+                <div className="mt-4 space-y-5 border-t border-zinc-700 pt-4">
                   <div>
                     <FieldLabel>Trusted traveler programs</FieldLabel>
                     <div className="flex flex-wrap gap-2">
