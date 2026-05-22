@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
-import { AppStoreQRPopover } from "@/components/AppStoreQRPopover";
 
 export default function Footer() {
   return (
@@ -22,9 +21,7 @@ export default function Footer() {
             </p>
             <p className="mt-2 text-xs text-zinc-400">Aberdeen, NJ</p>
             <div className="mt-6">
-              <AppStoreQRPopover placement="above" location="footer">
-                <AppStoreButton size="sm" location="footer" />
-              </AppStoreQRPopover>
+              <AppStoreButton size="sm" location="footer" placement="above" />
             </div>
           </div>
 

@@ -83,6 +83,32 @@ Trust is built before action is requested — not after.
 
 ---
 
+## App Store CTA Behavior (permanent rule)
+
+Desktop and mobile users need different install flows. Sending a desktop user to the App Store
+web listing is a dead end — they cannot install from there and must transfer to their phone
+on their own, which most won't do.
+
+Rules that apply to every App Store button and CTA on every page:
+
+- **Mobile (touch devices):** link directly to the App Store URL
+  (https://apps.apple.com/us/app/ontimer-never-be-late/id6755317601).
+  The user is already on the device where they can install.
+- **Desktop:** do NOT link to the App Store listing. Show a QR code the user can
+  scan to open the App Store on their phone. This is the only reliable desktop→mobile
+  handoff. A popover or inline modal works; a new tab to the App Store does not.
+
+Implementation contract:
+- All App Store CTAs must go through a single shared component (currently `CTAButton.tsx`
+  and `AppStoreCTA.tsx`) that enforces this logic centrally.
+- Never hard-code an App Store `<a href>` directly in a page or section component —
+  it bypasses the device-aware logic and will silently break the desktop flow.
+- When adding a new CTA placement, use the existing shared component with a `location`
+  prop for analytics. Do not create one-off button implementations.
+- The QR code popover must be keyboard-accessible and dismissible.
+
+---
+
 ## SEO / GEO / AEO Guidance
 
 Direct answers belong near the top of each section, not buried in paragraphs.

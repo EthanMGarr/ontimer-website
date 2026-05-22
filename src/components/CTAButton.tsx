@@ -1,8 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { APP_STORE_URL } from "@/lib/constants";
 import { trackAppStoreClick, trackAndroidWaitlistClick } from "@/lib/analytics";
+import { AppStoreQRPopover } from "./AppStoreQRPopover";
 
 export { AppStoreCTA } from "./AppStoreCTA";
 
@@ -11,6 +13,9 @@ interface CTAButtonProps {
   variant?: "primary" | "outline";
   className?: string;
   location?: string;
+  // Controls which direction the QR popover opens on desktop.
+  // Use "above" when the button sits near the bottom of the viewport (e.g. footer).
+  placement?: "above" | "below";
 }
 
 const sizeClasses = {
@@ -24,7 +29,16 @@ export function AppStoreButton({
   variant = "primary",
   className = "",
   location = "cta",
+  placement = "below",
 }: CTAButtonProps) {
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setIsDesktop(!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+  }, []);
+
   const base = "inline-flex items-center gap-2.5 rounded-full font-semibold transition-colors";
   const variants = {
     primary: "bg-green-500 text-black hover:bg-green-400",
@@ -32,7 +46,7 @@ export function AppStoreButton({
       "border border-green-500 text-green-500 hover:bg-green-500 hover:text-black",
   };
 
-  return (
+  const link = (
     <a
       href={APP_STORE_URL}
       target="_blank"
@@ -43,6 +57,18 @@ export function AppStoreButton({
       <AppleIcon className="h-4 w-4" />
       Download on the App Store
     </a>
+  );
+
+  // Pre-hydration or mobile: direct App Store link (no layout shift, works on server)
+  if (!mounted || !isDesktop) {
+    return link;
+  }
+
+  // Desktop: intercept click and show QR popover instead of navigating to App Store
+  return (
+    <AppStoreQRPopover placement={placement} location={location}>
+      {link}
+    </AppStoreQRPopover>
   );
 }
 
