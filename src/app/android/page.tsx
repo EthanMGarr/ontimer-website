@@ -1,4 +1,7 @@
+"use client";
+
 import { AppStoreCTA } from "@/components/CTAButton";
+import { trackAndroidWaitlistClick } from "@/lib/analytics";
 
 const WAITLIST_URL = "https://forms.gle/96FxjQbUokqZcjKE8";
 
@@ -28,6 +31,7 @@ export default function AndroidPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-green-500 px-8 py-4 text-base font-semibold text-black transition-colors hover:bg-green-400"
+              onClick={() => trackAndroidWaitlistClick("hero")}
             >
               Join the Android Waitlist
             </a>

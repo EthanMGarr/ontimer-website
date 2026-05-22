@@ -3,19 +3,12 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { APP_STORE_URL } from "@/lib/constants";
+import { trackQRCodeVisible, trackQRCodeClick } from "@/lib/analytics";
 
 interface AppStoreQRPopoverProps {
   children: ReactNode;
   placement?: "below" | "above";
   location?: string;
-}
-
-function track(event: string, location: string) {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
-  window.gtag("event", event, {
-    page_path: window.location.pathname,
-    button_location: location,
-  });
 }
 
 export function AppStoreQRPopover({
@@ -36,7 +29,7 @@ export function AppStoreQRPopover({
 
   useEffect(() => {
     if (!open) return;
-    track("qr_code_visible", location);
+    trackQRCodeVisible(location);
 
     function handleOutsideClick(e: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -94,7 +87,7 @@ export function AppStoreQRPopover({
               href={APP_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => track("qr_code_click", location)}
+              onClick={() => trackQRCodeClick(location)}
               className="rounded-lg bg-white p-2 transition-opacity hover:opacity-90"
               aria-label="Scan QR code to download OnTimer"
             >

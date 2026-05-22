@@ -3,17 +3,14 @@
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { APP_STORE_URL } from "@/lib/constants";
+import {
+  trackAppStoreClick,
+  trackQRCodeVisible,
+  trackQRCodeClick,
+} from "@/lib/analytics";
 
 interface AppStoreCTAProps {
   location?: string;
-}
-
-function track(event: string, location: string) {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
-  window.gtag("event", event, {
-    page_path: window.location.pathname,
-    button_location: location,
-  });
 }
 
 function AppleIcon({ className = "h-4 w-4" }: { className?: string }) {
@@ -41,7 +38,7 @@ export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
 
   useEffect(() => {
     if (mounted && isDesktop) {
-      track("qr_code_visible", location);
+      trackQRCodeVisible(location);
     }
   }, [mounted, isDesktop, location]);
 
@@ -66,7 +63,7 @@ export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
         <div className="flex flex-col items-center gap-3">
           <div
             className="cursor-pointer rounded-xl bg-white p-3 shadow-lg transition-opacity hover:opacity-90"
-            onClick={() => track("qr_code_click", location)}
+            onClick={() => trackQRCodeClick(location)}
           >
             <a
               href={APP_STORE_URL}
@@ -97,7 +94,7 @@ export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex w-fit items-center gap-2.5 rounded-full border border-green-500 px-6 py-2.5 text-sm font-semibold text-green-500 transition-colors hover:bg-green-500 hover:text-black"
-            onClick={() => track("desktop_appstore_click", location)}
+            onClick={() => trackAppStoreClick(location)}
           >
             <AppleIcon className="h-4 w-4" />
             Open in App Store
@@ -113,7 +110,7 @@ export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
       target="_blank"
       rel="noopener noreferrer"
       className="inline-flex items-center gap-2.5 rounded-full bg-green-500 px-8 py-4 text-base font-semibold text-black transition-colors hover:bg-green-400"
-      onClick={() => track("mobile_appstore_click", location)}
+      onClick={() => trackAppStoreClick(location)}
     >
       <AppleIcon className="h-4 w-4" />
       Download on the App Store

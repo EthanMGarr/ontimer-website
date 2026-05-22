@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { APP_STORE_URL } from "@/lib/constants";
+import { trackAppStoreClick, trackAndroidWaitlistClick } from "@/lib/analytics";
 
 export { AppStoreCTA } from "./AppStoreCTA";
 
@@ -17,14 +18,6 @@ const sizeClasses = {
   md: "px-6 py-3 text-sm",
   lg: "px-8 py-4 text-base",
 };
-
-function trackAppStoreClick(location: string) {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
-  window.gtag("event", "app_store_click", {
-    page_path: window.location.pathname,
-    button_location: location,
-  });
-}
 
 export function AppStoreButton({
   size = "md",
@@ -56,11 +49,13 @@ export function AppStoreButton({
 export function AndroidWaitlistButton({
   size = "md",
   className = "",
+  location = "android_waitlist",
 }: CTAButtonProps) {
   return (
     <Link
       href="/android"
       className={`inline-flex items-center gap-2.5 rounded-full border border-green-500 font-semibold text-green-500 transition-colors hover:bg-green-500 hover:text-black ${sizeClasses[size]} ${className}`}
+      onClick={() => trackAndroidWaitlistClick(location)}
     >
       Join Android Waitlist
     </Link>
