@@ -185,32 +185,19 @@ export default function AirportTimeToLeaveCalculator() {
           </h2>
           <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
-              Every trip is different. Traffic, airport size, time of day, and security lines can
-              all affect your departure timing. That&apos;s why using a calculator is the most
-              reliable way to avoid cutting it too close.
-            </p>
-            <p>For most flights, plan your airport arrival time first:</p>
-            <ul className="space-y-2">
-              {[
-                "Domestic flights: arrive 2 hours before departure",
-                "International flights: arrive 3 hours before departure",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex-shrink-0 text-green-500">•</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <p>
-              However, this is your arrival time, not when you should leave your house.
+              Plan to arrive 2 hours early for domestic flights and 3 hours early for international
+              flights. Then add your actual drive time on top of that. The result is your leave
+              time — not a rough guess.
             </p>
             <p>
-              To determine your departure time, subtract your travel time and add buffer for
-              traffic, parking, and delays.
+              Those airport arrival windows exist for a reason: security lines, bag drop cutoffs,
+              and terminal walking time all absorb the margin most people assume they have. The
+              calculator above applies that math to your specific route and departure time.
             </p>
             <p>
-              Most people underestimate how early they need to leave, especially during peak travel
-              times.
+              What the standard rule doesn&apos;t account for: whether you&apos;re parking (add
+              15–20 minutes), checking a bag (add another 15 minutes), or traveling during a peak
+              traffic window. Each of those can individually erase the buffer you thought you had.
             </p>
           </div>
         </div>
@@ -223,22 +210,22 @@ export default function AirportTimeToLeaveCalculator() {
             When Should You Leave for the Airport Based on Your Flight Time?
           </h2>
           <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
-            <p>Your ideal departure time depends heavily on when your flight takes off:</p>
-            <ul className="space-y-2">
-              {[
-                "Morning flights often require earlier departure due to rush hour traffic",
-                "Afternoon flights can be impacted by both traffic and longer security lines",
-                "Evening flights may have lighter traffic but still require full airport buffer time",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex-shrink-0 text-green-500">•</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
             <p>
-              The safest approach is to calculate your leave time based on your specific route and
-              departure time, rather than relying on a fixed rule.
+              The departure time on your ticket tells you when to stop calculating backwards.
+              For a domestic flight at noon, subtract 2 hours to get your required airport arrival
+              (10 AM), then subtract your drive time from that. If the drive is 40 minutes, you
+              need to leave by 9:20 AM — before accounting for parking or traffic.
+            </p>
+            <p>
+              Flight time affects how much traffic you&apos;ll hit. An early morning flight sounds
+              easy until you realize you&apos;re driving to the airport at 5 AM — which is actually
+              light traffic and often faster than you expect. A noon flight means leaving during
+              morning rush, which can add 20–40 minutes to a drive that looks short on the map.
+            </p>
+            <p>
+              Evening flights are the most commonly misjudged. Traffic has thinned, so the drive
+              feels easy — but airports are busiest in the late afternoon and security lines reflect
+              that. The drive is shorter; the airport wait often isn&apos;t.
             </p>
           </div>
         </div>
@@ -252,23 +239,20 @@ export default function AirportTimeToLeaveCalculator() {
           </h2>
           <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
-              There is no single right answer, but a few factors always matter: whether you&apos;re
-              flying domestic or international, how long security will take, whether you&apos;re
-              checking a bag, and how long the drive actually is at the time you&apos;re leaving.
-              Security time in particular varies widely depending on TSA wait times, time of day,
-              and airport traffic.
+              Work backwards from your flight. Start with when you need to be at the airport
+              (2 hours before domestic, 3 hours before international), then subtract your actual
+              drive time. That&apos;s your leave time.
             </p>
             <p>
-              Most people underestimate at least one of these. They check traffic on Google Maps and
-              assume a 35-minute drive, but forget that they&apos;re leaving during rush hour, need
-              to find parking, and still have to get through a bag drop line. The math compounds
-              quickly.
+              The inputs that shift the answer meaningfully: parking adds 15–20 minutes, checking
+              a bag adds 15 minutes, and driving during rush hour can double a drive that looks
+              routine on the map. Most people who miss flights didn&apos;t plan to cut it close —
+              they just ran the math optimistically on one of these.
             </p>
             <p>
-              A reliable departure time estimate works backwards from your flight: subtract the
-              airport arrival buffer first, then subtract travel time. The result is the latest
-              reasonable moment to walk out the door. The calculator above automates that math using
-              real-world inputs like TSA wait times and travel conditions.
+              The calculator above runs this backwards from your flight time using live traffic,
+              TSA wait estimates for your airport, and your specific situation. Enter your departure
+              and it returns the latest reasonable moment to leave your door.
             </p>
           </div>
         </div>

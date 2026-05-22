@@ -159,8 +159,6 @@ function buildAirportShortDisplay(input: string): string {
 
 // ─── Constants & helpers ──────────────────────────────────────────────────────
 
-const TYPICAL_TRAVEL_MINS = 30;
-
 function computeConfidence(bufferUsed: number, recommendedBuffer: number): Confidence {
   if (bufferUsed >= recommendedBuffer) return "comfortable";
   if (bufferUsed >= recommendedBuffer - 20) return "tight";
@@ -311,7 +309,7 @@ export default function AirportCalculator() {
 
   // ── Interaction state ───────────────────────────────────────────────────────
   const [calendarAdded, setCalendarAdded] = useState(false);
-  const [showBreakdown, setShowBreakdown] = useState(false);
+  const [showBreakdown, setShowBreakdown] = useState(true);
 
   const securityDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const travelDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -503,11 +501,6 @@ export default function AirportCalculator() {
   }, [departureDate, departureTime, computedResult, estimatedSecurityMins, baseBuffer,
       showSecurityOverride, customSecurityMinutes, showBufferOverride, customBuffer]);
 
-  // Estimated leave shown only in the estimating (fetching) state — assumes typical drive time
-  const estimatedLeaveTime = useMemo((): Date | null => {
-    if (!arrivalOnlyPreview) return null;
-    return new Date(arrivalOnlyPreview.getTime() - TYPICAL_TRAVEL_MINS * 60 * 1000);
-  }, [arrivalOnlyPreview]);
 
   // ── Manual calculate fallback ───────────────────────────────────────────────
   async function handleCalculate() {
@@ -602,7 +595,7 @@ export default function AirportCalculator() {
             {/* Route */}
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <FieldLabel>Starting location</FieldLabel>
+                <FieldLabel>Leaving from</FieldLabel>
                 <PlaceAutocomplete
                   value={origin}
                   onChange={setOrigin}
@@ -809,16 +802,6 @@ export default function AirportCalculator() {
               </div>
             )}
 
-            {!hasRouteInputs && !computedResult && (
-              <button
-                type="button"
-                onClick={handleCalculate}
-                disabled={isFetchingTravel}
-                className="w-full rounded-full border border-zinc-700 bg-transparent px-6 py-2 text-sm font-medium text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white disabled:opacity-50"
-              >
-                {isFetchingTravel ? "Calculating…" : "Get leave time →"}
-              </button>
-            )}
           </div>
 
           {/* ══ RIGHT: Result panel ═══════════════════════════════════════════ */}
@@ -844,23 +827,14 @@ export default function AirportCalculator() {
                   <ConfidenceBadge confidence={computedResult.confidence} />
                 </div>
 
-                {/* Trust signals */}
-                <div className="mt-4 space-y-1.5">
-                  {[
-                    computedResult.travelSource === "google"
-                      ? (computedResult.hasTrafficData ? "Live traffic conditions" : "Route time estimated")
-                      : "Manual drive time used",
-                    `TSA wait time${airportShortDisplay ? ` (${airportShortDisplay})` : ""}`,
-                    arrivalMode === "parking"
-                      ? `${flightType === "international" ? "International" : "Domestic"} buffer + parking`
-                      : `${flightType === "international" ? "International" : "Domestic"} airport buffer`,
-                  ].map((signal) => (
-                    <div key={signal} className="flex items-center gap-2">
-                      <span className="text-xs text-green-500">✓</span>
-                      <span className="text-xs text-zinc-400">{signal}</span>
-                    </div>
-                  ))}
-                </div>
+                {/* Inline summary — actual numbers, not category labels */}
+                <p className="mt-3 text-xs text-zinc-500">
+                  {fmtDuration(computedResult.travelMinutes)} drive
+                  {" · "}
+                  {fmtDuration(computedResult.securityMinutes)} TSA
+                  {" · "}
+                  {fmtDuration(computedResult.baseBufferMinutes)} buffer
+                </p>
 
                 {/* Calendar CTA */}
                 <div className="mt-5">
@@ -883,30 +857,7 @@ export default function AirportCalculator() {
                   )}
                 </div>
 
-                {/* Automation CTA */}
-                <div className="mt-4 border-t border-zinc-800 pt-4">
-                  <p className="text-sm font-bold text-white">Never calculate this manually again.</p>
-                  <div className="mt-2 space-y-1.5">
-                    {[
-                      "Calculates when to leave",
-                      "Adjusts for live traffic",
-                      "Alerts you at the right moment",
-                    ].map((item) => (
-                      <div key={item} className="flex items-center gap-2">
-                        <span className="text-xs text-green-500">✓</span>
-                        <span className="text-xs text-zinc-400">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="mt-1.5 text-[10px] text-zinc-500">
-                    Works for flights, meetings, and any calendar event.
-                  </p>
-                  <div className="mt-3">
-                    <AppStoreButton size="sm" location="airport_calculator_inline" />
-                  </div>
-                </div>
-
-                {/* Breakdown — collapsed by default, below automation CTA */}
+                {/* Breakdown — expanded by default, before the CTA */}
                 <div className="mt-4 border-t border-zinc-800 pt-3">
                   <button
                     type="button"
@@ -914,7 +865,7 @@ export default function AirportCalculator() {
                     className="flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-400"
                   >
                     <span>{showBreakdown ? "▾" : "▸"}</span>
-                    <span>{showBreakdown ? "Hide timing breakdown" : "See full timing breakdown"}</span>
+                    <span>{showBreakdown ? "Hide breakdown" : "See timing breakdown"}</span>
                   </button>
 
                   {showBreakdown && (
@@ -970,6 +921,20 @@ export default function AirportCalculator() {
                     </div>
                   )}
                 </div>
+
+                {/* App download CTA — after the breakdown so trust is established first */}
+                <div className="mt-4 border-t border-zinc-800 pt-4">
+                  <p className="text-sm font-bold text-white">Get this alert automatically.</p>
+                  <p className="mt-1.5 text-xs leading-relaxed text-zinc-400">
+                    OnTimer reads your calendar and fires a real alarm — sound and haptics — when it&apos;s time to leave. Not a notification you&apos;ll swipe away.
+                  </p>
+                  <p className="mt-1 text-[10px] text-zinc-500">
+                    Works for flights, meetings, and any calendar event with a location.
+                  </p>
+                  <div className="mt-3">
+                    <AppStoreButton size="sm" location="airport_calculator_inline" />
+                  </div>
+                </div>
               </div>
 
             ) : isFetchingTravel ? (
@@ -982,9 +947,7 @@ export default function AirportCalculator() {
                 )}
                 <p className="text-xs font-semibold text-zinc-400">Leave by</p>
                 <div className="mt-0.5 flex items-end gap-3">
-                  <p className="text-7xl font-black leading-none text-zinc-600">
-                    {estimatedLeaveTime ? fmtTime(estimatedLeaveTime) : "—:—"}
-                  </p>
+                  <p className="text-7xl font-black leading-none text-zinc-600">—:—</p>
                   <span className="mb-1.5 animate-pulse text-xs text-zinc-500">calculating…</span>
                 </div>
                 <p className="mt-3 text-xs text-zinc-500">Fetching live traffic for your route</p>
