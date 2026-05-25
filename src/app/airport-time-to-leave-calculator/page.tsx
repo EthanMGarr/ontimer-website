@@ -413,6 +413,14 @@ export default function AirportTimeToLeaveCalculator() {
                 href: "/adhd-time-blindness-tools",
                 label: "ADHD Time Blindness: Departure Planning Tools →",
               },
+              {
+                href: "/last-5-minutes-problem",
+                label: "The Last 5 Minutes Problem: Why Reminders Fail at the Worst Moment →",
+              },
+              {
+                href: "/turn-calendar-events-into-alarms",
+                label: "Turn Calendar Events Into Persistent Alarms →",
+              },
             ].map((link) => (
               <li key={link.href}>
                 <Link

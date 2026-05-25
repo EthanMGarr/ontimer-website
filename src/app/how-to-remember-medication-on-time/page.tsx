@@ -368,12 +368,14 @@ export default function Page() {
           <h2 className="text-xl font-black tracking-tight text-white">Related Guides</h2>
           <ul className="mt-6 space-y-3">
             {[
+              { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Reminders Fail at Critical Moments" },
               { href: "/why-medication-reminders-fail", label: "Why Medication Reminders Fail (And What Actually Works)" },
               { href: "/medication-schedule-calendar-setup", label: "How to Set Up a Medication Schedule Using Your Calendar" },
               { href: "/help-elderly-parent-remember-medication", label: "How to Help an Elderly Parent Remember Their Medication" },
               { href: "/adhd-medication-timing", label: "ADHD and Medication Timing: Why the Last 5 Minutes Matters" },
               { href: "/pet-medication-schedule", label: "How to Remember Your Pet's Medication Schedule" },
               { href: "/how-to-set-medication-reminders-iphone", label: "How to Set Medication Reminders on iPhone" },
+              { href: "/turn-calendar-events-into-alarms", label: "Turn Calendar Events Into Persistent Alarms" },
             ].map(({ href, label }) => (
               <li key={href}>
                 <Link

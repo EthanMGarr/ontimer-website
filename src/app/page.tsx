@@ -4,13 +4,13 @@ import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "OnTimer — Persistent Calendar Alarms for iPhone & Outlook",
+  title: "OnTimer — Calendar Alarm App: Turn Google & Outlook Events Into Persistent Alarms",
   description:
-    "OnTimer is an iPhone app that connects to your calendar and creates loud, persistent alarms before meetings and events so they are harder to miss.",
+    "OnTimer turns Google Calendar and Outlook events into persistent alarms on iPhone. Never miss meetings again — calendar alarms that stay on screen until you act.",
   alternates: { canonical: "https://www.ontimer.app" },
   openGraph: {
-    title: "OnTimer — Persistent Calendar Alarms for iPhone & Outlook",
-    description: "OnTimer is an iPhone app that connects to your calendar and creates loud, persistent alarms before meetings and events so they are harder to miss.",
+    title: "OnTimer — Calendar Alarm App: Turn Google & Outlook Events Into Persistent Alarms",
+    description: "OnTimer turns Google Calendar and Outlook events into persistent alarms on iPhone. Never miss meetings again — calendar alarms that stay on screen until you act.",
     url: "https://www.ontimer.app",
   },
 };
@@ -146,14 +146,14 @@ const steps = [
 ];
 
 const popularGuides = [
+  { label: "The Last 5 Minutes Problem: Why Notifications Fail", href: "/last-5-minutes-problem" },
   { label: "Turn Calendar Events Into Alarms", href: "/turn-calendar-events-into-alarms" },
+  { label: "Best Calendar Alarm App for Google & Outlook", href: "/best-calendar-alarm-app" },
   { label: "Persistent Calendar Reminders", href: "/persistent-calendar-reminders" },
   { label: "Calendar Notifications vs Alarms", href: "/calendar-notifications-vs-alarms" },
-  { label: "Best Calendar Alarm App", href: "/calendar-alarm-app" },
   { label: "Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
   { label: "Why Calendar Reminders Fail", href: "/why-calendar-reminders-fail" },
   { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
-  { label: "Zoom Meeting Reminder That Won't Let You Miss the Call", href: "/zoom-meeting-reminder" },
   { label: "Best Meeting Reminder App for iPhone", href: "/best-meeting-reminder-app" },
 ];
 
@@ -367,6 +367,49 @@ export default function Home() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* ── LAST 5 MINUTES PROBLEM ── */}
+      <section className="border-t border-zinc-800 py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            The <span className="text-green-500">Last 5 Minutes Problem</span>
+          </h2>
+          <p className="mt-4 text-zinc-400 leading-relaxed">
+            You knew about the meeting. You had the reminder set. You looked at the clock ten minutes
+            ago. Somehow you still ended up late.
+          </p>
+          <p className="mt-4 text-zinc-400 leading-relaxed">
+            This isn&apos;t a memory problem. It&apos;s an{" "}
+            <strong className="text-white">execution gap</strong> — the space between receiving a
+            reminder and acting on it before the window closes. Notifications fire and disappear.
+            Alarms interrupt and wait.
+          </p>
+          <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+            <p className="text-sm font-semibold text-white mb-2">Why notifications fail at the worst moment:</p>
+            <ul className="space-y-2">
+              {[
+                "You're in the middle of something when the reminder fires",
+                "You glance at it, think \"in a minute\", and keep working",
+                "The notification disappears — and so does the urgency",
+                "Five minutes later you're late",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm text-zinc-400">
+                  <span className="mt-0.5 flex-shrink-0 text-zinc-600">—</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mt-6">
+            <Link
+              href="/last-5-minutes-problem"
+              className="text-sm font-semibold text-green-500 hover:text-green-400 transition-colors"
+            >
+              Read: The Last 5 Minutes Problem — why notifications fail →
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -611,9 +654,9 @@ export default function Home() {
             <p className="mt-5 text-sm font-semibold text-white">Start here:</p>
             <ul className="mt-3 space-y-2">
               {[
+                { label: "The Last 5 Minutes Problem", href: "/last-5-minutes-problem" },
                 { label: "Turn Calendar Events Into Alarms", href: "/turn-calendar-events-into-alarms" },
                 { label: "Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
-                { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
                 { label: "What Time Should I Leave", href: "/what-time-should-i-leave" },
               ].map(({ label, href }) => (
                 <li key={href}>

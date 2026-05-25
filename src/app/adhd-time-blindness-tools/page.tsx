@@ -397,6 +397,14 @@ export default function AdhdTimeBlindnessTools() {
           <ul className="space-y-3">
             <li>
               <Link
+                href="/last-5-minutes-problem"
+                className="text-green-500 hover:text-green-400 transition-colors"
+              >
+                The Last 5 Minutes Problem: Why Notifications Fail →
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/never-be-late-to-meetings"
                 className="text-green-500 hover:text-green-400 transition-colors"
               >
@@ -405,18 +413,26 @@ export default function AdhdTimeBlindnessTools() {
             </li>
             <li>
               <Link
-                href="/meeting-reminder-app"
+                href="/best-calendar-alarm-app"
                 className="text-green-500 hover:text-green-400 transition-colors"
               >
-                Meeting Reminder App →
+                Best Calendar Alarm App for Google &amp; Outlook →
               </Link>
             </li>
             <li>
               <Link
-                href="/calendar-alarm-app"
+                href="/persistent-calendar-reminders"
                 className="text-green-500 hover:text-green-400 transition-colors"
               >
-                Calendar Alarm App →
+                How to Make Calendar Reminders Persistent →
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/turn-calendar-events-into-alarms"
+                className="text-green-500 hover:text-green-400 transition-colors"
+              >
+                Turn Calendar Events Into Persistent Alarms →
               </Link>
             </li>
           </ul>

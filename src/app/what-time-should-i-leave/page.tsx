@@ -496,6 +496,14 @@ export default function WhatTimeShouldILeavePage() {
                 href: "/adhd-time-blindness-tools",
                 label: "ADHD Time Blindness: Tools That Actually Help →",
               },
+              {
+                href: "/last-5-minutes-problem",
+                label: "The Last 5 Minutes Problem: Why Reminders Fail When You Need Them Most →",
+              },
+              {
+                href: "/turn-calendar-events-into-alarms",
+                label: "Turn Calendar Events Into Persistent Alarms →",
+              },
             ].map((link) => (
               <li key={link.href}>
                 <Link
