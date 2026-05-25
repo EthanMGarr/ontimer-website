@@ -302,13 +302,13 @@ export default function WhyCalendarRemindersFail() {
           <h2 className="mb-6 text-xl font-bold text-white">Related Guides</h2>
           <ul className="space-y-3">
             {[
+              { href: "/why-notifications-fail", label: "Why Notifications Fail (And Persistent Alarms Work Better)" },
               { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Notifications Fail" },
               { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for Google & Outlook" },
               { href: "/turn-calendar-events-into-alarms", label: "Turn Calendar Events Into Persistent Alarms" },
               { href: "/persistent-calendar-reminders", label: "How to Make Calendar Reminders Persistent" },
               { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working? 8 Fixes" },
               { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
-              { href: "/alarm-didnt-go-off-late-for-work", label: "Alarm Didn't Go Off? Build a Fail-Safe Reminder System" },
             ].map(({ href, label }) => (
               <li key={href}>
                 <Link href={href} className="text-green-500 transition-colors hover:text-green-400">

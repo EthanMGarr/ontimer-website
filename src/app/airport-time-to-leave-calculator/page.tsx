@@ -292,6 +292,28 @@ export default function AirportTimeToLeaveCalculator() {
               to cut it close. They just ran through the departure timing math too optimistically. A
               small buffer in every step of the chain is cheap insurance.
             </p>
+            <div className="mt-4 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+              <p className="text-sm font-semibold text-white mb-2">The execution gap at the airport</p>
+              <p className="text-sm text-zinc-400 leading-relaxed">
+                Most missed flights don&apos;t happen because people forgot about the flight. They happen
+                in the final execution window — knowing you need to leave and actually leaving.{" "}
+                <strong className="text-white">This is the{" "}
+                <Link href="/last-5-minutes-problem" className="text-green-500 hover:text-green-400">
+                  Last 5 Minutes Problem
+                </Link>
+                .</strong>{" "}
+                Knowing the right departure time is step one. Having something that
+                actually interrupts you and forces you out the door at that moment is step two.
+              </p>
+            </div>
+          </div>
+          <div className="mt-6 space-y-2">
+            <Link href="/last-5-minutes-problem" className="block text-sm text-green-500 hover:text-green-400 transition-colors font-medium">
+              The Last 5 Minutes Problem: why knowing isn&apos;t enough →
+            </Link>
+            <Link href="/why-notifications-fail" className="block text-sm text-green-500 hover:text-green-400 transition-colors">
+              Why notifications fail at the worst moment →
+            </Link>
           </div>
         </div>
       </section>

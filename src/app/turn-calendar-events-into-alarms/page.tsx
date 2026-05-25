@@ -359,6 +359,7 @@ export default function Page() {
           <h2 className="text-xl font-black tracking-tight text-white">Related Guides</h2>
           <ul className="mt-6 space-y-3">
             {[
+              { href: "/why-notifications-fail", label: "Why Notifications Fail (And Persistent Alarms Work Better)" },
               { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Notifications Fail" },
               { href: "/persistent-calendar-reminders", label: "How to Make Calendar Reminders Persistent" },
               { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for Google & Outlook" },

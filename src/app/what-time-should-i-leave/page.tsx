@@ -306,9 +306,21 @@ export default function WhatTimeShouldILeavePage() {
               before a meeting 25 minutes away means you are already late before you leave.
             </p>
             <p>
+              But there is a deeper problem. Even when the math is right, knowing when to leave and
+              actually leaving are two different things. This is the{" "}
+              <Link href="/last-5-minutes-problem" className="text-green-500 hover:text-green-400">
+                Last 5 Minutes Problem
+              </Link>
+              : the execution gap between receiving a reminder and acting on it before the window closes.
+              A passive notification that disappears does not close that gap.{" "}
+              <Link href="/why-notifications-fail" className="text-green-500 hover:text-green-400">
+                Persistent alarms do.
+              </Link>
+            </p>
+            <p>
               OnTimer works differently. It calculates your departure time based on real travel time
-              and traffic, then sends you a stronger, harder-to-ignore alert at the right moment.
-              Not a generic 15 minutes before start.
+              and traffic, then fires a persistent alarm at the right moment — an alert that stays
+              on your screen until you dismiss it, not a notification that vanishes.
             </p>
           </div>
         </div>

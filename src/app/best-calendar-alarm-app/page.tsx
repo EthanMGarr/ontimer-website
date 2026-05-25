@@ -365,12 +365,12 @@ export default function Page() {
           <h2 className="text-xl font-black tracking-tight text-white">Related Guides</h2>
           <ul className="mt-6 space-y-3">
             {[
+              { href: "/why-notifications-fail", label: "Why Notifications Fail (And Persistent Alarms Work Better)" },
               { href: "/calendar-notifications-vs-alarms", label: "Calendar Notifications vs Alarms: Why Most Reminders Fail" },
               { href: "/persistent-calendar-reminders", label: "How to Make Calendar Reminders Persistent" },
               { href: "/turn-calendar-events-into-alarms", label: "How to Turn Calendar Events Into Real Alarms" },
               { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Notifications Fail" },
               { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
-              { href: "/never-be-late-to-meetings", label: "How to Never Be Late to Meetings" },
               { href: "/adhd-time-blindness-tools", label: "ADHD Time Blindness Tools" },
             ].map(({ href, label }) => (
               <li key={href}>

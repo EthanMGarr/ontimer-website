@@ -4,13 +4,13 @@ import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "OnTimer — Calendar Alarm App: Turn Google & Outlook Events Into Persistent Alarms",
+  title: "OnTimer — Persistent Calendar Alarms for Meetings, Flights & Critical Moments",
   description:
-    "OnTimer turns Google Calendar and Outlook events into persistent alarms on iPhone. Never miss meetings again — calendar alarms that stay on screen until you act.",
+    "OnTimer turns Google Calendar and Outlook events into persistent alarms you can't ignore. Stop missing meetings, appointments, flights, and medication doses — calendar alarms that interrupt instead of disappear.",
   alternates: { canonical: "https://www.ontimer.app" },
   openGraph: {
-    title: "OnTimer — Calendar Alarm App: Turn Google & Outlook Events Into Persistent Alarms",
-    description: "OnTimer turns Google Calendar and Outlook events into persistent alarms on iPhone. Never miss meetings again — calendar alarms that stay on screen until you act.",
+    title: "OnTimer — Persistent Calendar Alarms for Meetings, Flights & Critical Moments",
+    description: "OnTimer turns Google Calendar and Outlook events into persistent alarms you can't ignore. Calendar alarms that interrupt instead of disappear.",
     url: "https://www.ontimer.app",
   },
 };
@@ -92,38 +92,38 @@ const comparisonRows = [
 const whoCards = [
   {
     heading: "Busy professionals",
-    body: "For people with packed workdays, client calls, internal meetings, and back-to-back schedules.",
+    body: "Packed workdays, back-to-back calls, client meetings. Passive notifications compete with everything else. Persistent alarms cut through.",
   },
   {
-    heading: "People who miss calendar notifications",
-    body: "For anyone who sees reminders but still loses track of time before the meeting actually starts.",
+    heading: "People who miss notifications",
+    body: "You see the reminder. You think \"in a minute.\" The notification disappears. That execution gap is exactly what OnTimer closes.",
   },
   {
-    heading: "People with time blindness or ADHD tendencies",
-    body: "For people who benefit from a stronger transition signal before it is time to leave or join.",
+    heading: "ADHD & time blindness",
+    body: "For people where 10 minutes can feel like 2. A persistent alarm that won't leave until dismissed is a categorically different signal.",
   },
   {
-    heading: "Multi-calendar users",
-    body: "For people juggling work and personal schedules across more than one calendar.",
+    heading: "Critical timing moments",
+    body: "Flights, medication doses, appointments, pickups. Any calendar event where missing the window has real consequences.",
   },
 ];
 
 const featureItems = [
   {
-    heading: "Connect multiple calendars",
-    body: "Connect Google and Microsoft calendars, including multiple accounts, so your reminders reflect your real schedule.",
+    heading: "Persistent alarms, not notifications",
+    body: "OnTimer alarms stay on your screen until you dismiss them. They don't disappear on their own. They interrupt — which is the point.",
   },
   {
-    heading: "Automatic alarms for calendar events",
-    body: "OnTimer watches your schedule and prepares alarms for upcoming meetings, calls, and appointments.",
+    heading: "Every calendar event covered automatically",
+    body: "OnTimer watches your Google Calendar and Outlook and fires a persistent alarm for every upcoming event. No per-event setup.",
   },
   {
-    heading: "Alerts you are less likely to miss",
-    body: "Unlike a standard notification, OnTimer alarms are designed to stay loud and visible until you dismiss them.",
+    heading: "Works across critical timing moments",
+    body: "Meetings, appointments, medication doses, flight departures. Any calendar event where the window closing has real consequences.",
   },
   {
     heading: "Time To Leave alerts",
-    body: "For events with a location, Time To Leave can alert you when it is time to head out based on travel time and traffic. This is a paid feature.",
+    body: "For events with a location, OnTimer calculates when you need to leave based on travel time and traffic — and alarms you. Paid feature.",
   },
 ];
 
@@ -147,14 +147,14 @@ const steps = [
 
 const popularGuides = [
   { label: "The Last 5 Minutes Problem: Why Notifications Fail", href: "/last-5-minutes-problem" },
+  { label: "Why Notifications Fail (And Persistent Alarms Work Better)", href: "/why-notifications-fail" },
   { label: "Turn Calendar Events Into Alarms", href: "/turn-calendar-events-into-alarms" },
   { label: "Best Calendar Alarm App for Google & Outlook", href: "/best-calendar-alarm-app" },
   { label: "Persistent Calendar Reminders", href: "/persistent-calendar-reminders" },
   { label: "Calendar Notifications vs Alarms", href: "/calendar-notifications-vs-alarms" },
-  { label: "Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
   { label: "Why Calendar Reminders Fail", href: "/why-calendar-reminders-fail" },
   { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
-  { label: "Best Meeting Reminder App for iPhone", href: "/best-meeting-reminder-app" },
+  { label: "Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
 ];
 
 const medicationGuides = [
@@ -188,21 +188,23 @@ export default function Home() {
             {/* Text */}
             <div className="flex-1 text-center lg:text-left">
               <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-                Calendar alarm app for iPhone
+                Persistent calendar alarms for iPhone
               </p>
               <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
-                Never miss a{" "}
-                <span className="text-green-500">meeting again</span>
+                Never miss{" "}
+                <span className="text-green-500">important moments</span>{" "}
+                again
               </h1>
               <p className="mt-6 max-w-xl text-lg text-zinc-400 lg:text-xl leading-relaxed">
-                OnTimer turns your Google Calendar and Outlook events into
-                persistent alarms on iPhone — not notifications that disappear.
-                Every meeting gets an alarm that stays until you act.
+                Turn calendar events into <strong className="text-white">persistent alarms</strong> you
+                can&apos;t ignore. OnTimer helps you break through the final execution
+                gap before meetings, flights, appointments, medication schedules,
+                and other critical moments.
               </p>
               <ul className="mt-4 max-w-xl space-y-1.5">
                 {[
                   "Works with Google Calendar & Microsoft 365 / Outlook",
-                  "Alarms that stay on screen until dismissed",
+                  "Persistent alarms that stay on screen until dismissed",
                   "No manual setup — your calendar is the source of truth",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2 text-sm text-zinc-400">
@@ -215,7 +217,11 @@ export default function Home() {
               <div className="mt-6 max-w-xl rounded-xl border border-green-500/30 bg-green-500/5 p-5">
                 <p className="text-xs font-semibold uppercase tracking-widest text-green-500 mb-2">Direct Answer</p>
                 <p className="text-sm leading-relaxed text-zinc-200">
-                  OnTimer is a free iPhone app that turns Google Calendar and Microsoft Outlook events into persistent alarms — alerts that stay on your screen until you dismiss them, instead of disappearing like standard notifications. Connect your calendar once; every meeting gets an alarm automatically.
+                  OnTimer turns Google Calendar and Outlook events into{" "}
+                  <strong className="text-white">persistent alarms</strong> instead of passive notifications.
+                  Unlike standard reminders that are easy to ignore, OnTimer uses loud, persistent alarms
+                  that interrupt you before important moments — meetings, flights, medication doses,
+                  and appointments. Connect your calendar once; every event gets an alarm automatically.
                 </p>
               </div>
 
@@ -334,32 +340,37 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CALENDAR REMINDERS AREN'T ALARMS ── */}
+      {/* ── NOTIFICATIONS vs ALARMS ── */}
       <section className="border-y border-zinc-800 bg-zinc-900/50 py-20">
         <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Calendar reminders aren&apos;t alarms.
+            Notifications inform.{" "}
+            <span className="text-green-500">Alarms interrupt.</span>
           </h2>
           <div className="mt-6 space-y-4 text-left text-zinc-400 leading-relaxed">
             <p>
-              Most calendar reminders are passive notifications. They appear,
-              you glance at them, and then they disappear into the rest of your
-              day.
+              Most calendar reminders are passive notifications — they appear
+              briefly and disappear whether you act on them or not. In the
+              final minutes before a critical moment, that is not enough.
             </p>
             <p>
-              That is fine for casual reminders. It is not reliable when you
-              actually need to show up on time.
+              <strong className="text-white">Notifications require attention.</strong>{" "}
+              If you are focused on something else, they fade into the background
+              without registering.{" "}
+              <strong className="text-white">Alarms interrupt behavior.</strong>{" "}
+              They stay on your screen until you dismiss them — and that
+              difference is what closes the execution gap.
             </p>
             <p>
-              OnTimer turns calendar events into loud, persistent alarms that
-              are much harder to ignore.
+              OnTimer turns calendar events into persistent alarms. Not
+              notifications. Alarms.
             </p>
           </div>
           <ul className="mt-6 space-y-2 text-left">
             {[
-              "Easy to swipe away notifications become real alarms",
-              "Meetings and appointments are harder to miss",
-              "You do not need to manually create reminders for every event",
+              "Passive notifications become persistent, dismissible alarms",
+              "Meetings, flights, medication, appointments — all covered",
+              "No manual setup — your calendar is the source of truth",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 text-zinc-300">
                 <span className="mt-1 flex-shrink-0 text-green-500">✓</span>
@@ -367,6 +378,14 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          <div className="mt-6 text-left">
+            <Link
+              href="/why-notifications-fail"
+              className="text-sm font-semibold text-green-500 hover:text-green-400 transition-colors"
+            >
+              Why notifications fail — and what actually works →
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -655,8 +674,8 @@ export default function Home() {
             <ul className="mt-3 space-y-2">
               {[
                 { label: "The Last 5 Minutes Problem", href: "/last-5-minutes-problem" },
+                { label: "Why Notifications Fail", href: "/why-notifications-fail" },
                 { label: "Turn Calendar Events Into Alarms", href: "/turn-calendar-events-into-alarms" },
-                { label: "Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
                 { label: "What Time Should I Leave", href: "/what-time-should-i-leave" },
               ].map(({ label, href }) => (
                 <li key={href}>

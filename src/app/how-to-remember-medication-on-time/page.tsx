@@ -368,6 +368,7 @@ export default function Page() {
           <h2 className="text-xl font-black tracking-tight text-white">Related Guides</h2>
           <ul className="mt-6 space-y-3">
             {[
+              { href: "/why-notifications-fail", label: "Why Notifications Fail (And Persistent Alarms Work Better)" },
               { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Reminders Fail at Critical Moments" },
               { href: "/why-medication-reminders-fail", label: "Why Medication Reminders Fail (And What Actually Works)" },
               { href: "/medication-schedule-calendar-setup", label: "How to Set Up a Medication Schedule Using Your Calendar" },
