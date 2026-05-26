@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
+import { WhyNotificationsFailGraphic } from "@/components/WhyNotificationsFailGraphic";
 
 export const metadata: Metadata = {
   title: "OnTimer — Persistent Calendar Alarms for Meetings, Flights & Critical Moments",
@@ -291,6 +292,52 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── FRAMEWORK INSIGHT ── */}
+      <section className="relative overflow-hidden border-t border-zinc-800 py-24 sm:py-32">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_70%,rgba(34,197,94,0.06),transparent)]" />
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6">
+          <div className="text-center">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-500">
+              Why reminders fail
+            </p>
+            <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl leading-[1.1]">
+              The problem isn&apos;t remembering.
+              <br />
+              <span className="text-green-500">It&apos;s follow-through.</span>
+            </h2>
+            <p className="mt-5 text-lg text-zinc-400 sm:text-xl">
+              Notifications inform.{" "}
+              <span className="font-semibold text-white">Alarms interrupt behavior.</span>
+            </p>
+            <p className="mt-4 mx-auto max-w-xl text-zinc-500 text-sm leading-relaxed">
+              Most missed reminders happen after the notification is seen. The issue is rarely awareness — it&apos;s the gap between knowing and acting.
+            </p>
+          </div>
+
+          <div className="relative mt-14 mx-auto max-w-2xl">
+            <div className="pointer-events-none absolute -inset-8 rounded-3xl bg-green-500/5 blur-2xl" />
+            <WhyNotificationsFailGraphic
+              variant="condensed"
+              caption="Passive notifications disappear. Interruptive alarms demand a response before they stop."
+            />
+          </div>
+
+          <div className="mt-10 text-center">
+            <p className="mx-auto max-w-lg text-zinc-400 leading-relaxed">
+              OnTimer was built around this problem. Not a notification upgrade — a different category of alert that stays on your screen until you respond.
+            </p>
+            <div className="mt-5">
+              <Link
+                href="/why-calendar-notifications-fail"
+                className="text-sm font-semibold text-green-500 hover:text-green-400 transition-colors"
+              >
+                Why calendar notifications fail — the full breakdown →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── PEOPLE ASK ── */}
       <section className="border-y border-zinc-800 py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
@@ -337,55 +384,6 @@ export default function Home() {
                 Microsoft accounts.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── NOTIFICATIONS vs ALARMS ── */}
-      <section className="border-y border-zinc-800 bg-zinc-900/50 py-20">
-        <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Notifications inform.{" "}
-            <span className="text-green-500">Alarms interrupt.</span>
-          </h2>
-          <div className="mt-6 space-y-4 text-left text-zinc-400 leading-relaxed">
-            <p>
-              Most calendar reminders are passive notifications — they appear
-              briefly and disappear whether you act on them or not. In the
-              final minutes before a critical moment, that is not enough.
-            </p>
-            <p>
-              <strong className="text-white">Notifications require attention.</strong>{" "}
-              If you are focused on something else, they fade into the background
-              without registering.{" "}
-              <strong className="text-white">Alarms interrupt behavior.</strong>{" "}
-              They stay on your screen until you dismiss them — and that
-              difference is what closes the execution gap.
-            </p>
-            <p>
-              OnTimer turns calendar events into persistent alarms. Not
-              notifications. Alarms.
-            </p>
-          </div>
-          <ul className="mt-6 space-y-2 text-left">
-            {[
-              "Passive notifications become persistent, dismissible alarms",
-              "Meetings, flights, medication, appointments — all covered",
-              "No manual setup — your calendar is the source of truth",
-            ].map((item) => (
-              <li key={item} className="flex items-start gap-3 text-zinc-300">
-                <span className="mt-1 flex-shrink-0 text-green-500">✓</span>
-                {item}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-6 text-left">
-            <Link
-              href="/why-notifications-fail"
-              className="text-sm font-semibold text-green-500 hover:text-green-400 transition-colors"
-            >
-              Why notifications fail — and what actually works →
-            </Link>
           </div>
         </div>
       </section>
