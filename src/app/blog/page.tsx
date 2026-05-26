@@ -74,7 +74,46 @@ const urgentGuides: GuideEntry[] = [
   },
 ];
 
-// ── Section 2: Calendar Alarm Guides ─────────────────────────────────────────
+// ── Section 2: When Notifications Fail ───────────────────────────────────────
+const notificationFailureGuides: GuideEntry[] = [
+  {
+    href: "/why-calendar-notifications-fail",
+    title: "Why Calendar Notifications Fail (And What Actually Works)",
+    description:
+      "You set the reminder. You still missed the meeting. Calendar notifications fail because they're passive — they inform without interrupting. Here's the full breakdown and what to use instead.",
+    date: "2026-05-26",
+  },
+  {
+    href: "/calendar-notifications-not-working",
+    title: "Calendar Notifications Not Working? Why Reminders Fail — and What Fixes It",
+    description:
+      "Reminders fail two ways: technical failures (Focus mode, permissions, background restrictions) and silent behavioral failures (notifications that fire correctly but you still miss). Both covered here.",
+    date: "2026-05-26",
+  },
+  {
+    href: "/persistent-calendar-reminders",
+    title: "How to Make Calendar Reminders Persistent",
+    description:
+      "Standard reminders vanish after a few seconds whether you act or not. A persistent reminder stays on your screen until you dismiss it. Here's what that means and how to set it up.",
+    date: "2026-05-08",
+  },
+  {
+    href: "/calendar-notifications-vs-alarms",
+    title: "Calendar Notifications vs Alarms: Why Most Reminders Fail",
+    description:
+      "Notifications inform. Alarms interrupt. Understanding this difference explains why most calendar reminders fail — and what to use instead for Google and Outlook calendars.",
+    date: "2026-05-08",
+  },
+  {
+    href: "/adhd-time-blindness-tools",
+    title: "ADHD Time Blindness Tools",
+    description:
+      "Time blindness makes passive notifications structurally unreliable. Here are the tools and strategies that actually interrupt hyperfocus — and why persistent alarms are the core fix.",
+    date: "2026-05-08",
+  },
+];
+
+// ── Section 3: Calendar Alarm Guides ─────────────────────────────────────────
 const calendarAlarmGuides: GuideEntry[] = [
   {
     href: "/turn-calendar-events-into-alarms",
@@ -106,7 +145,7 @@ const calendarAlarmGuides: GuideEntry[] = [
   },
 ];
 
-// ── Section 3: Medication Reminders ──────────────────────────────────────────
+// ── Section 4: Medication Reminders ──────────────────────────────────────────
 const medicationGuides: GuideEntry[] = [
   {
     href: "/how-to-remember-medication-on-time",
@@ -159,7 +198,7 @@ const medicationGuides: GuideEntry[] = [
   },
 ];
 
-// ── Section 3: Never Be Late Again ───────────────────────────────────────────
+// ── Section 5: Never Be Late Again ───────────────────────────────────────────
 const systemGuides: GuideEntry[] = [
   {
     href: "/what-to-say-when-late-to-meeting",
@@ -288,7 +327,32 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* ── Section 2: Calendar Alarm Guides ── */}
+      {/* ── Section 2: When Notifications Fail ── */}
+      <section className="border-b border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-green-500">Authority Cluster</p>
+          <h2 className="mb-2 text-2xl font-black text-white">When Notifications Fail</h2>
+          <p className="mb-8 text-sm text-zinc-500">
+            Why calendar reminders fail silently — and what to use instead when the settings are correct but
+            you still miss events.
+          </p>
+          <div className="space-y-4">
+            {notificationFailureGuides.map((guide, index) => {
+              if (index === 0) {
+                return (
+                  <div key={guide.href}>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-green-500">Start Here</p>
+                    <GuideCard {...guide} />
+                  </div>
+                );
+              }
+              return <GuideCard key={guide.href} {...guide} />;
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Section 3: Calendar Alarm Guides ── */}
       <section className="border-b border-zinc-800 py-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-green-500">New</p>
@@ -312,7 +376,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* ── Section 3: Medication Reminders ── */}
+      {/* ── Section 4: Medication Reminders ── */}
       <section className="border-b border-zinc-800 py-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="mb-8 text-2xl font-black text-white">Medication Reminders</h2>
@@ -334,7 +398,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* ── Section 4: Never Be Late Again ── */}
+      {/* ── Section 5: Never Be Late Again ── */}
       <section className="border-b border-zinc-800 py-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="mb-8 text-2xl font-black text-white">Never Be Late Again</h2>

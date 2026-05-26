@@ -397,6 +397,22 @@ export default function AdhdTimeBlindnessTools() {
           <ul className="space-y-3">
             <li>
               <Link
+                href="/why-calendar-notifications-fail"
+                className="text-green-500 hover:text-green-400 transition-colors"
+              >
+                Why Calendar Notifications Fail (And What Actually Works) →
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/calendar-notifications-not-working"
+                className="text-green-500 hover:text-green-400 transition-colors"
+              >
+                Calendar Notifications Not Working? Why Reminders Fail →
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/last-5-minutes-problem"
                 className="text-green-500 hover:text-green-400 transition-colors"
               >
