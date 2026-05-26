@@ -167,10 +167,10 @@ export default function Page() {
           <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-6">
             <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
             <p className="text-zinc-200 leading-relaxed">
-              <strong className="text-white">OnTimer is a free iPhone app that turns Google Calendar and Outlook events into persistent alarms.</strong>{" "}
-              Unlike standard calendar notifications, which disappear automatically, OnTimer alarms stay on your screen until you dismiss them.
-              It works with Google Calendar (personal and Workspace), Microsoft 365, and Outlook — and fires alarms
-              automatically for every event, with no per-event setup required.
+              <strong className="text-white">OnTimer is a free iPhone app that turns Google Calendar and Outlook events into alarms requiring acknowledgment.</strong>{" "}
+              Unlike standard calendar notifications — which disappear automatically, whether or not you act — OnTimer alarms
+              stay on your screen until you respond. It works with Google Calendar (personal and Workspace), Microsoft 365, and
+              Outlook, and fires alarms for every event automatically with no per-event setup.
             </p>
           </div>
         </div>
@@ -208,12 +208,18 @@ export default function Page() {
               . The solution isn&rsquo;t more notifications — it&rsquo;s alarms.
             </p>
           </div>
-          <div className="mt-6">
+          <div className="mt-6 space-y-2">
+            <Link
+              href="/why-calendar-notifications-fail"
+              className="block text-green-500 hover:text-green-400 transition-colors text-sm font-medium"
+            >
+              Why calendar notifications fail even when settings are correct →
+            </Link>
             <Link
               href="/calendar-notifications-vs-alarms"
-              className="text-green-500 hover:text-green-400 transition-colors text-sm font-medium"
+              className="block text-green-500 hover:text-green-400 transition-colors text-sm font-medium"
             >
-              Read more: Calendar notifications vs alarms explained →
+              Calendar notifications vs alarms — full breakdown →
             </Link>
           </div>
         </div>
@@ -391,8 +397,8 @@ export default function Page() {
             Stop missing meetings.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            Download OnTimer and turn your Google Calendar and Outlook events into persistent alarms
-            that actually get your attention.
+            Download OnTimer and replace passive calendar notifications with alarms that demand a
+            response before every meeting, flight, and appointment.
           </p>
           <div className="mt-8">
             <AppStoreCTA location="best_alarm_app_final_cta" />

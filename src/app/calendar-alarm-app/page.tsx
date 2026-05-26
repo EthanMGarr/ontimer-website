@@ -3,21 +3,21 @@ import Link from "next/link";
 import { AndroidWaitlistButton, AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Best Calendar Alarm App for Google & Outlook (iPhone)",
+  title: "Calendar Alarm App for iPhone — What It Is and How It Works",
   description:
-    "OnTimer is a calendar alarm app for iPhone that turns Google Calendar and Microsoft Outlook events into persistent alarms — not notifications that disappear.",
+    "A calendar alarm app turns your Google Calendar and Outlook events into alarms requiring acknowledgment — not passive notifications that disappear. Here's what OnTimer does and why it works.",
   alternates: { canonical: "https://www.ontimer.app/calendar-alarm-app" },
   openGraph: {
-    title: "Best Calendar Alarm App for Google & Outlook (iPhone)",
+    title: "Calendar Alarm App for iPhone — What It Is and How It Works",
     description:
-      "Turn your Google Calendar and Outlook events into persistent alarms. OnTimer is the calendar alarm app built for iPhone.",
+      "A calendar alarm app turns your Google Calendar and Outlook events into alarms requiring acknowledgment — not passive notifications that disappear.",
     url: "https://www.ontimer.app/calendar-alarm-app",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Best Calendar Alarm App for Google & Outlook (iPhone)",
+    title: "Calendar Alarm App for iPhone — What It Is and How It Works",
     description:
-      "Turn your Google Calendar and Outlook events into persistent alarms. OnTimer is the calendar alarm app built for iPhone.",
+      "A calendar alarm app turns your Google Calendar and Outlook events into alarms requiring acknowledgment — not passive notifications that disappear.",
   },
 };
 
@@ -132,13 +132,15 @@ export default function CalendarAlarmApp() {
             iPhone · Google Calendar &amp; Microsoft Outlook
           </p>
           <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl leading-tight">
-            Best Calendar Alarm App for{" "}
+            Calendar Alarm App for{" "}
             <span className="text-green-500">Google &amp; Outlook</span>
           </h1>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
-            OnTimer turns your Google Calendar and Microsoft Outlook events into persistent
-            alarms on iPhone — not notifications that disappear. Every meeting, every event,
-            every appointment gets an alarm that stays on your screen until you act.
+            Google Calendar and Outlook send notifications. Notifications disappear whether or
+            not you act on them. A calendar alarm app does something different: it fires an
+            alert that demands a response before it stops. OnTimer is that app — it connects
+            to your existing calendars and fires an interruptive alarm for every event,
+            automatically.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <AppStoreCTA location="calendar_alarm_app_hero" />
@@ -154,9 +156,10 @@ export default function CalendarAlarmApp() {
           <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-6">
             <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
             <p className="text-zinc-200 leading-relaxed">
-              <strong className="text-white">OnTimer is the best calendar alarm app for iPhone</strong> if you use Google Calendar
-              or Microsoft Outlook and need reminders that can&apos;t be ignored. It connects to your existing
-              calendars and fires persistent alarms for every event — automatically, without manual configuration per meeting.
+              <strong className="text-white">A calendar alarm app bridges the gap between your schedule and being interrupted at the right moment.</strong>{" "}
+              Unlike a calendar notification — which informs without interrupting — a calendar alarm requires
+              acknowledgment before it stops. OnTimer connects to Google Calendar and Outlook and fires these
+              high-attention alarms automatically for every event, with no per-event setup.
             </p>
           </div>
         </div>
@@ -219,9 +222,15 @@ export default function CalendarAlarmApp() {
               </div>
             ))}
           </div>
-          <div className="mt-6">
-            <Link href="/calendar-notifications-vs-alarms" className="text-green-500 hover:text-green-400 transition-colors text-sm font-medium">
-              Full breakdown: Calendar notifications vs alarms →
+          <div className="mt-4 rounded-lg border border-zinc-800 bg-zinc-900/50 px-5 py-3 text-sm text-zinc-400">
+            <strong className="text-zinc-300">The core problem:</strong> notifications are designed to inform without interrupting. For time-critical events, that design is backwards.
+          </div>
+          <div className="mt-4 space-y-2">
+            <Link href="/why-calendar-notifications-fail" className="block text-green-500 hover:text-green-400 transition-colors text-sm font-medium">
+              Why calendar notifications fail — the full explanation →
+            </Link>
+            <Link href="/calendar-notifications-vs-alarms" className="block text-green-500 hover:text-green-400 transition-colors text-sm font-medium">
+              Calendar notifications vs alarms →
             </Link>
           </div>
         </div>
@@ -291,7 +300,7 @@ export default function CalendarAlarmApp() {
             {[
               { n: 1, title: "Connects to your calendar", body: "Links to Google Calendar and Microsoft Outlook — including multiple accounts." },
               { n: 2, title: "Monitors your schedule", body: "Automatically detects upcoming events and prepares alarms in advance." },
-              { n: 3, title: "Fires a persistent alarm", body: "Before each meeting, triggers an alarm that stays on your screen until dismissed." },
+              { n: 3, title: "Fires an interruptive alarm", body: "Before each meeting, triggers an alarm that stays on your screen and requires an explicit dismiss or snooze before it stops." },
             ].map(({ n, title, body }) => (
               <div key={n} className="flex gap-6">
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-green-500 text-sm font-black text-black">{n}</div>
@@ -340,12 +349,13 @@ export default function CalendarAlarmApp() {
           <h2 className="text-xl font-black tracking-tight text-white">Related Guides</h2>
           <ul className="mt-6 space-y-3">
             {[
+              { href: "/why-calendar-notifications-fail", label: "Why Calendar Notifications Fail (And What Actually Works)" },
+              { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working? Why Reminders Fail — and What Fixes It" },
               { href: "/turn-calendar-events-into-alarms", label: "How to Turn Calendar Events Into Real Alarms" },
               { href: "/persistent-calendar-reminders", label: "How to Make Calendar Reminders Persistent" },
               { href: "/calendar-notifications-vs-alarms", label: "Calendar Notifications vs Alarms" },
               { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
               { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
-              { href: "/adhd-time-blindness-tools", label: "ADHD Time Blindness Tools" },
             ].map(({ href, label }) => (
               <li key={href}>
                 <Link href={href} className="text-green-500 hover:text-green-400 transition-colors text-sm">{label} →</Link>

@@ -3,14 +3,14 @@ import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Meeting Reminder App for iPhone: Alarms, Not Pings",
+  title: "Meeting Reminder App for iPhone — Alarms That Actually Work",
   description:
-    "OnTimer turns calendar reminders into real alarms so you never miss meetings, Zoom calls, or appointments again.",
+    "Most missed meetings happen after the reminder fires — not before. OnTimer replaces passive calendar notifications with interruptive alarms that demand acknowledgment before every meeting.",
   alternates: { canonical: "https://www.ontimer.app/meeting-reminder-app" },
   openGraph: {
-    title: "Meeting Reminder App for iPhone: Alarms, Not Pings",
+    title: "Meeting Reminder App for iPhone — Alarms That Actually Work",
     description:
-      "OnTimer turns calendar reminders into real alarms so you never miss meetings, Zoom calls, or appointments again.",
+      "Most missed meetings happen after the reminder fires — not before. OnTimer replaces passive calendar notifications with interruptive alarms for every meeting.",
     url: "https://www.ontimer.app/meeting-reminder-app",
     type: "website",
   },
@@ -81,75 +81,113 @@ export default function MeetingReminderApp() {
       />
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden pb-20 pt-24 md:pt-32">
+      <section className="relative overflow-hidden pb-16 pt-20 md:pt-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.15),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl">
-            Meeting Reminder App That Turns Calendar Events Into{" "}
-            <span className="text-green-500">Real Alarms</span>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
+            Google Calendar · Outlook · iPhone
+          </p>
+          <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl leading-tight">
+            Meeting Reminder App
+            <br />
+            <span className="text-green-500">That Fires Alarms, Not Pings</span>
           </h1>
-          <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
-            Most calendar apps rely on simple notifications to remind you about
-            meetings. These notifications are easy to swipe away or ignore.
-            OnTimer is a calendar alarm app that turns your calendar events into
-            persistent alarms so meetings never sneak up on you.
+          <p className="mt-5 text-lg text-zinc-400 leading-relaxed">
+            Most missed meetings don&apos;t happen because the reminder never fired. They happen
+            because the reminder fired, you saw it, and you didn&apos;t act in time. OnTimer
+            replaces dismissible calendar notifications with interruptive alarms that stay on
+            your screen until you respond.
           </p>
           <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
             <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
             <p className="text-zinc-200 leading-relaxed">
-              A meeting reminder app that fires persistent alarms — not passive notifications — works significantly better for preventing missed meetings. Passive notifications disappear on their own; persistent alarms stay on screen and require active dismissal, making them impossible to miss even during focused work. OnTimer connects to Google Calendar and Outlook and creates these alarms automatically for every event.
+              <strong className="text-white">Most missed meetings happen after the reminder fires — not before.</strong>{" "}
+              Passive notifications disappear whether or not you act on them. OnTimer
+              connects to Google Calendar and Outlook and fires an interruptive alarm before
+              each event — one that demands acknowledgment and doesn&apos;t go away until you respond.
+              No per-meeting setup required.
             </p>
           </div>
           <div className="mt-8">
-            <AppStoreCTA />
+            <AppStoreCTA location="meeting_reminder_app_hero" />
           </div>
+          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft 365 / Outlook</p>
         </div>
       </section>
 
       {/* ── WHY CALENDAR REMINDERS FAIL ── */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-20">
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Why Calendar Reminders Fail
+            Why Meeting Reminders Fail — Even When They Work
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              Calendar notifications often fail because they are passive. When
-              you&apos;re focused on work or switching between tasks, a small
-              notification is easy to miss. Many professionals discover they are
-              late to meetings simply because they dismissed the reminder without
-              realizing it.
+              Calendar notifications are passive. They appear at the top of your screen for a few
+              seconds, then disappear — whether or not you acted on them. In a focused work session,
+              that window is often not enough.
             </p>
+            <p>
+              You might see the notification, register what it says, and decide to finish the thing
+              you&apos;re in the middle of before switching. The notification disappears. Nothing
+              interrupts you again. The meeting starts without you.
+            </p>
+            <p>
+              This isn&apos;t a willpower problem. It&apos;s a design problem.{" "}
+              <strong className="text-white">Notifications inform. They don&apos;t interrupt.</strong>{" "}
+              For time-critical events — especially client meetings, interviews, or back-to-back
+              calls — inform is not enough.
+            </p>
+          </div>
+          <div className="mt-6">
+            <Link
+              href="/why-calendar-notifications-fail"
+              className="text-green-500 hover:text-green-400 transition-colors text-sm font-medium"
+            >
+              Why calendar notifications fail by design — the full breakdown →
+            </Link>
           </div>
         </div>
       </section>
 
       {/* ── HOW ONTIMER FIXES THIS ── */}
-      <section className="py-24">
+      <section className="border-t border-zinc-800 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             How OnTimer Fixes This
           </h2>
           <p className="mt-6 text-zinc-400 leading-relaxed">
-            OnTimer is a calendar alarm app that connects to your calendar and
-            creates a real alarm before your meeting begins. Instead of a quiet
-            notification, you receive an alert that is designed to get your
-            attention.
+            OnTimer connects to your Google Calendar and Microsoft 365 / Outlook and fires an
+            alarm before each event. Not a notification — an alarm. The distinction matters:
           </p>
-          <p className="mt-4 text-zinc-400">Key benefits include:</p>
-          <ul className="mt-4 space-y-3">
+          <div className="mt-8 space-y-4">
             {[
-              "Persistent alarms before meetings",
-              "Multiple calendar support",
-              "Business hours filtering",
-              "Time-to-leave alerts based on location and traffic",
-            ].map((item) => (
-              <li key={item} className="flex items-start gap-3 text-zinc-300">
-                <span className="mt-1 flex-shrink-0 text-green-500">•</span>
-                {item}
-              </li>
+              {
+                title: "Stays on screen until dismissed",
+                body: "The alarm doesn't disappear after 4 seconds. It remains on your screen, plays audio, and requires an explicit dismiss or snooze before it stops. You can't passively ignore it.",
+              },
+              {
+                title: "Fires automatically for every meeting",
+                body: "Connect your calendar once. OnTimer monitors your schedule and fires alarms automatically before each event — no configuration per meeting, no manual alarm-setting.",
+              },
+              {
+                title: "Works across Google and Microsoft accounts",
+                body: "Link Google Calendar (personal or Workspace) and Microsoft 365 / Outlook simultaneously. Multiple accounts from each provider are supported.",
+              },
+              {
+                title: "Adjustable lead time",
+                body: "Set whether the alarm fires 5, 10, 15, or 30 minutes before the event. Adjust based on whether you need commute time or just transition time.",
+              },
+            ].map(({ title, body }) => (
+              <div key={title} className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+                <p className="font-semibold text-white">{title}</p>
+                <p className="mt-1 text-sm text-zinc-400 leading-relaxed">{body}</p>
+              </div>
             ))}
-          </ul>
+          </div>
+          <div className="mt-8">
+            <AppStoreCTA location="meeting_reminder_app_solution" />
+          </div>
         </div>
       </section>
 
@@ -242,86 +280,29 @@ export default function MeetingReminderApp() {
         </div>
       </section>
 
-      {/* ── RELATED GUIDES CALLOUT ── */}
-      <section className="border-t border-zinc-800 py-12">
-        <div className="mx-auto max-w-3xl space-y-4 px-4 sm:px-6">
-          <p className="text-zinc-400 leading-relaxed">
-            If you need to figure out when to leave for the airport, try our{" "}
-            <Link
-              href="/airport-time-to-leave-calculator"
-              className="text-green-500 hover:text-green-400 transition-colors"
-            >
-              Airport Time-to-Leave Calculator
-            </Link>
-            {" "}— it estimates your exact departure time based on traffic, security time, bags, and how you&apos;re getting there.
-          </p>
-          <p className="text-zinc-400 leading-relaxed">
-            If your alarm recently failed to fire, read{" "}
-            <Link
-              href="/alarm-didnt-go-off-late-for-work"
-              className="text-green-500 hover:text-green-400 transition-colors"
-            >
-              Alarm Didn&apos;t Go Off? How to Build a Fail-Safe Reminder System
-            </Link>
-            {" "}for a step-by-step fix.
-          </p>
-          <p className="text-zinc-400 leading-relaxed">
-            If you&apos;ve been charged for a missed appointment, see{" "}
-            <Link
-              href="/missed-appointment-fee-how-to-prevent-no-shows"
-              className="text-green-500 hover:text-green-400 transition-colors"
-            >
-              Missed Appointment Fee? How to Prevent Costly No-Shows
-            </Link>
-            {" "}for a practical prevention system.
-          </p>
-          <p className="text-zinc-400 leading-relaxed">
-            If your calendar notifications aren&apos;t firing reliably, see{" "}
-            <Link
-              href="/calendar-notifications-not-working"
-              className="text-green-500 hover:text-green-400 transition-colors"
-            >
-              Calendar Notifications Not Working
-            </Link>
-            {" "}for eight targeted fixes.
-          </p>
-          <p className="text-zinc-400 leading-relaxed">
-            For a complete guide on building a reliable reminder system, read{" "}
-            <Link
-              href="/why-calendar-reminders-fail"
-              className="text-green-500 hover:text-green-400 transition-colors"
-            >
-              Why Calendar Reminders Fail
-            </Link>
-            {" "}and{" "}
-            <Link
-              href="/how-to-never-miss-a-meeting"
-              className="text-green-500 hover:text-green-400 transition-colors"
-            >
-              How to Never Miss a Meeting
-            </Link>
-            .
-          </p>
-          <p className="text-zinc-400 leading-relaxed">
-            Need a reminder that works specifically for Zoom calls? See the{" "}
-            <Link
-              href="/zoom-meeting-reminder"
-              className="text-green-500 hover:text-green-400 transition-colors"
-            >
-              Zoom Meeting Reminder That Won&apos;t Let You Miss the Call
-            </Link>
-            {" "}for a Zoom-specific setup guide.
-          </p>
-          <p className="text-zinc-400 leading-relaxed">
-            Comparing options?{" "}
-            <Link
-              href="/best-meeting-reminder-app"
-              className="text-green-500 hover:text-green-400 transition-colors"
-            >
-              Best Meeting Reminder App for iPhone
-            </Link>
-            {" "}breaks down what separates a solid meeting reminder from a basic notification.
-          </p>
+      {/* ── RELATED GUIDES ── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-xl font-black tracking-tight text-white">Related Guides</h2>
+          <ul className="mt-6 space-y-3">
+            {[
+              { href: "/why-calendar-notifications-fail", label: "Why Calendar Notifications Fail (And What Actually Works)" },
+              { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working? Why Reminders Fail — and What Fixes It" },
+              { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
+              { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Notifications Fail" },
+              { href: "/turn-calendar-events-into-alarms", label: "How to Turn Calendar Events Into Real Alarms" },
+              { href: "/best-meeting-reminder-app", label: "Best Meeting Reminder App for iPhone" },
+              { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
+              { href: "/zoom-meeting-reminder", label: "Zoom Meeting Reminder That Won't Let You Miss the Call" },
+              { href: "/alarm-didnt-go-off-late-for-work", label: "Alarm Didn't Go Off? Build a Fail-Safe Reminder System" },
+            ].map(({ href, label }) => (
+              <li key={href}>
+                <Link href={href} className="text-green-500 hover:text-green-400 transition-colors text-sm">
+                  {label} →
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -330,23 +311,15 @@ export default function MeetingReminderApp() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-2xl px-4 text-center sm:px-6">
           <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
-            Never miss a meeting again.
+            Reminders that don&apos;t let you drift.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            Download OnTimer on the App Store and never miss a meeting again.
+            Replace passive calendar notifications with alarms that demand acknowledgment before every meeting.
           </p>
           <div className="mt-8">
-            <AppStoreCTA />
+            <AppStoreCTA location="meeting_reminder_app_final_cta" />
           </div>
-          <p className="mt-6 text-sm text-zinc-400">
-            Also read:{" "}
-            <Link
-              href="/why-calendar-reminders-fail"
-              className="text-green-500 hover:text-green-400"
-            >
-              Why Calendar Reminders Fail
-            </Link>
-          </p>
+          <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar &amp; Microsoft Outlook</p>
         </div>
       </section>
     </>

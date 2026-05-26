@@ -146,15 +146,16 @@ const steps = [
 ];
 
 const popularGuides = [
+  { label: "Why Calendar Notifications Fail (And What Actually Works)", href: "/why-calendar-notifications-fail" },
   { label: "The Last 5 Minutes Problem: Why Notifications Fail", href: "/last-5-minutes-problem" },
   { label: "Why Notifications Fail (And Persistent Alarms Work Better)", href: "/why-notifications-fail" },
+  { label: "Calendar Notifications Not Working? Why Reminders Fail", href: "/calendar-notifications-not-working" },
   { label: "Turn Calendar Events Into Alarms", href: "/turn-calendar-events-into-alarms" },
   { label: "Best Calendar Alarm App for Google & Outlook", href: "/best-calendar-alarm-app" },
   { label: "Persistent Calendar Reminders", href: "/persistent-calendar-reminders" },
   { label: "Calendar Notifications vs Alarms", href: "/calendar-notifications-vs-alarms" },
   { label: "Why Calendar Reminders Fail", href: "/why-calendar-reminders-fail" },
   { label: "ADHD Time Blindness Tools", href: "/adhd-time-blindness-tools" },
-  { label: "Never Be Late to Meetings", href: "/never-be-late-to-meetings" },
 ];
 
 const medicationGuides = [
@@ -673,8 +674,8 @@ export default function Home() {
             <p className="mt-5 text-sm font-semibold text-white">Start here:</p>
             <ul className="mt-3 space-y-2">
               {[
+                { label: "Why Calendar Notifications Fail", href: "/why-calendar-notifications-fail" },
                 { label: "The Last 5 Minutes Problem", href: "/last-5-minutes-problem" },
-                { label: "Why Notifications Fail", href: "/why-notifications-fail" },
                 { label: "Turn Calendar Events Into Alarms", href: "/turn-calendar-events-into-alarms" },
                 { label: "What Time Should I Leave", href: "/what-time-should-i-leave" },
               ].map(({ label, href }) => (

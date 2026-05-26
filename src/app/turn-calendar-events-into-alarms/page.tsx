@@ -153,9 +153,9 @@ export default function Page() {
             <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
             <p className="text-zinc-200 leading-relaxed">
               <strong className="text-white">To turn calendar events into real alarms:</strong> use OnTimer. It connects
-              to your Google or Outlook calendar, detects every upcoming event, and fires a persistent alarm before
-              each one — not a notification that disappears, but an alert that stays on your screen until you dismiss it.
-              No manual setup per meeting. Your calendar is the source of truth.
+              to your Google or Outlook calendar, detects every upcoming event, and fires an interruptive alarm before
+              each one — not a notification that disappears, but an alert that stays on your screen and demands a
+              response before it stops. No manual setup per meeting. Your calendar is the source of truth.
             </p>
           </div>
         </div>
@@ -179,8 +179,17 @@ export default function Page() {
             </p>
             <p>
               The problem isn&apos;t that you forgot the meeting. The problem is that the alert
-              fired and nothing forced you to act on it.
+              fired and nothing forced you to act on it.{" "}
+              <strong className="text-white">Notifications inform. They don&apos;t interrupt.</strong>
             </p>
+          </div>
+          <div className="mt-6">
+            <Link
+              href="/why-calendar-notifications-fail"
+              className="text-green-500 hover:text-green-400 transition-colors text-sm font-medium"
+            >
+              Why calendar notifications fail — the full breakdown →
+            </Link>
           </div>
 
           <div className="mt-10 overflow-hidden rounded-2xl border border-zinc-800">
