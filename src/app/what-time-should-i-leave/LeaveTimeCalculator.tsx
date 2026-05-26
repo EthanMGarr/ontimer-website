@@ -1,25 +1,10 @@
-/// Leave Time Calculator — interactive client component.
-///
-/// ## Purpose
-/// Calculates when a user should leave to arrive on time at a destination.
-///
-/// ## Include
-/// - Destination + origin with PlaceAutocomplete
-/// - Arrival date/time pickers
-/// - Travel mode selector (Driving/Walking/Transit)
-/// - Buffer and prep-time pill selectors
-/// - Google Routes API integration via /api/travel-time
-/// - Manual travel time fallback
-///
-/// ## Don't Include
-/// - Page-level SEO, structured data (handled in page.tsx)
-/// - Business logic outside leave-time calculation
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 type TravelMode = "DRIVE" | "WALK" | "TRANSIT";
 
@@ -40,6 +25,8 @@ interface TravelTimeResponse {
   error?: string;
 }
 
+// ─── API ──────────────────────────────────────────────────────────────────────
+
 async function fetchTravelTime(
   origin: string,
   destination: string,
@@ -58,6 +45,8 @@ async function fetchTravelTime(
   return body;
 }
 
+// ─── Analytics ────────────────────────────────────────────────────────────────
+
 function track(name: string, params?: Record<string, string | number>) {
   if (typeof window === "undefined") return;
   const g = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
@@ -65,27 +54,30 @@ function track(name: string, params?: Record<string, string | number>) {
   g("event", name, { page_path: window.location.pathname, ...params });
 }
 
+// ─── Formatting ───────────────────────────────────────────────────────────────
+
 function fmtTime(d: Date) {
   return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 }
+
 function fmtDate(d: Date) {
   return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
 }
 
+// ─── UI Primitives ────────────────────────────────────────────────────────────
+
 function FieldLabel({ children }: { children: React.ReactNode }) {
-  return <p className="mb-2 text-sm font-semibold text-zinc-300">{children}</p>;
+  return <p className="mb-1.5 text-xs font-semibold text-zinc-400">{children}</p>;
 }
 
 function PillSelector({
   options,
   value,
   onChange,
-  formatLabel,
 }: {
   options: number[];
   value: number;
   onChange: (v: number) => void;
-  formatLabel?: (v: number) => string;
 }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -94,13 +86,14 @@ function PillSelector({
           key={opt}
           type="button"
           onClick={() => onChange(opt)}
-          className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+          aria-label={opt === 0 ? "None" : `${opt} minutes`}
+          className={`rounded-full px-3.5 py-1 text-sm font-medium transition-colors ${
             value === opt
               ? "bg-green-500 text-black"
               : "border border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white"
           }`}
         >
-          {formatLabel ? formatLabel(opt) : opt === 0 ? "None" : `${opt} min`}
+          {opt === 0 ? "None" : `${opt} min`}
         </button>
       ))}
     </div>
@@ -123,7 +116,7 @@ function SegmentedControl<T extends string>({
           key={opt.value}
           type="button"
           onClick={() => onChange(opt.value)}
-          className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+          className={`rounded-full px-3.5 py-1 text-sm font-medium transition-colors ${
             value === opt.value
               ? "bg-green-500 text-black"
               : "border border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white"
@@ -136,24 +129,56 @@ function SegmentedControl<T extends string>({
   );
 }
 
+// ─── Skeleton placeholder ─────────────────────────────────────────────────────
+
+function SkeletonResult() {
+  return (
+    <div className="rounded-xl border border-zinc-800 bg-zinc-800/40 p-5">
+      <p className="text-sm font-semibold text-white">Your leave time will appear here</p>
+      <p className="mt-1 text-xs text-zinc-500">Fill in your destination and arrival time.</p>
+      <div className="mt-5 space-y-3 border-t border-zinc-800 pt-4">
+        <div className="h-3 w-12 animate-pulse rounded bg-zinc-700" />
+        <div className="h-14 w-40 animate-pulse rounded-lg bg-zinc-700" />
+        <div className="h-3 w-24 animate-pulse rounded bg-zinc-700" />
+        <div className="space-y-2.5 border-t border-zinc-800 pt-3">
+          {["travel", "buffer", "parking"].map((key) => (
+            <div key={key} className="flex items-center justify-between">
+              <div className="h-3 w-20 animate-pulse rounded bg-zinc-700" />
+              <div className="h-3 w-14 animate-pulse rounded bg-zinc-700" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const TRAVEL_MODE_KEY = "leaveCalc_travelMode";
+
 const inputClass =
-  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
 
 function defaultArrival() {
-  const d = new Date(Date.now() + 2 * 60 * 60 * 1000);
-  const mins = d.getMinutes();
+  const today = new Date().toLocaleDateString("en-CA");
+  const upcoming = new Date(Date.now() + 2 * 60 * 60 * 1000);
+  const mins = upcoming.getMinutes();
   const remainder = mins % 15;
-  if (remainder !== 0) d.setMinutes(mins + (15 - remainder), 0, 0);
+  if (remainder !== 0) upcoming.setMinutes(mins + (15 - remainder), 0, 0);
   return {
-    date: d.toLocaleDateString("en-CA"),
-    time: d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
+    date: today,
+    time: upcoming.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
   };
 }
 
+// ─── Main component ───────────────────────────────────────────────────────────
+
 export default function LeaveTimeCalculator() {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toLocaleDateString("en-CA");
   const { date: defaultDate, time: defaultTime } = defaultArrival();
 
+  // Form state
   const [destination, setDestination] = useState("");
   const [origin, setOrigin] = useState("");
   const [arrivalDate, setArrivalDate] = useState(defaultDate);
@@ -161,22 +186,70 @@ export default function LeaveTimeCalculator() {
   const [travelMode, setTravelMode] = useState<TravelMode>("DRIVE");
   const [buffer, setBuffer] = useState(10);
   const [prepTime, setPrepTime] = useState(0);
+
+  // Assumptions panel
+  const [showAssumptions, setShowAssumptions] = useState(false);
+  const [showManualTravel, setShowManualTravel] = useState(false);
   const [manualTravelMinutes, setManualTravelMinutes] = useState("");
 
+  // Calculation state
   const [isCalculating, setIsCalculating] = useState(false);
   const [result, setResult] = useState<CalculatorResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const hasRouteInputs =
-    origin.trim().length >= 2 && destination.trim().length >= 2;
+  // Mobile: form starts expanded; collapses after first result
+  const [formExpanded, setFormExpanded] = useState(true);
+
+  const assumptionsRef = useRef<HTMLDivElement>(null);
+
+  // Derived
+  const isFormValid = destination.trim().length >= 2 && arrivalTime.length > 0;
+  const hasRouteInputs = origin.trim().length >= 2 && destination.trim().length >= 2;
+  // Show route hint when one address is filled but the other is empty
+  const showRouteHint = destination.trim().length >= 2 && origin.trim().length === 0;
+
+  // Restore travel mode from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(TRAVEL_MODE_KEY) as TravelMode;
+    if (["DRIVE", "WALK", "TRANSIT"].includes(saved)) setTravelMode(saved);
+  }, []);
+
+  // Clear stale result whenever any input that affects the calculation changes
+  useEffect(() => {
+    setResult(null);
+    setError(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [destination, origin, arrivalDate, arrivalTime, travelMode, buffer, prepTime]);
+
+  // Collapse form on mobile after result appears
+  useEffect(() => {
+    if (result && typeof window !== "undefined" && window.innerWidth < 1024) {
+      setFormExpanded(false);
+    }
+  }, [result]);
+
+  function handleTravelModeChange(mode: TravelMode) {
+    setTravelMode(mode);
+    localStorage.setItem(TRAVEL_MODE_KEY, mode);
+  }
+
+  function handleSwap() {
+    const tmp = destination;
+    setDestination(origin);
+    setOrigin(tmp);
+  }
+
+  function handleCustomize() {
+    setFormExpanded(true);
+    setShowAssumptions(true);
+    setTimeout(() => {
+      assumptionsRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 50);
+  }
 
   async function handleCalculate() {
+    if (!isFormValid) return;
     setError(null);
-
-    if (!arrivalDate || !arrivalTime) {
-      setError("Enter the date and time you need to arrive.");
-      return;
-    }
 
     const [year, month, day] = arrivalDate.split("-").map(Number);
     const [hour, minute] = arrivalTime.split(":").map(Number);
@@ -203,7 +276,7 @@ export default function LeaveTimeCalculator() {
           track("quota_fallback_used");
         } else {
           setError(
-            "Could not estimate travel time. Enter it manually below."
+            "Could not estimate travel time. Open timing assumptions to enter minutes manually."
           );
           setIsCalculating(false);
           return;
@@ -215,7 +288,7 @@ export default function LeaveTimeCalculator() {
       const manual = parseInt(manualTravelMinutes, 10);
       if (isNaN(manual) || manual < 0) {
         setError(
-          "Enter your starting location and destination, or enter travel time manually below."
+          "Add a starting location for automatic travel time, or enter minutes manually in timing assumptions."
         );
         return;
       }
@@ -241,246 +314,432 @@ export default function LeaveTimeCalculator() {
     });
   }
 
+  const travelModeLabel = { DRIVE: "drive", WALK: "walk", TRANSIT: "transit" }[travelMode];
+  const recipeStep = (n: number) => (
+    <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-zinc-700 text-[11px] font-bold text-zinc-400">
+      {n}
+    </span>
+  );
+
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 sm:p-8">
-      <div className="grid gap-10 lg:grid-cols-2">
-        {/* ── Inputs ── */}
-        <div className="space-y-7">
-          {/* Locations */}
-          <div className="space-y-4">
-            <div>
-              <FieldLabel>Destination</FieldLabel>
-              <PlaceAutocomplete
-                value={destination}
-                onChange={setDestination}
-                placeholder="Enter destination address or place"
-                inputClassName={inputClass}
-              />
-            </div>
-            <div>
-              <FieldLabel>Starting location</FieldLabel>
-              <PlaceAutocomplete
-                value={origin}
-                onChange={setOrigin}
-                placeholder="Enter your starting address"
-                inputClassName={inputClass}
-              />
-            </div>
-          </div>
+    <>
+      <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6">
+        {/*
+          DOM order: results first, then inputs.
+          On mobile (single col): results appear above form.
+          On desktop (lg:grid-cols-2): lg:order-* swaps them — form left, results right.
+        */}
+        <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
 
-          {/* Arrival date + time */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <FieldLabel>Arrival date</FieldLabel>
-              <input
-                type="date"
-                value={arrivalDate}
-                min={today}
-                onChange={(e) => setArrivalDate(e.target.value)}
-                className={`${inputClass} [color-scheme:dark]`}
-              />
-            </div>
-            <div>
-              <FieldLabel>When do you need to arrive?</FieldLabel>
-              <input
-                type="time"
-                value={arrivalTime}
-                onChange={(e) => setArrivalTime(e.target.value)}
-                className={`${inputClass} [color-scheme:dark]`}
-              />
-            </div>
-          </div>
+          {/* ══ Results ══════════════════════════════════════════════════════════ */}
+          <div className="lg:order-2 lg:sticky lg:top-6 lg:self-start">
+            {result ? (
+              <div className="rounded-xl border border-zinc-700 bg-zinc-800/80 p-5 transition-all duration-300">
 
-          {/* Travel mode */}
-          <div>
-            <FieldLabel>Travel mode</FieldLabel>
-            <SegmentedControl
-              options={[
-                { value: "DRIVE", label: "Driving" },
-                { value: "WALK", label: "Walking" },
-                { value: "TRANSIT", label: "Transit" },
-              ]}
-              value={travelMode}
-              onChange={setTravelMode}
-            />
-          </div>
-
-          {/* Buffer */}
-          <div>
-            <FieldLabel>Extra buffer before arrival</FieldLabel>
-            <PillSelector
-              options={[0, 5, 10, 15, 20, 30]}
-              value={buffer}
-              onChange={setBuffer}
-            />
-          </div>
-
-          {/* Prep time */}
-          <div>
-            <FieldLabel>
-              Extra time for parking, walking in, or check-in{" "}
-              <span className="font-normal text-zinc-400">(optional)</span>
-            </FieldLabel>
-            <PillSelector
-              options={[0, 5, 10, 15, 20, 30]}
-              value={prepTime}
-              onChange={setPrepTime}
-            />
-          </div>
-
-          {/* Manual travel time */}
-          <div>
-            {hasRouteInputs ? (
-              <>
-                <FieldLabel>Estimated travel time</FieldLabel>
-                <p className="mb-2 text-xs text-zinc-400">
-                  Estimated automatically from your locations. Override if needed.
+                {/* Hero */}
+                <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  Leave by
                 </p>
-                <input
-                  type="number"
-                  min="0"
-                  max="600"
-                  placeholder="Or enter minutes manually (optional)"
-                  value={manualTravelMinutes}
-                  onChange={(e) => setManualTravelMinutes(e.target.value)}
-                  className={inputClass}
-                />
-              </>
+                <p
+                  className="mt-0.5 text-6xl font-black leading-none text-green-500"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
+                  {fmtTime(result.leaveTime)}
+                </p>
+                <p className="mt-1.5 text-sm text-zinc-400">{fmtDate(result.leaveTime)}</p>
+
+                {/* Ordered recipe */}
+                <ol className="mt-5 space-y-2.5 border-t border-zinc-800 pt-4" aria-label="Leave-time breakdown">
+                  <li className="flex items-center gap-3 text-sm">
+                    <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-green-500/20 text-[11px] font-bold text-green-400">
+                      1
+                    </span>
+                    <span className="font-semibold text-white">
+                      Leave by {fmtTime(result.leaveTime)}
+                    </span>
+                  </li>
+
+                  <li className="flex items-center gap-3 text-sm">
+                    {recipeStep(2)}
+                    <span className="text-zinc-300">
+                      {result.travelMinutes} min {travelModeLabel}
+                      {result.travelSource === "google" && (
+                        <span className="ml-1.5 inline-flex items-center rounded-full bg-green-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-green-400">
+                          {result.hasTrafficData ? "live traffic" : "estimated"}
+                        </span>
+                      )}
+                    </span>
+                  </li>
+
+                  {result.bufferMinutes > 0 && (
+                    <li className="flex items-center gap-3 text-sm">
+                      {recipeStep(3)}
+                      <span className="text-zinc-300">
+                        {result.bufferMinutes} min personal buffer
+                      </span>
+                    </li>
+                  )}
+
+                  {result.prepMinutes > 0 && (
+                    <li className="flex items-center gap-3 text-sm">
+                      {recipeStep(result.bufferMinutes > 0 ? 4 : 3)}
+                      <span className="text-zinc-300">
+                        {result.prepMinutes} min parking / walk-in
+                      </span>
+                    </li>
+                  )}
+                </ol>
+
+                {/* Customize link */}
+                <button
+                  type="button"
+                  onClick={handleCustomize}
+                  className="mt-4 flex w-full items-center justify-between rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="text-zinc-400">⚙</span>
+                    <span>Customize timing assumptions</span>
+                  </span>
+                  <span className="text-xs text-zinc-500">
+                    Drive time, buffer, or walk-in different? Edit →
+                  </span>
+                </button>
+
+                {/* App Store CTA */}
+                <div className="mt-4 border-t border-zinc-800 pt-4">
+                  <p className="text-sm font-bold text-white">Get this alert automatically.</p>
+                  <p className="mt-1 text-xs leading-relaxed text-zinc-400">
+                    OnTimer fires a real alarm — sound and haptics — when it&apos;s time to
+                    leave. Not a notification you&apos;ll swipe away.
+                  </p>
+                  <div className="mt-3">
+                    <AppStoreButton size="sm" location="leave_calculator_result" />
+                  </div>
+                </div>
+              </div>
             ) : (
-              <>
-                <FieldLabel>Travel time (minutes)</FieldLabel>
-                <input
-                  type="number"
-                  min="0"
-                  max="600"
-                  placeholder="e.g. 25"
-                  value={manualTravelMinutes}
-                  onChange={(e) => setManualTravelMinutes(e.target.value)}
-                  className={inputClass}
-                />
-                <p className="mt-1.5 text-xs text-zinc-400">
-                  Enter a starting location and destination above for an automatic estimate.
-                </p>
-              </>
+              <SkeletonResult />
             )}
           </div>
 
-          {error && (
-            <p className="rounded-lg border border-red-900/50 bg-red-950/30 px-4 py-3 text-sm text-red-400">
-              {error}
-            </p>
-          )}
+          {/* ══ Inputs ════════════════════════════════════════════════════════════ */}
+          <div className="lg:order-1 flex flex-col gap-5">
 
-          <button
-            type="button"
-            onClick={handleCalculate}
-            disabled={isCalculating}
-            className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isCalculating ? "Estimating travel time…" : "Calculate leave time →"}
-          </button>
-        </div>
+            {/* Mobile accordion toggle — hidden on desktop */}
+            <button
+              type="button"
+              className="flex w-full items-center justify-between rounded-lg border border-zinc-800 bg-zinc-800/50 px-4 py-3 text-sm font-semibold text-zinc-300 transition-colors hover:bg-zinc-800 lg:hidden"
+              onClick={() => setFormExpanded(!formExpanded)}
+              aria-expanded={formExpanded}
+              aria-controls="calculator-form"
+            >
+              <span>{result ? "Adjust inputs" : "Enter trip details"}</span>
+              <span
+                className={`text-xs text-zinc-500 transition-transform duration-200 ${
+                  formExpanded ? "rotate-180" : ""
+                }`}
+              >
+                ▾
+              </span>
+            </button>
 
-        {/* ── Results ── */}
-        <div className="flex flex-col">
-          {result ? (
-            <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-6">
-              <div className="border-b border-zinc-700 pb-5">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                  Leave by
-                </p>
-                <p className="text-5xl font-black text-green-500">
-                  {fmtTime(result.leaveTime)}
-                </p>
-                <p className="mt-1 text-sm text-zinc-400">{fmtDate(result.leaveTime)}</p>
+            {/* Subtle shadow divider on mobile when form is collapsible */}
+            <div className="h-px bg-zinc-800 shadow-[0_2px_8px_rgba(0,0,0,0.5)] lg:hidden" />
+
+            <div
+              id="calculator-form"
+              className={`space-y-5 ${formExpanded ? "block" : "hidden lg:block"}`}
+            >
+
+              {/* Destination + swap + origin */}
+              <div>
+                <FieldLabel>Destination</FieldLabel>
+                <PlaceAutocomplete
+                  value={destination}
+                  onChange={setDestination}
+                  placeholder="Where are you going?"
+                  inputClassName={inputClass}
+                />
+
+                <div className="flex items-center justify-center py-1.5">
+                  <button
+                    type="button"
+                    onClick={handleSwap}
+                    className="flex items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-800 px-3 py-1 text-xs font-medium text-zinc-400 transition-colors hover:border-zinc-600 hover:text-white"
+                    aria-label="Swap origin and destination"
+                  >
+                    <SwapIcon />
+                    Swap
+                  </button>
+                </div>
+
+                <FieldLabel>
+                  Starting location{" "}
+                  <span className="font-normal text-zinc-500">(optional)</span>
+                </FieldLabel>
+                <PlaceAutocomplete
+                  value={origin}
+                  onChange={setOrigin}
+                  placeholder="Your starting address"
+                  inputClassName={inputClass}
+                />
+
+                {showRouteHint && (
+                  <p className="mt-1.5 text-xs text-amber-400/90">
+                    Can&apos;t find a route. Enter minutes manually or add a missing address.
+                  </p>
+                )}
               </div>
 
-              <div className="space-y-3 pt-4">
-                <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-400">Arrive by</p>
-                  <p className="text-sm font-semibold text-white">
-                    {fmtTime(result.arrivalTime)}
-                  </p>
+              {/* Arrival date + time */}
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <FieldLabel>Arrival date</FieldLabel>
+                  <input
+                    type="date"
+                    value={arrivalDate}
+                    min={today}
+                    onChange={(e) => setArrivalDate(e.target.value)}
+                    className={`${inputClass} [color-scheme:dark]`}
+                  />
                 </div>
-                <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-400">Travel time</p>
-                  <div className="text-right">
-                    <p className="text-sm font-semibold text-white">
-                      {result.travelMinutes} min
-                    </p>
-                    {result.travelSource === "google" && (
-                      <p className="text-xs text-green-500">
-                        {result.hasTrafficData ? "live traffic" : "estimated"}
-                      </p>
+                <div>
+                  <FieldLabel>Arrival time</FieldLabel>
+                  <input
+                    type="time"
+                    value={arrivalTime}
+                    onChange={(e) => setArrivalTime(e.target.value)}
+                    className={`${inputClass} [color-scheme:dark]`}
+                  />
+                </div>
+              </div>
+
+              {/* Travel mode */}
+              <div>
+                <FieldLabel>Travel mode</FieldLabel>
+                <SegmentedControl
+                  options={[
+                    { value: "DRIVE", label: "Driving" },
+                    { value: "WALK", label: "Walking" },
+                    { value: "TRANSIT", label: "Transit" },
+                  ]}
+                  value={travelMode}
+                  onChange={handleTravelModeChange}
+                />
+              </div>
+
+              {/* Buffer */}
+              <div>
+                <FieldLabel>
+                  Extra buffer <strong className="text-zinc-300">you</strong> like to have
+                </FieldLabel>
+                <PillSelector
+                  options={[0, 5, 10, 15, 20, 30]}
+                  value={buffer}
+                  onChange={setBuffer}
+                />
+              </div>
+
+              {/* Prep / walk-in time */}
+              <div>
+                <FieldLabel>
+                  Parking / walk-in time{" "}
+                  <span className="font-normal text-zinc-500">(optional)</span>
+                </FieldLabel>
+                <PillSelector
+                  options={[0, 5, 10, 15, 20, 30]}
+                  value={prepTime}
+                  onChange={setPrepTime}
+                />
+              </div>
+
+              {/* Timing assumptions — collapsed by default */}
+              <div ref={assumptionsRef} id="timing-assumptions">
+                <button
+                  type="button"
+                  onClick={() => setShowAssumptions(!showAssumptions)}
+                  className="flex w-full items-center justify-between rounded-lg border border-zinc-700 bg-zinc-800/70 px-4 py-2.5 text-sm font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white"
+                  aria-expanded={showAssumptions}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="text-zinc-500">⚙</span>
+                    <span>
+                      {showAssumptions
+                        ? "Hide timing assumptions"
+                        : "Customize timing assumptions"}
+                    </span>
+                  </span>
+                  <span
+                    className={`text-xs text-zinc-500 transition-transform duration-200 ${
+                      showAssumptions ? "rotate-180" : ""
+                    }`}
+                  >
+                    ▾
+                  </span>
+                </button>
+
+                {showAssumptions && (
+                  <div className="mt-3 rounded-lg border border-zinc-700/50 bg-zinc-800/40 p-4">
+                    <FieldLabel>Travel time</FieldLabel>
+                    {hasRouteInputs ? (
+                      !showManualTravel ? (
+                        <div>
+                          <p className="mb-1.5 text-xs text-zinc-400">
+                            Estimated automatically from your locations.
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setShowManualTravel(true)}
+                            className="text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
+                          >
+                            ✏︎ Edit travel time manually
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              min="0"
+                              max="600"
+                              placeholder="e.g. 25"
+                              value={manualTravelMinutes}
+                              onChange={(e) => setManualTravelMinutes(e.target.value)}
+                              className={`${inputClass} flex-1`}
+                              aria-label="Travel time in minutes"
+                            />
+                            <span className="text-sm text-zinc-400">min</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowManualTravel(false);
+                              setManualTravelMinutes("");
+                            }}
+                            className="text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
+                          >
+                            Use automatic estimate instead
+                          </button>
+                        </div>
+                      )
+                    ) : (
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min="0"
+                            max="600"
+                            placeholder="e.g. 25"
+                            value={manualTravelMinutes}
+                            onChange={(e) => setManualTravelMinutes(e.target.value)}
+                            className={`${inputClass} flex-1`}
+                            aria-label="Travel time in minutes"
+                          />
+                          <span className="text-sm text-zinc-400">min</span>
+                        </div>
+                        <p className="text-xs text-zinc-500">
+                          Add a starting location above for an automatic estimate.
+                        </p>
+                      </div>
                     )}
                   </div>
+                )}
+              </div>
+
+              {/* Error */}
+              {error && (
+                <div className="rounded-lg border border-red-900/50 bg-red-950/30 px-4 py-3">
+                  <p className="text-sm text-red-400">{error}</p>
                 </div>
-                {result.bufferMinutes > 0 && (
-                  <div className="flex items-baseline justify-between">
-                    <p className="text-xs text-zinc-400">Buffer</p>
-                    <p className="text-sm font-semibold text-white">
-                      {result.bufferMinutes} min
-                    </p>
+              )}
+
+              {/* CTA — sticky on desktop; swaps to App Store after result */}
+              <div className="lg:sticky lg:bottom-4 bg-zinc-900 pb-1 pt-1">
+                {result ? (
+                  <div>
+                    <AppStoreButton
+                      size="sm"
+                      location="leave_calculator_sticky_cta"
+                      className="w-full justify-center"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setResult(null);
+                        setError(null);
+                      }}
+                      className="mt-2 w-full text-center text-xs text-zinc-500 transition-colors hover:text-zinc-400"
+                    >
+                      ← Recalculate
+                    </button>
                   </div>
-                )}
-                {result.prepMinutes > 0 && (
-                  <div className="flex items-baseline justify-between">
-                    <p className="text-xs text-zinc-400">Parking / check-in</p>
-                    <p className="text-sm font-semibold text-white">
-                      {result.prepMinutes} min
-                    </p>
-                  </div>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleCalculate}
+                      disabled={!isFormValid || isCalculating}
+                      className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {isCalculating ? "Estimating travel time…" : "Calculate leave time →"}
+                    </button>
+                    {!isFormValid && (
+                      <p className="mt-1.5 text-center text-xs text-zinc-500">
+                        Add a destination &amp; time to enable.
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
-
-              <p className="mt-4 border-t border-zinc-700 pt-4 text-xs leading-relaxed text-zinc-400">
-                To arrive by {fmtTime(result.arrivalTime)} with {result.travelMinutes}{" "}
-                min of travel
-                {result.bufferMinutes > 0
-                  ? `, a ${result.bufferMinutes}-min buffer`
-                  : ""}
-                {result.prepMinutes > 0
-                  ? `, and ${result.prepMinutes} min for parking/check-in`
-                  : ""}
-                , leave by {fmtTime(result.leaveTime)}.
-              </p>
-
-              <div className="mt-5 rounded-xl border border-green-900/40 bg-green-950/20 p-4">
-                <p className="mb-1 text-sm font-semibold text-green-400">
-                  Want automatic reminders so you know exactly when to leave?
-                </p>
-                <p className="mb-3 text-xs leading-relaxed text-zinc-400">
-                  OnTimer helps you stay on time with stronger alerts before important
-                  events.
-                </p>
-                <AppStoreButton size="sm" location="leave_calculator_result" />
-              </div>
             </div>
-          ) : (
-            <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-zinc-700 p-10 text-center">
-              <div className="mb-4 text-4xl">🗺️</div>
-              <p className="text-base font-semibold text-zinc-300">
-                Your leave time will appear here
-              </p>
-              <p className="mt-1.5 text-sm text-zinc-400">
-                Fill in your destination and arrival time, then click Calculate.
-              </p>
-              <ul className="mt-6 w-full max-w-xs space-y-2.5 text-left">
-                {[
-                  "Real travel time based on traffic",
-                  "Accounts for buffer and check-in time",
-                  "Exact time to leave so you are not late",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-xs text-zinc-400">
-                    <span className="mt-0.5 flex-shrink-0 text-zinc-400">•</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          </div>
+
         </div>
+
+        {/* Spacer so mobile sticky bar doesn't obscure bottom content */}
+        {result && <div className="h-16 lg:hidden" />}
       </div>
-    </div>
+
+      {/* ── Mobile sticky leave-time bar ── */}
+      {result && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-800 bg-zinc-950/95 px-4 py-3 backdrop-blur-sm lg:hidden">
+          <div className="mx-auto flex max-w-lg items-center justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-medium text-zinc-500">Leave by</p>
+              <p
+                className="text-2xl font-black leading-tight text-green-500"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                {fmtTime(result.leaveTime)}
+              </p>
+            </div>
+            <AppStoreButton
+              size="sm"
+              location="leave_calculator_mobile_sticky"
+              placement="above"
+            />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function SwapIcon() {
+  return (
+    <svg
+      className="h-3.5 w-3.5"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M5 3L2 6l3 3M2 6h10M11 13l3-3-3-3M14 10H4" />
+    </svg>
   );
 }
