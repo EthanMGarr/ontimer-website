@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
+import { WhyNotificationsFailGraphic } from "@/components/WhyNotificationsFailGraphic";
 
 export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/why-calendar-notifications-fail" },
@@ -143,6 +144,19 @@ export default function Page() {
               minute. The notification has already disappeared. Nothing interrupts you again.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Framework Graphic */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="mb-4 text-sm text-zinc-500 leading-relaxed">
+            Most reminder failures happen after the notification is seen — not before. The graphic below maps the behavioral gap that passive alerts cannot close.
+          </p>
+          <WhyNotificationsFailGraphic
+            priority
+            caption="Standard notifications inform. Interruptive alarms close the gap between awareness and action."
+          />
         </div>
       </section>
 

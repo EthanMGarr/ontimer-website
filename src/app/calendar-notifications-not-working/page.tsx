@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
+import { WhyNotificationsFailGraphic } from "@/components/WhyNotificationsFailGraphic";
 
 export const metadata: Metadata = {
   title: "Calendar Notifications Not Working? Why Reminders Fail — and What Fixes It",
@@ -175,6 +176,18 @@ export default function CalendarNotificationsNotWorking() {
               Why calendar notifications fail by design — the full explanation →
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Framework Graphic */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="mb-4 text-sm text-zinc-500 leading-relaxed">
+            The framework below illustrates both failure paths — the technical gap on the left, and the behavioral gap that no settings fix can close.
+          </p>
+          <WhyNotificationsFailGraphic
+            caption="Notifications are passive by design. Alarms require acknowledgment before they stop."
+          />
         </div>
       </section>
 

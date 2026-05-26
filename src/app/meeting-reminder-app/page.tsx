@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
+import { WhyNotificationsFailGraphic } from "@/components/WhyNotificationsFailGraphic";
 
 export const metadata: Metadata = {
   title: "Meeting Reminder App for iPhone — Alarms That Actually Work",
@@ -147,6 +148,18 @@ export default function MeetingReminderApp() {
               Why calendar notifications fail by design — the full breakdown →
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Framework Graphic */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="mb-4 text-sm text-zinc-500 leading-relaxed">
+            The gap between seeing a reminder and acting on it is where most missed meetings happen.
+          </p>
+          <WhyNotificationsFailGraphic
+            caption="Interruptive alarms close the execution gap that passive notifications leave open."
+          />
         </div>
       </section>
 

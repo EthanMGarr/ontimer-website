@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
+import { WhyNotificationsFailGraphic } from "@/components/WhyNotificationsFailGraphic";
 
 export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/calendar-notifications-vs-alarms" },
@@ -129,6 +130,18 @@ export default function Page() {
               notifications. OnTimer turns those events into alarms.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Framework Graphic */}
+      <section className="border-t border-zinc-800 py-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="mb-4 text-sm text-zinc-500 leading-relaxed">
+            The problem is rarely awareness — it&apos;s follow-through. Notifications inform. Alarms interrupt behavior until you respond.
+          </p>
+          <WhyNotificationsFailGraphic
+            caption="The behavioral gap between seeing a notification and acting on it is where most missed meetings happen."
+          />
         </div>
       </section>
 
