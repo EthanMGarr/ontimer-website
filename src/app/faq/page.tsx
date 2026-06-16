@@ -10,6 +10,54 @@ const faqJsonLd = {
   mainEntity: [
     {
       "@type": "Question",
+      name: "What is a calendar alarm app?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "A calendar alarm app connects to your existing calendar and fires persistent, interruptive alarms before each event — not passive notifications that disappear on their own. Unlike standard calendar reminders from Google Calendar or Outlook, calendar alarm alerts stay on your screen until you actively dismiss them. OnTimer is a calendar alarm app for iPhone.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How do I turn Google Calendar events into alarms on iPhone?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Google Calendar doesn't natively support alarms — it sends notifications that disappear automatically. OnTimer connects to Google Calendar and turns every event into a persistent alarm on iPhone. Download OnTimer, connect your Google account, and every calendar event gets an alarm automatically — no per-event setup required.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How do I turn Outlook calendar events into alarms on iPhone?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Microsoft Outlook's built-in reminders are notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook calendars and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What is the difference between a calendar notification and a calendar alarm?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "A notification informs you — it appears briefly and disappears whether or not you act on it. An alarm interrupts you — it stays on screen and requires a response before it stops. Google Calendar and Outlook send notifications. OnTimer turns those calendar events into alarms.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What is the Last 5 Minutes Problem?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "The Last 5 Minutes Problem is the gap between knowing about a meeting and actually acting in time. You had the reminder set. You saw it. You planned to act in a moment. The notification disappeared, and the window closed before you did anything. Persistent alarms close this gap by staying on screen until you respond.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What does 'persistent alarm' mean?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "A persistent alarm stays on your screen and continues alerting until you actively dismiss or snooze it — unlike a standard notification, which disappears after a few seconds whether or not you acted. OnTimer fires persistent alarms for every calendar event, requiring explicit acknowledgment before they stop.",
+      },
+    },
+    {
+      "@type": "Question",
       name: "Is OnTimer free?",
       acceptedAnswer: {
         "@type": "Answer",
@@ -124,6 +172,81 @@ const faqJsonLd = {
 };
 
 const faqs: { question: string; answer: React.ReactNode }[] = [
+  {
+    question: "What is a calendar alarm app?",
+    answer: (
+      <>
+        A calendar alarm app connects to your existing calendar and fires persistent, interruptive
+        alarms before each event — not passive notifications that disappear on their own. Unlike
+        standard calendar reminders from Google Calendar or Outlook, these alarms stay on your screen
+        until you actively dismiss them.{" "}
+        <Link href="/calendar-alarm-app" className="text-green-500 hover:text-green-400 transition-colors">
+          OnTimer is a calendar alarm app for iPhone
+        </Link>.
+      </>
+    ),
+  },
+  {
+    question: "How do I turn Google Calendar events into alarms on iPhone?",
+    answer: (
+      <>
+        Google Calendar doesn&apos;t natively support alarms — it sends notifications that disappear
+        automatically. OnTimer connects to Google Calendar and{" "}
+        <Link href="/turn-calendar-events-into-alarms" className="text-green-500 hover:text-green-400 transition-colors">
+          turns every event into a persistent alarm on iPhone
+        </Link>.
+        Download OnTimer, connect your Google account, and every calendar event gets an alarm
+        automatically — no per-event setup required.
+      </>
+    ),
+  },
+  {
+    question: "How do I turn Outlook calendar events into alarms on iPhone?",
+    answer:
+      "Microsoft Outlook's built-in reminders are notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook calendars and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
+  },
+  {
+    question: "What is the difference between a calendar notification and a calendar alarm?",
+    answer: (
+      <>
+        A notification informs you — it appears briefly and disappears whether or not you act on it.
+        An alarm interrupts you — it stays on screen and requires a response before it stops. Google
+        Calendar and Outlook send notifications.{" "}
+        <Link href="/calendar-notifications-vs-alarms" className="text-green-500 hover:text-green-400 transition-colors">
+          OnTimer turns those calendar events into alarms
+        </Link>.
+      </>
+    ),
+  },
+  {
+    question: "What is the Last 5 Minutes Problem?",
+    answer: (
+      <>
+        The{" "}
+        <Link href="/last-5-minutes-problem" className="text-green-500 hover:text-green-400 transition-colors">
+          Last 5 Minutes Problem
+        </Link>{" "}
+        is the gap between knowing about a meeting and actually acting in time. You had the reminder
+        set. You saw it. You planned to act in a moment. The notification disappeared, and the window
+        closed before you did anything. Persistent alarms close this gap by staying on screen until
+        you respond.
+      </>
+    ),
+  },
+  {
+    question: "What does 'persistent alarm' mean?",
+    answer: (
+      <>
+        A persistent alarm stays on your screen and continues alerting until you actively dismiss or
+        snooze it — unlike a standard notification, which disappears after a few seconds whether or not
+        you acted. OnTimer fires{" "}
+        <Link href="/persistent-calendar-reminders" className="text-green-500 hover:text-green-400 transition-colors">
+          persistent alarms for every calendar event
+        </Link>,
+        requiring explicit acknowledgment before they stop.
+      </>
+    ),
+  },
   {
     question: "Is OnTimer free?",
     answer:

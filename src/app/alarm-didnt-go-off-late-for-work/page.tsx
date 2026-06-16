@@ -408,7 +408,7 @@ export default function AlarmDidntGoOff() {
             Never be late again.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            Try OnTimer — the meeting reminder system designed to make sure you&apos;re never late again.
+            Try OnTimer — the calendar alarm app designed to make sure you&apos;re never late again.
           </p>
           <div className="mt-8">
             <AppStoreCTA location="alarm-didnt-go-off" />

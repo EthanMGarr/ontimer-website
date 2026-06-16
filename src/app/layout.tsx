@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s | OnTimer",
   },
   description:
-    "OnTimer connects to your calendar and automatically sets alarms before meetings so you're never late again. Free iPhone app.",
+    "OnTimer is a calendar alarm app for iPhone. Connect Google Calendar or Outlook and every event gets a persistent alarm — not a notification that disappears. Free download.",
   keywords: [
     "OnTimer",
     "never be late",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     url: "https://www.ontimer.app",
     siteName: "OnTimer",
     description:
-      "OnTimer connects to your calendar and automatically sets alarms before meetings so you're never late again. Free iPhone app.",
+      "OnTimer is a calendar alarm app for iPhone. Connect Google Calendar or Outlook and every event gets a persistent alarm — not a notification that disappears.",
     images: [
       {
         url: "/images/NeverBeLateAgain.png",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     description:
-      "OnTimer connects to your calendar and automatically sets alarms before meetings so you're never late again. Free iPhone app.",
+      "OnTimer is a calendar alarm app for iPhone. Connect Google Calendar or Outlook and every event gets a persistent alarm — not a notification that disappears.",
     images: ["/images/NeverBeLateAgain.png"],
   },
   robots: {

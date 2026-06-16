@@ -27,9 +27,11 @@ const softwareJsonLd = {
   name: "OnTimer",
   operatingSystem: "iOS",
   applicationCategory: "ProductivityApplication",
+  applicationSubCategory: "Calendar Alarm App",
   description:
-    "OnTimer is a calendar alarm app that connects to Google Calendar and Microsoft Outlook and turns every event into a persistent alarm on iPhone.",
+    "OnTimer is a calendar alarm app for iPhone. It connects to Google Calendar and Microsoft Outlook and turns every event into a persistent alarm — not a notification that disappears.",
   url: "https://ontimer.app/calendar-alarm-app",
+  keywords: "calendar alarm app, turn calendar events into alarms, persistent calendar alarms, Google Calendar alarm, Outlook calendar alarm, meeting alarm app, never miss meetings iPhone",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   author: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
 };
@@ -162,6 +164,32 @@ export default function CalendarAlarmApp() {
               high-attention alarms automatically for every event, with no per-event setup.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* What Is a Calendar Alarm App */}
+      <section className="border-t border-zinc-800 py-14">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            What Is a Calendar Alarm App?
+          </h2>
+          <p className="mt-5 text-zinc-400 leading-relaxed">
+            A calendar alarm app is a mobile app that connects to your existing calendar and converts
+            upcoming events into persistent, interruptive alarms — not the passive push notifications
+            that Google Calendar and Outlook send by default.
+          </p>
+          <p className="mt-4 text-zinc-400 leading-relaxed">
+            Standard calendar notifications are designed to inform without interrupting. They appear
+            briefly at the top of your screen and then disappear — whether or not you saw them, whether
+            or not you acted. A calendar alarm works differently: it stays on your screen, plays audio,
+            and demands an explicit response before it stops.
+          </p>
+          <p className="mt-4 text-zinc-400 leading-relaxed">
+            OnTimer is a calendar alarm app for iPhone. It connects to Google Calendar and Microsoft
+            Outlook and fires a persistent alarm before every scheduled event automatically — with no
+            per-event setup required. Your calendar is the source of truth; OnTimer makes sure you
+            can&apos;t ignore it.
+          </p>
         </div>
       </section>
 

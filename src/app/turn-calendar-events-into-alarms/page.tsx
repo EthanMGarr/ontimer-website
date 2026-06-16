@@ -27,11 +27,43 @@ const softwareJsonLd = {
   name: "OnTimer",
   operatingSystem: "iOS",
   applicationCategory: "ProductivityApplication",
+  applicationSubCategory: "Calendar Alarm App",
   description:
-    "OnTimer turns Google Calendar and Microsoft Outlook calendar events into persistent alarms on iPhone.",
+    "OnTimer turns Google Calendar and Microsoft Outlook calendar events into persistent alarms on iPhone — not notifications that disappear.",
   url: "https://ontimer.app/turn-calendar-events-into-alarms",
+  keywords: "turn calendar events into alarms, Google Calendar alarm, Outlook calendar alarm, calendar alarm app, persistent calendar alarms, meeting alarm iPhone",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   author: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
+};
+
+const howToJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "How to Turn Google Calendar Events Into Alarms on iPhone",
+  description:
+    "Turn Google Calendar and Outlook events into persistent alarms on iPhone using OnTimer.",
+  step: [
+    {
+      "@type": "HowToStep",
+      name: "Download OnTimer",
+      text: "Download OnTimer free from the App Store. It is available for iPhone and requires iOS.",
+    },
+    {
+      "@type": "HowToStep",
+      name: "Connect your calendar",
+      text: "Link your Google Calendar or Microsoft 365 / Outlook account using OAuth. OnTimer reads your calendar — it never stores your credentials.",
+    },
+    {
+      "@type": "HowToStep",
+      name: "Set your lead time",
+      text: "Choose how many minutes before each event you want the alarm to fire — 5, 10, 15, or 30 minutes.",
+    },
+    {
+      "@type": "HowToStep",
+      name: "Receive persistent alarms automatically",
+      text: "Before each calendar event, OnTimer fires a persistent alarm on your iPhone that stays on screen until you dismiss it. No per-event setup required.",
+    },
+  ],
 };
 
 const faqItems = [
@@ -98,6 +130,7 @@ export default function Page() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script

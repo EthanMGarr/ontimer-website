@@ -48,6 +48,34 @@ const faqItems = [
   },
 ];
 
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "How to Make Calendar Reminders Persistent",
+  description:
+    "Standard calendar reminders disappear after a few seconds. Persistent calendar reminders stay on screen until you act. Here's why the difference matters and how to set it up.",
+  author: { "@type": "Organization", name: "OnTimer" },
+  publisher: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
+  datePublished: "2026-04-01",
+  dateModified: "2026-06-01",
+  mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/persistent-calendar-reminders" },
+};
+
+const softwareJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "OnTimer",
+  operatingSystem: "iOS",
+  applicationCategory: "ProductivityApplication",
+  applicationSubCategory: "Calendar Alarm App",
+  description:
+    "OnTimer is a calendar alarm app for iPhone that turns Google Calendar and Microsoft Outlook events into persistent alarms — alerts that stay on your screen until dismissed.",
+  url: "https://ontimer.app/persistent-calendar-reminders",
+  keywords: "persistent calendar reminders, persistent calendar alarms, calendar alarm app, Google Calendar alarm, Outlook persistent reminder",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  author: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
+};
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -75,6 +103,8 @@ const breadcrumbJsonLd = {
 export default function Page() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
@@ -201,8 +231,12 @@ export default function Page() {
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              OnTimer is an iPhone app that connects to your Google Calendar and Microsoft 365 / Outlook
-              calendar. It reads your schedule and fires a persistent alarm before each event.
+              OnTimer is a{" "}
+              <Link href="/calendar-alarm-app" className="text-green-500 hover:text-green-400">
+                calendar alarm app
+              </Link>{" "}
+              for iPhone. It connects to your Google Calendar and Microsoft 365 / Outlook
+              and reads your schedule to fire a persistent alarm before each event.
             </p>
           </div>
           <div className="mt-8 space-y-4">

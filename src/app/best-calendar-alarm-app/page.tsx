@@ -171,6 +171,10 @@ export default function Page() {
               Unlike standard calendar notifications — which disappear automatically, whether or not you act — OnTimer alarms
               stay on your screen until you respond. It works with Google Calendar (personal and Workspace), Microsoft 365, and
               Outlook, and fires alarms for every event automatically with no per-event setup.
+              For a full breakdown of what this category of app does, see{" "}
+              <Link href="/calendar-alarm-app" className="text-green-500 hover:text-green-400">
+                Calendar Alarm App — what it is and how it works
+              </Link>.
             </p>
           </div>
         </div>

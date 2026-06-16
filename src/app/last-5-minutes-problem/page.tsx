@@ -30,6 +30,22 @@ const articleJsonLd = {
   url: "https://www.ontimer.app/last-5-minutes-problem",
   author: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
   publisher: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
+  datePublished: "2026-04-01",
+  dateModified: "2026-06-01",
+  mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/last-5-minutes-problem" },
+};
+
+const definedTermJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "DefinedTerm",
+  name: "The Last 5 Minutes Problem",
+  description:
+    "The Last 5 Minutes Problem is the execution gap between receiving a reminder and acting on it before a deadline passes. Notifications appear and disappear without forcing action; persistent alarms interrupt and demand a response, closing the gap between awareness and action.",
+  inDefinedTermSet: {
+    "@type": "DefinedTermSet",
+    name: "OnTimer Glossary",
+    url: "https://www.ontimer.app/last-5-minutes-problem",
+  },
 };
 
 const faqItems = [
@@ -122,6 +138,7 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(definedTermJsonLd) }} />
 
       {/* Hero */}
       <section className="relative overflow-hidden pb-16 pt-20 md:pt-28">
@@ -332,12 +349,16 @@ export default function Page() {
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              <strong className="text-white">OnTimer</strong> connects to your Google Calendar and
+              <strong className="text-white">OnTimer</strong> is a{" "}
+              <Link href="/calendar-alarm-app" className="text-green-500 hover:text-green-400">
+                calendar alarm app
+              </Link>{" "}
+              for iPhone. It connects to your Google Calendar and
               Microsoft Outlook and turns every event into a{" "}
               <Link href="/persistent-calendar-reminders" className="text-green-500 hover:text-green-400">
                 persistent alarm
               </Link>{" "}
-              on iPhone. Not a notification. An alarm — the kind that stays on your screen until you
+              — not a notification. An alarm that stays on your screen until you
               dismiss it.
             </p>
             <p>

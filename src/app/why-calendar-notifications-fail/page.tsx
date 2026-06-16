@@ -68,7 +68,9 @@ const articleJsonLd = {
   author: { "@type": "Organization", name: "OnTimer" },
   publisher: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
   url: "https://www.ontimer.app/why-calendar-notifications-fail",
-  mainEntityOfPage: "https://www.ontimer.app/why-calendar-notifications-fail",
+  mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/why-calendar-notifications-fail" },
+  datePublished: "2026-04-01",
+  dateModified: "2026-06-01",
 };
 
 const faqJsonLd = {
@@ -440,9 +442,13 @@ export default function Page() {
           </h2>
           <div className="mt-6 text-zinc-400 leading-relaxed">
             <p>
-              OnTimer is an iPhone app that connects to your Google Calendar and Microsoft 365 / Outlook.
-              Instead of relying on the standard notification pipeline, it fires a persistent alarm before
-              each event — the same type of alert as your morning alarm.
+              OnTimer is a{" "}
+              <Link href="/calendar-alarm-app" className="text-green-500 hover:text-green-400">
+                calendar alarm app
+              </Link>{" "}
+              for iPhone. It connects to your Google Calendar and Microsoft 365 / Outlook and, instead of
+              relying on the standard notification pipeline, fires a persistent alarm before each event —
+              the same type of alert as your morning alarm.
             </p>
           </div>
           <div className="mt-8 space-y-4">
