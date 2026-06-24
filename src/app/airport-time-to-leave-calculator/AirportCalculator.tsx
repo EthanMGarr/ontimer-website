@@ -272,7 +272,11 @@ function defaultDeparture() {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export default function AirportCalculator() {
+interface AirportCalculatorProps {
+  initialAirport?: string;
+}
+
+export default function AirportCalculator({ initialAirport = "" }: AirportCalculatorProps) {
   const today = new Date().toISOString().split("T")[0];
   const { date: defaultDate, time: defaultTime } = defaultDeparture();
 
@@ -281,7 +285,7 @@ export default function AirportCalculator() {
   const [departureTime, setDepartureTime] = useState(defaultTime);
   const [flightType, setFlightType] = useState<FlightType>("domestic");
   const [origin, setOrigin] = useState("");
-  const [airport, setAirport] = useState("");
+  const [airport, setAirport] = useState(initialAirport);
 
   // ── Refinement state ────────────────────────────────────────────────────────
   const [showRefinements, setShowRefinements] = useState(false);

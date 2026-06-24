@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
+import { airports } from "@/lib/airports";
 import AirportCalculator from "./AirportCalculator";
 
 export const metadata: Metadata = {
@@ -408,7 +409,24 @@ export default function AirportTimeToLeaveCalculator() {
       {/* ── RELATED LINKS ── */}
       <section className="border-t border-zinc-800 py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="mb-6 text-xl font-bold text-white">Related timing tools</h2>
+          <h2 className="text-2xl font-black text-white">Major airport calculators</h2>
+          <p className="mt-3 text-zinc-400">
+            Start with a calculator preloaded for your airport, then enter your origin and flight time.
+          </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {airports.map((airport) => (
+              <Link
+                key={airport.code}
+                href={`/airport-time-to-leave/${airport.slug}`}
+                className="rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-4 transition-colors hover:border-green-800"
+              >
+                <span className="block text-sm font-semibold text-green-500">{airport.code}</span>
+                <span className="mt-1 block font-bold text-white">{airport.shortName}</span>
+              </Link>
+            ))}
+          </div>
+
+          <h2 className="mb-6 mt-12 text-xl font-bold text-white">Related timing tools</h2>
           <ul className="space-y-3">
             {[
               {
