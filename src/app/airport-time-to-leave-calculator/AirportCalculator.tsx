@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import type { SecurityEstimate } from "@/app/api/security-wait/route";
+import type { CalculatorExample } from "@/lib/travel-locations";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -274,9 +275,22 @@ function defaultDeparture() {
 
 interface AirportCalculatorProps {
   initialAirport?: string;
+  locationCode?: string;
+  example?: CalculatorExample;
 }
 
-export default function AirportCalculator({ initialAirport = "" }: AirportCalculatorProps) {
+const genericExample: CalculatorExample = {
+  eyebrow: "Illustrative example",
+  summary: "1:00 PM flight · driving and parking",
+  leaveTime: "Leave by 8:43 AM",
+  breakdown: ["Personalize the calculator with your route and flight"],
+};
+
+export default function AirportCalculator({
+  initialAirport = "",
+  locationCode,
+  example = genericExample,
+}: AirportCalculatorProps) {
   const today = new Date().toISOString().split("T")[0];
   const { date: defaultDate, time: defaultTime } = defaultDeparture();
 
@@ -382,7 +396,11 @@ export default function AirportCalculator({ initialAirport = "" }: AirportCalcul
         } else {
           track("routes_api_called", { duration_minutes: res.durationMinutes, trigger: "auto" });
         }
-        track("airport_calculator_result_shown", { travel_minutes: res.durationMinutes, trigger: "auto" });
+        track("airport_calculator_result_shown", {
+          travel_minutes: res.durationMinutes,
+          trigger: "auto",
+          ...(locationCode ? { location_code: locationCode } : {}),
+        });
       } catch {
         if (!controller.signal.aborted) {
           const manual = parseInt(manualTravelMinutes, 10);
@@ -548,7 +566,12 @@ export default function AirportCalculator({ initialAirport = "" }: AirportCalcul
       setTravelSource("manual");
       setHasTrafficData(false);
     }
-    track("calculator_used", { flight_type: flightType, arrival_mode: arrivalMode, trigger: "manual" });
+    track("calculator_used", {
+      flight_type: flightType,
+      arrival_mode: arrivalMode,
+      trigger: "manual",
+      ...(locationCode ? { location_code: locationCode } : {}),
+    });
   }
 
   // ── Render ──────────────────────────────────────────────────────────────────
@@ -852,7 +875,10 @@ export default function AirportCalculator({ initialAirport = "" }: AirportCalcul
                       href={buildGCalLink(computedResult.leaveTime, airport)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() => { track("calendar_link_clicked"); setCalendarAdded(true); }}
+                      onClick={() => {
+                        track("calendar_link_clicked", locationCode ? { location_code: locationCode } : undefined);
+                        setCalendarAdded(true);
+                      }}
                       className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-600 bg-zinc-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:border-zinc-500 hover:bg-zinc-600"
                     >
                       <span>📅</span>
@@ -930,13 +956,20 @@ export default function AirportCalculator({ initialAirport = "" }: AirportCalcul
                 <div className="mt-4 border-t border-zinc-800 pt-4">
                   <p className="text-sm font-bold text-white">Get this alert automatically.</p>
                   <p className="mt-1.5 text-xs leading-relaxed text-zinc-400">
-                    OnTimer reads your calendar and fires a real alarm — sound and haptics — when it&apos;s time to leave. Not a notification you&apos;ll swipe away.
+                    OnTimer can use your calendar location to alert you when it&apos;s time to leave,
+                    so you do not have to repeat this calculation next trip. It fires a real alarm
+                    with sound and haptics—not a notification you&apos;ll swipe away.
                   </p>
                   <p className="mt-1 text-[10px] text-zinc-500">
                     Works for flights, meetings, and any calendar event with a location.
                   </p>
                   <div className="mt-3">
-                    <AppStoreButton size="sm" location="airport_calculator_inline" />
+                    <AppStoreButton
+                      size="sm"
+                      location={locationCode
+                        ? `airport_${locationCode.toLowerCase()}_result`
+                        : "airport_calculator_inline"}
+                    />
                   </div>
                 </div>
               </div>
@@ -994,12 +1027,18 @@ export default function AirportCalculator({ initialAirport = "" }: AirportCalcul
                 {/* Example — clearly labeled, not the user's result */}
                 <div className="mt-5 rounded-lg border border-zinc-700/40 bg-zinc-800/60 px-4 py-3">
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
-                    Example result
+                    {example.eyebrow}
                   </p>
-                  <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <span className="text-xs text-zinc-500">1:00 PM · JFK departure</span>
-                    <span className="text-zinc-700">·</span>
-                    <span className="text-sm font-bold text-zinc-400">Leave by 8:43 AM</span>
+                  <div className="mt-2">
+                    <p className="text-xs text-zinc-400">{example.summary}</p>
+                    <p className="mt-1 text-lg font-bold text-zinc-200">{example.leaveTime}</p>
+                    <ul className="mt-2 space-y-1">
+                      {example.breakdown.map((item) => (
+                        <li key={item} className="text-[11px] text-zinc-500">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -1032,7 +1071,13 @@ export default function AirportCalculator({ initialAirport = "" }: AirportCalcul
                 href={buildGCalLink(computedResult.leaveTime, airport)}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => { track("calendar_link_clicked_mobile_sticky"); setCalendarAdded(true); }}
+                onClick={() => {
+                  track(
+                    "calendar_link_clicked_mobile_sticky",
+                    locationCode ? { location_code: locationCode } : undefined
+                  );
+                  setCalendarAdded(true);
+                }}
                 className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-semibold text-white transition-colors active:bg-zinc-700"
               >
                 <span>📅</span>

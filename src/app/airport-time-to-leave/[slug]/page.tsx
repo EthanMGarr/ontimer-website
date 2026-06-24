@@ -2,53 +2,66 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AirportCalculator from "@/app/airport-time-to-leave-calculator/AirportCalculator";
+import LocationSectionTracker from "@/components/LocationSectionTracker";
 import { AppStoreCTA } from "@/components/CTAButton";
-import { airports, getAirport } from "@/lib/airports";
+import {
+  getTravelLocation,
+  indexableTravelLocations,
+} from "@/lib/travel-locations";
 
-interface AirportPageProps {
+interface LocationPageProps {
   params: Promise<{ slug: string }>;
 }
 
 export function generateStaticParams() {
-  return airports.map(({ slug }) => ({ slug }));
+  return indexableTravelLocations.map(({ slug }) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: AirportPageProps): Promise<Metadata> {
-  const airport = getAirport((await params).slug);
-  if (!airport) return {};
+export async function generateMetadata({ params }: LocationPageProps): Promise<Metadata> {
+  const location = getTravelLocation((await params).slug);
+  if (!location || !location.indexable || location.kind !== "airport") {
+    return { robots: { index: false, follow: false } };
+  }
 
-  const title = `${airport.shortName} Time-to-Leave Calculator (${airport.code})`;
-  const description = `Calculate when to leave for ${airport.name} using traffic, TSA estimates, parking, bags and your flight time.`;
-  const url = `https://www.ontimer.app/airport-time-to-leave/${airport.slug}`;
+  const title = `${location.shortName} Time-to-Leave Calculator (${location.code})`;
+  const description = `Calculate when to leave for ${location.name} using traffic, airport transfers, parking, bags and your flight time.`;
+  const url = `https://www.ontimer.app/airport-time-to-leave/${location.slug}`;
 
   return {
     title,
     description,
+    keywords: [],
     alternates: { canonical: url },
+    robots: { index: true, follow: true },
     openGraph: { title, description, url },
     twitter: { title, description },
   };
 }
 
-export default async function AirportPage({ params }: AirportPageProps) {
-  const airport = getAirport((await params).slug);
-  if (!airport) notFound();
+export default async function LocationPage({ params }: LocationPageProps) {
+  const location = getTravelLocation((await params).slug);
+  if (!location || !location.indexable || location.kind !== "airport") notFound();
 
-  const url = `https://www.ontimer.app/airport-time-to-leave/${airport.slug}`;
+  const url = `https://www.ontimer.app/airport-time-to-leave/${location.slug}`;
   const faqItems = [
     {
-      question: `What time should I leave for ${airport.shortName}?`,
-      answer: airport.directAnswer,
+      question: `What time should I leave for ${location.shortName}?`,
+      answer: location.directAnswer,
     },
     {
-      question: `How early should I arrive at ${airport.code}?`,
+      question: `How early should I arrive at ${location.code}?`,
       answer:
-        "A common planning baseline is about 2 hours before a domestic flight and 3 hours before an international flight. Your airline, checked bags, travel date and airport conditions may require more time.",
+        `Use about ${location.airport.domesticArrivalMinutes / 60} hours before a domestic flight and ${location.airport.internationalArrivalMinutes / 60} hours before an international flight as a planning baseline. Add time for parking, rail or terminal transfers, and follow any earlier deadline supplied by your airline.`,
     },
     {
-      question: `Does the ${airport.code} calculator include traffic?`,
+      question: `Does the ${location.code} calculator include traffic?`,
       answer:
-        "Yes. Enter your starting location and flight time to estimate the road trip for your travel window. The result also accounts for airport processing and the arrival method you select.",
+        "Yes. Enter your starting location and flight time to estimate the trip for your travel window. The result also includes airport-processing assumptions and the arrival method you select.",
+    },
+    {
+      question: `How long should I allow for AirTrain at ${location.code}?`,
+      answer:
+        "The Port Authority says terminal-to-terminal AirTrain trips take under 20 minutes. From the airport rail station, its estimates are about 7 minutes to Terminal C, 11 minutes to Terminal B and 20 minutes to Terminal A. Add walking and waiting margin.",
     },
   ];
 
@@ -56,12 +69,13 @@ export default async function AirportPage({ params }: AirportPageProps) {
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
-      name: `${airport.shortName} Time-to-Leave Calculator`,
+      name: `${location.shortName} Time-to-Leave Calculator`,
       applicationCategory: "TravelApplication",
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-      description: `A free calculator for planning when to leave for ${airport.name}.`,
+      description: `A free calculator for planning when to leave for ${location.name}.`,
       url,
+      dateModified: location.reviewedOn,
       author: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
     },
     {
@@ -84,13 +98,14 @@ export default async function AirportPage({ params }: AirportPageProps) {
           name: "Airport Calculator",
           item: "https://www.ontimer.app/airport-time-to-leave-calculator",
         },
-        { "@type": "ListItem", position: 3, name: airport.shortName, item: url },
+        { "@type": "ListItem", position: 3, name: location.shortName, item: url },
       ],
     },
   ];
 
   return (
     <>
+      <LocationSectionTracker locationCode={location.code} />
       {jsonLd.map((item, index) => (
         <script
           key={index}
@@ -104,9 +119,13 @@ export default async function AirportPage({ params }: AirportPageProps) {
           <ol className="flex flex-wrap items-center gap-1.5 text-xs text-zinc-400">
             <li><Link href="/" className="hover:text-zinc-200">Home</Link></li>
             <li aria-hidden="true">›</li>
-            <li><Link href="/airport-time-to-leave-calculator" className="hover:text-zinc-200">Airport calculator</Link></li>
+            <li>
+              <Link href="/airport-time-to-leave-calculator" className="hover:text-zinc-200">
+                Airport calculator
+              </Link>
+            </li>
             <li aria-hidden="true">›</li>
-            <li className="text-zinc-300">{airport.code}</li>
+            <li className="text-zinc-300">{location.code}</li>
           </ol>
         </div>
       </nav>
@@ -114,94 +133,142 @@ export default async function AirportPage({ params }: AirportPageProps) {
       <section className="relative overflow-hidden pb-5 pt-6 md:pt-9">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-wider text-green-500">
-            {airport.code} · {airport.city}
-          </p>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <p className="text-sm font-semibold uppercase tracking-wider text-green-500">
+              {location.code} · {location.city}
+            </p>
+            <p className="text-xs text-zinc-500">{location.reviewedLabel}</p>
+          </div>
           <h1 className="mt-2 max-w-4xl text-3xl font-black tracking-tight text-white sm:text-5xl">
             What Time Should I Leave for{" "}
-            <span className="text-green-500">{airport.shortName}?</span>
+            <span className="text-green-500">{location.shortName}?</span>
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-zinc-300">
-            {airport.directAnswer}
+            {location.directAnswer}
           </p>
         </div>
       </section>
 
-      <section id="calculator" className="border-t border-zinc-800 pb-8 pt-4">
+      <section
+        id="calculator"
+        data-location-section="calculator"
+        className="border-t border-zinc-800 pb-8 pt-4"
+      >
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <AirportCalculator initialAirport={airport.calculatorValue} />
+          <AirportCalculator
+            initialAirport={location.calculatorDestination}
+            locationCode={location.code}
+            example={location.calculatorExample}
+          />
         </div>
       </section>
 
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-14">
-        <div className="mx-auto grid max-w-5xl gap-10 px-4 sm:px-6 lg:grid-cols-2">
-          <div>
-            <h2 className="text-2xl font-black text-white">
-              Getting to {airport.code} without losing your buffer
-            </h2>
-            <ul className="mt-5 space-y-4">
-              {airport.roadNotes.map((note) => (
-                <li key={note} className="flex gap-3 leading-relaxed text-zinc-300">
-                  <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-green-500" />
-                  <span>{note}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-2xl font-black text-white">
-              Inside {airport.shortName}
-            </h2>
-            <ul className="mt-5 space-y-4">
-              {airport.airportNotes.map((note) => (
-                <li key={note} className="flex gap-3 leading-relaxed text-zinc-300">
-                  <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-green-500" />
-                  <span>{note}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-14">
+      <section
+        data-location-section="ewr-planning-facts"
+        className="border-t border-zinc-800 bg-zinc-900/50 py-14"
+      >
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white">
-            Example {airport.code} leave-time plans
+          <h2 className="max-w-3xl text-3xl font-black tracking-tight text-white">
+            Newark-specific planning details that change when you should leave
           </h2>
-          <p className="mt-3 max-w-3xl text-zinc-400">
-            These examples show the order of operations. Use the calculator for your actual address, flight and travel date.
+          <p className="mt-3 max-w-3xl leading-relaxed text-zinc-400">
+            These are the extra legs that generic “arrive two hours early” advice misses.
+            Operational details can change, so verify your terminal and travel schedule before departure.
           </p>
-          <div className="mt-7 grid gap-5 md:grid-cols-2">
-            {airport.examples.map((example) => (
-              <article key={example.flight} className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
-                <p className="text-sm font-semibold text-green-500">{example.flight}</p>
-                <h3 className="mt-2 text-lg font-bold text-white">{example.situation}</h3>
-                <p className="mt-3 leading-relaxed text-zinc-400">{example.plan}</p>
+          <div className="mt-8 grid gap-5 lg:grid-cols-3">
+            {location.modules.map((module) => (
+              <article key={module.title} className="rounded-xl border border-zinc-800 bg-zinc-950/70 p-6">
+                <h3 className="text-xl font-bold text-white">{module.title}</h3>
+                <ul className="mt-5 space-y-4">
+                  {module.facts.map((fact) => (
+                    <li key={fact} className="flex gap-3 text-sm leading-relaxed text-zinc-300">
+                      <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-green-500" />
+                      <span>{fact}</span>
+                    </li>
+                  ))}
+                </ul>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="border-y border-zinc-800 bg-zinc-900/50 py-14">
-        <div className="mx-auto grid max-w-5xl gap-10 px-4 sm:px-6 lg:grid-cols-2">
+      <section data-location-section="worked-examples" className="py-14">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white">
+            Worked examples for leaving for {location.code}
+          </h2>
+          <p className="mt-3 max-w-3xl leading-relaxed text-zinc-400">
+            Each example is illustrative, not live traffic guidance. The assumptions are shown so
+            you can see the calculation and replace them with your own details above.
+          </p>
+          <div className="mt-7 grid gap-5 lg:grid-cols-3">
+            {location.workedExamples.map((example) => (
+              <article key={example.title} className="flex flex-col rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+                <p className="text-sm font-semibold text-green-500">{example.title}</p>
+                <h3 className="mt-2 text-lg font-bold text-white">{example.subtitle}</h3>
+                <div className="mt-5">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    Assumptions
+                  </p>
+                  <ul className="mt-2 space-y-2">
+                    {example.assumptions.map((item) => (
+                      <li key={item} className="text-sm leading-relaxed text-zinc-400">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="mt-5 border-t border-zinc-800 pt-5">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    Work backward
+                  </p>
+                  <ol className="mt-2 space-y-2">
+                    {example.calculation.map((item) => (
+                      <li key={item} className="text-sm text-zinc-300">{item}</li>
+                    ))}
+                  </ol>
+                </div>
+                <p className="mt-5 border-t border-zinc-800 pt-5 text-lg font-bold text-white">
+                  {example.result}
+                </p>
+              </article>
+            ))}
+          </div>
+          <p className="mt-6 text-sm text-zinc-500">
+            Traffic and service conditions vary. Use the live calculator for your trip and check
+            official transportation schedules before leaving.
+          </p>
+        </div>
+      </section>
+
+      <section
+        data-location-section="official-sources"
+        className="border-y border-zinc-800 bg-zinc-900/50 py-14"
+      >
+        <div className="mx-auto grid max-w-5xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.2fr_0.8fr]">
           <div>
             <h2 className="text-2xl font-black text-white">
-              Taking transit to {airport.shortName}
+              How to use this page safely
             </h2>
             <div className="mt-5 space-y-4 leading-relaxed text-zinc-300">
-              {airport.transitNotes.map((note) => <p key={note}>{note}</p>)}
+              <p>
+                Stable planning facts—such as terminal names and the existence of the airport rail
+                connection—belong in this guide. Traffic, security waits, airline terminals and
+                service disruptions are volatile, so the calculator or official operator should
+                supply the current answer.
+              </p>
+              <p>
+                Recheck your airline terminal, bag-drop deadline, NJ TRANSIT schedule and AirTrain
+                service on the day you travel.
+              </p>
             </div>
           </div>
           <div>
             <h2 className="text-2xl font-black text-white">Official planning sources</h2>
             <p className="mt-3 text-sm text-zinc-400">
-              Airport details change. Check these official sources before an important trip.
-              Page reviewed June 24, 2026.
+              Facts on this page were checked against these first-party sources. {location.reviewedLabel}.
             </p>
             <ul className="mt-5 space-y-3">
-              {airport.sources.map((source) => (
+              {location.sources.map((source) => (
                 <li key={source.url}>
                   <a
                     href={source.url}
@@ -218,10 +285,10 @@ export default async function AirportPage({ params }: AirportPageProps) {
         </div>
       </section>
 
-      <section className="py-14">
+      <section data-location-section="faq" className="py-14">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white">
-            Frequently asked questions about leaving for {airport.code}
+            Newark Airport leave-time questions
           </h2>
           <div className="mt-7 divide-y divide-zinc-800 border-y border-zinc-800">
             {faqItems.map(({ question, answer }) => (
@@ -232,24 +299,7 @@ export default async function AirportPage({ params }: AirportPageProps) {
             ))}
           </div>
           <div className="mt-10">
-            <AppStoreCTA location={`airport_${airport.code.toLowerCase()}_final`} />
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-12">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <h2 className="text-xl font-bold text-white">Plan another major airport</h2>
-          <div className="mt-5 flex flex-wrap gap-3">
-            {airports.filter(({ code }) => code !== airport.code).map((other) => (
-              <Link
-                key={other.code}
-                href={`/airport-time-to-leave/${other.slug}`}
-                className="rounded-full border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-300 hover:border-green-700 hover:text-white"
-              >
-                {other.code} · {other.shortName}
-              </Link>
-            ))}
+            <AppStoreCTA location={`airport_${location.code.toLowerCase()}_final`} />
           </div>
         </div>
       </section>

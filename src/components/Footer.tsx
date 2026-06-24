@@ -102,7 +102,6 @@ export default function Footer() {
               {[
                 { href: "/airport-time-to-leave-calculator", label: "Airport Calculator"        },
                 { href: "/airport-time-to-leave/newark-ewr", label: "Newark (EWR) Calculator"   },
-                { href: "/airport-time-to-leave/jfk",        label: "JFK Calculator"            },
                 { href: "/what-time-should-i-leave",         label: "Leave-Time Calculator"     },
                 { href: "/wake-up-time-calculator",          label: "Wake-Up Calculator"        },
                 { href: "/airport-theory-calculator",        label: "Airport Theory Calculator" },
