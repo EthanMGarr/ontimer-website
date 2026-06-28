@@ -11,6 +11,8 @@ import type { CalculatorExample } from "@/lib/travel-locations";
 type FlightType = "domestic" | "international";
 type ArrivalMode = "parking" | "rideshare" | "dropoff";
 type TravelSource = "google" | "manual";
+type PlanningMode = "today" | "future";
+type TrafficBasis = "live" | "predicted" | "scheduled" | "none";
 type Confidence = "comfortable" | "tight" | "risk";
 
 interface ComputedResult {
@@ -22,6 +24,8 @@ interface ComputedResult {
   travelMinutes: number;
   travelSource: TravelSource;
   hasTrafficData: boolean;
+  trafficBasis: TrafficBasis;
+  planningMode: PlanningMode;
   confidence: Confidence;
 }
 
@@ -67,6 +71,7 @@ async function fetchSecurityEstimate(
 interface TravelTimeResponse {
   durationMinutes: number;
   hasTrafficData: boolean;
+  trafficBasis: TrafficBasis;
   cacheHit: boolean;
   error?: string;
 }
@@ -122,6 +127,20 @@ function fmtDepartureTime(timeStr: string): string {
   const hour = h % 12 || 12;
   const ampm = h < 12 ? "AM" : "PM";
   return m === 0 ? `${hour} ${ampm}` : `${hour}:${m.toString().padStart(2, "0")} ${ampm}`;
+}
+
+function localDateString(date = new Date()): string {
+  return date.toLocaleDateString("en-CA");
+}
+
+function planningModeForDate(date: string): PlanningMode {
+  return date === localDateString() ? "today" : "future";
+}
+
+function trafficLabel(basis: TrafficBasis, mode: PlanningMode): string {
+  if (basis === "scheduled") return "scheduled route";
+  if (basis === "none") return "estimated route";
+  return mode === "future" || basis === "predicted" ? "expected traffic" : "live traffic";
 }
 
 // ─── Airport display ──────────────────────────────────────────────────────────
@@ -291,11 +310,12 @@ export default function AirportCalculator({
   locationCode,
   example = genericExample,
 }: AirportCalculatorProps) {
-  const today = new Date().toISOString().split("T")[0];
+  const today = localDateString();
   const { date: defaultDate, time: defaultTime } = defaultDeparture();
 
   // ── Form state ──────────────────────────────────────────────────────────────
   const [departureDate, setDepartureDate] = useState(defaultDate);
+  const [planningMode, setPlanningMode] = useState<PlanningMode>(() => planningModeForDate(defaultDate));
   const [departureTime, setDepartureTime] = useState(defaultTime);
   const [flightType, setFlightType] = useState<FlightType>("domestic");
   const [origin, setOrigin] = useState("");
@@ -322,6 +342,7 @@ export default function AirportCalculator({
   const [travelMins, setTravelMins] = useState<number | null>(null);
   const [travelSource, setTravelSource] = useState<TravelSource | null>(null);
   const [hasTrafficData, setHasTrafficData] = useState(false);
+  const [trafficBasis, setTrafficBasis] = useState<TrafficBasis>("none");
   const [isFetchingTravel, setIsFetchingTravel] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -371,6 +392,7 @@ export default function AirportCalculator({
     if (origin.trim().length < 2 || airport.trim().length < 2 || !departureDate || !departureTime) {
       setTravelMins(null);
       setTravelSource(null);
+      setTrafficBasis("none");
       setIsFetchingTravel(false);
       return;
     }
@@ -392,6 +414,7 @@ export default function AirportCalculator({
         setTravelMins(res.durationMinutes);
         setTravelSource("google");
         setHasTrafficData(res.hasTrafficData);
+        setTrafficBasis(res.trafficBasis);
         if (res.cacheHit) {
           track("travel_time_cache_hit", { duration_minutes: res.durationMinutes });
         } else {
@@ -409,9 +432,11 @@ export default function AirportCalculator({
             setTravelMins(manual);
             setTravelSource("manual");
             setHasTrafficData(false);
+            setTrafficBasis("none");
           } else {
             setTravelMins(null);
             setTravelSource(null);
+            setTrafficBasis("none");
           }
           track("quota_fallback_used");
         }
@@ -462,8 +487,18 @@ export default function AirportCalculator({
       : "TSA wait estimates",
     "Parking time",
     flightType === "international" ? "International timing" : "Domestic timing",
-    "Live traffic conditions",
+    planningMode === "future" ? "Expected traffic" : "Live traffic conditions",
   ];
+
+  function handlePlanningModeChange(mode: PlanningMode) {
+    setPlanningMode(mode);
+    if (mode === "today") setDepartureDate(localDateString());
+  }
+
+  function handleDepartureDateChange(date: string) {
+    setDepartureDate(date);
+    setPlanningMode(planningModeForDate(date));
+  }
 
   // ── Computed result ─────────────────────────────────────────────────────────
   const computedResult = useMemo((): ComputedResult | null => {
@@ -500,11 +535,14 @@ export default function AirportCalculator({
       travelMinutes: effectiveTravelMins,
       travelSource: travelSource ?? "manual",
       hasTrafficData,
+      trafficBasis,
+      planningMode,
       confidence: computeConfidence(bufMins, defaultBuffer),
     };
-  }, [departureDate, departureTime, travelMins, travelSource, hasTrafficData,
+  }, [departureDate, departureTime, travelMins, travelSource, hasTrafficData, trafficBasis,
       estimatedSecurityMins, baseBuffer, defaultBuffer, showSecurityOverride,
-      customSecurityMinutes, showBufferOverride, customBuffer, manualTravelMinutes]);
+      customSecurityMinutes, showBufferOverride, customBuffer, manualTravelMinutes,
+      planningMode]);
 
   // ── Airport arrival preview (partial + estimating states) ───────────────────
   const arrivalOnlyPreview = useMemo((): Date | null => {
@@ -549,6 +587,7 @@ export default function AirportCalculator({
         setTravelMins(res.durationMinutes);
         setTravelSource("google");
         setHasTrafficData(res.hasTrafficData);
+        setTrafficBasis(res.trafficBasis);
         track("routes_api_called", { duration_minutes: res.durationMinutes, trigger: "manual" });
       } catch {
         const manual = parseInt(manualTravelMinutes, 10);
@@ -556,6 +595,7 @@ export default function AirportCalculator({
           setTravelMins(manual);
           setTravelSource("manual");
           setHasTrafficData(false);
+          setTrafficBasis("none");
           track("quota_fallback_used");
         } else {
           setError("Could not estimate drive time. Open Adjust assumptions to enter drive time manually.");
@@ -572,6 +612,7 @@ export default function AirportCalculator({
       setTravelMins(manual);
       setTravelSource("manual");
       setHasTrafficData(false);
+      setTrafficBasis("none");
     }
     track("calculator_used", {
       flight_type: flightType,
@@ -612,17 +653,29 @@ export default function AirportCalculator({
               className={`space-y-4 ${formExpanded ? "block" : "hidden lg:block"}`}
             >
 
-            {/* Date + Time */}
+            {/* Planning mode + time */}
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <FieldLabel>Flight date</FieldLabel>
-                <input
-                  type="date"
-                  value={departureDate}
-                  min={today}
-                  onChange={(e) => setDepartureDate(e.target.value)}
-                  className={`${inputClass} [color-scheme:dark]`}
+                <FieldLabel>Planning this trip</FieldLabel>
+                <SegmentedControl
+                  options={[
+                    { value: "today", label: "Today" },
+                    { value: "future", label: "Future date" },
+                  ]}
+                  value={planningMode}
+                  onChange={handlePlanningModeChange}
                 />
+                {planningMode === "future" && (
+                  <div className="mt-3">
+                    <input
+                      type="date"
+                      value={departureDate}
+                      min={today}
+                      onChange={(e) => handleDepartureDateChange(e.target.value)}
+                      className={`${inputClass} [color-scheme:dark]`}
+                    />
+                  </div>
+                )}
               </div>
               <div>
                 <FieldLabel>Departure time</FieldLabel>
@@ -950,7 +1003,7 @@ export default function AirportCalculator({
                           <p className="text-sm font-semibold text-white">{fmtDuration(computedResult.travelMinutes)}</p>
                           {computedResult.travelSource === "google" && (
                             <p className="text-[11px] text-green-500">
-                              {computedResult.hasTrafficData ? "live traffic" : "estimated route"}
+                              {trafficLabel(computedResult.trafficBasis, computedResult.planningMode)}
                             </p>
                           )}
                         </div>
@@ -1031,7 +1084,11 @@ export default function AirportCalculator({
                   <p className="text-7xl font-black leading-none text-zinc-600">—:—</p>
                   <span className="mb-1.5 animate-pulse text-xs text-zinc-500">calculating…</span>
                 </div>
-                <p className="mt-3 text-xs text-zinc-500">Fetching live traffic for your route</p>
+                <p className="mt-3 text-xs text-zinc-500">
+                  {planningMode === "future"
+                    ? "Estimating expected traffic for your trip time"
+                    : "Fetching live traffic for your route"}
+                </p>
                 {arrivalOnlyPreview && (
                   <div className="mt-4 space-y-2 border-t border-zinc-800 pt-4">
                     <div className="flex items-baseline justify-between">
@@ -1056,7 +1113,7 @@ export default function AirportCalculator({
 
                 <div className="mt-4 space-y-2">
                   {[
-                    "Real-time traffic conditions",
+                    planningMode === "future" ? "Expected traffic for your trip time" : "Real-time traffic conditions",
                     "TSA wait estimates for your airport",
                     "Parking and terminal timing",
                     "Domestic vs international buffer",

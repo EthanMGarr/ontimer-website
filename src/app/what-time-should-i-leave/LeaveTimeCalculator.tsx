@@ -7,6 +7,8 @@ import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type TravelMode = "DRIVE" | "WALK" | "TRANSIT";
+type PlanningMode = "today" | "future";
+type TrafficBasis = "live" | "predicted" | "scheduled" | "none";
 
 interface CalculatorResult {
   leaveTime: Date;
@@ -16,11 +18,14 @@ interface CalculatorResult {
   prepMinutes: number;
   travelSource: "google" | "manual";
   hasTrafficData: boolean;
+  trafficBasis: TrafficBasis;
+  planningMode: PlanningMode;
 }
 
 interface TravelTimeResponse {
   durationMinutes: number;
   hasTrafficData: boolean;
+  trafficBasis: TrafficBasis;
   cacheHit: boolean;
   error?: string;
 }
@@ -62,6 +67,20 @@ function fmtTime(d: Date) {
 
 function fmtDate(d: Date) {
   return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+}
+
+function localDateString(date = new Date()): string {
+  return date.toLocaleDateString("en-CA");
+}
+
+function planningModeForDate(date: string): PlanningMode {
+  return date === localDateString() ? "today" : "future";
+}
+
+function trafficLabel(basis: TrafficBasis, mode: PlanningMode): string {
+  if (basis === "scheduled") return "scheduled route";
+  if (basis === "none") return "estimated";
+  return mode === "future" || basis === "predicted" ? "expected traffic" : "live traffic";
 }
 
 // ─── UI Primitives ────────────────────────────────────────────────────────────
@@ -158,7 +177,7 @@ const inputClass =
   "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
 
 function defaultArrival() {
-  const today = new Date().toLocaleDateString("en-CA");
+  const today = localDateString();
   const upcoming = new Date(Date.now() + 2 * 60 * 60 * 1000);
   const mins = upcoming.getMinutes();
   const remainder = mins % 15;
@@ -172,13 +191,14 @@ function defaultArrival() {
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function LeaveTimeCalculator() {
-  const today = new Date().toLocaleDateString("en-CA");
+  const today = localDateString();
   const { date: defaultDate, time: defaultTime } = defaultArrival();
 
   // Form state
   const [destination, setDestination] = useState("");
   const [origin, setOrigin] = useState("");
   const [arrivalDate, setArrivalDate] = useState(defaultDate);
+  const [planningMode, setPlanningMode] = useState<PlanningMode>(() => planningModeForDate(defaultDate));
   const [arrivalTime, setArrivalTime] = useState(defaultTime);
   const [travelMode, setTravelMode] = useState<TravelMode>("DRIVE");
   const [buffer, setBuffer] = useState(10);
@@ -236,6 +256,16 @@ export default function LeaveTimeCalculator() {
     setOrigin(tmp);
   }
 
+  function handlePlanningModeChange(mode: PlanningMode) {
+    setPlanningMode(mode);
+    if (mode === "today") setArrivalDate(localDateString());
+  }
+
+  function handleArrivalDateChange(date: string) {
+    setArrivalDate(date);
+    setPlanningMode(planningModeForDate(date));
+  }
+
   function handleCustomize() {
     setFormExpanded(true);
     setShowAssumptions(true);
@@ -255,6 +285,7 @@ export default function LeaveTimeCalculator() {
     let travelMinutes: number;
     let travelSource: "google" | "manual" = "manual";
     let hasTrafficData = false;
+    let trafficBasis: TrafficBasis = "none";
 
     if (hasRouteInputs) {
       setIsCalculating(true);
@@ -263,6 +294,7 @@ export default function LeaveTimeCalculator() {
         travelMinutes = res.durationMinutes;
         travelSource = "google";
         hasTrafficData = res.hasTrafficData;
+        trafficBasis = res.trafficBasis;
         track(res.cacheHit ? "travel_time_cache_hit" : "routes_api_called", {
           duration_minutes: travelMinutes,
         });
@@ -304,6 +336,8 @@ export default function LeaveTimeCalculator() {
       prepMinutes: prepTime,
       travelSource,
       hasTrafficData,
+      trafficBasis,
+      planningMode,
     });
     track("leave_calculator_used", {
       travel_mode: travelMode,
@@ -358,7 +392,7 @@ export default function LeaveTimeCalculator() {
                       {result.travelMinutes} min {travelModeLabel}
                       {result.travelSource === "google" && (
                         <span className="ml-1.5 inline-flex items-center rounded-full bg-green-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-green-400">
-                          {result.hasTrafficData ? "live traffic" : "estimated"}
+                          {trafficLabel(result.trafficBasis, result.planningMode)}
                         </span>
                       )}
                     </span>
@@ -484,17 +518,29 @@ export default function LeaveTimeCalculator() {
                 )}
               </div>
 
-              {/* Arrival date + time */}
+              {/* Planning mode + arrival time */}
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <FieldLabel>Arrival date</FieldLabel>
-                  <input
-                    type="date"
-                    value={arrivalDate}
-                    min={today}
-                    onChange={(e) => setArrivalDate(e.target.value)}
-                    className={`${inputClass} [color-scheme:dark]`}
+                  <FieldLabel>Planning this trip</FieldLabel>
+                  <SegmentedControl
+                    options={[
+                      { value: "today", label: "Today" },
+                      { value: "future", label: "Future date" },
+                    ]}
+                    value={planningMode}
+                    onChange={handlePlanningModeChange}
                   />
+                  {planningMode === "future" && (
+                    <div className="mt-3">
+                      <input
+                        type="date"
+                        value={arrivalDate}
+                        min={today}
+                        onChange={(e) => handleArrivalDateChange(e.target.value)}
+                        className={`${inputClass} [color-scheme:dark]`}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div>
                   <FieldLabel>Arrival time</FieldLabel>

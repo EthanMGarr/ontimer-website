@@ -35,6 +35,7 @@ const BUCKET_MINUTES = 30;             // Round departure time to this window
 interface TravelResult {
   durationMinutes: number;
   hasTrafficData: boolean;
+  trafficBasis: "live" | "predicted" | "scheduled" | "none";
 }
 
 interface CacheEntry {
@@ -100,6 +101,13 @@ function cacheKey(origin: string, dest: string, bucket: number, mode: string): s
  */
 function expandAirportCode(s: string): string {
   return /^[a-zA-Z]{2,4}$/.test(s.trim()) ? `${s.trim()} airport` : s;
+}
+
+function trafficBasisFor(bucketedTime: number, travelMode: string): TravelResult["trafficBasis"] {
+  if (travelMode === "WALK") return "none";
+  if (travelMode === "TRANSIT") return "scheduled";
+  const hoursUntil = (bucketedTime * 1000 - Date.now()) / (1000 * 60 * 60);
+  return hoursUntil <= 6 ? "live" : "predicted";
 }
 
 // ─── Google Maps Routes API call ──────────────────────────────────────────────
@@ -170,6 +178,7 @@ async function callRoutesApi(
     durationMinutes: Math.ceil(durationSec / 60),
     // hasTrafficData only meaningful for DRIVE; WALK/TRANSIT don't use traffic routing
     hasTrafficData: travelMode === "DRIVE" && durationSec !== staticSec,
+    trafficBasis: trafficBasisFor(bucketedTime, travelMode),
   };
 }
 

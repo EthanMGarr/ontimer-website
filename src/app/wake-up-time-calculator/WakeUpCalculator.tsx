@@ -21,6 +21,8 @@ import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 
 type TravelMode = "DRIVE" | "WALK" | "TRANSIT";
+type PlanningMode = "today" | "future";
+type TrafficBasis = "live" | "predicted" | "scheduled" | "none";
 
 interface CalculatorResult {
   wakeUpTime: Date;
@@ -31,11 +33,14 @@ interface CalculatorResult {
   extraMinutes: number;
   travelSource: "google" | "manual";
   hasTrafficData: boolean;
+  trafficBasis: TrafficBasis;
+  planningMode: PlanningMode;
 }
 
 interface TravelTimeResponse {
   durationMinutes: number;
   hasTrafficData: boolean;
+  trafficBasis: TrafficBasis;
   cacheHit: boolean;
   error?: string;
 }
@@ -70,6 +75,20 @@ function fmtTime(d: Date) {
 }
 function fmtDate(d: Date) {
   return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+}
+
+function localDateString(date = new Date()): string {
+  return date.toLocaleDateString("en-CA");
+}
+
+function planningModeForDate(date: string): PlanningMode {
+  return date === localDateString() ? "today" : "future";
+}
+
+function trafficLabel(basis: TrafficBasis, mode: PlanningMode): string {
+  if (basis === "scheduled") return "scheduled route";
+  if (basis === "none") return "estimated";
+  return mode === "future" || basis === "predicted" ? "expected traffic" : "live traffic";
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
@@ -148,12 +167,13 @@ function defaultArrival() {
 }
 
 export default function WakeUpCalculator() {
-  const today = new Date().toISOString().split("T")[0];
+  const today = localDateString();
   const { date: defaultDate, time: defaultTime } = defaultArrival();
 
   const [destination, setDestination] = useState("");
   const [origin, setOrigin] = useState("");
   const [arrivalDate, setArrivalDate] = useState(defaultDate);
+  const [planningMode, setPlanningMode] = useState<PlanningMode>(() => planningModeForDate(defaultDate));
   const [arrivalTime, setArrivalTime] = useState(defaultTime);
   const [travelMode, setTravelMode] = useState<TravelMode>("DRIVE");
   const [getReadyTime, setGetReadyTime] = useState(45);
@@ -167,6 +187,16 @@ export default function WakeUpCalculator() {
 
   const hasRouteInputs =
     origin.trim().length >= 2 && destination.trim().length >= 2;
+
+  function handlePlanningModeChange(mode: PlanningMode) {
+    setPlanningMode(mode);
+    if (mode === "today") setArrivalDate(localDateString());
+  }
+
+  function handleArrivalDateChange(date: string) {
+    setArrivalDate(date);
+    setPlanningMode(planningModeForDate(date));
+  }
 
   async function handleCalculate() {
     setError(null);
@@ -183,6 +213,7 @@ export default function WakeUpCalculator() {
     let travelMinutes: number;
     let travelSource: "google" | "manual" = "manual";
     let hasTrafficData = false;
+    let trafficBasis: TrafficBasis = "none";
 
     if (hasRouteInputs) {
       setIsCalculating(true);
@@ -191,6 +222,7 @@ export default function WakeUpCalculator() {
         travelMinutes = res.durationMinutes;
         travelSource = "google";
         hasTrafficData = res.hasTrafficData;
+        trafficBasis = res.trafficBasis;
         track(res.cacheHit ? "travel_time_cache_hit" : "routes_api_called", {
           duration_minutes: travelMinutes,
         });
@@ -230,6 +262,8 @@ export default function WakeUpCalculator() {
       extraMinutes: extraTime,
       travelSource,
       hasTrafficData,
+      trafficBasis,
+      planningMode,
     });
     track("wakeup_calculator_used", {
       travel_mode: travelMode,
@@ -264,17 +298,29 @@ export default function WakeUpCalculator() {
             </div>
           </div>
 
-          {/* Arrival date + time */}
+          {/* Planning mode + arrival time */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <FieldLabel>Arrival date</FieldLabel>
-              <input
-                type="date"
-                value={arrivalDate}
-                min={today}
-                onChange={(e) => setArrivalDate(e.target.value)}
-                className={`${inputClass} [color-scheme:dark]`}
+              <FieldLabel>Planning this trip</FieldLabel>
+              <SegmentedControl
+                options={[
+                  { value: "today", label: "Today" },
+                  { value: "future", label: "Future date" },
+                ]}
+                value={planningMode}
+                onChange={handlePlanningModeChange}
               />
+              {planningMode === "future" && (
+                <div className="mt-3">
+                  <input
+                    type="date"
+                    value={arrivalDate}
+                    min={today}
+                    onChange={(e) => handleArrivalDateChange(e.target.value)}
+                    className={`${inputClass} [color-scheme:dark]`}
+                  />
+                </div>
+              )}
             </div>
             <div>
               <FieldLabel>When do you need to arrive?</FieldLabel>
@@ -416,7 +462,7 @@ export default function WakeUpCalculator() {
                     </p>
                     {result.travelSource === "google" && (
                       <p className="text-xs text-green-500">
-                        {result.hasTrafficData ? "live traffic" : "estimated"}
+                        {trafficLabel(result.trafficBasis, result.planningMode)}
                       </p>
                     )}
                   </div>

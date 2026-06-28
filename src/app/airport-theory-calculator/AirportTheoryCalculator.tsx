@@ -32,12 +32,16 @@ import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 type FlightType = "domestic" | "international";
 type Aggression = 1 | 2 | 3;
 type TravelSource = "google" | "manual";
+type PlanningMode = "today" | "future";
+type TrafficBasis = "live" | "predicted" | "scheduled" | "none";
 
 interface TheoryResult {
   leaveTime: Date;
   bufferMinutes: number;
   travelMinutes: number;
   travelSource: TravelSource;
+  trafficBasis: TrafficBasis;
+  planningMode: PlanningMode;
   aggression: Aggression;
   hasCheckedBag: boolean;
   flightType: FlightType;
@@ -163,6 +167,7 @@ function theoryBuffer(
 interface TravelTimeResponse {
   durationMinutes: number;
   hasTrafficData: boolean;
+  trafficBasis: TrafficBasis;
   cacheHit: boolean;
   error?: string;
 }
@@ -191,6 +196,20 @@ function fmtTime(d: Date) {
 
 function fmtDate(d: Date) {
   return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+}
+
+function localDateString(date = new Date()): string {
+  return date.toLocaleDateString("en-CA");
+}
+
+function planningModeForDate(date: string): PlanningMode {
+  return date === localDateString() ? "today" : "future";
+}
+
+function trafficLabel(basis: TrafficBasis, mode: PlanningMode): string {
+  if (basis === "scheduled") return "scheduled route";
+  if (basis === "none") return "manual estimate";
+  return mode === "future" || basis === "predicted" ? "expected traffic" : "live traffic";
 }
 
 function defaultDeparture() {
@@ -264,10 +283,11 @@ const inputClass =
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function AirportTheoryCalculator() {
-  const today = new Date().toISOString().split("T")[0];
+  const today = localDateString();
   const { date: defaultDate, time: defaultTime } = defaultDeparture();
 
   const [departureDate, setDepartureDate] = useState(defaultDate);
+  const [planningMode, setPlanningMode] = useState<PlanningMode>(() => planningModeForDate(defaultDate));
   const [departureTime, setDepartureTime] = useState(defaultTime);
   const [flightType, setFlightType] = useState<FlightType>("domestic");
   const [origin, setOrigin] = useState("");
@@ -311,12 +331,24 @@ export default function AirportTheoryCalculator() {
       bufferMinutes: theoryBuffer("domestic", false, false, ag),
       travelMinutes: 0,
       travelSource: "manual",
+      trafficBasis: "none",
+      planningMode: "today",
       aggression: ag,
       hasCheckedBag: false,
       flightType: "domestic",
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function handlePlanningModeChange(mode: PlanningMode) {
+    setPlanningMode(mode);
+    if (mode === "today") setDepartureDate(localDateString());
+  }
+
+  function handleDepartureDateChange(date: string) {
+    setDepartureDate(date);
+    setPlanningMode(planningModeForDate(date));
+  }
 
   async function handleCalculate() {
     setError(null);
@@ -332,6 +364,7 @@ export default function AirportTheoryCalculator() {
 
     let travelMinutes: number;
     let travelSource: TravelSource = "manual";
+    let trafficBasis: TrafficBasis = "none";
 
     if (hasRouteInputs) {
       setIsCalculating(true);
@@ -339,6 +372,7 @@ export default function AirportTheoryCalculator() {
         const res = await fetchTravelTime(origin, airport, departure);
         travelMinutes = res.durationMinutes;
         travelSource = "google";
+        trafficBasis = res.trafficBasis;
       } catch {
         const manual = parseInt(manualTravelMinutes, 10);
         if (!isNaN(manual) && manual >= 0) {
@@ -361,7 +395,7 @@ export default function AirportTheoryCalculator() {
     }
 
     const leaveTime = new Date(departure.getTime() - (bufferMins + travelMinutes) * 60 * 1000);
-    setResult({ leaveTime, bufferMinutes: bufferMins, travelMinutes, travelSource, aggression, hasCheckedBag, flightType });
+    setResult({ leaveTime, bufferMinutes: bufferMins, travelMinutes, travelSource, trafficBasis, planningMode, aggression, hasCheckedBag, flightType });
     setShareStatus("idle");
   }
 
@@ -393,13 +427,25 @@ export default function AirportTheoryCalculator() {
         {/* ── Inputs ── */}
         <div className="space-y-7">
 
-          {/* Date + time */}
+          {/* Planning mode + time */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <FieldLabel>Flight departure date</FieldLabel>
-              <input type="date" value={departureDate} min={today}
-                onChange={(e) => setDepartureDate(e.target.value)}
-                className={`${inputClass} [color-scheme:dark]`} />
+              <FieldLabel>Planning this trip</FieldLabel>
+              <SegmentedControl
+                options={[
+                  { value: "today", label: "Today" },
+                  { value: "future", label: "Future date" },
+                ]}
+                value={planningMode}
+                onChange={handlePlanningModeChange}
+              />
+              {planningMode === "future" && (
+                <div className="mt-3">
+                  <input type="date" value={departureDate} min={today}
+                    onChange={(e) => handleDepartureDateChange(e.target.value)}
+                    className={`${inputClass} [color-scheme:dark]`} />
+                </div>
+              )}
             </div>
             <div>
               <FieldLabel>Departure time</FieldLabel>
@@ -617,7 +663,10 @@ function ResultPanel({ result, onShare, shareStatus }: {
 
       {/* Breakdown — subtle */}
       <div className="flex justify-between px-1 text-xs text-zinc-400">
-        <span>Drive: {result.travelMinutes} min</span>
+        <span>
+          Drive: {result.travelMinutes} min
+          {result.travelSource === "google" ? ` (${trafficLabel(result.trafficBasis, result.planningMode)})` : ""}
+        </span>
         <span>Airport buffer: {result.bufferMinutes} min</span>
       </div>
       {result.hasCheckedBag && result.aggression === 3 && (
