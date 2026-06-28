@@ -172,7 +172,9 @@ export default async function LocationPage({ params }: LocationPageProps) {
             Newark-specific planning details that change when you should leave
           </h2>
           <p className="mt-3 max-w-3xl leading-relaxed text-zinc-400">
-            These are the extra legs that generic “arrive two hours early” advice misses.
+            {location.authorityIntro}
+          </p>
+          <p className="mt-3 max-w-3xl leading-relaxed text-zinc-400">
             Operational details can change, so verify your terminal and travel schedule before departure.
           </p>
           <div className="mt-8 grid gap-5 lg:grid-cols-3">

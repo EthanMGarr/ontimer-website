@@ -39,6 +39,7 @@ interface TravelLocationBase {
   reviewedOn: string;
   reviewedLabel: string;
   directAnswer: string;
+  authorityIntro: string;
   calculatorExample: CalculatorExample;
   workedExamples: WorkedExample[];
   modules: ContentModule[];
@@ -93,7 +94,9 @@ export const travelLocations: TravelLocationProfile[] = [
     reviewedOn: "2026-06-24",
     reviewedLabel: "Reviewed June 24, 2026",
     directAnswer:
-      "For a domestic flight from Newark, start with an airport arrival target about 2 hours before departure; use about 3 hours for international travel. Then add your time-specific trip to EWR and the transfer from parking, rail or drop-off to the correct terminal.",
+      "Newark Liberty trips can change fast with Turnpike traffic, AirTrain transfers, parking, bags and terminal access. Enter your flight details and OnTimer will calculate when you should leave for EWR — not just when you should arrive.",
+    authorityIntro:
+      "Most Newark airport guides stop at “arrive 2 hours before domestic flights and 3 hours before international flights.” That advice is useful, but incomplete. Your real question is when to leave. For EWR, that depends on your starting location, time of day, parking or rail plan, Terminal A/B/C access, AirTrain transfers, TSA PreCheck, checked bags and whether your flight is domestic or international. OnTimer combines those details into a personalized leave-time recommendation.",
     calculatorExample: {
       eyebrow: "Illustrative EWR example",
       summary: "7:00 AM domestic flight · Aberdeen, NJ · parking",
@@ -222,6 +225,8 @@ export const travelLocations: TravelLocationProfile[] = [
     reviewedLabel: "Draft profile — not yet reviewed for publication",
     directAnswer:
       `This ${shortName} page is temporarily unavailable while OnTimer finishes and validates its location-specific planning template.`,
+    authorityIntro:
+      `This ${shortName} authority section is intentionally unpublished until its location-specific traffic, terminal, parking, transit and source details are reviewed.`,
     calculatorExample: {
       eyebrow: `Illustrative ${code} example`,
       summary: `${shortName} planning example`,
@@ -256,6 +261,7 @@ function collectVisibleStrings(location: TravelLocationProfile): string[] {
     location.shortName,
     location.city,
     location.directAnswer,
+    location.authorityIntro,
     location.calculatorExample.eyebrow,
     location.calculatorExample.summary,
     location.calculatorExample.leaveTime,
