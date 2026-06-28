@@ -133,21 +133,18 @@ function SegmentedControl<T extends string>({
 
 function SkeletonResult() {
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-800/40 p-5">
-      <p className="text-sm font-semibold text-white">Your leave time will appear here</p>
-      <p className="mt-1 text-xs text-zinc-500">Fill in your destination and arrival time.</p>
-      <div className="mt-5 space-y-3 border-t border-zinc-800 pt-4">
-        <div className="h-3 w-12 animate-pulse rounded bg-zinc-700" />
-        <div className="h-14 w-40 animate-pulse rounded-lg bg-zinc-700" />
-        <div className="h-3 w-24 animate-pulse rounded bg-zinc-700" />
-        <div className="space-y-2.5 border-t border-zinc-800 pt-3">
-          {["travel", "buffer", "parking"].map((key) => (
-            <div key={key} className="flex items-center justify-between">
-              <div className="h-3 w-20 animate-pulse rounded bg-zinc-700" />
-              <div className="h-3 w-14 animate-pulse rounded bg-zinc-700" />
-            </div>
-          ))}
-        </div>
+    <div className="rounded-xl border border-zinc-800 bg-zinc-800/40 p-4 sm:p-5">
+      <p className="text-sm font-semibold text-white">What you will get</p>
+      <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+        Add your destination and arrival time to calculate the latest reasonable time to leave.
+      </p>
+      <div className="mt-4 grid gap-2 text-xs text-zinc-300 sm:grid-cols-2">
+        {["Leave-by time", "Travel time", "Personal buffer", "Calendar-ready result"].map((item) => (
+          <div key={item} className="flex items-center gap-2">
+            <span className="text-green-500">✓</span>
+            <span>{item}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -324,15 +321,10 @@ export default function LeaveTimeCalculator() {
   return (
     <>
       <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6">
-        {/*
-          DOM order: results first, then inputs.
-          On mobile (single col): results appear above form.
-          On desktop (lg:grid-cols-2): lg:order-* swaps them — form left, results right.
-        */}
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
 
           {/* ══ Results ══════════════════════════════════════════════════════════ */}
-          <div className="lg:order-2 lg:sticky lg:top-6 lg:self-start">
+          <div className={`${result ? "order-1" : "order-2"} lg:order-2 lg:sticky lg:top-6 lg:self-start`}>
             {result ? (
               <div className="rounded-xl border border-zinc-700 bg-zinc-800/80 p-5 transition-all duration-300">
 
@@ -424,7 +416,7 @@ export default function LeaveTimeCalculator() {
           </div>
 
           {/* ══ Inputs ════════════════════════════════════════════════════════════ */}
-          <div className="lg:order-1 flex flex-col gap-5">
+          <div className={`${result ? "order-2" : "order-1"} flex flex-col gap-5 lg:order-1`}>
 
             {/* Mobile accordion toggle — hidden on desktop */}
             <button
@@ -528,6 +520,24 @@ export default function LeaveTimeCalculator() {
                   onChange={handleTravelModeChange}
                 />
               </div>
+
+              {!result && (
+                <div className="lg:hidden">
+                  <button
+                    type="button"
+                    onClick={handleCalculate}
+                    disabled={!isFormValid || isCalculating}
+                    className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {isCalculating ? "Estimating travel time..." : "Calculate leave time"}
+                  </button>
+                  {!isFormValid && (
+                    <p className="mt-1.5 text-center text-xs text-zinc-500">
+                      Add a destination and arrival time to enable.
+                    </p>
+                  )}
+                </div>
+              )}
 
               {/* Buffer */}
               <div>

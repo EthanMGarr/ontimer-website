@@ -328,6 +328,7 @@ export default function AirportCalculator({
   // ── Interaction state ───────────────────────────────────────────────────────
   const [calendarAdded, setCalendarAdded] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(true);
+  const [formExpanded, setFormExpanded] = useState(true);
 
   const securityDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const travelDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -523,6 +524,12 @@ export default function AirportCalculator({
   }, [departureDate, departureTime, computedResult, estimatedSecurityMins, baseBuffer,
       showSecurityOverride, customSecurityMinutes, showBufferOverride, customBuffer]);
 
+  useEffect(() => {
+    if (computedResult && typeof window !== "undefined" && window.innerWidth < 1024) {
+      setFormExpanded(false);
+    }
+  }, [computedResult]);
+
 
   // ── Manual calculate fallback ───────────────────────────────────────────────
   async function handleCalculate() {
@@ -580,8 +587,30 @@ export default function AirportCalculator({
       <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6">
         <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:gap-8">
 
-          {/* ══ LEFT: Inputs ══════════════════════════════════════════════════ */}
-          <div className="space-y-4">
+          {/* ══ Inputs ════════════════════════════════════════════════════════ */}
+          <div className={`${computedResult ? "order-2" : "order-1"} space-y-4 lg:order-1`}>
+
+            <button
+              type="button"
+              className="flex w-full items-center justify-between rounded-lg border border-zinc-800 bg-zinc-800/50 px-4 py-3 text-sm font-semibold text-zinc-300 transition-colors hover:bg-zinc-800 lg:hidden"
+              onClick={() => setFormExpanded(!formExpanded)}
+              aria-expanded={formExpanded}
+              aria-controls="airport-calculator-form"
+            >
+              <span>{computedResult ? "Adjust flight details" : "Enter flight details"}</span>
+              <span
+                className={`text-xs text-zinc-500 transition-transform duration-200 ${
+                  formExpanded ? "rotate-180" : ""
+                }`}
+              >
+                ▾
+              </span>
+            </button>
+
+            <div
+              id="airport-calculator-form"
+              className={`space-y-4 ${formExpanded ? "block" : "hidden lg:block"}`}
+            >
 
             {/* Date + Time */}
             <div className="grid gap-3 sm:grid-cols-2">
@@ -642,6 +671,20 @@ export default function AirportCalculator({
               </div>
             </div>
 
+            <button
+              type="button"
+              onClick={handleCalculate}
+              disabled={!departureDate || !departureTime || origin.trim().length < 2 || airport.trim().length < 2 || isFetchingTravel}
+              className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isFetchingTravel ? "Calculating leave time..." : "Calculate leave time"}
+            </button>
+            {(!origin.trim() || !airport.trim()) && (
+              <p className="text-center text-xs text-zinc-500">
+                Add where you are leaving from and your airport to calculate.
+              </p>
+            )}
+
             {/* Smart airport timing card */}
             <div className="rounded-xl border border-zinc-700 bg-zinc-800/70 p-4">
 
@@ -655,7 +698,7 @@ export default function AirportCalculator({
               </p>
 
               {/* Trust signals — 2-column grid */}
-              <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
+              <div className="mt-3 hidden grid-cols-2 gap-x-4 gap-y-1.5 sm:grid">
                 {coreTrustSignals.map((item) => (
                   <div key={item} className="flex items-center gap-1.5">
                     <span className="flex-shrink-0 text-xs text-green-500">✓</span>
@@ -829,10 +872,11 @@ export default function AirportCalculator({
               </div>
             )}
 
+            </div>
           </div>
 
-          {/* ══ RIGHT: Result panel ═══════════════════════════════════════════ */}
-          <div className="flex flex-col lg:sticky lg:top-6 lg:self-start">
+          {/* ══ Result panel ══════════════════════════════════════════════════ */}
+          <div className={`${computedResult ? "order-1" : "order-2"} flex flex-col lg:order-2 lg:sticky lg:top-6 lg:self-start`}>
 
             {computedResult ? (
               /* ── COMPLETE ── */
