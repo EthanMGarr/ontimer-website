@@ -45,7 +45,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
   const url = `https://www.ontimer.app/airport-time-to-leave/${location.slug}`;
   const faqItems = [
     {
-      question: `What time should I leave for ${location.shortName}?`,
+      question: `What time should I leave for ${location.shortName} (${location.code})?`,
       answer: location.directAnswer,
     },
     {
@@ -140,7 +140,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
           </div>
           <h1 className="mt-2 max-w-4xl text-3xl font-black tracking-tight text-white sm:text-5xl">
             What Time Should I Leave for{" "}
-            <span className="text-green-500">{location.shortName}?</span>
+            <span className="text-green-500">{location.shortName} ({location.code})?</span>
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-zinc-300">
             {location.directAnswer}
