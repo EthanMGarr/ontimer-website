@@ -265,9 +265,9 @@ export default async function LocationPage({ params }: LocationPageProps) {
             </div>
           </div>
           <div>
-            <h2 className="text-2xl font-black text-white">Official planning sources</h2>
+            <h2 className="text-2xl font-black text-white">Planning and traffic sources</h2>
             <p className="mt-3 text-sm text-zinc-400">
-              Facts on this page were checked against these first-party sources. {location.reviewedLabel}.
+              Facts on this page were checked against airport, transit, security and traffic sources. {location.reviewedLabel}.
             </p>
             <ul className="mt-5 space-y-3">
               {location.sources.map((source) => (

@@ -96,7 +96,7 @@ export const travelLocations: TravelLocationProfile[] = [
     directAnswer:
       "Newark Liberty trips can change fast with Turnpike traffic, AirTrain transfers, parking, bags and terminal access. Enter your flight details and OnTimer will calculate when you should leave for EWR — not just when you should arrive.",
     authorityIntro:
-      "Most Newark airport guides stop at “arrive 2 hours before domestic flights and 3 hours before international flights.” That advice is useful, but incomplete. Your real question is when to leave. For EWR, that depends on your starting location, time of day, parking or rail plan, Terminal A/B/C access, AirTrain transfers, TSA PreCheck, checked bags and whether your flight is domestic or international. OnTimer combines those details into a personalized leave-time recommendation.",
+      "Newark Liberty is not a small regional airport with one simple arrival pattern. In 2024, published North American airport traffic rankings put EWR at No. 14, with Port Authority traffic data showing 48,853,370 annual passengers. The airport sits across Newark and Elizabeth, draws traffic from the New Jersey Turnpike, I-78 and Routes 1–9, and sends travelers into three different terminal plans: Terminal A, Terminal B or United-heavy Terminal C. A useful EWR leave-time estimate has to work backward from your flight, then add the local pieces that actually slow people down: Turnpike or bridge/tunnel traffic, parking or rideshare access, the Newark Airport Rail Station, AirTrain timing, the Terminal A walk or shuttle, checked bags, TSA PreCheck and whether your airline wants you there earlier for an international departure.",
     calculatorExample: {
       eyebrow: "Illustrative EWR example",
       summary: "7:00 AM domestic flight · Aberdeen, NJ · parking",
@@ -202,6 +202,14 @@ export const travelLocations: TravelLocationProfile[] = [
       {
         label: "NJ TRANSIT Newark Airport guide",
         url: "https://www.njtransit.com/airport",
+      },
+      {
+        label: "Port Authority airport traffic statistics",
+        url: "https://www.panynj.gov/airports/en/statistics-general-info.html",
+      },
+      {
+        label: "ACI-NA airport traffic report",
+        url: "https://airportscouncil.org/intelligence-data-center/airport-traffic-report/",
       },
       ...officialAirportSources,
     ],
