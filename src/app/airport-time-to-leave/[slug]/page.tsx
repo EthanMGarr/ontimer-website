@@ -59,9 +59,8 @@ export default async function LocationPage({ params }: LocationPageProps) {
         "Yes. Enter your starting location and flight time to estimate the trip for your travel window. The result also includes airport-processing assumptions and the arrival method you select.",
     },
     {
-      question: `How long should I allow for AirTrain at ${location.code}?`,
-      answer:
-        "The Port Authority says terminal-to-terminal AirTrain trips take under 20 minutes. From the airport rail station, its estimates are about 7 minutes to Terminal C, 11 minutes to Terminal B and 20 minutes to Terminal A. Add walking and waiting margin.",
+      question: `What local airport timing details matter at ${location.code}?`,
+      answer: location.airport.localTimingFaq,
     },
   ];
 
@@ -164,12 +163,12 @@ export default async function LocationPage({ params }: LocationPageProps) {
       </section>
 
       <section
-        data-location-section="ewr-planning-facts"
+        data-location-section={`${location.code.toLowerCase()}-planning-facts`}
         className="border-t border-zinc-800 bg-zinc-900/50 py-14"
       >
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <h2 className="max-w-3xl text-3xl font-black tracking-tight text-white">
-            Newark-specific planning details that change when you should leave
+            {location.shortName}-specific planning details that change when you should leave
           </h2>
           <p className="mt-3 max-w-3xl leading-relaxed text-zinc-400">
             {location.authorityIntro}
@@ -253,14 +252,14 @@ export default async function LocationPage({ params }: LocationPageProps) {
             </h2>
             <div className="mt-5 space-y-4 leading-relaxed text-zinc-300">
               <p>
-                Stable planning facts—such as terminal names and the existence of the airport rail
-                connection—belong in this guide. Traffic, security waits, airline terminals and
+                Stable planning facts—such as terminal names and airport transfer options—belong in
+                this guide. Traffic, security waits, airline terminals and
                 service disruptions are volatile, so the calculator or official operator should
                 supply the current answer.
               </p>
               <p>
-                Recheck your airline terminal, bag-drop deadline, NJ TRANSIT schedule and AirTrain
-                service on the day you travel.
+                Recheck your airline terminal, bag-drop deadline, airport transit schedule and
+                transfer service on the day you travel.
               </p>
             </div>
           </div>
@@ -290,7 +289,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
       <section data-location-section="faq" className="py-14">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white">
-            Newark Airport leave-time questions
+            {location.shortName} leave-time questions
           </h2>
           <div className="mt-7 divide-y divide-zinc-800 border-y border-zinc-800">
             {faqItems.map(({ question, answer }) => (
