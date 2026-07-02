@@ -213,6 +213,7 @@ export default function LeaveTimeCalculator() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [result, setResult] = useState<CalculatorResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
 
   // Mobile: form starts expanded; collapses after first result
   const [formExpanded, setFormExpanded] = useState(true);
@@ -235,6 +236,7 @@ export default function LeaveTimeCalculator() {
   useEffect(() => {
     setResult(null);
     setError(null);
+    setFallbackNotice(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destination, origin, arrivalDate, arrivalTime, travelMode, buffer, prepTime]);
 
@@ -304,10 +306,11 @@ export default function LeaveTimeCalculator() {
           travelMinutes = manual;
           track("quota_fallback_used");
         } else {
+          setFormExpanded(true);
           setShowAssumptions(true);
           setShowManualTravel(true);
-          setError(
-            "Could not estimate travel time automatically. Enter travel time below, or try a fuller address."
+          setFallbackNotice(
+            "Automatic travel time is unavailable for this route. Enter travel time below, or try a fuller address."
           );
           setIsCalculating(false);
           return;
@@ -709,6 +712,11 @@ export default function LeaveTimeCalculator() {
               {error && (
                 <div className="rounded-lg border border-red-900/50 bg-red-950/30 px-4 py-3">
                   <p className="text-sm text-red-400">{error}</p>
+                </div>
+              )}
+              {fallbackNotice && !error && (
+                <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3">
+                  <p className="text-sm text-amber-200">{fallbackNotice}</p>
                 </div>
               )}
 

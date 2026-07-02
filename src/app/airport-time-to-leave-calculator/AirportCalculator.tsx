@@ -345,6 +345,7 @@ export default function AirportCalculator({
   const [trafficBasis, setTrafficBasis] = useState<TrafficBasis>("none");
   const [isFetchingTravel, setIsFetchingTravel] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
 
   // ── Interaction state ───────────────────────────────────────────────────────
   const [calendarAdded, setCalendarAdded] = useState(false);
@@ -357,6 +358,7 @@ export default function AirportCalculator({
 
   useEffect(() => {
     setError(null);
+    setFallbackNotice(null);
   }, [departureDate, departureTime, origin, airport, flightType, arrivalMode,
       hasCheckedBag, manualTravelMinutes, hasPreCheck, hasClear, customBuffer, customSecurityMinutes]);
 
@@ -600,7 +602,8 @@ export default function AirportCalculator({
         } else {
           setShowRefinements(true);
           setShowManualDriveTime(true);
-          setError("Could not estimate drive time automatically. Enter drive time below, or try a fuller starting address.");
+          setFormExpanded(true);
+          setFallbackNotice("Automatic drive time is unavailable for this route. Enter drive time below, or try a fuller starting address.");
         }
       } finally {
         setIsFetchingTravel(false);
@@ -924,6 +927,11 @@ export default function AirportCalculator({
                 >
                   Try again
                 </button>
+              </div>
+            )}
+            {fallbackNotice && !error && (
+              <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3">
+                <p className="text-sm text-amber-200">{fallbackNotice}</p>
               </div>
             )}
 

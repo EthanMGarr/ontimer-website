@@ -184,6 +184,7 @@ export default function WakeUpCalculator() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [result, setResult] = useState<CalculatorResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
 
   const hasRouteInputs =
     origin.trim().length >= 2 && destination.trim().length >= 2;
@@ -200,6 +201,7 @@ export default function WakeUpCalculator() {
 
   async function handleCalculate() {
     setError(null);
+    setFallbackNotice(null);
 
     if (!arrivalDate || !arrivalTime) {
       setError("Enter the date and time you need to arrive.");
@@ -232,7 +234,7 @@ export default function WakeUpCalculator() {
           travelMinutes = manual;
           track("quota_fallback_used");
         } else {
-          setError("Could not estimate travel time automatically. Enter travel time manually below, or try a fuller address.");
+          setFallbackNotice("Automatic travel time is unavailable for this route. Enter travel time manually below, or try a fuller address.");
           setIsCalculating(false);
           return;
         }
@@ -420,6 +422,11 @@ export default function WakeUpCalculator() {
           {error && (
             <p className="rounded-lg border border-red-900/50 bg-red-950/30 px-4 py-3 text-sm text-red-400">
               {error}
+            </p>
+          )}
+          {fallbackNotice && !error && (
+            <p className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+              {fallbackNotice}
             </p>
           )}
 

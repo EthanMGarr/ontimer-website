@@ -301,6 +301,7 @@ export default function AirportTheoryCalculator() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [result, setResult] = useState<TheoryResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle");
 
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
@@ -352,6 +353,7 @@ export default function AirportTheoryCalculator() {
 
   async function handleCalculate() {
     setError(null);
+    setFallbackNotice(null);
     if (!departureDate || !departureTime) {
       setError("Enter your flight departure date and time.");
       return;
@@ -379,7 +381,7 @@ export default function AirportTheoryCalculator() {
           travelMinutes = manual;
         } else {
           setShowManualTravel(true);
-          setError("Could not estimate drive time automatically. Enter drive time below, or try a fuller starting address.");
+          setFallbackNotice("Automatic drive time is unavailable for this route. Enter drive time below, or try a fuller starting address.");
           setIsCalculating(false);
           return;
         }
@@ -536,6 +538,11 @@ export default function AirportTheoryCalculator() {
           {error && (
             <p className="rounded-lg border border-red-900/50 bg-red-950/30 px-4 py-3 text-sm text-red-400">
               {error}
+            </p>
+          )}
+          {fallbackNotice && !error && (
+            <p className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+              {fallbackNotice}
             </p>
           )}
 
