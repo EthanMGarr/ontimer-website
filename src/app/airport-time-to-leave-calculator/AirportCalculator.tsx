@@ -501,6 +501,8 @@ export default function AirportCalculator({
       customSecurityMinutes, showBufferOverride, customBuffer, manualTravelMinutes,
       planningMode]);
 
+  const resultHeroMode = genericRedesign && computedResult !== null;
+
   // ── Airport arrival preview (partial + estimating states) ───────────────────
   const arrivalOnlyPreview = useMemo((): Date | null => {
     if (!departureDate || !departureTime || computedResult) return null;
@@ -601,10 +603,18 @@ export default function AirportCalculator({
   return (
     <>
       <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6">
-        <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:gap-8">
+        <div className={`grid gap-6 ${
+          resultHeroMode
+            ? "lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.75fr)] lg:items-start"
+            : "lg:grid-cols-[1fr_1fr] lg:gap-8"
+        }`}>
 
           {/* ══ Inputs ════════════════════════════════════════════════════════ */}
-          <div className={`${computedResult ? "order-2" : "order-1"} space-y-4 lg:order-1`}>
+          <div
+            className={`${computedResult ? "order-2" : "order-1"} space-y-4 ${
+              resultHeroMode ? "lg:order-2 lg:opacity-80" : "lg:order-1"
+            }`}
+          >
 
             {!genericRedesign && (
               <button
@@ -939,12 +949,20 @@ export default function AirportCalculator({
           {/* ══ Result panel ══════════════════════════════════════════════════ */}
           <div
             ref={resultPanelRef}
-            className={`${computedResult ? "order-1" : "order-2"} scroll-mt-20 flex flex-col lg:order-2 lg:sticky lg:top-6 lg:self-start`}
+            className={`${computedResult ? "order-1" : "order-2"} scroll-mt-20 flex flex-col ${
+              resultHeroMode ? "lg:order-1" : "lg:order-2 lg:sticky lg:top-6 lg:self-start"
+            }`}
           >
 
             {computedResult ? (
               /* ── COMPLETE ── */
-              <div className="rounded-xl border border-zinc-700 bg-zinc-800/80 p-5 transition-all duration-300">
+              <div
+                className={`rounded-xl border p-5 transition-all duration-300 ${
+                  resultHeroMode
+                    ? "border-green-500/30 bg-zinc-900 shadow-[0_0_40px_rgba(34,197,94,0.08)] sm:p-7"
+                    : "border-zinc-700 bg-zinc-800/80"
+                }`}
+              >
 
                 {departureTime && (
                   <p className="mb-2 text-xs text-zinc-500">
@@ -953,31 +971,33 @@ export default function AirportCalculator({
                 )}
 
                 {/* Hero */}
-                <p className="text-xs font-semibold text-zinc-400">Leave by</p>
-                <p className="mt-0.5 whitespace-nowrap text-6xl font-black leading-none text-green-500 sm:text-7xl">
+                <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Leave by</p>
+                <p className={`mt-1 whitespace-nowrap font-black leading-none text-green-500 ${
+                  resultHeroMode ? "text-6xl sm:text-8xl" : "text-6xl sm:text-7xl"
+                }`}>
                   {fmtTime(computedResult.leaveTime)}
                 </p>
-                <p className="mt-2 text-sm text-zinc-400">{fmtDate(computedResult.leaveTime)}</p>
+                <p className="mt-2 text-base text-zinc-300">{fmtDate(computedResult.leaveTime)}</p>
                 <div className="mt-1.5">
                   <ConfidenceBadge confidence={computedResult.confidence} />
                 </div>
 
                 {genericRedesign && departureTime && (
-                  <div className="mt-4 rounded-lg border border-zinc-700/60 bg-zinc-900/60 p-4">
-                    <p className="text-sm leading-relaxed text-zinc-300">
-                      For your {fmtDepartureTime(departureTime)} {flightType} flight, we recommend
-                      leaving at <span className="font-semibold text-white">{fmtTime(computedResult.leaveTime)}</span>.
-                    </p>
-                    <p className="mt-3 text-xs font-semibold text-zinc-400">This recommendation includes:</p>
-                    <div className="mt-2 grid gap-1.5">
+                  <div className="mt-5 rounded-lg border border-zinc-700/60 bg-zinc-950/50 p-4">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                      <p className="text-sm font-semibold text-white">Why this recommendation?</p>
+                      <p className="text-xs text-zinc-500">
+                        {fmtDepartureTime(departureTime)} {flightType} flight
+                      </p>
+                    </div>
+                    <div className="mt-3 grid gap-1.5 sm:grid-cols-2">
                       {[
                         computedResult.travelSource === "google"
                           ? trafficLabel(computedResult.trafficBasis, computedResult.planningMode)
                           : "Your drive time",
-                        "TSA wait estimates",
-                        "Parking and terminal walking time",
-                        "Airport-specific timing recommendations",
-                        `Arriving about ${flightType === "international" ? "3 hours" : "2 hours"} before departure`,
+                        "TSA estimates",
+                        "Parking & terminal walking",
+                        "Airport timing",
                       ].map((item) => (
                         <div key={item} className="flex items-center gap-2">
                           <span className="flex-shrink-0 text-xs text-green-500">✓</span>

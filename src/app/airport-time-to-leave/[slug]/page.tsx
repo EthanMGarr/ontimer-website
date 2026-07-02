@@ -137,6 +137,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
               {location.code} · {location.city}
             </p>
             <p className="text-xs text-zinc-500">{location.reviewedLabel}</p>
+            <p className="text-xs text-zinc-500">Powered by OnTimer</p>
           </div>
           <h1 className="mt-2 max-w-4xl text-3xl font-black tracking-tight text-white sm:text-5xl">
             What Time Should I Leave for{" "}

@@ -148,7 +148,7 @@ export default function AirportTimeToLeaveCalculator() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <p className="mb-1.5 text-sm font-semibold uppercase tracking-wider text-green-500">
-            Free calculator
+            Free Airport Leave Time Calculator from OnTimer
           </p>
           <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
             What Time Should I Leave for the{" "}
