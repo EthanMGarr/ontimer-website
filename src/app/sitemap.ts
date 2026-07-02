@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getSortedPosts } from "@/lib/blog";
-import { indexableTravelLocations } from "@/lib/travel-locations";
+import { getDestinationSitemapRoutes } from "@/lib/destination-routing";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.ontimer.app";
@@ -238,12 +238,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  const locationRoutes: MetadataRoute.Sitemap = indexableTravelLocations.map((location) => ({
-    url: `${baseUrl}/airport-time-to-leave/${location.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 0.8,
-  }));
+  const locationRoutes = getDestinationSitemapRoutes(baseUrl);
 
   return [...staticRoutes, ...locationRoutes, ...blogRoutes];
 }

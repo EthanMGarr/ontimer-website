@@ -5,14 +5,28 @@ import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import type { SecurityEstimate } from "@/app/api/security-wait/route";
 import type { CalculatorExample } from "@/lib/travel-locations";
+import {
+  leaveTimePlanner,
+  type CalculationFactor,
+  type PlanningMode,
+  type TrafficBasis,
+  type TravelSource,
+} from "@/core/leave-time";
+import {
+  AirportPlugin,
+  airportEventTypeFor,
+  createAirportDestination,
+  getAirportBaseBufferMinutes,
+  getAirportDefaultSecurityMinutes,
+  type AirportArrivalMode,
+  type AirportFlightType,
+  type AirportPlanningContext,
+} from "@/core/leave-time/plugins/airports";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type FlightType = "domestic" | "international";
-type ArrivalMode = "parking" | "rideshare" | "dropoff";
-type TravelSource = "google" | "manual";
-type PlanningMode = "today" | "future";
-type TrafficBasis = "live" | "predicted" | "scheduled" | "none";
+type FlightType = AirportFlightType;
+type ArrivalMode = AirportArrivalMode;
 type Confidence = "comfortable" | "tight" | "risk";
 
 interface ComputedResult {
@@ -27,20 +41,7 @@ interface ComputedResult {
   trafficBasis: TrafficBasis;
   planningMode: PlanningMode;
   confidence: Confidence;
-}
-
-// ─── Buffer logic ─────────────────────────────────────────────────────────────
-
-function baseAirportBuffer(
-  flightType: FlightType,
-  hasCheckedBag: boolean,
-  arrivalMode: ArrivalMode
-): number {
-  let minutes = flightType === "domestic" ? 90 : 135;
-  if (hasCheckedBag) minutes += 15;
-  if (arrivalMode === "parking") minutes += 20;
-  else if (arrivalMode === "rideshare" || arrivalMode === "dropoff") minutes += 5;
-  return minutes;
+  factors: CalculationFactor[];
 }
 
 // ─── API helpers ──────────────────────────────────────────────────────────────
@@ -118,6 +119,14 @@ function fmtDuration(minutes: number): string {
   return m === 0 ? `${h} hr` : `${h} hr ${m} min`;
 }
 
+function factorMinutes(
+  result: ComputedResult,
+  key: string,
+  fallback: number
+): number {
+  return result.factors.find((factor) => factor.key === key)?.minutes ?? fallback;
+}
+
 function fmtDepartureTime(timeStr: string): string {
   const parts = timeStr.split(":");
   if (parts.length < 2) return "";
@@ -178,12 +187,6 @@ function buildAirportShortDisplay(input: string): string {
 }
 
 // ─── Constants & helpers ──────────────────────────────────────────────────────
-
-function computeConfidence(bufferUsed: number, recommendedBuffer: number): Confidence {
-  if (bufferUsed >= recommendedBuffer) return "comfortable";
-  if (bufferUsed >= recommendedBuffer - 20) return "tight";
-  return "risk";
-}
 
 function buildGCalLink(leaveTime: Date, airportInput: string): string {
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -397,8 +400,8 @@ export default function AirportCalculator({
   }, [origin, airport, departureDate, departureTime]);
 
   // ── Derived values ──────────────────────────────────────────────────────────
-  const baseBuffer = baseAirportBuffer(flightType, hasCheckedBag, arrivalMode);
-  const estimatedSecurityMins = securityEstimate?.avg ?? (flightType === "domestic" ? 25 : 45);
+  const baseBuffer = getAirportBaseBufferMinutes(flightType, hasCheckedBag, arrivalMode);
+  const estimatedSecurityMins = securityEstimate?.avg ?? getAirportDefaultSecurityMinutes(flightType);
   const defaultBuffer = baseBuffer + estimatedSecurityMins;
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
   const manualDriveMinutes = parseInt(manualTravelMinutes, 10);
@@ -465,41 +468,53 @@ export default function AirportCalculator({
     const departure = new Date(year, month - 1, day, hour, minute, 0);
     if (isNaN(departure.getTime())) return null;
 
-    const secMins = showSecurityOverride && customSecurityMinutes
-      ? parseInt(customSecurityMinutes, 10)
-      : estimatedSecurityMins;
-    const baseBuf = showBufferOverride && customBuffer
-      ? Math.max(0, parseInt(customBuffer, 10) - secMins)
-      : baseBuffer;
-    const bufMins = baseBuf + secMins;
-    if (isNaN(bufMins) || bufMins < 0) return null;
+    const planningContext: AirportPlanningContext = {
+      flightType,
+      arrivalMode,
+      hasCheckedBag,
+      estimatedSecurityMinutes: estimatedSecurityMins,
+      travelMinutes: travelMins,
+      manualTravelMinutesInput: manualTravelMinutes,
+      travelSource,
+      hasTrafficData,
+      trafficBasis,
+      planningMode,
+      useSecurityOverride: showSecurityOverride,
+      customSecurityMinutesInput: customSecurityMinutes,
+      useAirportBufferOverride: showBufferOverride,
+      customAirportBufferMinutesInput: customBuffer,
+    };
 
-    const resolvedManual = parseInt(manualTravelMinutes, 10);
-    const effectiveTravelMins =
-      travelMins !== null ? travelMins :
-      (!isNaN(resolvedManual) && resolvedManual >= 0 ? resolvedManual : null);
-    if (effectiveTravelMins === null) return null;
+    const result = leaveTimePlanner.plan(
+      {
+        destination: createAirportDestination(airport),
+        eventType: airportEventTypeFor(flightType),
+        targetTime: departure,
+        context: planningContext,
+      },
+      AirportPlugin
+    );
 
-    const arrivalTime = new Date(departure.getTime() - bufMins * 60 * 1000);
-    const leaveTime = new Date(arrivalTime.getTime() - effectiveTravelMins * 60 * 1000);
+    if (!result) return null;
 
     return {
-      arrivalTime,
-      leaveTime,
-      bufferMinutes: bufMins,
-      baseBufferMinutes: baseBuf,
-      securityMinutes: secMins,
-      travelMinutes: effectiveTravelMins,
+      arrivalTime: result.arriveBy,
+      leaveTime: result.leaveAt,
+      bufferMinutes: result.totalBufferMinutes,
+      baseBufferMinutes: Number(result.metadata?.baseBufferMinutes ?? 0),
+      securityMinutes: Number(result.metadata?.securityMinutes ?? 0),
+      travelMinutes: result.travelMinutes,
       travelSource: travelSource ?? "manual",
       hasTrafficData,
       trafficBasis,
       planningMode,
-      confidence: computeConfidence(bufMins, defaultBuffer),
+      confidence: result.confidence,
+      factors: result.factors,
     };
   }, [departureDate, departureTime, travelMins, travelSource, hasTrafficData, trafficBasis,
       estimatedSecurityMins, baseBuffer, defaultBuffer, showSecurityOverride,
       customSecurityMinutes, showBufferOverride, customBuffer, manualTravelMinutes,
-      planningMode]);
+      planningMode, flightType, arrivalMode, hasCheckedBag, airport]);
 
   const resultHeroMode = genericRedesign && computedResult !== null;
 
@@ -1024,11 +1039,11 @@ export default function AirportCalculator({
 
                 {/* Inline summary — actual numbers, not category labels */}
                 <p className="mt-3 text-xs text-zinc-500">
-                  {fmtDuration(computedResult.travelMinutes)} drive
+                  {fmtDuration(factorMinutes(computedResult, "travel", computedResult.travelMinutes))} drive
                   {" · "}
-                  {fmtDuration(computedResult.securityMinutes)} TSA
+                  {fmtDuration(factorMinutes(computedResult, "tsa_security", computedResult.securityMinutes))} TSA
                   {" · "}
-                  {fmtDuration(computedResult.baseBufferMinutes)} buffer
+                  {fmtDuration(factorMinutes(computedResult, "airport_buffer", computedResult.baseBufferMinutes))} buffer
                 </p>
 
                 {/* Calendar CTA */}
@@ -1109,7 +1124,9 @@ export default function AirportCalculator({
                       <div className="flex items-start justify-between gap-2">
                         <p className="text-sm text-zinc-400">Drive time</p>
                         <div className="text-right">
-                          <p className="text-sm font-semibold text-white">{fmtDuration(computedResult.travelMinutes)}</p>
+                          <p className="text-sm font-semibold text-white">
+                            {fmtDuration(factorMinutes(computedResult, "travel", computedResult.travelMinutes))}
+                          </p>
                           {computedResult.travelSource === "google" && (
                             <p className="text-[11px] text-green-500">
                               {trafficLabel(computedResult.trafficBasis, computedResult.planningMode)}
@@ -1128,7 +1145,9 @@ export default function AirportCalculator({
                           )}
                         </div>
                         <div className="text-right">
-                          <p className="text-sm font-semibold text-white">{fmtDuration(computedResult.securityMinutes)}</p>
+                          <p className="text-sm font-semibold text-white">
+                            {fmtDuration(factorMinutes(computedResult, "tsa_security", computedResult.securityMinutes))}
+                          </p>
                           {securityState === "ready" && (
                             <p className="text-[11px] text-green-500">TSA estimate</p>
                           )}
@@ -1146,7 +1165,7 @@ export default function AirportCalculator({
                           )}
                         </div>
                         <p className="text-sm font-semibold text-white">
-                          {fmtDuration(computedResult.baseBufferMinutes)}
+                          {fmtDuration(factorMinutes(computedResult, "airport_buffer", computedResult.baseBufferMinutes))}
                         </p>
                       </div>
 

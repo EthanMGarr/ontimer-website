@@ -34,6 +34,7 @@ interface TravelLocationBase {
   code: string;
   name: string;
   shortName: string;
+  aliases?: string[];
   city: string;
   calculatorDestination: string;
   reviewedOn: string;
@@ -80,6 +81,329 @@ const officialAirportSources: SourceLink[] = [
     url: "https://www.tsa.gov/travel/security-screening",
   },
 ];
+
+const officialCruiseSources: SourceLink[] = [
+  {
+    label: "U.S. Customs and Border Protection cruise travel guidance",
+    url: "https://www.cbp.gov/travel/us-citizens/western-hemisphere-travel-initiative",
+  },
+];
+
+interface CruiseTerminalSeed {
+  slug: string;
+  code: string;
+  name: string;
+  shortName: string;
+  city: string;
+  calculatorDestination?: string;
+  pierNames: string[];
+  accessPattern: string;
+  trafficFact: string;
+  terminalFact: string;
+  parkingFact: string;
+  shuttleFact: string;
+  exampleOrigin: string;
+  exampleFarOrigin: string;
+  hotelOrigin: string;
+  officialSource: SourceLink;
+  parkingSource?: SourceLink;
+}
+
+function createCruiseTerminalProfile(seed: CruiseTerminalSeed): CruiseTerminalLocationProfile {
+  return {
+    kind: "cruise-terminal",
+    publishingStatus: "published",
+    indexable: true,
+    slug: seed.slug,
+    code: seed.code,
+    name: seed.name,
+    shortName: seed.shortName,
+    city: seed.city,
+    calculatorDestination: seed.calculatorDestination ?? `${seed.name}, ${seed.city}`,
+    reviewedOn: "2026-07-02",
+    reviewedLabel: "Reviewed July 2, 2026",
+    directAnswer:
+      `${seed.shortName} leave time depends on ${seed.accessPattern}, terminal or pier assignment, parking or shuttle plans, checked luggage, cruise check-in windows and whether your sailing is domestic or international.`,
+    authorityIntro:
+      `${seed.shortName} is a cruise departure point, not a normal appointment address. A useful leave-time estimate has to work backward from your boarding window, then add the port details that slow travelers down: ${seed.accessPattern}, terminal or pier assignment, parking or rideshare access, hotel shuttles, checked luggage, document checks and the cutoff time before boarding closes.`,
+    calculatorExample: {
+      eyebrow: `Illustrative ${seed.code} example`,
+      summary: `1:00 PM boarding window · ${seed.exampleOrigin} · parking`,
+      leaveTime: "Leave around 9:45 AM",
+      breakdown: [
+        "11:00 AM port arrival target",
+        "20-minute parking and terminal allowance",
+        "55-minute illustrative drive plus cushion",
+      ],
+    },
+    cruiseTerminal: {
+      checkInLeadMinutes: 120,
+      pierNames: seed.pierNames,
+      accessHeading: `Getting to ${seed.shortName} without losing your boarding buffer`,
+      insideHeading: `Terminals, luggage and boarding at ${seed.shortName}`,
+      transitHeading: `Parking, hotel shuttle and rideshare planning for ${seed.code}`,
+    },
+    modules: [
+      {
+        title: "Port access and terminal assignment",
+        facts: [
+          seed.trafficFact,
+          seed.terminalFact,
+          "Cruise terminals work on boarding windows. Reaching the port area is not the same as reaching the correct terminal with documents and luggage ready.",
+        ],
+      },
+      {
+        title: "Luggage, check-in and boarding",
+        facts: [
+          "Checked luggage, porter drop-off, document checks and security screening can become the real constraint even when the drive looks short.",
+          "International sailings often need more margin for identity documents and cruise-line check-in requirements.",
+          "Arrive before the cruise line's cutoff, not merely before the ship leaves. Boarding can close well before departure.",
+        ],
+      },
+      {
+        title: "Parking, shuttles and rideshare",
+        facts: [
+          seed.parkingFact,
+          seed.shuttleFact,
+          "If you use a hotel shuttle, rental car return or off-site parking, count that transfer as a separate leg before your terminal arrival target.",
+        ],
+      },
+    ],
+    workedExamples: [
+      {
+        title: `${seed.exampleOrigin} -> ${seed.code}`,
+        subtitle: "1:00 PM domestic cruise boarding · parking · checked luggage",
+        assumptions: [
+          "Illustrative 55-minute drive; use the calculator for live traffic",
+          "20 minutes to park and reach the terminal",
+          "2-hour port-arrival target",
+        ],
+        calculation: [
+          "Boarding window: 1:00 PM",
+          "Port arrival target: 11:00 AM",
+          "Reach parking by: 10:40 AM",
+          "Illustrative drive and cushion: 55 minutes",
+        ],
+        result: "Illustrative leave time: 9:45 AM",
+      },
+      {
+        title: `${seed.exampleFarOrigin} -> ${seed.code}`,
+        subtitle: "12:30 PM international cruise boarding · rideshare",
+        assumptions: [
+          "Illustrative 75-minute drive; actual traffic may differ materially",
+          "10-minute curb-to-terminal allowance",
+          "2.5-hour international check-in target",
+        ],
+        calculation: [
+          "Boarding window: 12:30 PM",
+          "Port arrival target: 10:00 AM",
+          "Reach terminal curb by: 9:50 AM",
+          "Illustrative drive: 75 minutes",
+        ],
+        result: "Illustrative leave time: 8:35 AM",
+      },
+      {
+        title: `${seed.hotelOrigin} -> ${seed.code}`,
+        subtitle: "Hotel shuttle · 11:30 AM domestic cruise boarding",
+        assumptions: [
+          "Illustrative 20-minute shuttle ride",
+          "15 minutes for pickup, loading and terminal movement",
+          "2-hour port-arrival target",
+        ],
+        calculation: [
+          "Boarding window: 11:30 AM",
+          "Port arrival target: 9:30 AM",
+          "Shuttle and loading allowance: 35 minutes",
+        ],
+        result: `Be ready at ${seed.hotelOrigin} by about 8:55 AM`,
+      },
+    ],
+    sources: [
+      seed.officialSource,
+      ...(seed.parkingSource ? [seed.parkingSource] : []),
+      ...officialCruiseSources,
+    ],
+  };
+}
+
+const cruiseTerminalProfiles: CruiseTerminalLocationProfile[] = [
+  {
+    slug: "portmiami",
+    code: "PMCR",
+    name: "PortMiami Cruise Terminals",
+    shortName: "PortMiami",
+    aliases: ["Port Miami", "Port Miami cruise terminals"],
+    city: "Miami, Florida",
+    pierNames: ["Cruise Terminal A", "Cruise Terminal B", "Cruise Terminal C", "Cruise Terminal D", "Cruise Terminal E", "Cruise Terminal F", "Cruise Terminal G", "Cruise Terminal V"],
+    accessPattern: "MacArthur Causeway traffic, Downtown Miami congestion, terminal roads and cruise-day parking demand",
+    trafficFact: "PortMiami trips can be shaped by MacArthur Causeway, Biscayne Boulevard, downtown event traffic and cruise-day surges near terminal entrances.",
+    terminalFact: "PortMiami uses multiple cruise terminals, and the correct terminal depends on cruise line and ship assignment.",
+    parkingFact: "On-port garages and lots reduce transfer complexity but can still add time for entry, payment, unloading and the terminal walk.",
+    shuttleFact: "Hotel shuttles and rideshare trips can queue near port access points during busy embarkation windows.",
+    exampleOrigin: "Miami Beach",
+    exampleFarOrigin: "Fort Lauderdale",
+    hotelOrigin: "Downtown Miami hotel",
+    officialSource: { label: "PortMiami cruise terminals", url: "https://www.miamidade.gov/portmiami/cruise-terminals.asp" },
+    parkingSource: { label: "PortMiami parking", url: "https://www.miamidade.gov/portmiami/parking-transportation.asp" },
+  },
+  {
+    slug: "port-canaveral",
+    code: "PCCR",
+    name: "Port Canaveral Cruise Terminals",
+    shortName: "Port Canaveral",
+    city: "Cape Canaveral, Florida",
+    pierNames: ["Cruise Terminal 1", "Cruise Terminal 3", "Cruise Terminal 5", "Cruise Terminal 6", "Cruise Terminal 8", "Cruise Terminal 10"],
+    accessPattern: "SR 528, A1A, beach traffic, theme-park hotel transfers and terminal-specific parking",
+    trafficFact: "Port Canaveral trips often depend on SR 528, A1A and resort-area traffic from Orlando or Cocoa Beach.",
+    terminalFact: "Port Canaveral has several cruise terminals, so terminal assignment matters before choosing parking or drop-off.",
+    parkingFact: "Terminal parking is convenient but can still add time for tolls, port entry and garage or lot movement.",
+    shuttleFact: "Orlando hotel and airport shuttles need pickup, loading and highway time counted separately.",
+    exampleOrigin: "Orlando International Drive",
+    exampleFarOrigin: "Walt Disney World Resort area",
+    hotelOrigin: "Cocoa Beach hotel",
+    officialSource: { label: "Port Canaveral cruise terminals", url: "https://www.portcanaveral.com/Cruise" },
+    parkingSource: { label: "Port Canaveral parking", url: "https://www.portcanaveral.com/Cruise/Directions-Parking" },
+  },
+  {
+    slug: "port-everglades",
+    code: "PECR",
+    name: "Port Everglades Cruise Terminals",
+    shortName: "Port Everglades",
+    city: "Fort Lauderdale, Florida",
+    pierNames: ["Cruise Terminal 2", "Cruise Terminal 4", "Cruise Terminal 18", "Cruise Terminal 19", "Cruise Terminal 21", "Cruise Terminal 25", "Cruise Terminal 26", "Cruise Terminal 29"],
+    accessPattern: "I-595, US 1, Fort Lauderdale airport traffic, port security gates and terminal roads",
+    trafficFact: "Port Everglades trips can be affected by I-595, US 1, airport traffic and beach traffic near Fort Lauderdale.",
+    terminalFact: "Port Everglades has multiple cruise terminals inside a secured port area, so terminal assignment and gate access matter.",
+    parkingFact: "Garage and surface parking plans vary by terminal, and port gate entry can add time on embarkation days.",
+    shuttleFact: "Airport and hotel shuttles are common, but loading and port entry should be included before the check-in target.",
+    exampleOrigin: "Fort Lauderdale Beach",
+    exampleFarOrigin: "Miami",
+    hotelOrigin: "17th Street hotel",
+    officialSource: { label: "Port Everglades cruise guide", url: "https://www.porteverglades.net/cruise/" },
+    parkingSource: { label: "Port Everglades parking", url: "https://www.porteverglades.net/cruise/parking/" },
+  },
+  {
+    slug: "manhattan-cruise-terminal",
+    code: "MTCR",
+    name: "Manhattan Cruise Terminal",
+    shortName: "Manhattan Cruise Terminal",
+    city: "New York, New York",
+    pierNames: ["Pier 88", "Pier 90", "Pier 92"],
+    accessPattern: "West Side Highway traffic, Midtown congestion, pier access and Manhattan parking constraints",
+    trafficFact: "Manhattan Cruise Terminal trips can swing with West Side Highway traffic, Midtown events and tunnel or bridge approaches.",
+    terminalFact: "The terminal operates along Manhattan piers, so the pier assignment and curb plan matter with luggage.",
+    parkingFact: "Manhattan parking can be slow and expensive, and garage entry can add meaningful time before check-in.",
+    shuttleFact: "Hotel, taxi and rideshare trips may queue around the piers during busy boarding windows.",
+    exampleOrigin: "Upper West Side",
+    exampleFarOrigin: "Newark, NJ",
+    hotelOrigin: "Times Square hotel",
+    officialSource: { label: "Manhattan Cruise Terminal", url: "https://nycruise.com/manhattan-terminal/" },
+    parkingSource: { label: "NYC cruise parking", url: "https://nycruise.com/parking/" },
+  },
+  {
+    slug: "brooklyn-cruise-terminal",
+    code: "BTCR",
+    name: "Brooklyn Cruise Terminal",
+    shortName: "Brooklyn Cruise Terminal",
+    city: "Brooklyn, New York",
+    pierNames: ["Pier 12"],
+    accessPattern: "Red Hook street access, Brooklyn-Queens Expressway traffic and terminal-area curb constraints",
+    trafficFact: "Brooklyn Cruise Terminal trips can depend on BQE traffic, Red Hook street access and bridge or tunnel approaches.",
+    terminalFact: "The terminal is centered on Pier 12, but the last-mile street approach can be slower than the map distance suggests.",
+    parkingFact: "On-site parking simplifies the transfer but still requires entry, unloading and a walk with luggage.",
+    shuttleFact: "Rideshare and car-service pickups can be affected by curb demand around the terminal.",
+    exampleOrigin: "Park Slope",
+    exampleFarOrigin: "Long Island City",
+    hotelOrigin: "Downtown Brooklyn hotel",
+    officialSource: { label: "Brooklyn Cruise Terminal", url: "https://nycruise.com/brooklyn-terminal/" },
+    parkingSource: { label: "NYC cruise parking", url: "https://nycruise.com/parking/" },
+  },
+  {
+    slug: "baltimore-cruise-terminal",
+    code: "BCCR",
+    name: "Baltimore Cruise Terminal",
+    shortName: "Baltimore Cruise Terminal",
+    city: "Baltimore, Maryland",
+    pierNames: ["South Locust Point Cruise Terminal"],
+    accessPattern: "I-95, I-395, Fort McHenry Tunnel approaches and South Locust Point access",
+    trafficFact: "Baltimore Cruise Terminal trips can change with I-95, I-395, tunnel traffic and downtown event congestion.",
+    terminalFact: "The South Locust Point terminal is simpler than many ports, but port entry and luggage handling still need a buffer.",
+    parkingFact: "On-site parking is commonly used and should be counted as a separate arrival step before check-in.",
+    shuttleFact: "Hotel shuttles and rideshare trips can be straightforward, but pickup timing still matters with cruise luggage.",
+    exampleOrigin: "Inner Harbor",
+    exampleFarOrigin: "Washington, DC",
+    hotelOrigin: "Inner Harbor hotel",
+    officialSource: { label: "Baltimore cruise terminal", url: "https://www.cruise.maryland.gov/" },
+  },
+  {
+    slug: "galveston-cruise-terminal",
+    code: "GCCR",
+    name: "Port of Galveston Cruise Terminals",
+    shortName: "Galveston Cruise Terminal",
+    city: "Galveston, Texas",
+    pierNames: ["Cruise Terminal 25", "Cruise Terminal 28", "Cruise Terminal 10"],
+    accessPattern: "I-45 island traffic, Harborside Drive, cruise parking lots and beach-weekend congestion",
+    trafficFact: "Galveston cruise trips often depend on I-45, island access, Harborside Drive and beach or holiday traffic.",
+    terminalFact: "Galveston has multiple cruise terminals, and the right terminal affects parking and drop-off routing.",
+    parkingFact: "Port and private parking lots can add shuttle or walk time before terminal check-in.",
+    shuttleFact: "Houston-area shuttles should be planned as a full transfer leg, not just highway time.",
+    exampleOrigin: "Houston Hobby Airport",
+    exampleFarOrigin: "Downtown Houston",
+    hotelOrigin: "Galveston seawall hotel",
+    officialSource: { label: "Port of Galveston cruise parking and terminals", url: "https://www.portofgalveston.com/" },
+  },
+  {
+    slug: "long-beach-cruise-terminal",
+    code: "LBCR",
+    name: "Long Beach Cruise Terminal",
+    shortName: "Long Beach Cruise Terminal",
+    city: "Long Beach, California",
+    pierNames: ["Long Beach Cruise Terminal"],
+    accessPattern: "710 freeway traffic, harbor access, Queen Mary area roads and terminal parking",
+    trafficFact: "Long Beach Cruise Terminal trips can be affected by the 710, harbor-area traffic and event demand near the waterfront.",
+    terminalFact: "The terminal is compact compared with larger ports, but terminal parking and luggage movement still need their own allowance.",
+    parkingFact: "Parking near the terminal can simplify the trip while adding garage entry and walking time.",
+    shuttleFact: "Hotel shuttles and rideshare trips should include loading time and waterfront approach traffic.",
+    exampleOrigin: "Downtown Long Beach",
+    exampleFarOrigin: "Anaheim",
+    hotelOrigin: "Long Beach waterfront hotel",
+    officialSource: { label: "Long Beach Cruise Terminal", url: "https://www.carnival.com/cruise-from/long-beach.aspx" },
+  },
+  {
+    slug: "seattle-cruise-terminal",
+    code: "STCR",
+    name: "Seattle Cruise Terminals",
+    shortName: "Seattle Cruise Terminal",
+    city: "Seattle, Washington",
+    pierNames: ["Pier 66", "Pier 91"],
+    accessPattern: "Elliott Avenue, Alaskan Way, downtown Seattle traffic and pier-specific access",
+    trafficFact: "Seattle cruise trips can vary by downtown traffic, waterfront construction, Elliott Avenue and Alaskan Way approaches.",
+    terminalFact: "Seattle uses Pier 66 and Pier 91 for cruise operations, and the correct pier changes the route materially.",
+    parkingFact: "Pier parking and off-site plans can involve shuttles or different walking distances with luggage.",
+    shuttleFact: "Airport and hotel shuttles need pickup, loading and pier-specific drop-off time included.",
+    exampleOrigin: "Downtown Seattle",
+    exampleFarOrigin: "Sea-Tac Airport",
+    hotelOrigin: "Belltown hotel",
+    officialSource: { label: "Port of Seattle cruise terminals", url: "https://www.portseattle.org/cruise" },
+  },
+  {
+    slug: "vancouver-cruise-terminal",
+    code: "VCCR",
+    name: "Canada Place Cruise Terminal",
+    shortName: "Vancouver Cruise Terminal",
+    city: "Vancouver, British Columbia",
+    pierNames: ["Canada Place"],
+    accessPattern: "downtown Vancouver traffic, Canada Place access, hotel transfers and border-document timing",
+    trafficFact: "Vancouver cruise trips can be shaped by downtown traffic, Canada Place curb demand and hotel pickup timing.",
+    terminalFact: "Canada Place is central and busy; the final curb, luggage and check-in sequence can take longer than the route distance implies.",
+    parkingFact: "Downtown parking and luggage unloading should be counted before the cruise check-in target.",
+    shuttleFact: "Hotel and airport transfers need pickup, loading and downtown approach time included.",
+    exampleOrigin: "Yaletown",
+    exampleFarOrigin: "Vancouver International Airport",
+    hotelOrigin: "Downtown Vancouver hotel",
+    officialSource: { label: "Vancouver cruise terminal", url: "https://www.portvancouver.com/cruise/" },
+  },
+].map(createCruiseTerminalProfile);
 
 interface AirportSeed {
   slug: string;
@@ -1128,6 +1452,7 @@ const additionalAirportProfiles: AirportLocationProfile[] = [
 ].map(createAirportProfile);
 
 export const travelLocations: TravelLocationProfile[] = [
+  ...cruiseTerminalProfiles,
   {
     kind: "airport",
     publishingStatus: "prototype",
