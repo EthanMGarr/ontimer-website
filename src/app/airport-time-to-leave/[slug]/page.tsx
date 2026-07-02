@@ -158,6 +158,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
             initialAirport={location.calculatorDestination}
             locationCode={location.code}
             example={location.calculatorExample}
+            genericRedesign
           />
         </div>
       </section>
