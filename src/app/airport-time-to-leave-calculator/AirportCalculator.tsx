@@ -641,9 +641,13 @@ export default function AirportCalculator({
             >
 
             {/* Planning mode + time */}
-            <div className={genericRedesign ? "rounded-xl border border-zinc-800 bg-zinc-950/40 p-4" : ""}>
+            <div className={genericRedesign ? `rounded-xl border p-4 ${
+              resultHeroMode ? "border-zinc-800/70 bg-zinc-950/25" : "border-zinc-800 bg-zinc-950/40"
+            }` : ""}>
               {genericRedesign && (
-                <p className="mb-4 text-sm font-bold text-white">Your Trip</p>
+                <p className="mb-4 text-sm font-bold text-white">
+                  {resultHeroMode ? "Edit Trip" : "Your Trip"}
+                </p>
               )}
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
@@ -694,7 +698,9 @@ export default function AirportCalculator({
             </div>
 
             {/* Route */}
-            <div className={genericRedesign ? "rounded-xl border border-zinc-800 bg-zinc-950/40 p-4" : ""}>
+            <div className={genericRedesign ? `rounded-xl border p-4 ${
+              resultHeroMode ? "border-zinc-800/70 bg-zinc-950/25" : "border-zinc-800 bg-zinc-950/40"
+            }` : ""}>
               {genericRedesign && (
                 <p className="mb-4 text-sm font-bold text-white">Route</p>
               )}
@@ -731,11 +737,17 @@ export default function AirportCalculator({
                 (!hasRouteInputs && !hasManualDriveTime) ||
                 isFetchingTravel
               }
-              className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
+              className={`w-full rounded-full px-6 py-3 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                resultHeroMode
+                  ? "border border-zinc-600 bg-zinc-800 text-zinc-100 hover:border-zinc-500 hover:bg-zinc-700"
+                  : "bg-green-500 text-black hover:bg-green-400"
+              }`}
             >
               {isFetchingTravel
                 ? "Calculating leave time..."
-                : genericRedesign
+                : resultHeroMode
+                  ? "Update Leave Time"
+                  : genericRedesign
                   ? "Show My Leave Time"
                   : "Calculate leave time"}
             </button>
@@ -751,11 +763,13 @@ export default function AirportCalculator({
             )}
 
             {/* Smart airport timing card */}
-            <div className="rounded-xl border border-zinc-700 bg-zinc-800/70 p-4">
+            <div className={`rounded-xl border p-4 ${
+              resultHeroMode ? "border-zinc-800 bg-zinc-900/60" : "border-zinc-700 bg-zinc-800/70"
+            }`}>
 
               {/* Header */}
               <div className="flex items-center gap-2">
-                <span className="text-base leading-none text-green-500">✓</span>
+                <span className={`text-base leading-none ${resultHeroMode ? "text-zinc-500" : "text-green-500"}`}>✓</span>
                 <p className="text-sm font-semibold text-white">
                   {genericRedesign ? "Already Included" : "Smart airport timing enabled"}
                 </p>
@@ -770,19 +784,19 @@ export default function AirportCalculator({
               <div className={`${genericRedesign ? "grid" : "hidden sm:grid"} mt-3 grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2`}>
                 {coreTrustSignals.map((item) => (
                   <div key={item} className="flex items-center gap-1.5">
-                    <span className="flex-shrink-0 text-xs text-green-500">✓</span>
+                    <span className={`flex-shrink-0 text-xs ${resultHeroMode ? "text-zinc-500" : "text-green-500"}`}>✓</span>
                     <span className="text-xs text-zinc-300">{item}</span>
                   </div>
                 ))}
                 {hasCheckedBag && (
                   <div className="flex items-center gap-1.5">
-                    <span className="flex-shrink-0 text-xs text-green-500">✓</span>
+                    <span className={`flex-shrink-0 text-xs ${resultHeroMode ? "text-zinc-500" : "text-green-500"}`}>✓</span>
                     <span className="text-xs text-zinc-300">Bag drop time</span>
                   </div>
                 )}
                 {(hasPreCheck || hasClear) && (
                   <div className="flex items-center gap-1.5">
-                    <span className="flex-shrink-0 text-xs text-green-500">✓</span>
+                    <span className={`flex-shrink-0 text-xs ${resultHeroMode ? "text-zinc-500" : "text-green-500"}`}>✓</span>
                     <span className="text-xs text-zinc-300">PreCheck / CLEAR</span>
                   </div>
                 )}
@@ -1066,13 +1080,13 @@ export default function AirportCalculator({
                     <AppStoreButton
                       size="md"
                       label={genericRedesign ? "Get Leave Time Alerts" : "Download on the App Store"}
-                      className="w-full justify-center"
+                      className={genericRedesign ? "justify-center" : "w-full justify-center"}
                       location={locationCode
                         ? `airport_${locationCode.toLowerCase()}_result`
                         : "airport_calculator_inline"}
                     />
                     {genericRedesign && (
-                      <p className="mt-2 text-center text-[11px] text-zinc-500">
+                      <p className="mt-2 text-[11px] text-zinc-500">
                         Download on the App Store
                       </p>
                     )}
