@@ -875,13 +875,6 @@ export default function AirportCalculator({
             {error && (
               <div className="rounded-lg border border-red-900/50 bg-red-950/30 px-4 py-3">
                 <p className="text-sm text-red-400">{error}</p>
-                <button
-                  type="button"
-                  onClick={handleCalculate}
-                  className="mt-1.5 text-xs text-red-400 underline underline-offset-2 hover:text-red-300"
-                >
-                  Try again
-                </button>
               </div>
             )}
             {fallbackNotice && !error && (
