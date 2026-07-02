@@ -103,6 +103,19 @@ function expandAirportCode(s: string): string {
   return /^[a-zA-Z]{2,4}$/.test(s.trim()) ? `${s.trim()} airport` : s;
 }
 
+function broaderOriginCandidate(origin: string): string | null {
+  const parts = origin.split(",").map((part) => part.trim()).filter(Boolean);
+  if (parts.length >= 2) return parts.slice(1).join(", ");
+
+  const streetSuffix =
+    /\b(?:street|st|avenue|ave|road|rd|lane|ln|drive|dr|court|ct|place|pl|way|boulevard|blvd)\b\.?/i;
+  const match = origin.match(streetSuffix);
+  if (!match || match.index === undefined) return null;
+
+  const afterStreet = origin.slice(match.index + match[0].length).trim();
+  return afterStreet.length >= 3 ? afterStreet : null;
+}
+
 function trafficBasisFor(bucketedTime: number, travelMode: string): TravelResult["trafficBasis"] {
   if (travelMode === "WALK") return "none";
   if (travelMode === "TRANSIT") return "scheduled";
@@ -285,6 +298,45 @@ export async function GET(request: NextRequest) {
         console.error(
           `[travel-time] routes_api_fallback_failed key="${key}" err="${fallbackMsg}"`
         );
+      }
+
+      const broaderOrigin = broaderOriginCandidate(origin);
+      if (broaderOrigin && broaderOrigin !== origin) {
+        try {
+          console.warn(
+            `[travel-time] retrying_with_broader_origin key="${key}" origin="${broaderOrigin}"`
+          );
+          const broaderResult = await callRoutesApi(
+            broaderOrigin,
+            destination,
+            bucket,
+            apiKey,
+            travelMode,
+            false
+          );
+          const degradedResult: TravelResult = {
+            ...broaderResult,
+            hasTrafficData: false,
+            trafficBasis: "none",
+          };
+          cacheSet(key, degradedResult);
+          console.log(
+            `[travel-time] routes_api_broader_origin_called origin="${broaderOrigin}" dest="${destination}" ` +
+            `bucket=${bucket} mode=${travelMode} duration=${degradedResult.durationMinutes}min`
+          );
+          return NextResponse.json({
+            ...degradedResult,
+            cacheHit: false,
+            degraded: true,
+          });
+        } catch (broaderErr) {
+          const broaderMsg = broaderErr instanceof Error
+            ? broaderErr.message
+            : String(broaderErr);
+          console.error(
+            `[travel-time] routes_api_broader_origin_failed key="${key}" err="${broaderMsg}"`
+          );
+        }
       }
     }
 
