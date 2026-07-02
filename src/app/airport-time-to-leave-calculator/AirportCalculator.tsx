@@ -296,10 +296,11 @@ interface AirportCalculatorProps {
   initialAirport?: string;
   locationCode?: string;
   example?: CalculatorExample;
+  genericRedesign?: boolean;
 }
 
 const genericExample: CalculatorExample = {
-  eyebrow: "Illustrative example",
+  eyebrow: "Example Time to Leave",
   summary: "1:00 PM flight · driving and parking",
   leaveTime: "Leave by 8:43 AM",
   breakdown: ["Personalize the calculator with your route and flight"],
@@ -309,6 +310,7 @@ export default function AirportCalculator({
   initialAirport = "",
   locationCode,
   example = genericExample,
+  genericRedesign = false,
 }: AirportCalculatorProps) {
   const today = localDateString();
   const { date: defaultDate, time: defaultTime } = defaultDeparture();
@@ -434,6 +436,16 @@ export default function AirportCalculator({
     planningMode === "future" ? "Expected traffic" : "Live traffic conditions",
   ];
 
+  const includedSignals = [
+    planningMode === "future" ? "Expected traffic" : "Live traffic",
+    "TSA wait estimates",
+    "Parking and terminal walking",
+    "Airport-specific timing",
+    flightType === "international"
+      ? "International flight recommendations"
+      : "Domestic flight recommendations",
+  ];
+
   function handlePlanningModeChange(mode: PlanningMode) {
     setPlanningMode(mode);
     if (mode === "today") setDepartureDate(localDateString());
@@ -507,10 +519,15 @@ export default function AirportCalculator({
       showSecurityOverride, customSecurityMinutes, showBufferOverride, customBuffer]);
 
   useEffect(() => {
-    if (computedResult && typeof window !== "undefined" && window.innerWidth < 1024) {
+    if (
+      !genericRedesign &&
+      computedResult &&
+      typeof window !== "undefined" &&
+      window.innerWidth < 1024
+    ) {
       setFormExpanded(false);
     }
-  }, [computedResult]);
+  }, [computedResult, genericRedesign]);
 
 
   // ── Manual calculate fallback ───────────────────────────────────────────────
@@ -580,96 +597,108 @@ export default function AirportCalculator({
           {/* ══ Inputs ════════════════════════════════════════════════════════ */}
           <div className={`${computedResult ? "order-2" : "order-1"} space-y-4 lg:order-1`}>
 
-            <button
-              type="button"
-              className="flex w-full items-center justify-between rounded-lg border border-zinc-800 bg-zinc-800/50 px-4 py-3 text-sm font-semibold text-zinc-300 transition-colors hover:bg-zinc-800 lg:hidden"
-              onClick={() => setFormExpanded(!formExpanded)}
-              aria-expanded={formExpanded}
-              aria-controls="airport-calculator-form"
-            >
-              <span>{computedResult ? "Adjust flight details" : "Enter flight details"}</span>
-              <span
-                className={`text-xs text-zinc-500 transition-transform duration-200 ${
-                  formExpanded ? "rotate-180" : ""
-                }`}
+            {!genericRedesign && (
+              <button
+                type="button"
+                className="flex w-full items-center justify-between rounded-lg border border-zinc-800 bg-zinc-800/50 px-4 py-3 text-sm font-semibold text-zinc-300 transition-colors hover:bg-zinc-800 lg:hidden"
+                onClick={() => setFormExpanded(!formExpanded)}
+                aria-expanded={formExpanded}
+                aria-controls="airport-calculator-form"
               >
-                ▾
-              </span>
-            </button>
+                <span>{computedResult ? "Adjust flight details" : "Enter flight details"}</span>
+                <span
+                  className={`text-xs text-zinc-500 transition-transform duration-200 ${
+                    formExpanded ? "rotate-180" : ""
+                  }`}
+                >
+                  ▾
+                </span>
+              </button>
+            )}
 
             <div
               id="airport-calculator-form"
-              className={`space-y-4 ${formExpanded ? "block" : "hidden lg:block"}`}
+              className={`space-y-4 ${genericRedesign || formExpanded ? "block" : "hidden lg:block"}`}
             >
 
             {/* Planning mode + time */}
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <FieldLabel>Planning this trip</FieldLabel>
+            <div className={genericRedesign ? "rounded-xl border border-zinc-800 bg-zinc-950/40 p-4" : ""}>
+              {genericRedesign && (
+                <p className="mb-4 text-sm font-bold text-white">Your Trip</p>
+              )}
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <FieldLabel>Planning this trip</FieldLabel>
+                  <SegmentedControl
+                    options={[
+                      { value: "today", label: "Today" },
+                      { value: "future", label: "Future date" },
+                    ]}
+                    value={planningMode}
+                    onChange={handlePlanningModeChange}
+                  />
+                  {planningMode === "future" && (
+                    <div className="mt-3">
+                      <input
+                        type="date"
+                        value={departureDate}
+                        min={today}
+                        onChange={(e) => handleDepartureDateChange(e.target.value)}
+                        className={`${inputClass} [color-scheme:dark]`}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <FieldLabel>Departure time</FieldLabel>
+                  <input
+                    type="time"
+                    value={departureTime}
+                    onChange={(e) => setDepartureTime(e.target.value)}
+                    className={`${inputClass} [color-scheme:dark]`}
+                  />
+                </div>
+              </div>
+
+              {/* Flight type */}
+              <div className={genericRedesign ? "mt-4" : "mt-4"}>
+                <FieldLabel>Flight type</FieldLabel>
                 <SegmentedControl
                   options={[
-                    { value: "today", label: "Today" },
-                    { value: "future", label: "Future date" },
+                    { value: "domestic", label: "Domestic" },
+                    { value: "international", label: "International" },
                   ]}
-                  value={planningMode}
-                  onChange={handlePlanningModeChange}
-                />
-                {planningMode === "future" && (
-                  <div className="mt-3">
-                    <input
-                      type="date"
-                      value={departureDate}
-                      min={today}
-                      onChange={(e) => handleDepartureDateChange(e.target.value)}
-                      className={`${inputClass} [color-scheme:dark]`}
-                    />
-                  </div>
-                )}
-              </div>
-              <div>
-                <FieldLabel>Departure time</FieldLabel>
-                <input
-                  type="time"
-                  value={departureTime}
-                  onChange={(e) => setDepartureTime(e.target.value)}
-                  className={`${inputClass} [color-scheme:dark]`}
+                  value={flightType}
+                  onChange={setFlightType}
                 />
               </div>
-            </div>
-
-            {/* Flight type */}
-            <div>
-              <FieldLabel>Flight type</FieldLabel>
-              <SegmentedControl
-                options={[
-                  { value: "domestic", label: "Domestic" },
-                  { value: "international", label: "International" },
-                ]}
-                value={flightType}
-                onChange={setFlightType}
-              />
             </div>
 
             {/* Route */}
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <FieldLabel>Leaving from</FieldLabel>
-                <PlaceAutocomplete
-                  value={origin}
-                  onChange={setOrigin}
-                  placeholder="Your address or city"
-                  inputClassName={inputClass}
-                />
-              </div>
-              <div>
-                <FieldLabel>Airport</FieldLabel>
-                <PlaceAutocomplete
-                  value={airport}
-                  onChange={setAirport}
-                  placeholder="e.g. JFK, LAX, Newark"
-                  inputClassName={inputClass}
-                  types="establishment"
-                />
+            <div className={genericRedesign ? "rounded-xl border border-zinc-800 bg-zinc-950/40 p-4" : ""}>
+              {genericRedesign && (
+                <p className="mb-4 text-sm font-bold text-white">Route</p>
+              )}
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <FieldLabel>Leaving from</FieldLabel>
+                  <PlaceAutocomplete
+                    value={origin}
+                    onChange={setOrigin}
+                    placeholder="Your address or city"
+                    inputClassName={inputClass}
+                  />
+                </div>
+                <div>
+                  <FieldLabel>Airport</FieldLabel>
+                  <PlaceAutocomplete
+                    value={airport}
+                    onChange={setAirport}
+                    placeholder="e.g. JFK, LAX, Newark"
+                    inputClassName={inputClass}
+                    types="establishment"
+                  />
+                </div>
               </div>
             </div>
 
@@ -685,7 +714,11 @@ export default function AirportCalculator({
               }
               className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isFetchingTravel ? "Calculating leave time..." : "Calculate leave time"}
+              {isFetchingTravel
+                ? "Calculating leave time..."
+                : genericRedesign
+                  ? "Show My Leave Time"
+                  : "Calculate leave time"}
             </button>
             {airport.trim().length < 2 && (
               <p className="text-center text-xs text-zinc-500">
@@ -703,15 +736,19 @@ export default function AirportCalculator({
 
               {/* Header */}
               <div className="flex items-center gap-2">
-                <span className="text-base leading-none text-green-500">⚙</span>
-                <p className="text-sm font-semibold text-white">Smart airport timing enabled</p>
+                <span className="text-base leading-none text-green-500">✓</span>
+                <p className="text-sm font-semibold text-white">
+                  {genericRedesign ? "Already Included" : "Smart airport timing enabled"}
+                </p>
               </div>
-              <p className="mt-1 text-xs leading-relaxed text-zinc-500">
-                We automatically account for the timing factors most travelers miss.
-              </p>
+              {!genericRedesign && (
+                <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+                  We automatically account for the timing factors most travelers miss.
+                </p>
+              )}
 
               {/* Trust signals — 2-column grid */}
-              <div className="mt-3 hidden grid-cols-2 gap-x-4 gap-y-1.5 sm:grid">
+              <div className={`${genericRedesign ? "grid" : "hidden sm:grid"} mt-3 grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2`}>
                 {coreTrustSignals.map((item) => (
                   <div key={item} className="flex items-center gap-1.5">
                     <span className="flex-shrink-0 text-xs text-green-500">✓</span>
@@ -739,7 +776,11 @@ export default function AirportCalculator({
                 className="mt-4 flex w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:bg-zinc-700 hover:text-white"
               >
                 <span className="flex items-center gap-2">
-                  <span>{showRefinements ? "Hide assumptions" : "Customize timing assumptions"}</span>
+                  <span>
+                    {showRefinements
+                      ? genericRedesign ? "Hide advanced options" : "Hide assumptions"
+                      : genericRedesign ? "Advanced Options" : "Customize timing assumptions"}
+                  </span>
                   {activeRefinementCount > 0 && !showRefinements && (
                     <span className="rounded-full bg-green-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-green-400">
                       {activeRefinementCount} modified
@@ -909,6 +950,32 @@ export default function AirportCalculator({
                   <ConfidenceBadge confidence={computedResult.confidence} />
                 </div>
 
+                {genericRedesign && departureTime && (
+                  <div className="mt-4 rounded-lg border border-zinc-700/60 bg-zinc-900/60 p-4">
+                    <p className="text-sm leading-relaxed text-zinc-300">
+                      For your {fmtDepartureTime(departureTime)} {flightType} flight, we recommend
+                      leaving at <span className="font-semibold text-white">{fmtTime(computedResult.leaveTime)}</span>.
+                    </p>
+                    <p className="mt-3 text-xs font-semibold text-zinc-400">This recommendation includes:</p>
+                    <div className="mt-2 grid gap-1.5">
+                      {[
+                        computedResult.travelSource === "google"
+                          ? trafficLabel(computedResult.trafficBasis, computedResult.planningMode)
+                          : "Your drive time",
+                        "TSA wait estimates",
+                        "Parking and terminal walking time",
+                        "Airport-specific timing recommendations",
+                        `Arriving about ${flightType === "international" ? "3 hours" : "2 hours"} before departure`,
+                      ].map((item) => (
+                        <div key={item} className="flex items-center gap-2">
+                          <span className="flex-shrink-0 text-xs text-green-500">✓</span>
+                          <span className="text-xs text-zinc-300">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Inline summary — actual numbers, not category labels */}
                 <p className="mt-3 text-xs text-zinc-500">
                   {fmtDuration(computedResult.travelMinutes)} drive
@@ -1009,15 +1076,40 @@ export default function AirportCalculator({
 
                 {/* App download CTA — after the breakdown so trust is established first */}
                 <div className="mt-4 border-t border-zinc-800 pt-4">
-                  <p className="text-sm font-bold text-white">Get this alert automatically.</p>
-                  <p className="mt-1.5 text-xs leading-relaxed text-zinc-400">
-                    OnTimer can use your calendar location to alert you when it&apos;s time to leave,
-                    so you do not have to repeat this calculation next trip. It fires a real alarm
-                    with sound and haptics—not a notification you&apos;ll swipe away.
+                  <p className="text-sm font-bold text-white">
+                    {genericRedesign ? "Never calculate this again" : "Get this alert automatically."}
                   </p>
-                  <p className="mt-1 text-[10px] text-zinc-500">
-                    Works for flights, meetings, and any calendar event with a location.
-                  </p>
+                  {genericRedesign ? (
+                    <>
+                      <p className="mt-1.5 text-xs leading-relaxed text-zinc-400">
+                        OnTimer automatically reminds you when it&apos;s time to leave for flights,
+                        meetings, appointments, and events.
+                      </p>
+                      <div className="mt-3 grid gap-1.5">
+                        {[
+                          "Automatic travel time",
+                          "Traffic-aware reminders",
+                          "Persistent notifications that help you stay on time",
+                        ].map((item) => (
+                          <div key={item} className="flex items-center gap-2">
+                            <span className="flex-shrink-0 text-xs text-green-500">✓</span>
+                            <span className="text-xs text-zinc-300">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="mt-1.5 text-xs leading-relaxed text-zinc-400">
+                        OnTimer can use your calendar location to alert you when it&apos;s time to leave,
+                        so you do not have to repeat this calculation next trip. It fires a real alarm
+                        with sound and haptics—not a notification you&apos;ll swipe away.
+                      </p>
+                      <p className="mt-1 text-[10px] text-zinc-500">
+                        Works for flights, meetings, and any calendar event with a location.
+                      </p>
+                    </>
+                  )}
                   <div className="mt-3">
                     <AppStoreButton
                       size="sm"
@@ -1064,18 +1156,22 @@ export default function AirportCalculator({
             ) : (
               /* ── CAPABILITY STATE — no route inputs yet (default / initial) ── */
               <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
-                <p className="text-sm font-semibold text-white">Get your personalized leave time</p>
-                <p className="mt-1 text-xs leading-relaxed text-zinc-500">
-                  Add your starting location and airport — we&apos;ll calculate:
+                <p className="text-sm font-semibold text-white">
+                  {genericRedesign ? "Your leave time includes" : "Get your personalized leave time"}
                 </p>
+                {!genericRedesign && (
+                  <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+                    Add your starting location and airport — we&apos;ll calculate:
+                  </p>
+                )}
 
                 <div className="mt-4 space-y-2">
-                  {[
+                  {(genericRedesign ? includedSignals : [
                     planningMode === "future" ? "Expected traffic for your trip time" : "Real-time traffic conditions",
                     "TSA wait estimates for your airport",
                     "Parking and terminal timing",
                     "Domestic vs international buffer",
-                  ].map((item) => (
+                  ]).map((item) => (
                     <div key={item} className="flex items-center gap-2">
                       <span className="flex-shrink-0 text-xs text-green-500">✓</span>
                       <span className="text-xs text-zinc-300">{item}</span>
@@ -1085,8 +1181,8 @@ export default function AirportCalculator({
 
                 {/* Example — clearly labeled, not the user's result */}
                 <div className="mt-5 rounded-lg border border-zinc-700/40 bg-zinc-800/60 px-4 py-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
-                    {example.eyebrow}
+                  <p className="text-xs font-semibold text-zinc-300">
+                    {genericRedesign ? "Example Time to Leave" : example.eyebrow}
                   </p>
                   <div className="mt-2">
                     <p className="text-xs text-zinc-400">{example.summary}</p>

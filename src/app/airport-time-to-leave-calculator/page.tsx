@@ -163,7 +163,7 @@ export default function AirportTimeToLeaveCalculator() {
       {/* ── CALCULATOR ── */}
       <section id="calculator" className="border-t border-zinc-800 pb-6 pt-3 md:pb-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <AirportCalculator />
+          <AirportCalculator genericRedesign />
           <p className="mt-5 text-center text-sm text-zinc-400">
             This calculator is for realistic departure planning. For a fun take on risky airport
             timing, see the{" "}
