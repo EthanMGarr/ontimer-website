@@ -276,7 +276,7 @@ function ConfidenceBadge({ confidence }: { confidence: Confidence }) {
 }
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+  "min-h-12 w-full touch-manipulation rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-3 text-base text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:py-2 sm:text-sm";
 
 // ─── Default departure ────────────────────────────────────────────────────────
 

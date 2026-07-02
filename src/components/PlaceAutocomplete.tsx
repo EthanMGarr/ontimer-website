@@ -222,7 +222,7 @@ export default function PlaceAutocomplete({
                 e.preventDefault();
                 handleSelect(pred);
               }}
-              className={`cursor-pointer px-3 py-2.5 transition-colors ${
+              className={`min-h-12 cursor-pointer px-3 py-3 transition-colors ${
                 i === activeIndex ? "bg-zinc-700" : "hover:bg-zinc-700/60"
               } ${i > 0 ? "border-t border-zinc-700/50" : ""}`}
             >
