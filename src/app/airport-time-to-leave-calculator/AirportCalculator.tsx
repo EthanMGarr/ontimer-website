@@ -954,7 +954,7 @@ export default function AirportCalculator({
 
                 {/* Hero */}
                 <p className="text-xs font-semibold text-zinc-400">Leave by</p>
-                <p className="mt-0.5 text-7xl font-black leading-none text-green-500">
+                <p className="mt-0.5 whitespace-nowrap text-6xl font-black leading-none text-green-500 sm:text-7xl">
                   {fmtTime(computedResult.leaveTime)}
                 </p>
                 <p className="mt-2 text-sm text-zinc-400">{fmtDate(computedResult.leaveTime)}</p>
@@ -1143,7 +1143,7 @@ export default function AirportCalculator({
                 )}
                 <p className="text-xs font-semibold text-zinc-400">Leave by</p>
                 <div className="mt-0.5 flex items-end gap-3">
-                  <p className="text-7xl font-black leading-none text-zinc-600">—:—</p>
+                  <p className="whitespace-nowrap text-6xl font-black leading-none text-zinc-600 sm:text-7xl">—:—</p>
                   <span className="mb-1.5 animate-pulse text-xs text-zinc-500">calculating…</span>
                 </div>
                 <p className="mt-3 text-xs text-zinc-500">
