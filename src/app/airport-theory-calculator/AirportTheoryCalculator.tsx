@@ -381,7 +381,7 @@ export default function AirportTheoryCalculator() {
           travelMinutes = manual;
         } else {
           setShowManualTravel(true);
-          setFallbackNotice("Automatic drive time is unavailable for this route. Enter drive time below, or try a fuller starting address.");
+          setFallbackNotice("Live drive time did not load. Enter drive time below to calculate without live traffic.");
           setIsCalculating(false);
           return;
         }

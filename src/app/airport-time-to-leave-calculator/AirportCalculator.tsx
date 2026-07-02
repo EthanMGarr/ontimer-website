@@ -545,7 +545,7 @@ export default function AirportCalculator({
           setShowRefinements(true);
           setShowManualDriveTime(true);
           setFormExpanded(true);
-          setFallbackNotice("Automatic drive time is unavailable for this route. Enter drive time below, or try a fuller starting address.");
+          setFallbackNotice("Live drive time did not load. Enter drive time below to calculate without live traffic.");
         }
       } finally {
         setIsFetchingTravel(false);
