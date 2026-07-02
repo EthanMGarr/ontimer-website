@@ -1,0 +1,103 @@
+# Vocabulary
+
+## Always Say
+
+- OnTimer
+- On time
+- Automatically
+- Automatic
+- Automatically keeps you on time
+- Never be late
+- Never be late again
+- Early is OnTime, and OnTime is Late
+- Calendar alarm
+- Calendar alarm app
+- Automatic calendar alarms
+- Meeting alarm
+- Alarm
+- Real alarm
+- Persistent alarms
+- Persistent calendar alarms
+- Meeting
+- Appointment
+- Calendar
+- Calendar event
+- Google Calendar
+- Microsoft Outlook
+- Microsoft 365
+- Time To Leave
+- Reliable
+- Harder to miss
+- No manual setup
+- Existing calendar
+- Source of truth
+- Requires acknowledgement
+- Stays on screen until dismissed
+- Sound and haptics
+- Full-screen alert
+- Notification blindness
+- Passive notifications
+- Last 5 Minutes Problem
+- Gap between knowing and acting
+- Time to leave
+- Join, leave, or wrap up
+- iPhone
+- Download on the App Store
+- Android waitlist
+
+## Never Say
+
+- Calendar replacement
+- Productivity suite
+- Task manager
+- To-do app
+- Planner app
+- Life organizer
+- AI assistant
+- Smart assistant
+- Personal assistant
+- Optimize your life
+- Maximize productivity
+- Crush your schedule
+- Hack your day
+- Never forget anything
+- Guaranteed
+- Impossible to miss
+- Foolproof
+- Life-changing
+- Revolutionary
+- Magical
+- Effortless productivity
+- Stay on top of everything
+- Boost performance
+- Cure lateness
+- Treat ADHD
+- Medical adherence
+- Patient compliance
+- Discipline problem
+- Lazy
+- Unreliable people
+- Users are bad at time
+
+## Needs Discussion
+
+- Reminder app
+- Meeting reminder app
+- Persistent reminder
+- Event reminder
+- Appointment alarm
+- Time blindness
+- ADHD
+- Medication reminders
+- Flights
+- Critical moments
+- Important moments
+- Punctuality
+- Never miss a meeting
+- Calendar notifications not working
+- Time to leave reminder
+- Traffic
+- Travel time
+- Productivity
+- Accountability
+- Focus mode
