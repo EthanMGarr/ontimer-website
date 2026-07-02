@@ -1021,15 +1021,53 @@ export default function AirportCalculator({
                   )}
                 </div>
 
-                {/* Breakdown — expanded by default, before the CTA */}
-                <div className="mt-4 border-t border-zinc-800 pt-3">
+                {/* App download CTA — recurring solution before optional details */}
+                <div className="mt-5 border-t border-zinc-800 pt-5">
+                  <p className="text-base font-bold text-white">
+                    {genericRedesign ? "Never be late again." : "Get this alert automatically."}
+                  </p>
+                  {genericRedesign ? (
+                    <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
+                      OnTimer automatically reminds you when it&apos;s time to leave—for flights, meetings, appointments, and more.
+                    </p>
+                  ) : (
+                    <>
+                      <p className="mt-1.5 text-xs leading-relaxed text-zinc-400">
+                        OnTimer can use your calendar location to alert you when it&apos;s time to leave,
+                        so you do not have to repeat this calculation next trip. It fires a real alarm
+                        with sound and haptics—not a notification you&apos;ll swipe away.
+                      </p>
+                      <p className="mt-1 text-[10px] text-zinc-500">
+                        Works for flights, meetings, and any calendar event with a location.
+                      </p>
+                    </>
+                  )}
+                  <div className="mt-4">
+                    <AppStoreButton
+                      size="md"
+                      label={genericRedesign ? "Get Leave Time Alerts" : "Download on the App Store"}
+                      className="w-full justify-center"
+                      location={locationCode
+                        ? `airport_${locationCode.toLowerCase()}_result`
+                        : "airport_calculator_inline"}
+                    />
+                    {genericRedesign && (
+                      <p className="mt-2 text-center text-[11px] text-zinc-500">
+                        Download on the App Store
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Timing details stay available without interrupting the conversion flow. */}
+                <div className="mt-5 border-t border-zinc-800 pt-4">
                   <button
                     type="button"
                     onClick={() => setShowBreakdown(!showBreakdown)}
                     className="flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-400"
                   >
                     <span>{showBreakdown ? "▾" : "▸"}</span>
-                    <span>{showBreakdown ? "Hide breakdown" : "See timing breakdown"}</span>
+                    <span>{showBreakdown ? "Hide timing breakdown" : "See timing breakdown"}</span>
                   </button>
 
                   {showBreakdown && (
@@ -1084,52 +1122,6 @@ export default function AirportCalculator({
                       </div>
                     </div>
                   )}
-                </div>
-
-                {/* App download CTA — after the breakdown so trust is established first */}
-                <div className="mt-4 border-t border-zinc-800 pt-4">
-                  <p className="text-sm font-bold text-white">
-                    {genericRedesign ? "Never calculate this again" : "Get this alert automatically."}
-                  </p>
-                  {genericRedesign ? (
-                    <>
-                      <p className="mt-1.5 text-xs leading-relaxed text-zinc-400">
-                        OnTimer automatically reminds you when it&apos;s time to leave for flights,
-                        meetings, appointments, and events.
-                      </p>
-                      <div className="mt-3 grid gap-1.5">
-                        {[
-                          "Automatic travel time",
-                          "Traffic-aware reminders",
-                          "Persistent notifications that help you stay on time",
-                        ].map((item) => (
-                          <div key={item} className="flex items-center gap-2">
-                            <span className="flex-shrink-0 text-xs text-green-500">✓</span>
-                            <span className="text-xs text-zinc-300">{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p className="mt-1.5 text-xs leading-relaxed text-zinc-400">
-                        OnTimer can use your calendar location to alert you when it&apos;s time to leave,
-                        so you do not have to repeat this calculation next trip. It fires a real alarm
-                        with sound and haptics—not a notification you&apos;ll swipe away.
-                      </p>
-                      <p className="mt-1 text-[10px] text-zinc-500">
-                        Works for flights, meetings, and any calendar event with a location.
-                      </p>
-                    </>
-                  )}
-                  <div className="mt-3">
-                    <AppStoreButton
-                      size="sm"
-                      location={locationCode
-                        ? `airport_${locationCode.toLowerCase()}_result`
-                        : "airport_calculator_inline"}
-                    />
-                  </div>
                 </div>
               </div>
 

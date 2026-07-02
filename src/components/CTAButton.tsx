@@ -13,6 +13,7 @@ interface CTAButtonProps {
   variant?: "primary" | "outline";
   className?: string;
   location?: string;
+  label?: string;
   // Controls which direction the QR popover opens on desktop.
   // Use "above" when the button sits near the bottom of the viewport (e.g. footer).
   placement?: "above" | "below";
@@ -29,6 +30,7 @@ export function AppStoreButton({
   variant = "primary",
   className = "",
   location = "cta",
+  label = "Download on the App Store",
   placement = "below",
 }: CTAButtonProps) {
   const [isDesktop, setIsDesktop] = useState(false);
@@ -55,7 +57,7 @@ export function AppStoreButton({
       onClick={() => trackAppStoreClick(location)}
     >
       <AppleIcon className="h-4 w-4" />
-      Download on the App Store
+      {label}
     </a>
   );
 
