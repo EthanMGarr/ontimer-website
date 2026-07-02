@@ -351,10 +351,11 @@ export default function AirportCalculator({
 
   // ── Interaction state ───────────────────────────────────────────────────────
   const [calendarAdded, setCalendarAdded] = useState(false);
-  const [showBreakdown, setShowBreakdown] = useState(true);
+  const [showBreakdown, setShowBreakdown] = useState(!genericRedesign);
   const [formExpanded, setFormExpanded] = useState(true);
 
   const securityDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const resultPanelRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     setError(null);
     setFallbackNotice(null);
@@ -527,6 +528,14 @@ export default function AirportCalculator({
     ) {
       setFormExpanded(false);
     }
+  }, [computedResult, genericRedesign]);
+
+  useEffect(() => {
+    if (!genericRedesign || !computedResult || typeof window === "undefined") return;
+    if (window.innerWidth >= 1024) return;
+    window.requestAnimationFrame(() => {
+      resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }, [computedResult, genericRedesign]);
 
 
@@ -928,7 +937,10 @@ export default function AirportCalculator({
           </div>
 
           {/* ══ Result panel ══════════════════════════════════════════════════ */}
-          <div className={`${computedResult ? "order-1" : "order-2"} flex flex-col lg:order-2 lg:sticky lg:top-6 lg:self-start`}>
+          <div
+            ref={resultPanelRef}
+            className={`${computedResult ? "order-1" : "order-2"} scroll-mt-20 flex flex-col lg:order-2 lg:sticky lg:top-6 lg:self-start`}
+          >
 
             {computedResult ? (
               /* ── COMPLETE ── */
@@ -1203,11 +1215,11 @@ export default function AirportCalculator({
         </div>
 
         {/* Spacer so mobile sticky bar doesn't obscure bottom content */}
-        {computedResult && <div className="h-20 lg:hidden" />}
+        {computedResult && !genericRedesign && <div className="h-20 lg:hidden" />}
       </div>
 
       {/* ── Mobile sticky leave-time bar ── */}
-      {computedResult && (
+      {computedResult && !genericRedesign && (
         <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-800 bg-zinc-950/95 px-4 py-3 backdrop-blur-sm">
           <div className="mx-auto flex max-w-lg items-center justify-between gap-4">
             <div>
