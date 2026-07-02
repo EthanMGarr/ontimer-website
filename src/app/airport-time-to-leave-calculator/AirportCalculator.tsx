@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
+import CalculationFactorList from "@/components/leave-time/CalculationFactorList";
+import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNotice";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import type { SecurityEstimate } from "@/app/api/security-wait/route";
 import type { CalculatorExample } from "@/lib/travel-locations";
@@ -144,12 +146,6 @@ function localDateString(date = new Date()): string {
 
 function planningModeForDate(date: string): PlanningMode {
   return date === localDateString() ? "today" : "future";
-}
-
-function trafficLabel(basis: TrafficBasis, mode: PlanningMode): string {
-  if (basis === "scheduled") return "scheduled route";
-  if (basis === "none") return "estimated route";
-  return mode === "future" || basis === "predicted" ? "expected traffic" : "live traffic";
 }
 
 // ─── Airport display ──────────────────────────────────────────────────────────
@@ -1011,6 +1007,10 @@ export default function AirportCalculator({
                   <ConfidenceBadge confidence={computedResult.confidence} />
                 </div>
 
+                {genericRedesign && (
+                  <PlanningEstimateNotice finalSentence="verify airline and airport requirements before you leave." />
+                )}
+
                 {genericRedesign && departureTime && (
                   <div className="mt-5 rounded-lg border border-zinc-700/60 bg-zinc-950/50 p-4">
                     <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
@@ -1019,20 +1019,11 @@ export default function AirportCalculator({
                         {fmtDepartureTime(departureTime)} {flightType} flight
                       </p>
                     </div>
-                    <div className="mt-3 grid gap-1.5 sm:grid-cols-2">
-                      {[
-                        computedResult.travelSource === "google"
-                          ? trafficLabel(computedResult.trafficBasis, computedResult.planningMode)
-                          : "Your drive time",
-                        "TSA estimates",
-                        "Parking & terminal walking",
-                        "Airport timing",
-                      ].map((item) => (
-                        <div key={item} className="flex items-center gap-2">
-                          <span className="flex-shrink-0 text-xs text-green-500">✓</span>
-                          <span className="text-xs text-zinc-300">{item}</span>
-                        </div>
-                      ))}
+                    <div className="mt-3">
+                      <CalculationFactorList
+                        factors={computedResult.factors}
+                        formatDuration={fmtDuration}
+                      />
                     </div>
                   </div>
                 )}
@@ -1120,55 +1111,12 @@ export default function AirportCalculator({
                   </button>
 
                   {showBreakdown && (
-                    <div className="mt-4 space-y-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="text-sm text-zinc-400">Drive time</p>
-                        <div className="text-right">
-                          <p className="text-sm font-semibold text-white">
-                            {fmtDuration(factorMinutes(computedResult, "travel", computedResult.travelMinutes))}
-                          </p>
-                          {computedResult.travelSource === "google" && (
-                            <p className="text-[11px] text-green-500">
-                              {trafficLabel(computedResult.trafficBasis, computedResult.planningMode)}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <p className="text-sm text-zinc-400">Security wait</p>
-                          {securityEstimate && securityState === "ready" && airportShortDisplay && (
-                            <p className="text-[11px] text-zinc-500">
-                              {airportShortDisplay}: {fmtDuration(securityEstimate.min)}–{fmtDuration(securityEstimate.max)} typical
-                            </p>
-                          )}
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-semibold text-white">
-                            {fmtDuration(factorMinutes(computedResult, "tsa_security", computedResult.securityMinutes))}
-                          </p>
-                          {securityState === "ready" && (
-                            <p className="text-[11px] text-green-500">TSA estimate</p>
-                          )}
-                          {securityState === "loading" && (
-                            <p className="text-[11px] text-zinc-500">estimating…</p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <p className="text-sm text-zinc-400">Airport buffer</p>
-                          {bufferContextLabel && (
-                            <p className="text-[11px] text-zinc-500">{bufferContextLabel}</p>
-                          )}
-                        </div>
-                        <p className="text-sm font-semibold text-white">
-                          {fmtDuration(factorMinutes(computedResult, "airport_buffer", computedResult.baseBufferMinutes))}
-                        </p>
-                      </div>
-
+                    <div className="mt-4">
+                      <CalculationFactorList
+                        factors={computedResult.factors}
+                        formatDuration={fmtDuration}
+                        variant="breakdown"
+                      />
                       <div className="flex items-baseline justify-between border-t border-zinc-800 pt-3">
                         <p className="text-sm text-zinc-400">Arrive at airport by</p>
                         <p className="text-sm font-semibold text-white">{fmtTime(computedResult.arrivalTime)}</p>

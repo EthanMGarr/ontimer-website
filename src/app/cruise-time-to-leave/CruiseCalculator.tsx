@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
+import CalculationFactorList from "@/components/leave-time/CalculationFactorList";
+import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNotice";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import {
   leaveTimePlanner,
@@ -87,12 +89,6 @@ function fmtDuration(minutes: number): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
   return m === 0 ? `${h} hr` : `${h} hr ${m} min`;
-}
-
-function trafficLabel(basis: TrafficBasis, mode: PlanningMode): string {
-  if (basis === "scheduled") return "scheduled route";
-  if (basis === "none") return "estimated route";
-  return mode === "future" || basis === "predicted" ? "expected traffic" : "live traffic";
 }
 
 function confidenceLabel(confidence: CruiseResult["confidence"]) {
@@ -599,20 +595,18 @@ export default function CruiseCalculator({
               <p className="mt-2 text-base text-zinc-300">{fmtDate(computedResult.leaveAt)}</p>
               <p className="mt-1.5 text-xs text-green-500">{confidenceLabel(computedResult.confidence)}</p>
 
+              <PlanningEstimateNotice finalSentence="verify your cruise line's boarding time and embarkation requirements before you leave." />
+
               <div className="mt-5 rounded-lg border border-zinc-700/60 bg-zinc-950/50 p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                   <p className="text-sm font-semibold text-white">Why this recommendation?</p>
                   <p className="text-xs text-zinc-500">{fmtTime(computedResult.targetTime)} boarding</p>
                 </div>
-                <div className="mt-3 grid gap-1.5 sm:grid-cols-2">
-                  {computedResult.factors.map((factor) => (
-                    <div key={factor.key} className="flex items-center gap-2">
-                      <span className="flex-shrink-0 text-xs text-green-500">✓</span>
-                      <span className="text-xs text-zinc-300">
-                        {factor.label}: {fmtDuration(factor.minutes)}
-                      </span>
-                    </div>
-                  ))}
+                <div className="mt-3">
+                  <CalculationFactorList
+                    factors={computedResult.factors}
+                    formatDuration={fmtDuration}
+                  />
                 </div>
               </div>
 
@@ -664,20 +658,12 @@ export default function CruiseCalculator({
               </div>
 
               <div className="mt-5 border-t border-zinc-800 pt-4">
-                <div className="space-y-3">
-                  {computedResult.factors.map((factor) => (
-                    <div key={factor.key} className="flex items-start justify-between gap-2">
-                      <p className="text-sm text-zinc-400">{factor.label}</p>
-                      <div className="text-right">
-                        <p className="text-sm font-semibold text-white">{fmtDuration(factor.minutes)}</p>
-                        {factor.key === "travel" && computedResult.travelSource === "google" && (
-                          <p className="text-[11px] text-green-500">
-                            {trafficLabel(computedResult.trafficBasis, computedResult.planningMode)}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                <div>
+                  <CalculationFactorList
+                    factors={computedResult.factors}
+                    formatDuration={fmtDuration}
+                    variant="breakdown"
+                  />
                   <div className="flex items-baseline justify-between border-t border-zinc-800 pt-3">
                     <p className="text-sm text-zinc-400">Arrive at cruise terminal by</p>
                     <p className="text-sm font-semibold text-white">{fmtTime(computedResult.arriveBy)}</p>

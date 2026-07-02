@@ -37,6 +37,10 @@ export interface DestinationPageModel {
     sourceIntro: string;
     links: SourceLink[];
   };
+  relatedDestinations?: {
+    heading: string;
+    links: InternalLinkDefinition[];
+  };
   faq: {
     heading: string;
     items: FaqItem[];
@@ -218,6 +222,25 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
           </div>
         </div>
       </section>
+
+      {model.relatedDestinations && model.relatedDestinations.links.length > 0 && (
+        <section data-location-section="related-destinations" className="border-b border-zinc-800 py-10">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <h2 className="text-2xl font-black text-white">{model.relatedDestinations.heading}</h2>
+            <div className="mt-5 flex flex-wrap gap-3">
+              {model.relatedDestinations.links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-semibold text-zinc-200 transition-colors hover:border-zinc-700 hover:bg-zinc-800"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section data-location-section="faq" className="py-14">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">

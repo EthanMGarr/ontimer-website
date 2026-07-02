@@ -111,7 +111,17 @@ const travelRule: TimingRule<CruisePlanningContext> = {
       key: "travel",
       label: "Travel time",
       minutes,
+      explanation: context.hasTrafficData
+        ? "Estimated for your route and boarding window."
+        : "Based on the travel time entered for this trip.",
       source: context.travelSource ?? "manual",
+      sourceLabel: context.travelSource === "google"
+        ? context.trafficBasis === "live"
+          ? "live traffic"
+          : context.trafficBasis === "predicted"
+            ? "expected traffic"
+            : "traffic estimate"
+        : "manual",
       ruleKey: "cruise.travel",
       priority: 10,
       metadata: {
@@ -132,7 +142,11 @@ const terminalWalkRule: TimingRule<CruisePlanningContext> = {
       key: "terminal_walk",
       label: context.transportationMode === "parking" ? "Parking & terminal walk" : "Terminal access",
       minutes: getCruiseTerminalWalkMinutes(context.transportationMode),
+      explanation: context.transportationMode === "parking"
+        ? "Time for parking, unloading and reaching the terminal."
+        : "Time for curb, shuttle or drop-off movement before check-in.",
       source: "rule",
+      sourceLabel: "terminal access",
       ruleKey: "cruise.terminal-walk",
       priority: 20,
     };
@@ -150,7 +164,9 @@ const baggageRule: TimingRule<CruisePlanningContext> = {
       key: "baggage_drop",
       label: "Baggage drop",
       minutes,
+      explanation: "Time for porter or baggage handoff before check-in.",
       source: "rule",
+      sourceLabel: "checked luggage",
       ruleKey: "cruise.baggage-drop",
       priority: 30,
     };
@@ -167,7 +183,11 @@ const checkInRule: TimingRule<CruisePlanningContext> = {
       key: "cruise_check_in",
       label: "Cruise check-in",
       minutes: Math.max(0, getCruiseCheckInMinutes(context.eventKind) + priorityAdjustment),
+      explanation: context.hasPriorityBoarding
+        ? "Adjusted for priority boarding."
+        : "Planning baseline for documents, security and cruise check-in.",
       source: context.hasPriorityBoarding ? "priority-boarding" : "rule",
+      sourceLabel: context.hasPriorityBoarding ? "priority boarding" : "boarding window",
       ruleKey: "cruise.check-in",
       priority: 40,
     };
@@ -183,7 +203,9 @@ const boardingCutoffRule: TimingRule<CruisePlanningContext> = {
       key: "boarding_cutoff",
       label: "Boarding cutoff",
       minutes: getCruiseBoardingCutoffMinutes(context.eventKind),
+      explanation: "Buffer before boarding can close ahead of departure.",
       source: "rule",
+      sourceLabel: "boarding cutoff",
       ruleKey: "cruise.boarding-cutoff",
       priority: 50,
     };
@@ -199,7 +221,9 @@ const userBufferRule: TimingRule<CruisePlanningContext> = {
       key: "user_buffer",
       label: "Extra buffer",
       minutes: resolveUserBufferMinutes(context),
+      explanation: "Extra margin for important trips and day-of uncertainty.",
       source: "rule",
+      sourceLabel: "user buffer",
       ruleKey: "cruise.user-buffer",
       priority: 60,
     };
@@ -241,7 +265,9 @@ export const CruisePlugin: LeaveTimePlugin<CruisePlanningContext> = {
             key: "arrival_buffer",
             label: "Arrival buffer",
             minutes: totalBufferMinutes,
+            explanation: "Uses your manual total arrival buffer.",
             source: "override",
+            sourceLabel: "manual",
             ruleKey: "cruise.arrival-buffer",
             priority: 20,
           } satisfies CalculationFactor,

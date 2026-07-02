@@ -8,6 +8,7 @@ import type {
   SeoMetadataDefinition,
 } from "@/core/leave-time";
 import type { AirportLocationProfile, TravelLocationProfile } from "@/lib/travel-locations";
+import { getRelatedTravelLocationLinks } from "@/lib/travel-locations";
 import {
   airportEventTypes,
   createAirportDestination,
@@ -101,6 +102,13 @@ export const airportDestinationType: DestinationTypeDefinition<AirportLocationPr
         international: profile.airport.internationalArrivalMinutes,
       },
       transportationSupport: ["drive", "rideshare", "dropoff", "transit"],
+      coordinates: profile.coordinates,
+      popularity: profile.popularity,
+      relatedDestinationIds: profile.relatedDestinationSlugs,
+      knowledge: {
+        ...profile.destinationKnowledge,
+        trustedSources: profile.sources,
+      },
       metadata: {
         code: profile.code,
         city: profile.city,
@@ -248,6 +256,10 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
       sourceHeading: "Planning and traffic sources",
       sourceIntro: `Facts on this page were checked against airport, transit, security and traffic sources. ${location.reviewedLabel}.`,
       links: location.sources,
+    },
+    relatedDestinations: {
+      heading: "Related leave-time calculators",
+      links: getRelatedTravelLocationLinks(location),
     },
     faq: {
       heading: `${location.shortName} leave-time questions`,

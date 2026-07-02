@@ -110,7 +110,17 @@ const travelRule: TimingRule<AirportPlanningContext> = {
       key: "travel",
       label: "Drive time",
       minutes,
+      explanation: context.hasTrafficData
+        ? "Estimated for your route and travel window."
+        : "Based on the drive time entered for this trip.",
       source: context.travelSource ?? "manual",
+      sourceLabel: context.travelSource === "google"
+        ? context.trafficBasis === "live"
+          ? "live traffic"
+          : context.trafficBasis === "predicted"
+            ? "expected traffic"
+            : "traffic estimate"
+        : "manual",
       ruleKey: "airport.travel",
       priority: 10,
       metadata: {
@@ -131,7 +141,11 @@ const securityRule: TimingRule<AirportPlanningContext> = {
       key: "tsa_security",
       label: "TSA Security",
       minutes: resolveSecurityMinutes(context),
+      explanation: context.useSecurityOverride
+        ? "Uses your manual security wait."
+        : "Airport security estimate for this flight type.",
       source: context.useSecurityOverride ? "override" : "estimate",
+      sourceLabel: context.useSecurityOverride ? "manual" : "TSA estimate",
       ruleKey: "airport.tsa-security",
       priority: 20,
     };
@@ -148,7 +162,11 @@ const airportBufferRule: TimingRule<AirportPlanningContext> = {
       key: "airport_buffer",
       label: "Airport buffer",
       minutes: resolveAirportBufferMinutes(context, securityMinutes),
+      explanation: context.useAirportBufferOverride
+        ? "Uses your manual airport buffer after security."
+        : "Includes airport arrival, bags, parking or terminal movement.",
       source: context.useAirportBufferOverride ? "override" : "rule",
+      sourceLabel: context.useAirportBufferOverride ? "manual" : "airport timing",
       ruleKey: "airport.arrival-buffer",
       priority: 30,
     };

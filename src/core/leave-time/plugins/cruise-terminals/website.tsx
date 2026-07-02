@@ -8,6 +8,7 @@ import type {
   SeoMetadataDefinition,
 } from "@/core/leave-time";
 import type { CruiseTerminalLocationProfile, TravelLocationProfile } from "@/lib/travel-locations";
+import { getRelatedTravelLocationLinks } from "@/lib/travel-locations";
 import {
   createCruiseDestination,
   cruiseEventTypes,
@@ -103,6 +104,13 @@ export const cruiseDestinationType: DestinationTypeDefinition<CruiseTerminalLoca
         international: profile.cruiseTerminal.checkInLeadMinutes + 30,
       },
       transportationSupport: ["drive", "rideshare", "dropoff"],
+      coordinates: profile.coordinates,
+      popularity: profile.popularity,
+      relatedDestinationIds: profile.relatedDestinationSlugs,
+      knowledge: {
+        ...profile.destinationKnowledge,
+        trustedSources: profile.sources,
+      },
       metadata: {
         code: profile.code,
         city: profile.city,
@@ -249,6 +257,10 @@ export function buildCruisePageModel(location: CruiseTerminalLocationProfile): D
       sourceHeading: "Planning and cruise terminal sources",
       sourceIntro: `Facts on this page were checked against port, cruise terminal and travel-document sources. ${location.reviewedLabel}.`,
       links: location.sources,
+    },
+    relatedDestinations: {
+      heading: "Related leave-time calculators",
+      links: getRelatedTravelLocationLinks(location),
     },
     faq: {
       heading: `${location.shortName} leave-time questions`,

@@ -26,6 +26,19 @@ export interface ContentModule {
   facts: string[];
 }
 
+export interface DestinationKnowledgeProfile {
+  commonDelays?: string[];
+  localPlanningNotes?: string[];
+  parkingGuidance?: string[];
+  walkingConsiderations?: string[];
+  aiSearchSummary?: string;
+}
+
+export interface RelatedTravelLocationLink {
+  href: string;
+  label: string;
+}
+
 interface TravelLocationBase {
   kind: TravelLocationKind;
   publishingStatus: PublishingStatus;
@@ -41,6 +54,13 @@ interface TravelLocationBase {
   reviewedLabel: string;
   directAnswer: string;
   authorityIntro: string;
+  popularity?: number;
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
+  relatedDestinationSlugs?: string[];
+  destinationKnowledge?: DestinationKnowledgeProfile;
   calculatorExample: CalculatorExample;
   workedExamples: WorkedExample[];
   modules: ContentModule[];
@@ -107,6 +127,7 @@ interface CruiseTerminalSeed {
   hotelOrigin: string;
   officialSource: SourceLink;
   parkingSource?: SourceLink;
+  relatedDestinationSlugs?: string[];
 }
 
 function createCruiseTerminalProfile(seed: CruiseTerminalSeed): CruiseTerminalLocationProfile {
@@ -126,6 +147,24 @@ function createCruiseTerminalProfile(seed: CruiseTerminalSeed): CruiseTerminalLo
       `${seed.shortName} leave time depends on ${seed.accessPattern}, terminal or pier assignment, parking or shuttle plans, checked luggage, cruise check-in windows and whether your sailing is domestic or international.`,
     authorityIntro:
       `${seed.shortName} is a cruise departure point, not a normal appointment address. A useful leave-time estimate has to work backward from your boarding window, then add the port details that slow travelers down: ${seed.accessPattern}, terminal or pier assignment, parking or rideshare access, hotel shuttles, checked luggage, document checks and the cutoff time before boarding closes.`,
+    relatedDestinationSlugs: seed.relatedDestinationSlugs,
+    destinationKnowledge: {
+      commonDelays: [
+        seed.trafficFact,
+        seed.terminalFact,
+      ],
+      localPlanningNotes: [
+        `Boarding windows and terminal assignments are the timing anchor at ${seed.shortName}.`,
+        "Checked luggage, document checks and final boarding cutoffs should be counted before ship departure time.",
+      ],
+      parkingGuidance: [seed.parkingFact],
+      walkingConsiderations: [
+        seed.shuttleFact,
+        "Count the last movement from garage, shuttle stop or curb to the correct terminal as its own timing step.",
+      ],
+      aiSearchSummary:
+        `${seed.shortName} leave-time planning should account for ${seed.accessPattern}, terminal assignment, baggage drop, document checks and cruise-line boarding cutoffs.`,
+    },
     calculatorExample: {
       eyebrow: `Illustrative ${seed.code} example`,
       summary: `1:00 PM boarding window · ${seed.exampleOrigin} · parking`,
@@ -233,6 +272,7 @@ const cruiseTerminalProfiles: CruiseTerminalLocationProfile[] = [
     name: "PortMiami Cruise Terminals",
     shortName: "PortMiami",
     aliases: ["Port Miami", "Port Miami cruise terminals"],
+    relatedDestinationSlugs: ["miami-mia", "port-everglades", "fort-lauderdale-fll"],
     city: "Miami, Florida",
     pierNames: ["Cruise Terminal A", "Cruise Terminal B", "Cruise Terminal C", "Cruise Terminal D", "Cruise Terminal E", "Cruise Terminal F", "Cruise Terminal G", "Cruise Terminal V"],
     accessPattern: "MacArthur Causeway traffic, Downtown Miami congestion, terminal roads and cruise-day parking demand",
@@ -269,6 +309,7 @@ const cruiseTerminalProfiles: CruiseTerminalLocationProfile[] = [
     code: "PECR",
     name: "Port Everglades Cruise Terminals",
     shortName: "Port Everglades",
+    relatedDestinationSlugs: ["fort-lauderdale-fll", "portmiami", "miami-mia"],
     city: "Fort Lauderdale, Florida",
     pierNames: ["Cruise Terminal 2", "Cruise Terminal 4", "Cruise Terminal 18", "Cruise Terminal 19", "Cruise Terminal 21", "Cruise Terminal 25", "Cruise Terminal 26", "Cruise Terminal 29"],
     accessPattern: "I-595, US 1, Fort Lauderdale airport traffic, port security gates and terminal roads",
@@ -287,6 +328,7 @@ const cruiseTerminalProfiles: CruiseTerminalLocationProfile[] = [
     code: "MTCR",
     name: "Manhattan Cruise Terminal",
     shortName: "Manhattan Cruise Terminal",
+    relatedDestinationSlugs: ["jfk", "laguardia-lga", "newark-ewr", "brooklyn-cruise-terminal"],
     city: "New York, New York",
     pierNames: ["Pier 88", "Pier 90", "Pier 92"],
     accessPattern: "West Side Highway traffic, Midtown congestion, pier access and Manhattan parking constraints",
@@ -305,6 +347,7 @@ const cruiseTerminalProfiles: CruiseTerminalLocationProfile[] = [
     code: "BTCR",
     name: "Brooklyn Cruise Terminal",
     shortName: "Brooklyn Cruise Terminal",
+    relatedDestinationSlugs: ["jfk", "laguardia-lga", "manhattan-cruise-terminal"],
     city: "Brooklyn, New York",
     pierNames: ["Pier 12"],
     accessPattern: "Red Hook street access, Brooklyn-Queens Expressway traffic and terminal-area curb constraints",
@@ -425,6 +468,7 @@ interface AirportSeed {
   officialSource: SourceLink;
   transitSource: SourceLink;
   parkingSource?: SourceLink;
+  relatedDestinationSlugs?: string[];
 }
 
 function createAirportProfile(seed: AirportSeed): AirportLocationProfile {
@@ -444,6 +488,23 @@ function createAirportProfile(seed: AirportSeed): AirportLocationProfile {
       `${seed.shortName} (${seed.code}) leave time depends on ${seed.roadAccess}, the correct terminal or concourse, parking or curbside access, checked bags, TSA PreCheck, airport transfers and whether your flight is domestic or international.`,
     authorityIntro:
       `${seed.shortName} is busy enough that generic airport advice is not enough. The useful question is not only when to arrive, but when to leave from your actual starting point. For ${seed.code}, that means working backward from your flight time and adding the local details that can change the trip: ${seed.roadAccess}, terminal choice, parking or rideshare access, transit schedules, checked bags, TSA PreCheck and the larger buffer often needed for international departures.`,
+    relatedDestinationSlugs: seed.relatedDestinationSlugs,
+    destinationKnowledge: {
+      commonDelays: [
+        seed.roadFact,
+        seed.transferFact,
+      ],
+      localPlanningNotes: [
+        seed.terminalFact,
+        `For ${seed.code}, work backward from the flight time and count the route, terminal access, bag drop, security and walking time separately.`,
+      ],
+      parkingGuidance: [seed.parkingFact],
+      walkingConsiderations: [
+        "Reaching airport property is not the same as reaching the correct airline curb, garage, station or terminal entrance.",
+      ],
+      aiSearchSummary:
+        `${seed.shortName} leave-time planning should account for ${seed.roadAccess}, terminal choice, parking or curbside access, transit schedules, checked bags, TSA PreCheck and domestic or international flight buffers.`,
+    },
     calculatorExample: {
       eyebrow: `Illustrative ${seed.code} example`,
       summary: `7:30 AM domestic flight · ${seed.exampleOrigin} · parking`,
@@ -635,6 +696,7 @@ const additionalAirportProfiles: AirportLocationProfile[] = [
     name: "Miami International Airport",
     shortName: "Miami Airport",
     city: "Miami, Florida",
+    relatedDestinationSlugs: ["portmiami", "port-everglades", "fort-lauderdale-fll"],
     terminalNames: ["North Terminal", "Central Terminal", "South Terminal"],
     roadAccess: "Dolphin Expressway, Airport Expressway, LeJeune Road, cruise traffic and garage access",
     roadFact: "MIA trips can change with Dolphin Expressway, Airport Expressway, LeJeune Road and Miami cruise or event traffic.",
@@ -775,6 +837,7 @@ const additionalAirportProfiles: AirportLocationProfile[] = [
     name: "Fort Lauderdale-Hollywood International Airport",
     shortName: "Fort Lauderdale Airport",
     city: "Fort Lauderdale, Florida",
+    relatedDestinationSlugs: ["port-everglades", "portmiami", "miami-mia"],
     terminalNames: ["Terminal 1", "Terminal 2", "Terminal 3", "Terminal 4"],
     roadAccess: "I-595, US 1, I-95, Port Everglades cruise traffic and terminal garage circulation",
     roadFact: "FLL trips can be shaped by I-595, US 1, I-95, beach traffic and Port Everglades cruise-day demand.",
@@ -815,6 +878,7 @@ const additionalAirportProfiles: AirportLocationProfile[] = [
     name: "LaGuardia Airport",
     shortName: "LaGuardia Airport",
     city: "Queens, New York",
+    relatedDestinationSlugs: ["jfk", "newark-ewr", "manhattan-cruise-terminal"],
     terminalNames: ["Terminal A", "Terminal B", "Terminal C"],
     roadAccess: "Grand Central Parkway, BQE, RFK Bridge approaches, Queens surface streets and terminal curbs",
     roadFact: "LGA trips can change quickly with Grand Central Parkway, BQE, RFK Bridge approaches and Queens surface-street traffic.",
@@ -1462,6 +1526,7 @@ export const travelLocations: TravelLocationProfile[] = [
     name: "Newark Liberty International Airport",
     shortName: "Newark Airport",
     city: "Newark, New Jersey",
+    relatedDestinationSlugs: ["jfk", "laguardia-lga", "manhattan-cruise-terminal"],
     calculatorDestination: "Newark Liberty International Airport",
     reviewedOn: "2026-06-24",
     reviewedLabel: "Reviewed June 24, 2026",
@@ -2004,6 +2069,7 @@ export const travelLocations: TravelLocationProfile[] = [
     name: "John F. Kennedy International Airport",
     shortName: "JFK Airport",
     city: "Queens, New York",
+    relatedDestinationSlugs: ["newark-ewr", "laguardia-lga", "manhattan-cruise-terminal"],
     calculatorDestination: "John F. Kennedy International Airport",
     reviewedOn: "2026-06-28",
     reviewedLabel: "Reviewed June 28, 2026",
@@ -2129,6 +2195,27 @@ export const travelLocations: TravelLocationProfile[] = [
   ...additionalAirportProfiles,
 ];
 
+export function getTravelLocationPath(location: TravelLocationProfile): string {
+  if (location.kind === "airport") return `/airport-time-to-leave/${location.slug}`;
+  return `/cruise-time-to-leave/${location.slug}`;
+}
+
+export function getRelatedTravelLocationLinks(
+  location: TravelLocationProfile
+): RelatedTravelLocationLink[] {
+  const relatedSlugs = location.relatedDestinationSlugs ?? [];
+
+  return relatedSlugs
+    .map((slug) => travelLocations.find((candidate) => candidate.slug === slug))
+    .filter((candidate): candidate is TravelLocationProfile => Boolean(candidate?.indexable))
+    .map((candidate) => ({
+      href: getTravelLocationPath(candidate),
+      label: candidate.kind === "airport"
+        ? `${candidate.shortName} (${candidate.code})`
+        : candidate.shortName,
+    }));
+}
+
 export const indexableTravelLocations = travelLocations.filter(
   (location) => location.indexable
 );
@@ -2187,6 +2274,11 @@ export function validateTravelLocationProfiles(): void {
     }
     if (location.indexable && (!location.reviewedOn || location.sources.length < 2)) {
       throw new Error(`${location.code} cannot be indexed without a review date and sources`);
+    }
+    for (const relatedSlug of location.relatedDestinationSlugs ?? []) {
+      if (!travelLocations.some((candidate) => candidate.slug === relatedSlug)) {
+        throw new Error(`${location.code} has unknown related destination slug: ${relatedSlug}`);
+      }
     }
 
     const visibleText = collectVisibleStrings(location).join(" ");

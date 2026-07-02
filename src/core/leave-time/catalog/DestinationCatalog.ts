@@ -19,6 +19,15 @@ export class DestinationCatalog {
     return this.destinations.filter((destination) => destination.type === type);
   }
 
+  relatedTo(destination: Destination): Destination[] {
+    const relatedIds = destination.relatedDestinationIds ?? [];
+    if (relatedIds.length === 0) return [];
+
+    return relatedIds
+      .map((id) => this.byId(id) ?? this.destinations.find((candidate) => candidate.slug === id))
+      .filter((candidate): candidate is Destination => Boolean(candidate));
+  }
+
   findByAlias(query: string): Destination | undefined {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return undefined;

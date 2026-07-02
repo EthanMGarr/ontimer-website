@@ -36,7 +36,21 @@ export interface Destination {
   supportedEventTypeIds?: EventTypeId[];
   localArrivalDefaults?: Record<string, number>;
   transportationSupport?: TransportationMode[];
+  knowledge?: DestinationKnowledge;
+  relatedDestinationIds?: string[];
   metadata?: Record<string, string | number | boolean | string[]>;
+}
+
+export interface DestinationKnowledge {
+  commonDelays?: string[];
+  localPlanningNotes?: string[];
+  parkingGuidance?: string[];
+  walkingConsiderations?: string[];
+  aiSearchSummary?: string;
+  trustedSources?: Array<{
+    label: string;
+    url: string;
+  }>;
 }
 
 export interface EventType {
@@ -49,7 +63,10 @@ export interface CalculationFactor {
   key: string;
   label: string;
   minutes: number;
+  explanation?: string;
   source?: TravelSource | "estimate" | "override" | "rule" | (string & {});
+  sourceLabel?: string;
+  sourceUrl?: string;
   ruleKey?: TimingRuleKey;
   priority?: number;
   metadata?: Record<string, string | number | boolean>;
