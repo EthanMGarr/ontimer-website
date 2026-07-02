@@ -113,7 +113,7 @@ function createAirportProfile(seed: AirportSeed): AirportLocationProfile {
     name: seed.name,
     shortName: seed.shortName,
     city: seed.city,
-    calculatorDestination: seed.calculatorDestination ?? `${seed.code} Airport`,
+    calculatorDestination: seed.calculatorDestination ?? `${seed.name}, ${seed.city}`,
     reviewedOn: "2026-06-28",
     reviewedLabel: "Reviewed June 28, 2026",
     directAnswer:
@@ -1137,7 +1137,7 @@ export const travelLocations: TravelLocationProfile[] = [
     name: "Newark Liberty International Airport",
     shortName: "Newark Airport",
     city: "Newark, New Jersey",
-    calculatorDestination: "EWR Airport",
+    calculatorDestination: "Newark Liberty International Airport",
     reviewedOn: "2026-06-24",
     reviewedLabel: "Reviewed June 24, 2026",
     directAnswer:
@@ -1272,7 +1272,7 @@ export const travelLocations: TravelLocationProfile[] = [
     name: "Hartsfield-Jackson Atlanta International Airport",
     shortName: "Atlanta Airport",
     city: "Atlanta, Georgia",
-    calculatorDestination: "ATL Airport",
+    calculatorDestination: "Hartsfield-Jackson Atlanta International Airport",
     reviewedOn: "2026-06-28",
     reviewedLabel: "Reviewed June 28, 2026",
     directAnswer:
@@ -1407,7 +1407,7 @@ export const travelLocations: TravelLocationProfile[] = [
     name: "Los Angeles International Airport",
     shortName: "LAX",
     city: "Los Angeles, California",
-    calculatorDestination: "LAX Airport",
+    calculatorDestination: "Los Angeles International Airport",
     reviewedOn: "2026-06-28",
     reviewedLabel: "Reviewed June 28, 2026",
     directAnswer:
@@ -1548,7 +1548,7 @@ export const travelLocations: TravelLocationProfile[] = [
     name: "Chicago O'Hare International Airport",
     shortName: "Chicago O'Hare",
     city: "Chicago, Illinois",
-    calculatorDestination: "ORD Airport",
+    calculatorDestination: "Chicago O'Hare International Airport",
     reviewedOn: "2026-06-28",
     reviewedLabel: "Reviewed June 28, 2026",
     directAnswer:
@@ -1679,7 +1679,7 @@ export const travelLocations: TravelLocationProfile[] = [
     name: "John F. Kennedy International Airport",
     shortName: "JFK Airport",
     city: "Queens, New York",
-    calculatorDestination: "JFK Airport",
+    calculatorDestination: "John F. Kennedy International Airport",
     reviewedOn: "2026-06-28",
     reviewedLabel: "Reviewed June 28, 2026",
     directAnswer:
