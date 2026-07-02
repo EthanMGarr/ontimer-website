@@ -598,7 +598,9 @@ export default function AirportCalculator({
           setTrafficBasis("none");
           track("quota_fallback_used");
         } else {
-          setError("Could not estimate drive time. Open Adjust assumptions to enter drive time manually.");
+          setShowRefinements(true);
+          setShowManualDriveTime(true);
+          setError("Could not estimate drive time automatically. Enter drive time below, or try a fuller starting address.");
         }
       } finally {
         setIsFetchingTravel(false);
@@ -834,7 +836,7 @@ export default function AirportCalculator({
                         <input
                           type="number"
                           min="0"
-                          max="300"
+                          max="2880"
                           placeholder="e.g. 35"
                           value={manualTravelMinutes}
                           onChange={(e) => setManualTravelMinutes(e.target.value)}

@@ -378,7 +378,8 @@ export default function AirportTheoryCalculator() {
         if (!isNaN(manual) && manual >= 0) {
           travelMinutes = manual;
         } else {
-          setError("Could not estimate drive time. Enter it manually below.");
+          setShowManualTravel(true);
+          setError("Could not estimate drive time automatically. Enter drive time below, or try a fuller starting address.");
           setIsCalculating(false);
           return;
         }

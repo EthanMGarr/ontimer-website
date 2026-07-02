@@ -123,7 +123,8 @@ async function callRoutesApi(
   destination: string,
   bucketedTime: number,
   apiKey: string,
-  travelMode: string
+  travelMode: string,
+  useTraffic = true
 ): Promise<TravelResult> {
   // Routes API requires departureTime >= now (RFC3339 UTC).
   // Clamp so a bucketed time that fell into the past is still accepted.
@@ -137,7 +138,7 @@ async function callRoutesApi(
     travelMode,
   };
 
-  if (travelMode === "DRIVE") {
+  if (travelMode === "DRIVE" && useTraffic) {
     body.routingPreference = "TRAFFIC_AWARE";
     body.departureTime = departureTime;
   } else if (travelMode === "TRANSIT") {
@@ -178,7 +179,9 @@ async function callRoutesApi(
     durationMinutes: Math.ceil(durationSec / 60),
     // hasTrafficData only meaningful for DRIVE; WALK/TRANSIT don't use traffic routing
     hasTrafficData: travelMode === "DRIVE" && durationSec !== staticSec,
-    trafficBasis: trafficBasisFor(bucketedTime, travelMode),
+    trafficBasis: travelMode === "DRIVE" && !useTraffic
+      ? "none"
+      : trafficBasisFor(bucketedTime, travelMode),
   };
 }
 
@@ -253,6 +256,38 @@ export async function GET(request: NextRequest) {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error(`[travel-time] routes_api_failed key="${key}" err="${msg}"`);
+
+    if (travelMode === "DRIVE") {
+      try {
+        console.warn(`[travel-time] retrying_without_traffic key="${key}"`);
+        const fallbackResult = await callRoutesApi(
+          origin,
+          destination,
+          bucket,
+          apiKey,
+          travelMode,
+          false
+        );
+        cacheSet(key, fallbackResult);
+        console.log(
+          `[travel-time] routes_api_fallback_called origin="${origin}" dest="${destination}" ` +
+          `bucket=${bucket} mode=${travelMode} duration=${fallbackResult.durationMinutes}min`
+        );
+        return NextResponse.json({
+          ...fallbackResult,
+          cacheHit: false,
+          degraded: true,
+        });
+      } catch (fallbackErr) {
+        const fallbackMsg = fallbackErr instanceof Error
+          ? fallbackErr.message
+          : String(fallbackErr);
+        console.error(
+          `[travel-time] routes_api_fallback_failed key="${key}" err="${fallbackMsg}"`
+        );
+      }
+    }
+
     return NextResponse.json(
       { error: msg, cacheHit: false },
       { status: 502 }

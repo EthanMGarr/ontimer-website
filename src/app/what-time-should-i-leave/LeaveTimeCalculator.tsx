@@ -304,8 +304,10 @@ export default function LeaveTimeCalculator() {
           travelMinutes = manual;
           track("quota_fallback_used");
         } else {
+          setShowAssumptions(true);
+          setShowManualTravel(true);
           setError(
-            "Could not estimate travel time. Open timing assumptions to enter minutes manually."
+            "Could not estimate travel time automatically. Enter travel time below, or try a fuller address."
           );
           setIsCalculating(false);
           return;

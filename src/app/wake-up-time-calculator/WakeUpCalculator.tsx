@@ -232,7 +232,7 @@ export default function WakeUpCalculator() {
           travelMinutes = manual;
           track("quota_fallback_used");
         } else {
-          setError("Could not estimate travel time. Enter it manually below.");
+          setError("Could not estimate travel time automatically. Enter travel time manually below, or try a fuller address.");
           setIsCalculating(false);
           return;
         }
