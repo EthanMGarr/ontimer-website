@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
-/// Server-side proxy to Google Maps Routes API (computeRoutes) with TTL caching.
+/// Server-side proxy for travel-time estimation with TTL caching.
 ///
 /// ## Purpose
 /// Keeps GOOGLE_MAPS_API_KEY server-only. Caches results to minimise upstream
 /// API calls. Only called on explicit user submit — never on keystrokes or
 /// page load.
+///
+/// ## API strategy (in order of preference)
+/// 1. Google Routes API (routes.googleapis.com) — newer, richer traffic data.
+///    Requires "Routes API" to be enabled in Google Cloud Console.
+/// 2. Google Directions API (maps.googleapis.com) — older but lives on the same
+///    domain as the Places API, so it is almost always already enabled when
+///    autocomplete works. Used as a fallback if the Routes API is not enabled.
 ///
 /// ## Cache design
 /// Two-layer:
@@ -51,6 +58,18 @@ interface RoutesApiRoute {
 interface RoutesApiResponse {
   routes?: RoutesApiRoute[];
   error?: { code: number; message: string; status: string };
+}
+
+// Directions API (legacy, maps.googleapis.com — same domain as Places API)
+interface DirectionsApiLeg {
+  duration?: { value: number };           // base drive time in seconds
+  duration_in_traffic?: { value: number }; // traffic-aware drive time in seconds
+}
+
+interface DirectionsApiResponse {
+  routes?: Array<{ legs?: DirectionsApiLeg[] }>;
+  status?: string;       // "OK", "ZERO_RESULTS", "NOT_FOUND", etc.
+  error_message?: string;
 }
 
 // ─── In-memory TTL cache ──────────────────────────────────────────────────────
@@ -198,6 +217,63 @@ async function callRoutesApi(
   };
 }
 
+// ─── Google Maps Directions API call (fallback) ───────────────────────────────
+// Uses maps.googleapis.com — same domain as the Places API, so it is almost
+// always already enabled when autocomplete is working. Serves as a reliable
+// fallback when the Routes API (routes.googleapis.com) is not enabled.
+
+async function callDirectionsApi(
+  origin: string,
+  destination: string,
+  bucketedTime: number,
+  apiKey: string
+): Promise<TravelResult> {
+  const nowUnix = Math.floor(Date.now() / 1000);
+  const safeDepartureUnix = Math.max(bucketedTime, nowUnix + 60);
+
+  const params = new URLSearchParams({
+    origin: expandAirportCode(origin),
+    destination: expandAirportCode(destination),
+    key: apiKey,
+    mode: "driving",
+    departure_time: safeDepartureUnix.toString(),
+    traffic_model: "best_guess",
+  });
+
+  const res = await fetch(
+    `https://maps.googleapis.com/maps/api/directions/json?${params}`,
+    { cache: "no-store" }
+  );
+
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+  const data: DirectionsApiResponse = await res.json();
+
+  if (data.status !== "OK" && data.status !== "ZERO_RESULTS") {
+    throw new Error(
+      `Directions API: ${data.status ?? "unknown"}${data.error_message ? ` — ${data.error_message}` : ""}`
+    );
+  }
+
+  const leg = data.routes?.[0]?.legs?.[0];
+  if (!leg) throw new Error("Directions API returned no routes");
+
+  const baseSec = leg.duration?.value ?? 0;
+  const trafficSec = leg.duration_in_traffic?.value ?? baseSec;
+  const hasTraffic = trafficSec !== baseSec;
+
+  const hoursUntil = (safeDepartureUnix * 1000 - Date.now()) / (1000 * 60 * 60);
+  const trafficBasis: TravelResult["trafficBasis"] = hasTraffic
+    ? hoursUntil <= 6 ? "live" : "predicted"
+    : "none";
+
+  return {
+    durationMinutes: Math.ceil(trafficSec / 60),
+    hasTrafficData: hasTraffic,
+    trafficBasis,
+  };
+}
+
 // ─── Route handler ────────────────────────────────────────────────────────────
 
 export async function GET(request: NextRequest) {
@@ -337,6 +413,36 @@ export async function GET(request: NextRequest) {
             `[travel-time] routes_api_broader_origin_failed key="${key}" err="${broaderMsg}"`
           );
         }
+      }
+
+      // ── Layer 4: Directions API (maps.googleapis.com) ─────────────────────
+      // The Directions API lives on the same domain as the Places API, so it is
+      // almost always already enabled when autocomplete is working — unlike the
+      // Routes API which requires separate enablement in Google Cloud Console.
+      try {
+        console.warn(`[travel-time] retrying_with_directions_api key="${key}"`);
+        const directionsResult = await callDirectionsApi(
+          origin,
+          destination,
+          bucket,
+          apiKey
+        );
+        cacheSet(key, directionsResult);
+        console.log(
+          `[travel-time] directions_api_called origin="${origin}" dest="${destination}" ` +
+          `bucket=${bucket} duration=${directionsResult.durationMinutes}min traffic=${directionsResult.hasTrafficData}`
+        );
+        return NextResponse.json({
+          ...directionsResult,
+          cacheHit: false,
+        });
+      } catch (directionsErr) {
+        const directionsMsg = directionsErr instanceof Error
+          ? directionsErr.message
+          : String(directionsErr);
+        console.error(
+          `[travel-time] directions_api_failed key="${key}" err="${directionsMsg}"`
+        );
       }
     }
 
