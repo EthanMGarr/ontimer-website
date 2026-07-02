@@ -353,9 +353,6 @@ export default function AirportCalculator({
   const [formExpanded, setFormExpanded] = useState(true);
 
   const securityDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const travelDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const travelAbortRef = useRef<AbortController | null>(null);
-
   useEffect(() => {
     setError(null);
     setFallbackNotice(null);
@@ -386,78 +383,23 @@ export default function AirportCalculator({
     return () => clearTimeout(securityDebounceRef.current);
   }, [airport, departureDate, departureTime, flightType, hasPreCheck, hasClear]);
 
-  // ── Auto-fetch travel time ──────────────────────────────────────────────────
+  // Route estimates are intentionally fetched only on explicit calculate.
+  // Changing route/time inputs invalidates any prior automatic result.
   useEffect(() => {
-    clearTimeout(travelDebounceRef.current);
-    travelAbortRef.current?.abort();
-
-    if (origin.trim().length < 2 || airport.trim().length < 2 || !departureDate || !departureTime) {
-      setTravelMins(null);
-      setTravelSource(null);
-      setTrafficBasis("none");
-      setIsFetchingTravel(false);
-      return;
-    }
-
-    travelDebounceRef.current = setTimeout(async () => {
-      const [year, month, day] = departureDate.split("-").map(Number);
-      const [hour, minute] = departureTime.split(":").map(Number);
-      const departure = new Date(year, month - 1, day, hour, minute, 0);
-      if (isNaN(departure.getTime())) return;
-
-      const controller = new AbortController();
-      travelAbortRef.current = controller;
-      setIsFetchingTravel(true);
-      setError(null);
-
-      try {
-        const res = await fetchTravelTime(origin, airport, departure);
-        if (controller.signal.aborted) return;
-        setTravelMins(res.durationMinutes);
-        setTravelSource("google");
-        setHasTrafficData(res.hasTrafficData);
-        setTrafficBasis(res.trafficBasis);
-        if (res.cacheHit) {
-          track("travel_time_cache_hit", { duration_minutes: res.durationMinutes });
-        } else {
-          track("routes_api_called", { duration_minutes: res.durationMinutes, trigger: "auto" });
-        }
-        track("airport_calculator_result_shown", {
-          travel_minutes: res.durationMinutes,
-          trigger: "auto",
-          ...(locationCode ? { location_code: locationCode } : {}),
-        });
-      } catch {
-        if (!controller.signal.aborted) {
-          const manual = parseInt(manualTravelMinutes, 10);
-          if (!isNaN(manual) && manual >= 0) {
-            setTravelMins(manual);
-            setTravelSource("manual");
-            setHasTrafficData(false);
-            setTrafficBasis("none");
-          } else {
-            setTravelMins(null);
-            setTravelSource(null);
-            setTrafficBasis("none");
-          }
-          track("quota_fallback_used");
-        }
-      } finally {
-        if (!controller.signal.aborted) setIsFetchingTravel(false);
-      }
-    }, 1000);
-
-    return () => {
-      clearTimeout(travelDebounceRef.current);
-      travelAbortRef.current?.abort();
-    };
-  }, [origin, airport, departureDate, departureTime]); // eslint-disable-line react-hooks/exhaustive-deps
+    setTravelMins(null);
+    setTravelSource(null);
+    setHasTrafficData(false);
+    setTrafficBasis("none");
+    setIsFetchingTravel(false);
+  }, [origin, airport, departureDate, departureTime]);
 
   // ── Derived values ──────────────────────────────────────────────────────────
   const baseBuffer = baseAirportBuffer(flightType, hasCheckedBag, arrivalMode);
   const estimatedSecurityMins = securityEstimate?.avg ?? (flightType === "domestic" ? 25 : 45);
   const defaultBuffer = baseBuffer + estimatedSecurityMins;
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
+  const manualDriveMinutes = parseInt(manualTravelMinutes, 10);
+  const hasManualDriveTime = !isNaN(manualDriveMinutes) && manualDriveMinutes >= 0;
   const airportShortDisplay = buildAirportShortDisplay(airport);
   const hasAirport = airport.trim().length >= 2;
 
@@ -609,12 +551,14 @@ export default function AirportCalculator({
         setIsFetchingTravel(false);
       }
     } else {
-      const manual = parseInt(manualTravelMinutes, 10);
-      if (isNaN(manual) || manual < 0) {
-        setError("Enter your starting location and airport, or open Adjust assumptions to enter drive time manually.");
+      if (!hasManualDriveTime) {
+        setShowRefinements(true);
+        setShowManualDriveTime(true);
+        setFormExpanded(true);
+        setFallbackNotice("Enter your starting location for automatic drive time, or enter drive time manually below.");
         return;
       }
-      setTravelMins(manual);
+      setTravelMins(manualDriveMinutes);
       setTravelSource("manual");
       setHasTrafficData(false);
       setTrafficBasis("none");
@@ -732,14 +676,25 @@ export default function AirportCalculator({
             <button
               type="button"
               onClick={handleCalculate}
-              disabled={!departureDate || !departureTime || origin.trim().length < 2 || airport.trim().length < 2 || isFetchingTravel}
+              disabled={
+                !departureDate ||
+                !departureTime ||
+                airport.trim().length < 2 ||
+                (!hasRouteInputs && !hasManualDriveTime) ||
+                isFetchingTravel
+              }
               className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isFetchingTravel ? "Calculating leave time..." : "Calculate leave time"}
             </button>
-            {(!origin.trim() || !airport.trim()) && (
+            {airport.trim().length < 2 && (
               <p className="text-center text-xs text-zinc-500">
-                Add where you are leaving from and your airport to calculate.
+                Add your airport to calculate.
+              </p>
+            )}
+            {airport.trim().length >= 2 && !origin.trim() && !hasManualDriveTime && (
+              <p className="text-center text-xs text-zinc-500">
+                Add where you are leaving from, or enter drive time manually.
               </p>
             )}
 
