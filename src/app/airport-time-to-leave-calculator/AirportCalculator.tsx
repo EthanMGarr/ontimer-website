@@ -1095,23 +1095,21 @@ export default function AirportCalculator({
                   </div>
                 </div>
 
-                {genericRedesign && (
-                  <PlanningEstimateNotice requirement="verify airline and airport requirements before leaving." />
-                )}
-
                 {/* Timing details stay available without interrupting the conversion flow. */}
                 <div className="mt-5 border-t border-zinc-800 pt-4">
                   <button
                     type="button"
                     onClick={() => setShowBreakdown(!showBreakdown)}
                     className="flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-400"
+                    aria-expanded={showBreakdown}
+                    aria-controls="airport-timing-breakdown"
                   >
                     <span>{showBreakdown ? "▾" : "▸"}</span>
                     <span>{showBreakdown ? "Hide timing breakdown" : "See timing breakdown"}</span>
                   </button>
 
                   {showBreakdown && (
-                    <div className="mt-4">
+                    <div id="airport-timing-breakdown" className="mt-4">
                       <CalculationFactorList
                         factors={computedResult.factors}
                         formatDuration={fmtDuration}
@@ -1124,6 +1122,10 @@ export default function AirportCalculator({
                     </div>
                   )}
                 </div>
+
+                {genericRedesign && (
+                  <PlanningEstimateNotice requirement="verify airline and airport requirements before leaving." />
+                )}
               </div>
 
             ) : isFetchingTravel ? (

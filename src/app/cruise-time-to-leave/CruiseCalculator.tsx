@@ -668,10 +668,11 @@ export default function CruiseCalculator({
                 </div>
               </div>
 
-              <PlanningEstimateNotice requirement="verify your cruise line's boarding and embarkation requirements before leaving." />
-
               <div className="mt-5 border-t border-zinc-800 pt-4">
                 <div>
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    Timing breakdown
+                  </p>
                   <CalculationFactorList
                     factors={computedResult.factors}
                     formatDuration={fmtDuration}
@@ -683,6 +684,8 @@ export default function CruiseCalculator({
                   </div>
                 </div>
               </div>
+
+              <PlanningEstimateNotice requirement="verify your cruise line's boarding and embarkation requirements before leaving." />
             </div>
           ) : (
             <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
