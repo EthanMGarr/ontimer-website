@@ -41,9 +41,6 @@ export default function CalculationFactorList({
           <span className="mt-0.5 flex-shrink-0 text-xs text-green-500">✓</span>
           <span className="text-xs leading-relaxed text-zinc-300">
             {factor.label}: {formatDuration(factor.minutes)}
-            {factor.explanation ? (
-              <span className="block text-zinc-500">{factor.explanation}</span>
-            ) : null}
           </span>
         </div>
       ))}

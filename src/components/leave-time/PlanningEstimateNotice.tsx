@@ -1,15 +1,13 @@
 interface PlanningEstimateNoticeProps {
-  finalSentence: string;
+  requirement: string;
 }
 
-export default function PlanningEstimateNotice({ finalSentence }: PlanningEstimateNoticeProps) {
+export default function PlanningEstimateNotice({ requirement }: PlanningEstimateNoticeProps) {
   return (
-    <div className="mt-5 rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-3">
-      <p className="text-xs leading-relaxed text-zinc-500">
+    <div className="mt-4 rounded-lg border border-zinc-800 bg-zinc-950/40 px-3 py-2.5">
+      <p className="text-[11px] leading-relaxed text-zinc-500">
         <span className="font-semibold text-zinc-400">Planning estimate:</span>{" "}
-        This calculator provides an estimated leave time based on available traffic, travel, and destination information.
-        Actual conditions, including traffic, weather, security lines, parking availability, check-in requirements, and operational changes, may vary.
-        Always allow additional time for important trips and {finalSentence}
+        Conditions can change. Allow extra time and {requirement}
       </p>
     </div>
   );

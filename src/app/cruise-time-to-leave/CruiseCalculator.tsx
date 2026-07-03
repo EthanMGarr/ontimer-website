@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import CalculationFactorList from "@/components/leave-time/CalculationFactorList";
 import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNotice";
@@ -222,6 +222,7 @@ export default function CruiseCalculator({
   const [isFetchingTravel, setIsFetchingTravel] = useState(false);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
   const [calendarAdded, setCalendarAdded] = useState(false);
+  const resultPanelRef = useRef<HTMLDivElement>(null);
 
   const hasRouteInputs = origin.trim().length >= 2 && terminal.trim().length >= 2;
   const manualDriveMinutes = parseInt(manualTravelMinutes, 10);
@@ -302,6 +303,15 @@ export default function CruiseCalculator({
     userBufferMinutes,
     terminal,
   ]);
+
+  useEffect(() => {
+    if (!computedResult || typeof window === "undefined") return;
+    if (window.innerWidth >= 1024) return;
+
+    window.requestAnimationFrame(() => {
+      resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [computedResult]);
 
   async function handleCalculate() {
     setFallbackNotice(null);
@@ -582,7 +592,10 @@ export default function CruiseCalculator({
           )}
         </div>
 
-        <div className={`${computedResult ? "order-1 lg:order-1" : "order-2"} scroll-mt-20 flex flex-col`}>
+        <div
+          ref={resultPanelRef}
+          className={`${computedResult ? "order-1 lg:order-1" : "order-2"} scroll-mt-28 flex flex-col`}
+        >
           {computedResult ? (
             <div className="rounded-xl border border-green-500/30 bg-zinc-900 p-5 shadow-[0_0_40px_rgba(34,197,94,0.08)] transition-all duration-300 sm:p-7">
               <p className="mb-2 text-xs text-zinc-500">
@@ -594,8 +607,6 @@ export default function CruiseCalculator({
               </p>
               <p className="mt-2 text-base text-zinc-300">{fmtDate(computedResult.leaveAt)}</p>
               <p className="mt-1.5 text-xs text-green-500">{confidenceLabel(computedResult.confidence)}</p>
-
-              <PlanningEstimateNotice finalSentence="verify your cruise line's boarding time and embarkation requirements before you leave." />
 
               <div className="mt-5 rounded-lg border border-zinc-700/60 bg-zinc-950/50 p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
@@ -656,6 +667,8 @@ export default function CruiseCalculator({
                   <p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p>
                 </div>
               </div>
+
+              <PlanningEstimateNotice requirement="verify your cruise line's boarding and embarkation requirements before leaving." />
 
               <div className="mt-5 border-t border-zinc-800 pt-4">
                 <div>

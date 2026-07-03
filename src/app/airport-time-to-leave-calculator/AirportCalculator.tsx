@@ -974,7 +974,7 @@ export default function AirportCalculator({
           {/* ══ Result panel ══════════════════════════════════════════════════ */}
           <div
             ref={resultPanelRef}
-            className={`${computedResult ? "order-1" : "order-2"} scroll-mt-20 flex flex-col ${
+            className={`${computedResult ? "order-1" : "order-2"} scroll-mt-28 flex flex-col ${
               resultHeroMode ? "lg:order-1" : "lg:order-2 lg:sticky lg:top-6 lg:self-start"
             }`}
           >
@@ -1006,10 +1006,6 @@ export default function AirportCalculator({
                 <div className="mt-1.5">
                   <ConfidenceBadge confidence={computedResult.confidence} />
                 </div>
-
-                {genericRedesign && (
-                  <PlanningEstimateNotice finalSentence="verify airline and airport requirements before you leave." />
-                )}
 
                 {genericRedesign && departureTime && (
                   <div className="mt-5 rounded-lg border border-zinc-700/60 bg-zinc-950/50 p-4">
@@ -1098,6 +1094,10 @@ export default function AirportCalculator({
                     )}
                   </div>
                 </div>
+
+                {genericRedesign && (
+                  <PlanningEstimateNotice requirement="verify airline and airport requirements before leaving." />
+                )}
 
                 {/* Timing details stay available without interrupting the conversion flow. */}
                 <div className="mt-5 border-t border-zinc-800 pt-4">
