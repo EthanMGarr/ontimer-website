@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { APP_STORE_URL } from "@/lib/constants";
 import { AppStoreQRPopover } from "./AppStoreQRPopover";
 
@@ -91,6 +92,12 @@ function trackNavClick(label: string) {
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setOpenGroup(null);
+    setMobileOpen(false);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/85 backdrop-blur-md">
@@ -145,7 +152,10 @@ export default function Header() {
                           key={item.href}
                           href={item.href}
                           className="block rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
-                          onClick={() => trackNavClick(item.label)}
+                          onClick={() => {
+                            setOpenGroup(null);
+                            trackNavClick(item.label);
+                          }}
                         >
                           <span className="block text-sm font-semibold text-white">
                             {item.label}
@@ -164,6 +174,7 @@ export default function Header() {
             <Link
               href="/faq"
               className="text-sm font-medium text-zinc-400 transition-colors hover:text-white"
+              onClick={() => setOpenGroup(null)}
             >
               FAQ
             </Link>
