@@ -100,12 +100,13 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               {[
+                { href: "/time-calculators",                 label: "Time Calculators"          },
+                { href: "/airport-time-calculators",         label: "Airport Time Calculators"  },
+                { href: "/cruise-terminal-time-calculators", label: "Cruise Time Calculators"   },
                 { href: "/airport-time-to-leave-calculator", label: "Airport Calculator"        },
-                { href: "/airport-time-to-leave/newark-ewr", label: "Newark (EWR) Calculator"   },
                 { href: "/what-time-should-i-leave",         label: "Leave-Time Calculator"     },
                 { href: "/wake-up-time-calculator",          label: "Wake-Up Calculator"        },
                 { href: "/airport-theory-calculator",        label: "Airport Theory Calculator" },
-                { href: "/time-to-leave-reminders",          label: "Time-to-Leave Reminders"   },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="text-sm text-zinc-400 transition-colors hover:text-white">
