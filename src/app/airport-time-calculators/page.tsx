@@ -7,9 +7,9 @@ import {
 } from "@/components/CalculatorDirectory";
 
 export const metadata: Metadata = {
-  title: "Airport Time Calculators | OnTimer",
+  title: "Airport Guides & Calculators | OnTimer",
   description:
-    "Browse OnTimer airport time calculators for EWR, JFK, LGA, LAX, ATL, ORD and more airport-specific leave-time pages.",
+    "Browse OnTimer airport guides and calculators for EWR, JFK, LGA, LAX, ATL, ORD and more airport-specific leave-time pages.",
   alternates: { canonical: "https://www.ontimer.app/airport-time-calculators" },
 };
 
@@ -21,9 +21,9 @@ const featuredAirports = featuredCodes
 const collectionJsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Airport Time Calculators",
+  name: "Airport Guides & Calculators",
   description:
-    "A directory of airport-specific leave-time calculators from OnTimer.",
+    "A directory of airport-specific leave-time guides and calculators from OnTimer.",
   url: "https://www.ontimer.app/airport-time-calculators",
 };
 
@@ -35,10 +35,37 @@ export default function AirportTimeCalculatorsDirectory() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
       />
       <DirectoryShell
-        eyebrow="Airport time calculators"
-        title="Airport-specific calculators for when to leave."
+        eyebrow="Airport guides & calculators"
+        title="Airport guides and calculators for when to leave."
         description="Each airport page works backward from your flight and adds the timing details that change by airport: traffic, parking, transit, terminal movement, security and arrival buffers."
       >
+        <section className="border-b border-zinc-900 bg-zinc-950 py-12">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="grid gap-6 lg:grid-cols-[0.6fr_0.4fr] lg:items-center">
+              <div>
+                <p className="text-sm font-semibold text-emerald-300">
+                  Flying from another airport?
+                </p>
+                <h2 className="mt-3 text-2xl font-black tracking-tight text-white sm:text-3xl">
+                  Calculate departure time for any airport.
+                </h2>
+                <p className="mt-4 max-w-2xl text-sm leading-6 text-zinc-400">
+                  Use the Airport Time-to-Leave Calculator when you want the
+                  answer immediately and do not need to browse airport-specific
+                  guides first.
+                </p>
+              </div>
+              <div className="lg:text-right">
+                <Link
+                  href="/airport-time-to-leave-calculator"
+                  className="inline-flex min-h-11 items-center rounded-full bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200"
+                >
+                  Launch Airport Time-to-Leave Calculator
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
         <section className="border-b border-zinc-900 bg-black py-12">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="grid gap-8 lg:grid-cols-[0.35fr_0.65fr]">

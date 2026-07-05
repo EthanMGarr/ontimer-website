@@ -16,15 +16,6 @@ const popularAirports = [
   { href: "/airport-time-to-leave/chicago-ohare-ord", label: "Chicago O'Hare", meta: "ORD" },
 ];
 
-const popularCruiseTerminals = [
-  { href: "/cruise-time-to-leave/portmiami", label: "PortMiami", meta: "Miami" },
-  { href: "/cruise-time-to-leave/port-canaveral", label: "Port Canaveral", meta: "Orlando area" },
-  { href: "/cruise-time-to-leave/port-everglades", label: "Port Everglades", meta: "Fort Lauderdale" },
-  { href: "/cruise-time-to-leave/manhattan-cruise-terminal", label: "Manhattan", meta: "New York" },
-  { href: "/cruise-time-to-leave/brooklyn-cruise-terminal", label: "Brooklyn", meta: "New York" },
-  { href: "/cruise-time-to-leave/seattle-cruise-terminal", label: "Seattle", meta: "Seattle" },
-];
-
 const learnLinks = [
   {
     href: "/why-calendar-notifications-fail",
@@ -49,7 +40,6 @@ const learnLinks = [
 ];
 
 type OpenMenu = "time-calculators" | "learn" | null;
-type CalculatorPanel = "airports" | "cruise";
 
 function trackNavClick(label: string) {
   if (typeof window === "undefined") return;
@@ -91,8 +81,6 @@ function ArrowRight() {
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<OpenMenu>(null);
-  const [calculatorPanel, setCalculatorPanel] =
-    useState<CalculatorPanel>("airports");
   const pathname = usePathname();
 
   useEffect(() => {
@@ -104,15 +92,6 @@ export default function Header() {
     setOpenMenu(null);
     setMobileOpen(false);
   };
-
-  const activeLocations =
-    calculatorPanel === "airports" ? popularAirports : popularCruiseTerminals;
-  const activeDirectoryHref =
-    calculatorPanel === "airports"
-      ? "/airport-time-calculators"
-      : "/cruise-terminal-time-calculators";
-  const activeDirectoryLabel =
-    calculatorPanel === "airports" ? "More Airports" : "More Cruise Terminals";
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/85 backdrop-blur-md">
@@ -153,7 +132,6 @@ export default function Header() {
               className="relative"
               onMouseEnter={() => {
                 setOpenMenu("time-calculators");
-                setCalculatorPanel("airports");
               }}
               onMouseLeave={() => setOpenMenu(null)}
             >
@@ -163,7 +141,6 @@ export default function Header() {
                 aria-expanded={openMenu === "time-calculators"}
                 onFocus={() => {
                   setOpenMenu("time-calculators");
-                  setCalculatorPanel("airports");
                 }}
                 onClick={() =>
                   setOpenMenu((current) =>
@@ -181,25 +158,46 @@ export default function Header() {
               </button>
 
               {openMenu === "time-calculators" ? (
-                <div className="absolute left-1/2 top-full z-50 w-[40rem] -translate-x-1/2 pt-3">
+                <div className="absolute left-1/2 top-full z-50 w-[42rem] -translate-x-1/2 pt-3">
                   <div className="grid grid-cols-[0.9fr_1.1fr] overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl shadow-black/40">
                     <div className="border-r border-zinc-800 p-2">
                       <Link
-                        href="/airport-time-calculators"
-                        className="group flex items-center justify-between rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
-                        onMouseEnter={() => setCalculatorPanel("airports")}
-                        onFocus={() => setCalculatorPanel("airports")}
+                        href="/airport-time-to-leave-calculator"
+                        className="block rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
                         onClick={() => {
                           closeMenus();
-                          trackNavClick("Airport Time Calculators");
+                          trackNavClick("Airport Time-to-Leave Calculator");
                         }}
                       >
-                        <span>
-                          <span className="block text-sm font-semibold text-white">
-                            Airport Time Calculators
+                        <span className="flex gap-2">
+                          <span aria-hidden="true">✈</span>
+                          <span>
+                            <span className="block text-sm font-semibold text-white">
+                              Airport Time-to-Leave Calculator
+                            </span>
+                            <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
+                              Calculate for any airport
+                            </span>
                           </span>
-                          <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
-                            Flights, terminals, traffic and airport buffers
+                        </span>
+                      </Link>
+                      <Link
+                        href="/airport-time-calculators"
+                        className="group flex items-center justify-between rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
+                        onClick={() => {
+                          closeMenus();
+                          trackNavClick("Airport Guides & Calculators");
+                        }}
+                      >
+                        <span className="flex gap-2">
+                          <span aria-hidden="true">✈</span>
+                          <span>
+                            <span className="block text-sm font-semibold text-white">
+                              Airport Guides & Calculators
+                            </span>
+                            <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
+                              Popular airport-specific pages
+                            </span>
                           </span>
                         </span>
                         <span className="text-zinc-600 transition-colors group-hover:text-emerald-300">
@@ -208,21 +206,19 @@ export default function Header() {
                       </Link>
                       <Link
                         href="/cruise-terminal-time-calculators"
-                        className="group flex items-center justify-between rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
-                        onMouseEnter={() => setCalculatorPanel("cruise")}
-                        onFocus={() => setCalculatorPanel("cruise")}
+                        className="block rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
                         onClick={closeMenus}
                       >
-                        <span>
-                          <span className="block text-sm font-semibold text-white">
-                            Cruise Terminal Time Calculators
+                        <span className="flex gap-2">
+                          <span aria-hidden="true">🚢</span>
+                          <span>
+                            <span className="block text-sm font-semibold text-white">
+                              Cruise Terminal Time Calculator
+                            </span>
+                            <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
+                              Boarding windows, ports, luggage and parking
+                            </span>
                           </span>
-                          <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
-                            Boarding windows, ports, luggage and parking
-                          </span>
-                        </span>
-                        <span className="text-zinc-600 transition-colors group-hover:text-emerald-300">
-                          <ArrowRight />
                         </span>
                       </Link>
                       <Link
@@ -230,11 +226,16 @@ export default function Header() {
                         className="block rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
                         onClick={closeMenus}
                       >
-                        <span className="block text-sm font-semibold text-white">
-                          Wake-Up Time Calculator
-                        </span>
-                        <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
-                          Work backward from when you need to move
+                        <span className="flex gap-2">
+                          <span aria-hidden="true">⏰</span>
+                          <span>
+                            <span className="block text-sm font-semibold text-white">
+                              Wake-Up Time Calculator
+                            </span>
+                            <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
+                              Work backward from when you need to move
+                            </span>
+                          </span>
                         </span>
                       </Link>
                       <Link
@@ -242,16 +243,22 @@ export default function Header() {
                         className="block rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
                         onClick={closeMenus}
                       >
-                        <span className="block text-sm font-semibold text-white">
-                          Leave-Time Calculator
-                        </span>
-                        <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
-                          Everyday events, appointments and arrivals
+                        <span className="flex gap-2">
+                          <span aria-hidden="true">🚗</span>
+                          <span>
+                            <span className="block text-sm font-semibold text-white">
+                              Leave-Time Calculator
+                            </span>
+                            <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
+                              Everyday events, appointments and arrivals
+                            </span>
+                          </span>
                         </span>
                       </Link>
+                      <div className="my-1 border-t border-zinc-800" />
                       <Link
                         href="/time-calculators"
-                        className="mt-1 flex items-center justify-between rounded-xl px-3 py-3 text-sm font-semibold text-emerald-300 transition-colors hover:bg-zinc-900"
+                        className="flex items-center justify-between rounded-xl px-3 py-3 text-sm font-semibold text-emerald-300 transition-colors hover:bg-zinc-900"
                         onClick={closeMenus}
                       >
                         Browse All Calculators
@@ -261,10 +268,10 @@ export default function Header() {
 
                     <div className="p-5">
                       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">
-                        Popular {calculatorPanel === "airports" ? "airports" : "cruise terminals"}
+                        Popular Airports
                       </p>
                       <div className="mt-4 grid gap-x-5 gap-y-3 sm:grid-cols-2">
-                        {activeLocations.map((location) => (
+                        {popularAirports.map((location) => (
                           <Link
                             key={location.href}
                             href={location.href}
@@ -284,11 +291,11 @@ export default function Header() {
                         ))}
                       </div>
                       <Link
-                        href={activeDirectoryHref}
+                        href="/airport-time-calculators"
                         className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-300 transition-colors hover:text-emerald-200"
                         onClick={closeMenus}
                       >
-                        {activeDirectoryLabel}
+                        More Airports
                         <ArrowRight />
                       </Link>
                     </div>
@@ -398,8 +405,9 @@ export default function Header() {
                 </p>
                 <div className="grid gap-1">
                   {[
-                    ["Airport Time Calculators", "/airport-time-calculators"],
-                    ["Cruise Terminal Time Calculators", "/cruise-terminal-time-calculators"],
+                    ["Airport Time-to-Leave Calculator", "/airport-time-to-leave-calculator"],
+                    ["Airport Guides & Calculators", "/airport-time-calculators"],
+                    ["Cruise Terminal Time Calculator", "/cruise-terminal-time-calculators"],
                     ["Wake-Up Time Calculator", "/wake-up-time-calculator"],
                     ["Leave-Time Calculator", "/what-time-should-i-leave"],
                     ["Browse All Calculators", "/time-calculators"],

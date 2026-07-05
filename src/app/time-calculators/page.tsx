@@ -48,8 +48,8 @@ export default function TimeCalculatorsDirectory() {
             <div>
               <CategoryLink
                 href="/airport-time-calculators"
-                label="Airport Time Calculators"
-                description="Airport-specific leave-time calculators for flights, traffic, parking, terminal movement and TSA planning."
+                label="Airport Guides & Calculators"
+                description="Airport-specific leave-time guides and calculators for flights, traffic, parking, terminal movement and TSA planning."
                 count={airportLocations.length}
               />
               <CategoryLink
