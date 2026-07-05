@@ -64,9 +64,11 @@ export function DirectoryShell({
 export function LocationDirectory({
   locations,
   intro,
+  idPrefix,
 }: {
   locations: TravelLocationProfile[];
   intro: string;
+  idPrefix?: string;
 }) {
   const groups = groupLocationsAlphabetically(locations);
   const letters = Object.keys(groups).sort();
@@ -82,7 +84,11 @@ export function LocationDirectory({
 
           <div className="space-y-8">
             {letters.map((letter) => (
-              <div key={letter} className="grid gap-4 border-t border-zinc-800 pt-5 sm:grid-cols-[4rem_1fr]">
+              <div
+                key={letter}
+                id={idPrefix ? `${idPrefix}-${letter}` : undefined}
+                className="scroll-mt-24 grid gap-4 border-t border-zinc-800 pt-5 sm:grid-cols-[4rem_1fr]"
+              >
                 <h2 className="text-2xl font-black text-white">{letter}</h2>
                 <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
                   {groups[letter].map((location) => (

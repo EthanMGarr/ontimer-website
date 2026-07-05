@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   airportLocations,
-  DirectoryShell,
+  groupLocationsAlphabetically,
   LocationDirectory,
 } from "@/components/CalculatorDirectory";
+import { getTravelLocationPath } from "@/lib/travel-locations";
 
 export const metadata: Metadata = {
   title: "Airport Guides & Calculators | OnTimer",
@@ -17,6 +18,7 @@ const featuredCodes = ["EWR", "JFK", "LGA", "LAX", "ATL", "ORD"];
 const featuredAirports = featuredCodes
   .map((code) => airportLocations.find((location) => location.code === code))
   .filter((location): location is (typeof airportLocations)[number] => Boolean(location));
+const airportLetters = Object.keys(groupLocationsAlphabetically(airportLocations)).sort();
 
 const collectionJsonLd = {
   "@context": "https://schema.org",
@@ -34,74 +36,98 @@ export default function AirportTimeCalculatorsDirectory() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
       />
-      <DirectoryShell
-        eyebrow="Airport guides & calculators"
-        title="Airport guides and calculators for when to leave."
-        description="Each airport page works backward from your flight and adds the timing details that change by airport: traffic, parking, transit, terminal movement, security and arrival buffers."
-      >
-        <section className="border-b border-zinc-900 bg-zinc-950 py-12">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <div className="grid gap-6 lg:grid-cols-[0.6fr_0.4fr] lg:items-center">
-              <div>
-                <p className="text-sm font-semibold text-emerald-300">
+      <section className="border-b border-zinc-900 bg-black py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="grid gap-10 lg:grid-cols-[0.45fr_0.55fr] lg:items-start">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">
+                Airport guides & calculators
+              </p>
+              <h1 className="mt-5 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl">
+                Choose your airport.
+              </h1>
+              <p className="mt-5 max-w-xl text-base leading-7 text-zinc-400">
+                Pick an airport-specific calculator for local timing details like
+                traffic, parking, terminal movement, security and arrival buffers.
+              </p>
+
+              <div className="mt-7 border-t border-zinc-800 pt-5">
+                <p className="text-sm font-semibold text-white">
                   Flying from another airport?
                 </p>
-                <h2 className="mt-3 text-2xl font-black tracking-tight text-white sm:text-3xl">
-                  Calculate departure time for any airport.
-                </h2>
-                <p className="mt-4 max-w-2xl text-sm leading-6 text-zinc-400">
-                  Use the Airport Time-to-Leave Calculator when you want the
-                  answer immediately and do not need to browse airport-specific
-                  guides first.
+                <p className="mt-2 text-sm leading-6 text-zinc-500">
+                  Use the generic airport calculator when you want to calculate
+                  for any airport without browsing first.
                 </p>
-              </div>
-              <div className="lg:text-right">
                 <Link
                   href="/airport-time-to-leave-calculator"
-                  className="inline-flex min-h-11 items-center rounded-full bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200"
+                  className="mt-4 inline-flex min-h-11 items-center rounded-full bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200"
                 >
                   Launch Airport Time-to-Leave Calculator
                 </Link>
               </div>
             </div>
-          </div>
-        </section>
-        <section className="border-b border-zinc-900 bg-black py-12">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <div className="grid gap-8 lg:grid-cols-[0.35fr_0.65fr]">
-              <div>
-                <p className="text-sm font-semibold text-white">
-                  Popular airports
-                </p>
-                <p className="mt-3 text-sm leading-6 text-zinc-500">
-                  Quick paths to high-traffic airport calculators, with the full
-                  directory below.
-                </p>
+
+            <div>
+              <div className="border-t border-zinc-800 pt-5">
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold text-white">
+                      Popular airports
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-zinc-500">
+                      Start with a high-traffic airport, or jump to the full
+                      alphabetical directory.
+                    </p>
+                  </div>
+                  <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-600">
+                    {airportLocations.length} airports
+                  </span>
+                </div>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {featuredAirports.map((airport) => (
+                    <Link
+                      key={airport.slug}
+                      href={getTravelLocationPath(airport)}
+                      className="group border-t border-zinc-800 pt-3"
+                    >
+                      <span className="block text-lg font-black text-white transition-colors group-hover:text-emerald-300">
+                        {airport.shortName}
+                      </span>
+                      <span className="mt-1 block text-sm text-zinc-500">
+                        {airport.code} - {airport.city}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {featuredAirports.map((airport) => (
-                  <Link
-                    key={airport.slug}
-                    href={`/airport-time-to-leave/${airport.slug}`}
-                    className="group border-t border-zinc-800 pt-4"
-                  >
-                    <span className="block text-lg font-black text-white transition-colors group-hover:text-emerald-300">
-                      {airport.shortName}
-                    </span>
-                    <span className="mt-1 block text-sm text-zinc-500">
-                      {airport.code} - {airport.city}
-                    </span>
-                  </Link>
-                ))}
+
+              <div className="mt-8 border-t border-zinc-800 pt-5">
+                <p className="text-sm font-semibold text-white">
+                  Browse alphabetically
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {airportLetters.map((letter) => (
+                    <Link
+                      key={letter}
+                      href={`#airport-${letter}`}
+                      className="inline-flex h-9 min-w-9 items-center justify-center rounded-full border border-zinc-800 px-3 text-sm font-semibold text-zinc-300 transition-colors hover:border-emerald-300 hover:text-emerald-300"
+                    >
+                      {letter}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </section>
-        <LocationDirectory
-          locations={airportLocations}
-          intro="Every airport-specific calculator is linked here, organized alphabetically so the directory scales as more airports are added."
-        />
-      </DirectoryShell>
+        </div>
+      </section>
+      <LocationDirectory
+        locations={airportLocations}
+        intro="Every airport-specific calculator is linked here, organized alphabetically so you can choose the airport closest to your trip."
+        idPrefix="airport"
+      />
     </>
   );
 }
