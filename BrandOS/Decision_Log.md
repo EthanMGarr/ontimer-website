@@ -18,7 +18,7 @@ Decision: Calendars organize time. OnTimer protects time.
 
 Reason: This preserves the calendar as source of truth while making OnTimer's role distinct. Calendars tell people what is next; OnTimer helps them act at the right moment.
 
-Evidence: Repo guidance says OnTimer is not a calendar app. The current product relies on Google Calendar and Microsoft Outlook, then adds automatic alarms on top of those calendars.
+Evidence: Repo guidance says OnTimer is not a calendar app. The current product relies on Google Calendar, Apple Calendar, and Microsoft calendars, then adds automatic alarms on top of those calendars.
 
 Date: 2026-06-30.
 
@@ -48,7 +48,7 @@ Decision: The internal strategic promise is "OnTimer automatically keeps you on 
 
 Reason: The brand needs a promise larger than the category but still grounded in product behavior. "Calendar alarm app" defines the mechanism. "OnTimer automatically keeps you on time" defines the customer outcome. "Never be late again" remains the primary customer-facing hero message.
 
-Evidence: Competitor research consistently showed adjacent apps selling reminder, planner, calendar, task, or repeated-nudge features. OnTimer's strongest differentiation is automatic punctuality from existing calendar events rather than manual reminder management. The website and repo guidance support this through automatic alarms, Google Calendar and Microsoft Outlook support, persistent alerts, Time To Leave, and multiple calendars.
+Evidence: Competitor research consistently showed adjacent apps selling reminder, planner, calendar, task, or repeated-nudge features. OnTimer's strongest differentiation is automatic punctuality from existing calendar events rather than manual reminder management. The website and repo guidance support this through automatic alarms, Google Calendar, Apple Calendar, and Microsoft calendar support, persistent alerts, Time To Leave, and multiple calendars.
 
 Date: 2026-06-30.
 
@@ -78,7 +78,7 @@ Decision: OnTimer should focus on automatic alarms created from existing calenda
 
 Reason: The user should not rebuild their schedule or manually create alarms for every meeting.
 
-Evidence: Website copy repeatedly says OnTimer connects to Google Calendar and Outlook and creates alarms automatically with no per-event setup.
+Evidence: Website copy repeatedly says OnTimer connects to Google Calendar, Apple Calendar, and Microsoft calendars and creates alarms automatically with no per-event setup.
 
 Date: Present in current site copy as of 2026-06-30.
 
@@ -118,7 +118,7 @@ Decision: Use meetings as the clearest everyday example of OnTimer's value.
 
 Reason: Meetings are common, high-stakes, and make the difference between notification and alarm easy to understand.
 
-Evidence: Website copy emphasizes meetings, back-to-back schedules, Google Calendar, Outlook, and persistent alarms before events.
+Evidence: Website copy emphasizes meetings, back-to-back schedules, Google Calendar, Apple Calendar, Microsoft calendars, and persistent alarms before events.
 
 Date: Present in current site copy as of 2026-06-30.
 

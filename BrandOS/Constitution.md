@@ -86,7 +86,7 @@ More specifically:
 
 ## Current Positioning
 
-OnTimer is an iPhone calendar alarm app that turns Google Calendar and Microsoft Outlook events into persistent alarms before meetings, appointments, flights, medication schedules, and other critical moments.
+OnTimer is an iPhone calendar alarm app that turns Google Calendar, Apple Calendar, and Microsoft calendar events into persistent alarms before meetings, appointments, flights, medication schedules, and other critical moments.
 
 It is for people who are not forgetting their schedule. They are losing the final action window after passive reminders appear and disappear.
 
@@ -100,7 +100,7 @@ The enemy is not Apple Calendar, Google Calendar, Outlook, or any specific calen
 
 - Alarm-first, not calendar-first.
 - Built around existing calendar events.
-- Automatic alarm creation from Google Calendar and Microsoft Outlook.
+- Automatic alarm creation from Google Calendar, Apple Calendar, and Microsoft calendars.
 - Persistent alarms that require acknowledgement.
 - Designed for the behavioral gap between awareness and action.
 - Time To Leave alerts for events with locations.
@@ -131,7 +131,7 @@ The enemy is not Apple Calendar, Google Calendar, Outlook, or any specific calen
 8. Trust is built through concrete details, not hype.
 9. Lead with the outcome first: stay on time.
 10. Then explain the mechanism: automatic calendar alarms.
-11. Then prove it: Google Calendar, Microsoft Outlook, persistent alarms, Time To Leave, multiple calendars.
+11. Then prove it: Google Calendar, Apple Calendar, Microsoft calendars, persistent alarms, Time To Leave, multiple calendars.
 12. Lead with the highest-consequence use cases: meetings, appointments, flights, medication timing, and other moments where lateness matters.
 13. Use customer language before category language when clarity matters.
 14. Avoid medical, ADHD, or accessibility overclaims unless evidence and wording are careful.

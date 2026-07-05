@@ -23,6 +23,7 @@
 - Calendar
 - Calendar event
 - Google Calendar
+- Apple Calendar
 - Microsoft Outlook
 - Microsoft 365
 - Time To Leave

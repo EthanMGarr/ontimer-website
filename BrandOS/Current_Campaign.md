@@ -12,7 +12,7 @@ Outcome: stay on time.
 
 Mechanism: automatic calendar alarms from the user's existing calendar.
 
-Proof: Google Calendar, Microsoft Outlook, persistent alarms, Time To Leave, and multiple calendars.
+Proof: Google Calendar, Apple Calendar, Microsoft calendars, persistent alarms, Time To Leave, and multiple calendars.
 
 Primary customer-facing hero message: "Never be late again."
 

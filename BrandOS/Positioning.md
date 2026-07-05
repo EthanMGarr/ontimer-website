@@ -2,7 +2,7 @@
 
 ## Who OnTimer Is For
 
-OnTimer is for iPhone users who rely on Google Calendar, Microsoft Outlook, or multiple calendars and still miss the moment when they need to leave, join, wrap up, or act.
+OnTimer is for iPhone users who rely on Google Calendar, Apple Calendar, Microsoft calendars, or multiple calendars and still miss the moment when they need to leave, join, wrap up, or act.
 
 The strongest current audiences are:
 
@@ -41,7 +41,8 @@ OnTimer uses the existing calendar as the source of truth, then creates and upda
 
 - Persistent alarms
 - Google Calendar
-- Microsoft Outlook
+- Apple Calendar
+- Microsoft calendars
 - Time To Leave
 - Multiple calendars
 
@@ -109,7 +110,7 @@ Persistent reminder apps can be strong at repeated task nudges. OnTimer's edge i
 
 ## Current Positioning Statement
 
-For people who rely on their calendar but still miss the moment to act, OnTimer automatically keeps you on time by turning existing calendar events into alarms, with Google Calendar and Microsoft Outlook support, persistent alerts, Time To Leave, and multiple-calendar coverage.
+For people who rely on their calendar but still miss the moment to act, OnTimer automatically keeps you on time by turning existing calendar events into alarms, with Google Calendar, Apple Calendar, and Microsoft calendar support, persistent alerts, Time To Leave, and multiple-calendar coverage.
 
 ## Current Hero Message
 

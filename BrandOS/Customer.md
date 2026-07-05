@@ -46,7 +46,7 @@ Use phrases customers would naturally say:
 - "I do not want to set alarms manually for every meeting."
 - "I just need to know when to stop what I am doing."
 - "I am not forgetting the meeting. I am missing the moment to move."
-- "I use Google Calendar and Outlook."
+- "I use Google Calendar, Apple Calendar, or Microsoft calendars."
 - "I need an alarm, not another notification."
 
 ## Who This Product Is Not For
