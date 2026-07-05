@@ -138,22 +138,24 @@ export default function Header() {
                 </button>
 
                 {openGroup === group.label ? (
-                  <div className="absolute left-1/2 top-full z-50 mt-3 w-72 -translate-x-1/2 rounded-2xl border border-zinc-800 bg-zinc-950 p-2 shadow-2xl shadow-black/40">
-                    {group.items.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="block rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
-                        onClick={() => trackNavClick(item.label)}
-                      >
-                        <span className="block text-sm font-semibold text-white">
-                          {item.label}
-                        </span>
-                        <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
-                          {item.description}
-                        </span>
-                      </Link>
-                    ))}
+                  <div className="absolute left-1/2 top-full z-50 w-72 -translate-x-1/2 pt-3">
+                    <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-2 shadow-2xl shadow-black/40">
+                      {group.items.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="block rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
+                          onClick={() => trackNavClick(item.label)}
+                        >
+                          <span className="block text-sm font-semibold text-white">
+                            {item.label}
+                          </span>
+                          <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
+                            {item.description}
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 ) : null}
               </div>
