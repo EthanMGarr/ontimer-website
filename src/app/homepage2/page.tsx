@@ -116,7 +116,7 @@ const steps = [
   {
     number: "02",
     title: "OnTimer creates alarms",
-    body: "No need to set an alarm for every meeting. Your events are covered automatically.",
+    body: "Upcoming events get alarms automatically, without rebuilding your schedule.",
   },
   {
     number: "03",
@@ -161,6 +161,11 @@ const calculators = [
     title: "Airport Theory",
     body: "See how risky a last-minute airport plan is.",
     href: "/airport-theory-calculator",
+  },
+  {
+    title: "Cruise Terminal Time Calculator",
+    body: "Plan around boarding windows, ports, luggage, and parking.",
+    href: "/cruise-terminal-time-calculators",
   },
 ];
 
@@ -311,117 +316,7 @@ export default function Homepage2() {
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-zinc-950 py-12">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div>
-              <p className="text-sm font-semibold text-white">
-                Works with all of your Google, Apple Calendar, and Microsoft
-                Calendars.
-              </p>
-              <p className="mt-2 text-sm leading-6 text-zinc-500">
-                Automatic alarms. Time To Leave. Multiple calendars.
-              </p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {calendarLogos.map((calendar) => (
-                <div
-                  key={calendar.label}
-                  className="flex min-h-14 items-center justify-center gap-2 rounded-lg border border-zinc-800 bg-black px-4"
-                >
-                  {calendar.src ? (
-                    <Image
-                      src={calendar.src}
-                      alt=""
-                      width={24}
-                      height={24}
-                      className="h-6 w-6 rounded-md object-cover"
-                    />
-                  ) : (
-                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-white text-xs font-black text-black">
-                      31
-                    </span>
-                  )}
-                  <span className="text-sm font-semibold text-zinc-200">
-                    {calendar.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-zinc-900 bg-black py-20 sm:py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <SectionHeading
-            eyebrow="How it works"
-            title="Connect once. Stay on time automatically."
-            body="OnTimer is for people who already use a calendar and do not want to manage a second schedule. Your events are already there. OnTimer turns them into alarms."
-          />
-
-          <div className="mt-14 grid gap-8 md:grid-cols-3">
-            {steps.map((item) => (
-              <div key={item.number} className="border-t border-zinc-800 pt-6">
-                <p className="text-sm font-black text-sky-300">
-                  {item.number}
-                </p>
-                <h3 className="mt-5 text-xl font-black text-white">
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-zinc-400">
-                  {item.body}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-zinc-900 bg-zinc-950 py-20 sm:py-24">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="mx-auto grid w-full max-w-md grid-cols-[0.82fr_1fr] items-end gap-3">
-            <div className="overflow-hidden rounded-[1.5rem] border border-zinc-800 bg-black">
-              <Image
-                src="/images/ConnectsToCalendars.png"
-                alt="OnTimer calendar connection screen explaining calendar access"
-                width={946}
-                height={2048}
-                className="h-auto w-full"
-              />
-            </div>
-            <div className="overflow-hidden rounded-[1.75rem] border border-zinc-800 bg-black shadow-2xl shadow-black/50">
-              <Image
-                src="/images/AutomaticAlarms.png"
-                alt="OnTimer full-screen alarm for an upcoming calendar event"
-                width={946}
-                height={2048}
-                className="h-auto w-full"
-              />
-            </div>
-          </div>
-
-          <div>
-            <SectionHeading
-              eyebrow="Automatic by design"
-              title="This is not another place to manage reminders."
-              align="left"
-              body="OnTimer watches the calendars you already use and creates alarms automatically. That is the product."
-            />
-            <div className="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-              {automaticDetails.map((item) => (
-                <div key={item} className="border-t border-zinc-800 pt-4">
-                  <p className="text-sm font-semibold leading-6 text-zinc-200">
-                    {item}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-zinc-900 bg-black py-20 sm:py-24">
+      <section className="border-b border-zinc-900 bg-black py-16 sm:py-20">
         <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
             <SectionHeading
@@ -471,7 +366,75 @@ export default function Homepage2() {
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-zinc-950 py-20 sm:py-24">
+      <section className="border-b border-zinc-900 bg-zinc-950 py-16 sm:py-20">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="mx-auto grid w-full max-w-md grid-cols-[0.82fr_1fr] items-end gap-3">
+            <div className="overflow-hidden rounded-[1.5rem] border border-zinc-800 bg-black">
+              <Image
+                src="/images/ConnectsToCalendars.png"
+                alt="OnTimer calendar connection screen explaining calendar access"
+                width={946}
+                height={2048}
+                className="h-auto w-full"
+              />
+            </div>
+            <div className="overflow-hidden rounded-[1.75rem] border border-zinc-800 bg-black shadow-2xl shadow-black/50">
+              <Image
+                src="/images/AutomaticAlarms.png"
+                alt="OnTimer full-screen alarm for an upcoming calendar event"
+                width={946}
+                height={2048}
+                className="h-auto w-full"
+              />
+            </div>
+          </div>
+
+          <div>
+            <SectionHeading
+              eyebrow="Automatic by design"
+              title="This is not another place to manage reminders."
+              align="left"
+              body="OnTimer works from your existing calendars and creates alarms automatically, so staying on time does not become another system to manage."
+            />
+            <div className="mt-7 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+              {automaticDetails.map((item) => (
+                <div key={item} className="border-t border-zinc-800 pt-4">
+                  <p className="text-sm font-semibold leading-6 text-zinc-200">
+                    {item}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-7 grid gap-3 sm:grid-cols-3">
+              {calendarLogos.map((calendar) => (
+                <div
+                  key={calendar.label}
+                  className="flex min-h-14 items-center justify-center gap-2 rounded-lg border border-zinc-800 bg-black px-4"
+                >
+                  {calendar.src ? (
+                    <Image
+                      src={calendar.src}
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="h-6 w-6 rounded-md object-cover"
+                    />
+                  ) : (
+                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-white text-xs font-black text-black">
+                      31
+                    </span>
+                  )}
+                  <span className="text-sm font-semibold text-zinc-200">
+                    {calendar.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-zinc-900 bg-black py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionHeading
             eyebrow="Where it helps"
@@ -492,17 +455,43 @@ export default function Homepage2() {
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-black py-20 sm:py-24">
+      <section className="border-b border-zinc-900 bg-zinc-950 py-16 sm:py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <SectionHeading
+            eyebrow="How it works"
+            title="Connect once. Stay on time automatically."
+            body="Your calendar remains the source of truth. OnTimer handles the timing layer before the moment to join, leave, or wrap up."
+          />
+
+          <div className="mt-12 grid gap-8 md:grid-cols-3">
+            {steps.map((item) => (
+              <div key={item.number} className="border-t border-zinc-800 pt-6">
+                <p className="text-sm font-black text-sky-300">
+                  {item.number}
+                </p>
+                <h3 className="mt-5 text-xl font-black text-white">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-zinc-400">
+                  {item.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-zinc-900 bg-black py-16 sm:py-20">
         <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <div>
-            <SectionLabel>Time To Leave</SectionLabel>
+            <SectionLabel>Time To Leave / Planning tools</SectionLabel>
             <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
-              Know when to leave, not just when the event starts.
+              OnTimer also includes powerful planning tools.
             </h2>
             <p className="mt-5 text-lg leading-8 text-zinc-400">
-              If a calendar event has a location, OnTimer can help with Time To
-              Leave alerts based on travel time and traffic. Time To Leave is a
-              paid feature.
+              Use the calculator ecosystem for specific timing questions:
+              flights, daily departures, wake-up planning, airport risk, and
+              cruise terminal logistics.
             </p>
           </div>
 
@@ -530,15 +519,15 @@ export default function Homepage2() {
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-zinc-950 py-20 sm:py-24">
+      <section className="border-b border-zinc-900 bg-zinc-950 py-16 sm:py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <SectionHeading
-            eyebrow="Direct answers"
-            title="The short version."
-            body="OnTimer is an iPhone calendar alarm app. It turns existing calendar events into alarms that stay visible until you respond."
+            eyebrow="FAQ"
+            title="Frequently Asked Questions"
+            body="Short answers for the questions people usually have before trying OnTimer."
           />
 
-          <div className="mt-12 divide-y divide-zinc-800 border-y border-zinc-800">
+          <div className="mt-10 divide-y divide-zinc-800 border-y border-zinc-800">
             {faqItems.map((item) => (
               <div
                 key={item.question}
@@ -554,7 +543,7 @@ export default function Homepage2() {
         </div>
       </section>
 
-      <section className="bg-black py-20 sm:py-24">
+      <section className="bg-black py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <SectionLabel>Download OnTimer</SectionLabel>
           <h2 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
