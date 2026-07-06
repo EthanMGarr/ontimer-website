@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { HomepagePreviewCTA } from "@/components/HomepagePreviewCTA";
+import { APP_STORE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "OnTimer Homepage Preview",
@@ -133,12 +134,12 @@ const automaticDetails = [
 ];
 
 const useCases = [
-  "Back-to-back meetings",
-  "Doctor appointments",
-  "Flights",
-  "School pickups",
-  "Medication timing",
-  "Events with locations",
+  { icon: "💼", label: "Back-to-back meetings" },
+  { icon: "🏥", label: "Doctor appointments" },
+  { icon: "✈", label: "Flights" },
+  { icon: "🎒", label: "School pickups" },
+  { icon: "💊", label: "Medication timing" },
+  { icon: "📍", label: "Events with locations" },
 ];
 
 const calculators = [
@@ -262,15 +263,16 @@ export default function Homepage2() {
       />
 
       <section className="overflow-hidden border-b border-zinc-900 bg-black">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[0.98fr_1.02fr] lg:gap-16 lg:py-24">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-14 sm:px-6 sm:py-[4.5rem] lg:grid-cols-[0.98fr_1.02fr] lg:gap-16 lg:py-20">
           <div className="text-center lg:text-left">
             <SectionLabel>Automatic calendar alarms for iPhone</SectionLabel>
             <h1 className="mt-5 text-5xl font-black leading-[0.96] tracking-tight text-white sm:text-6xl lg:text-7xl">
               Never be late again.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-zinc-300 sm:text-xl lg:mx-0">
-              OnTimer turns your calendar events into real alarms, so you know
-              when to join, leave, or act before the moment passes.
+              Connect your Google, Apple, or Microsoft calendar once. OnTimer
+              automatically turns upcoming events into alarms that stay visible
+              until you respond, without rebuilding your schedule.
             </p>
 
             <div className="mt-8 flex justify-center lg:justify-start">
@@ -316,7 +318,7 @@ export default function Homepage2() {
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-black py-16 sm:py-20">
+      <section className="border-b border-zinc-900 bg-black py-14 sm:py-[4.5rem]">
         <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
             <SectionHeading
@@ -366,7 +368,7 @@ export default function Homepage2() {
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-zinc-950 py-16 sm:py-20">
+      <section className="border-b border-zinc-900 bg-zinc-950 py-14 sm:py-[4.5rem]">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="mx-auto grid w-full max-w-md grid-cols-[0.82fr_1fr] items-end gap-3">
             <div className="overflow-hidden rounded-[1.5rem] border border-zinc-800 bg-black">
@@ -405,36 +407,11 @@ export default function Homepage2() {
                 </div>
               ))}
             </div>
-            <div className="mt-7 grid gap-3 sm:grid-cols-3">
-              {calendarLogos.map((calendar) => (
-                <div
-                  key={calendar.label}
-                  className="flex min-h-14 items-center justify-center gap-2 rounded-lg border border-zinc-800 bg-black px-4"
-                >
-                  {calendar.src ? (
-                    <Image
-                      src={calendar.src}
-                      alt=""
-                      width={24}
-                      height={24}
-                      className="h-6 w-6 rounded-md object-cover"
-                    />
-                  ) : (
-                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-white text-xs font-black text-black">
-                      31
-                    </span>
-                  )}
-                  <span className="text-sm font-semibold text-zinc-200">
-                    {calendar.label}
-                  </span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-black py-16 sm:py-20">
+      <section className="border-b border-zinc-900 bg-black py-14 sm:py-[4.5rem]">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionHeading
             eyebrow="Where it helps"
@@ -445,17 +422,20 @@ export default function Homepage2() {
           <div className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {useCases.map((item) => (
               <div
-                key={item}
-                className="rounded-lg border border-zinc-800 bg-black px-5 py-4 text-base font-semibold text-white"
+                key={item.label}
+                className="flex items-center gap-3 rounded-lg border border-zinc-800 bg-black px-5 py-4 text-base font-semibold text-white"
               >
-                {item}
+                <span className="text-lg" aria-hidden="true">
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-zinc-950 py-16 sm:py-20">
+      <section className="border-b border-zinc-900 bg-zinc-950 py-14 sm:py-[4.5rem]">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionHeading
             eyebrow="How it works"
@@ -463,7 +443,7 @@ export default function Homepage2() {
             body="Your calendar remains the source of truth. OnTimer handles the timing layer before the moment to join, leave, or wrap up."
           />
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          <div className="mt-10 grid gap-8 md:grid-cols-3">
             {steps.map((item) => (
               <div key={item.number} className="border-t border-zinc-800 pt-6">
                 <p className="text-sm font-black text-sky-300">
@@ -475,23 +455,49 @@ export default function Homepage2() {
                 <p className="mt-3 text-sm leading-6 text-zinc-400">
                   {item.body}
                 </p>
+                {item.number === "01" ? (
+                  <div className="mt-5 grid gap-2">
+                    {calendarLogos.map((calendar) => (
+                      <div
+                        key={calendar.label}
+                        className="flex min-h-11 items-center gap-2 rounded-lg border border-zinc-800 bg-black px-3"
+                      >
+                        {calendar.src ? (
+                          <Image
+                            src={calendar.src}
+                            alt=""
+                            width={22}
+                            height={22}
+                            className="h-6 w-6 rounded-md object-cover"
+                          />
+                        ) : (
+                          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-white text-[0.65rem] font-black text-black">
+                            31
+                          </span>
+                        )}
+                        <span className="text-xs font-semibold text-zinc-200">
+                          {calendar.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-black py-16 sm:py-20">
+      <section className="border-b border-zinc-900 bg-black py-14 sm:py-[4.5rem]">
         <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <div>
             <SectionLabel>Time To Leave / Planning tools</SectionLabel>
             <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
-              OnTimer also includes powerful planning tools.
+              Plan ahead with free time calculators.
             </h2>
             <p className="mt-5 text-lg leading-8 text-zinc-400">
-              Use the calculator ecosystem for specific timing questions:
-              flights, daily departures, wake-up planning, airport risk, and
-              cruise terminal logistics.
+              Work backward from flights, appointments, wake-up times, cruises,
+              and travel so you know exactly when to leave.
             </p>
           </div>
 
@@ -519,7 +525,7 @@ export default function Homepage2() {
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-zinc-950 py-16 sm:py-20">
+      <section className="border-b border-zinc-900 bg-zinc-950 py-14 sm:py-[4.5rem]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <SectionHeading
             eyebrow="FAQ"
@@ -543,7 +549,7 @@ export default function Homepage2() {
         </div>
       </section>
 
-      <section className="bg-black py-16 sm:py-20">
+      <section className="bg-black py-14 sm:py-[4.5rem]">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <SectionLabel>Download OnTimer</SectionLabel>
           <h2 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
@@ -553,8 +559,16 @@ export default function Homepage2() {
             Download OnTimer for iPhone and turn your calendar into automatic
             alarms for the moments you need to act.
           </p>
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <HomepagePreviewCTA location="homepage2_final" />
+            <a
+              href={APP_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden min-h-12 items-center justify-center rounded-full border border-zinc-700 px-7 py-3 text-base font-semibold text-white transition-colors hover:border-white hover:bg-white hover:text-black md:inline-flex"
+            >
+              Download from the App Store
+            </a>
           </div>
           <Link
             href="/android"
