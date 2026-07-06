@@ -290,14 +290,14 @@ export default function Homepage2() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[34rem]">
+          <div className="relative mx-auto w-full max-w-[34rem] lg:max-w-[29rem]">
             <div className="relative aspect-[0.92] overflow-hidden rounded-[2rem] border border-zinc-800 bg-zinc-950 shadow-2xl shadow-black/60">
               <Image
                 src="/images/CantMissAlerts.png"
                 alt="OnTimer iPhone screen showing an upcoming calendar event and an OnTimer priority notification"
                 fill
                 priority
-                sizes="(min-width: 1024px) 34rem, 90vw"
+                sizes="(min-width: 1024px) 29rem, 90vw"
                 className="object-cover object-[56%_44%]"
               />
             </div>
@@ -356,7 +356,7 @@ export default function Homepage2() {
             </Link>
           </div>
 
-          <div className="overflow-hidden rounded-[2rem] border border-zinc-800 bg-zinc-950">
+          <div className="mx-auto w-full max-w-[21rem] overflow-hidden rounded-[2rem] border border-zinc-800 bg-zinc-950 lg:justify-self-center">
             <Image
               src="/images/NeverBeLateAgain.png"
               alt="OnTimer current homepage screenshot about never being late again"
@@ -370,7 +370,7 @@ export default function Homepage2() {
 
       <section className="border-b border-zinc-900 bg-zinc-950 py-14 sm:py-[4.5rem]">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="mx-auto grid w-full max-w-md grid-cols-[0.82fr_1fr] items-end gap-3">
+          <div className="mx-auto grid w-full max-w-md grid-cols-[0.82fr_1fr] items-end gap-3 lg:max-w-[23rem] lg:justify-self-center">
             <div className="overflow-hidden rounded-[1.5rem] border border-zinc-800 bg-black">
               <Image
                 src="/images/ConnectsToCalendars.png"
