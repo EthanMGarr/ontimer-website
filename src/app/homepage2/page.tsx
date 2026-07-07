@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { HeroAnimationV2 } from "@/components/HeroAnimationV2";
 import { HomepagePreviewCTA } from "@/components/HomepagePreviewCTA";
 import { APP_STORE_URL } from "@/lib/constants";
 
@@ -290,31 +291,7 @@ export default function Homepage2() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[34rem] lg:max-w-[29rem]">
-            <div className="relative aspect-[0.92] overflow-hidden rounded-[2rem] border border-zinc-800 bg-zinc-950 shadow-2xl shadow-black/60">
-              <Image
-                src="/images/CantMissAlerts.png"
-                alt="OnTimer iPhone screen showing an upcoming calendar event and an OnTimer priority notification"
-                fill
-                priority
-                sizes="(min-width: 1024px) 29rem, 90vw"
-                className="object-cover object-[56%_44%]"
-              />
-            </div>
-            <div className="absolute -bottom-5 left-5 right-5 rounded-2xl border border-zinc-800 bg-black/90 px-5 py-4 shadow-xl backdrop-blur">
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-left">
-                <p className="text-sm font-semibold text-white">
-                  Calendar event
-                </p>
-                <ArrowRight />
-                <p className="text-sm font-semibold text-white">Real alarm</p>
-              </div>
-              <p className="mt-2 text-xs leading-5 text-zinc-500">
-                The difference is not another reminder. It is an alert you have
-                to acknowledge.
-              </p>
-            </div>
-          </div>
+          <HeroAnimationV2 />
         </div>
       </section>
 
