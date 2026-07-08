@@ -22,16 +22,6 @@ export const metadata: Metadata = {
   },
 };
 
-const commonCauses = [
-  "Notifications are disabled",
-  "Focus Mode or Do Not Disturb is blocking alerts",
-  "Scheduled Notification Summary is delaying alerts",
-  "The event does not have a reminder",
-  "Default alert times are missing or wrong",
-  "The calendar account is not syncing",
-  "Background App Refresh or battery settings are restricting the app",
-];
-
 const diagnostics = [
   { label: "Notifications never appear", href: "#notifications-enabled" },
   { label: "Notifications are silent", href: "#focus-mode" },
@@ -333,40 +323,37 @@ export default function CalendarNotificationsNotWorking() {
         </div>
       </section>
 
-      {/* Immediate Answer */}
-      <section className="border-t border-zinc-800 py-12">
+      {/* Intro */}
+      <section className="border-t border-zinc-800 py-10">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-6">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">Start Here</p>
-            <h2 className="text-2xl font-black tracking-tight text-white">The most likely causes</h2>
-            <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-              {commonCauses.map((cause) => (
-                <li key={cause} className="rounded-lg border border-zinc-800 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-300">
-                  {cause}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <p className="text-base leading-relaxed text-zinc-400">
+            The most common causes are disabled notifications, Focus Mode or Do Not Disturb, Scheduled
+            Notification Summary, missing event reminders, default alert settings, calendar sync problems,
+            Background App Refresh, and battery restrictions.
+          </p>
         </div>
       </section>
 
-      {/* Quick Diagnostic */}
+      {/* Diagnostic */}
       <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Quick Diagnostic
+            What best describes your problem?
           </h2>
           <p className="mt-4 leading-relaxed text-zinc-400">
-            What best describes your problem? Choose the closest match and jump to the most relevant fix.
+            Select the closest symptom to jump directly to the most relevant fix.
           </p>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {diagnostics.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="rounded-xl border border-zinc-800 bg-zinc-950/70 p-4 text-sm font-medium text-zinc-200 transition-colors hover:border-green-500/50 hover:text-green-400"
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-zinc-800 bg-zinc-950/70 p-4 text-sm font-medium text-zinc-200 shadow-sm transition-all hover:-translate-y-0.5 hover:border-green-500/50 hover:bg-zinc-900 hover:text-green-400 hover:shadow-lg hover:shadow-green-950/20 focus:outline-none focus:ring-2 focus:ring-green-500/50"
               >
-                {item.label}
+                <span>{item.label}</span>
+                <span className="shrink-0 text-green-500 transition-transform group-hover:translate-x-1">
+                  Jump to fix →
+                </span>
               </Link>
             ))}
           </div>
@@ -381,7 +368,7 @@ export default function CalendarNotificationsNotWorking() {
           </h2>
           <p className="mt-4 leading-relaxed text-zinc-400">
             Go in order if you are not sure where the problem is. If you already know the symptom, use the
-            Quick Diagnostic links above.
+            symptom links above.
           </p>
 
           <div className="mt-10 space-y-10">
