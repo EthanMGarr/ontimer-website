@@ -1,67 +1,275 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
-import { WhyNotificationsFailGraphic } from "@/components/WhyNotificationsFailGraphic";
 
 export const metadata: Metadata = {
-  title: "Calendar Notifications Not Working? Why Reminders Fail — and What Fixes It",
+  title: "Calendar Notifications Not Working? 10 Fixes for iPhone, Google & Apple Calendar",
   description:
-    "Calendar notifications fail silently — they fire correctly but you still miss the meeting. Here's why iPhone and Google Calendar reminders break, 8 fixes, and what to use when fixes aren't enough.",
+    "Calendar notifications not working? Learn how to fix missing, delayed, or silent reminders on Apple Calendar, Google Calendar, and Outlook with this step-by-step troubleshooting guide.",
   alternates: { canonical: "https://www.ontimer.app/calendar-notifications-not-working" },
   openGraph: {
-    title: "Calendar Notifications Not Working? Why Reminders Fail — and What Fixes It",
+    title: "Calendar Notifications Not Working? 10 Fixes for iPhone, Google & Apple Calendar",
     description:
-      "Calendar notifications fail silently — they fire correctly but you still miss the meeting. Here's why reminders break, 8 fixes, and what to use when fixes aren't enough.",
+      "Fix missing, delayed, or silent calendar reminders on Apple Calendar, Google Calendar, and Outlook with this step-by-step troubleshooting guide.",
     url: "https://www.ontimer.app/calendar-notifications-not-working",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Calendar Notifications Not Working? Why Reminders Fail — and What Fixes It",
+    title: "Calendar Notifications Not Working? 10 Fixes",
     description:
-      "Calendar notifications fail silently. Here's why iPhone and Google Calendar reminders break — and 8 fixes that actually work.",
+      "Calendar notifications not working? Fix missing, delayed, or silent reminders on Apple Calendar, Google Calendar, and Outlook.",
   },
 };
 
+const commonCauses = [
+  "Notifications are disabled",
+  "Focus Mode or Do Not Disturb is blocking alerts",
+  "Scheduled Notification Summary is delaying alerts",
+  "The event does not have a reminder",
+  "Default alert times are missing or wrong",
+  "The calendar account is not syncing",
+  "Background App Refresh or battery settings are restricting the app",
+];
+
+const diagnostics = [
+  { label: "Notifications never appear", href: "#notifications-enabled" },
+  { label: "Notifications are silent", href: "#focus-mode" },
+  { label: "Notifications appear late", href: "#scheduled-summary" },
+  { label: "Some events notify but others don't", href: "#event-reminder" },
+  { label: "Google Calendar notifications stopped working", href: "#background-refresh" },
+  { label: "Apple Calendar notifications stopped working", href: "#default-alert-times" },
+  { label: "Outlook calendar notifications stopped working", href: "#calendar-sync" },
+  { label: "Recurring reminders stopped working", href: "#force-sync" },
+];
+
+const troubleshootingSteps = [
+  {
+    id: "notifications-enabled",
+    title: "Verify notifications are enabled",
+    summary:
+      "First, make sure your phone is allowed to show alerts from the calendar app. If this setting is off, event reminders can be configured correctly and still never appear.",
+    steps: [
+      "Open Settings on your iPhone.",
+      "Tap Notifications.",
+      "Choose Calendar, Google Calendar, or Outlook.",
+      "Turn on Allow Notifications.",
+      "Enable Lock Screen, Notification Center, banners, sounds, and badges while testing.",
+    ],
+    platformNotes: [
+      "Apple Calendar: check Settings -> Notifications -> Calendar.",
+      "Google Calendar: check Settings -> Notifications -> Google Calendar, then confirm notifications are enabled inside the Google Calendar app.",
+      "Outlook: check Settings -> Notifications -> Outlook, then confirm Outlook's in-app notification settings are enabled.",
+    ],
+  },
+  {
+    id: "focus-mode",
+    title: "Check Focus Mode and Do Not Disturb",
+    summary:
+      "Focus modes are one of the most common reasons calendar alerts suddenly stop. A Focus can block notifications silently, especially Work, Sleep, Driving, or Do Not Disturb.",
+    steps: [
+      "Open Settings.",
+      "Tap Focus.",
+      "Turn off the active Focus temporarily.",
+      "If notifications start working, reopen that Focus and add your calendar app under Allowed Apps.",
+      "Repeat for any Focus mode that turns on automatically by time, location, driving, or app usage.",
+    ],
+    platformNotes: [
+      "Apple Calendar: allow Calendar through each Focus mode that may be active before events.",
+      "Google Calendar: allow Google Calendar specifically. Allowing Apple Calendar does not allow Google Calendar.",
+      "Outlook: allow Outlook specifically, especially for work Focus modes.",
+    ],
+  },
+  {
+    id: "scheduled-summary",
+    title: "Check Scheduled Notification Summary",
+    summary:
+      "Scheduled Summary can hold notifications and deliver them later in a batch. That is useful for low-priority alerts, but it can make calendar reminders appear late.",
+    steps: [
+      "Open Settings.",
+      "Tap Notifications.",
+      "Tap Scheduled Summary.",
+      "Remove Calendar, Google Calendar, and Outlook from the summary list.",
+      "Create a test event a few minutes from now to confirm the alert arrives immediately.",
+    ],
+    platformNotes: [
+      "Apple Calendar: remove Calendar from Scheduled Summary.",
+      "Google Calendar: remove Google Calendar from Scheduled Summary.",
+      "Outlook: remove Outlook from Scheduled Summary if work reminders arrive late.",
+    ],
+  },
+  {
+    id: "event-reminder",
+    title: "Verify the event actually has a reminder",
+    summary:
+      "Not every calendar event has an alert attached. Imported events, shared calendars, subscribed calendars, and invitations from other people may use different reminder defaults.",
+    steps: [
+      "Open an event that failed to notify you.",
+      "Tap Edit or the edit icon.",
+      "Look for Alert, Reminder, or Notification.",
+      "If it says None, add a reminder such as 10 minutes before.",
+      "Save the event, then test another upcoming event from the same calendar.",
+    ],
+    platformNotes: [
+      "Apple Calendar: open the event -> Edit -> Alert.",
+      "Google Calendar: open the event -> edit pencil -> notifications.",
+      "Outlook: open the event -> edit -> Reminder.",
+    ],
+  },
+  {
+    id: "default-alert-times",
+    title: "Check default alert times",
+    summary:
+      "If new events are being created without reminders, your default alert settings may be missing or set differently than you expect.",
+    steps: [
+      "Check your calendar app's default reminder settings.",
+      "Create a new event and confirm whether an alert is added automatically.",
+      "If no alert is added, set a default alert time for events.",
+      "Review all-day events separately, since many apps use different defaults for all-day reminders.",
+    ],
+    platformNotes: [
+      "Apple Calendar: Settings -> Calendar -> Default Alert Times. Check Events, All-Day Events, and Birthdays.",
+      "Google Calendar: open Google Calendar settings, choose the calendar, then check Event notifications and All-day event notifications.",
+      "Outlook: check Outlook calendar settings for default reminders. Work accounts may enforce their own defaults.",
+    ],
+  },
+  {
+    id: "calendar-sync",
+    title: "Verify calendar synchronization",
+    summary:
+      "A reminder can only fire if the event has synced to the device or app that is supposed to notify you. Sync issues often look like notification issues.",
+    steps: [
+      "Open the calendar list in your app.",
+      "Make sure the calendar that contains the event is visible and enabled.",
+      "Confirm the event appears on the same device where you expect the notification.",
+      "If you use multiple accounts, confirm the event is not saved to a hidden or inactive calendar.",
+      "Check whether the event appears correctly on the calendar provider's web app.",
+    ],
+    platformNotes: [
+      "Apple Calendar: open Calendar -> Calendars and make sure the relevant iCloud, Google, Exchange, or Outlook calendar is checked.",
+      "Google Calendar: open the side menu, check the calendar, then open Settings and confirm Sync is enabled for that calendar.",
+      "Outlook: confirm the Microsoft or Exchange account is connected and the calendar is enabled in Outlook's calendar list.",
+    ],
+  },
+  {
+    id: "background-refresh",
+    title: "Verify Background App Refresh",
+    summary:
+      "Third-party calendar apps need background access to stay current. If background refresh is disabled, notifications may be delayed or fail after calendar changes.",
+    steps: [
+      "Open Settings.",
+      "Tap General.",
+      "Tap Background App Refresh.",
+      "Make sure Background App Refresh is on.",
+      "Enable it for Google Calendar or Outlook.",
+    ],
+    platformNotes: [
+      "Apple Calendar: Apple Calendar is built into iOS, but connected accounts still need to sync correctly.",
+      "Google Calendar: enable Background App Refresh for Google Calendar.",
+      "Outlook: enable Background App Refresh for Outlook, especially if work calendar changes do not alert.",
+    ],
+  },
+  {
+    id: "low-power-mode",
+    title: "Disable Low Power Mode while testing",
+    summary:
+      "Low Power Mode reduces background activity. It may not be the root cause, but it can make notification and sync problems harder to diagnose.",
+    steps: [
+      "Open Settings.",
+      "Tap Battery.",
+      "Turn off Low Power Mode.",
+      "Create a test event three to five minutes from now.",
+      "Check whether the notification arrives on time with Low Power Mode off.",
+    ],
+    platformNotes: [
+      "If notifications only work with Low Power Mode off, keep it disabled before important events while you continue troubleshooting.",
+      "This is most relevant for Google Calendar and Outlook because they depend more on app refresh behavior.",
+    ],
+  },
+  {
+    id: "force-sync",
+    title: "Force a calendar sync",
+    summary:
+      "If the account is connected but events or reminders are stale, force the calendar to refresh before removing accounts or changing deeper settings.",
+    steps: [
+      "Open your calendar app.",
+      "Refresh the calendar list or main calendar view.",
+      "Close and reopen the calendar app.",
+      "Create a new test event from another device or web browser.",
+      "Confirm the event and its reminder appear on your phone.",
+    ],
+    platformNotes: [
+      "Apple Calendar: open Calendar -> Calendars, then pull down to refresh.",
+      "Google Calendar: open Google Calendar, pull down to refresh, then check the calendar's Sync setting.",
+      "Outlook: pull down on the calendar view to refresh and confirm the account remains connected.",
+    ],
+  },
+  {
+    id: "reconnect-account",
+    title: "Remove and reconnect the calendar account if necessary",
+    summary:
+      "Use this as the last reset step. If a calendar account connection is stale or corrupted, reconnecting it can restore event sync and reminder behavior.",
+    steps: [
+      "Confirm your calendar data is safely stored in iCloud, Google Calendar, Outlook, Microsoft 365, or Exchange before removing the account.",
+      "Remove the affected account from the device or calendar app.",
+      "Restart the phone.",
+      "Add the account again.",
+      "Create a test event with a reminder and confirm it notifies correctly.",
+    ],
+    platformNotes: [
+      "Apple Calendar: Settings -> Calendar -> Accounts, then remove and re-add the affected account.",
+      "Google Calendar: sign out and back into the Google account, or remove and re-add the account under iOS Calendar Accounts if Apple Calendar displays your Google events.",
+      "Outlook: remove and re-add the Microsoft account in Outlook, or reconnect the Exchange or Microsoft account in iOS settings.",
+    ],
+  },
+];
+
+const unresolvedIssues = [
+  "An iOS notification bug after an update",
+  "Google Calendar sync delays",
+  "Exchange synchronization issues",
+  "A corrupted local calendar database",
+];
+
 const faqItems = [
   {
-    question: "Why are my iPhone calendar notifications not working?",
+    question: "Why did my calendar notifications stop working?",
     answer:
-      "The most common cause is Focus mode silently blocking alerts. Check Settings → Focus → your active Focus → Apps and add your calendar app. If Focus isn't the issue, check Settings → Notifications → Calendar and confirm alerts are enabled with sound and banners. iOS updates occasionally reset notification permissions without warning.",
+      "The most common causes are notification permissions, Focus Mode, Scheduled Notification Summary, missing event reminders, sync problems, Background App Refresh, or Low Power Mode. Start by checking system notification permissions, then check the event itself.",
   },
   {
-    question: "Why are my Google Calendar notifications not working on iPhone?",
+    question: "Why are my iPhone calendar alerts silent?",
     answer:
-      "Google Calendar on iPhone relies on Apple's notification system, which can be blocked by Focus mode, battery optimization, or background app restrictions. Even when delivered correctly, Google Calendar notifications are passive — they appear briefly and disappear whether or not you act. If the notification fires but you still miss events, the problem is behavioral, not technical.",
+      "Silent iPhone calendar alerts are usually caused by Focus Mode, Do Not Disturb, notification sound settings, Scheduled Summary, or low notification volume. Check Settings -> Focus and Settings -> Notifications -> Calendar first.",
   },
   {
-    question: "Can Focus mode silence calendar reminders without telling me?",
+    question: "Why are Google Calendar notifications delayed?",
     answer:
-      "Yes. Any Focus configuration that doesn't explicitly allow your calendar app will suppress notifications silently. You won't see any indication that an alert was blocked — the notification simply never arrives. Check Settings → Focus → your active Focus → Apps to allow your calendar app through.",
+      "Google Calendar notifications can be delayed when Scheduled Summary is enabled, Background App Refresh is off, Low Power Mode is active, or the calendar has not synced recently. Remove Google Calendar from Scheduled Summary and confirm Sync is enabled for the affected calendar.",
   },
   {
-    question: "Why do calendar reminders fire but I still miss meetings?",
+    question: "Why do recurring reminders stop working?",
     answer:
-      "Because notifications are passive — they appear and disappear whether or not you act. You may have seen the notification, registered the meeting time, decided to finish what you were doing first, and then missed the window when the notification vanished and nothing interrupted you again. This is a design limitation of notifications, not a settings problem. Persistent alarms solve it.",
+      "Recurring reminders can stop after a series is edited, imported, moved between calendars, or affected by a sync issue. Open the recurring series, confirm the reminder still exists, then force a calendar sync.",
   },
   {
-    question: "What's the difference between a calendar notification and a persistent alarm?",
+    question: "Why are calendar reminders inconsistent?",
     answer:
-      "A notification fires once, appears briefly, and disappears. It requires you to see it and act on it in the same instant. A persistent alarm stays on your screen, plays audio continuously, and requires an explicit dismiss or snooze before it stops — the same behavior as your morning alarm. For time-critical events, persistent alarms are the reliable option.",
+      "Inconsistent reminders usually mean different events are coming from different calendars, accounts, or default alert rules. Check the calendar source and reminder setting on a few events that worked and a few that failed.",
   },
   {
-    question: "Do calendar reminders fail even with correct settings?",
+    question: "Why do only some events notify?",
     answer:
-      "Yes. Even with correct permissions, calendar notifications can be affected by OS updates, time zone changes, battery optimization, and occasional system bugs. They also fail behaviorally — you see them and still miss the event. The most reliable approach adds a persistent alarm layer on top of your standard calendar notifications.",
+      "Only some events notify when some events have reminders and others do not, or when events are spread across calendars with different sync and default reminder settings. Shared and subscribed calendars often behave differently from your primary calendar.",
   },
 ];
 
 const articleJsonLd = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Calendar Notifications Not Working? Why Reminders Fail — and What Fixes It",
+  headline: "Calendar Notifications Not Working? 10 Things to Check",
   description:
-    "Calendar notifications fail silently — they fire correctly but you still miss the meeting. Here's why iPhone and Google Calendar reminders break, 8 fixes, and what to use when fixes aren't enough.",
+    "A step-by-step troubleshooting guide for missing, delayed, or silent calendar notifications on Apple Calendar, Google Calendar, and Outlook.",
   author: { "@type": "Organization", name: "OnTimer" },
   publisher: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
   url: "https://www.ontimer.app/calendar-notifications-not-working",
@@ -104,406 +312,194 @@ export default function CalendarNotificationsNotWorking() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.15),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <nav className="mb-6 text-sm text-zinc-500">
-            <Link href="/" className="hover:text-zinc-300 transition-colors">Home</Link>
+            <Link href="/" className="transition-colors hover:text-zinc-300">Home</Link>
             <span className="mx-2">›</span>
             <span className="text-zinc-300">Calendar Notifications Not Working</span>
           </nav>
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            iPhone · Google Calendar · Outlook
+            Apple Calendar · Google Calendar · Outlook
           </p>
-          <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl leading-tight">
+          <h1 className="text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl">
             Calendar Notifications Not Working?
             <br />
-            <span className="text-green-500">Here&apos;s Why — and What Fixes It</span>
+            <span className="text-green-500">Here&apos;s How to Fix Them</span>
           </h1>
-          <p className="mt-5 text-lg text-zinc-400 leading-relaxed">
-            Most people discover their calendar reminders are unreliable the moment they miss a meeting.
-            Calendar notifications can fail two ways: technical failures (Focus mode, permissions, background
-            restrictions) and silent behavioral failures (notifications that fire correctly but you still
-            miss). This guide covers both.
+          <p className="mt-5 text-lg leading-relaxed text-zinc-400">
+            If your calendar notifications aren&apos;t working, the problem is usually one of a few common
+            issues: notification permissions, Focus Mode, Scheduled Notification Summary, missing event
+            reminders, calendar sync problems, Background App Refresh, or battery restrictions. Work through
+            the checklist below. Most problems can be fixed in just a few minutes.
           </p>
         </div>
       </section>
 
-      {/* Direct Answer */}
+      {/* Immediate Answer */}
       <section className="border-t border-zinc-800 py-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-6">
-            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
-            <p className="text-zinc-200 leading-relaxed">
-              <strong className="text-white">The most common cause of broken calendar notifications is Focus mode silently blocking alerts.</strong>{" "}
-              Check Settings → Focus → your active Focus → Apps. If Focus isn&apos;t the issue, check
-              notification permissions (Settings → Notifications → Calendar). But if the notifications fire
-              correctly and you still miss events, the problem is behavioral — not technical. Notifications are
-              passive; they disappear whether or not you act.{" "}
-              <Link href="/why-calendar-notifications-fail" className="text-green-500 hover:text-green-400 transition-colors">
-                That requires a different solution entirely.
+            <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">Start Here</p>
+            <h2 className="text-2xl font-black tracking-tight text-white">The most likely causes</h2>
+            <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+              {commonCauses.map((cause) => (
+                <li key={cause} className="rounded-lg border border-zinc-800 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-300">
+                  {cause}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Diagnostic */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            Quick Diagnostic
+          </h2>
+          <p className="mt-4 leading-relaxed text-zinc-400">
+            What best describes your problem? Choose the closest match and jump to the most relevant fix.
+          </p>
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            {diagnostics.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="rounded-xl border border-zinc-800 bg-zinc-950/70 p-4 text-sm font-medium text-zinc-200 transition-colors hover:border-green-500/50 hover:text-green-400"
+              >
+                {item.label}
               </Link>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Notifications Fail Silently */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Two Ways Calendar Reminders Fail — and Why One Is Invisible
-          </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
-            <p>
-              Most troubleshooting guides focus on technical failures: the notification never arrived, the
-              permissions were wrong, the app had a bug. These are real — and fixable.
-            </p>
-            <p>
-              But there&apos;s a second failure mode that no settings fix can address:{" "}
-              <strong className="text-white">notifications that fire correctly and you still miss the meeting.</strong>{" "}
-              You saw the banner. You understood what it said. You told yourself you&apos;d leave in five
-              minutes. Five minutes became fifteen, the notification was long gone, and nothing interrupted
-              you again.
-            </p>
-            <p>
-              This isn&apos;t a settings problem. It&apos;s a design problem. Calendar notifications are
-              passive — they appear briefly and disappear whether or not you respond. For time-critical
-              events, passive alerts are structurally unreliable.
-            </p>
-          </div>
-          <div className="mt-6">
-            <Link
-              href="/why-calendar-notifications-fail"
-              className="text-green-500 hover:text-green-400 transition-colors text-sm font-medium"
-            >
-              Why calendar notifications fail by design — the full explanation →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Framework Graphic */}
-      <section className="border-t border-zinc-800 py-12">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="mb-4 text-sm text-zinc-500 leading-relaxed">
-            The framework below illustrates both failure paths — the technical gap on the left, and the behavioral gap that no settings fix can close.
-          </p>
-          <WhyNotificationsFailGraphic
-            caption="Notifications are passive by design. Alarms require acknowledgment before they stop."
-          />
-        </div>
-      </section>
-
-      {/* The 5 Most Common Failure Modes */}
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            The 5 Most Common Technical Failure Modes
-          </h2>
-          <p className="mt-4 text-zinc-400 leading-relaxed">
-            Calendar alerts pass through multiple system layers before they reach you. Any one of these can
-            silently block them. Work through this list in order.
-          </p>
-
-          <div className="mt-10 space-y-8">
-            <div>
-              <h3 className="text-xl font-bold text-white">
-                1. Focus Mode silently blocks calendar alerts
-              </h3>
-              <p className="mt-3 text-zinc-400 leading-relaxed">
-                Focus mode is the single most common cause of missing calendar reminders on iPhone. When a
-                Focus is active, it suppresses notifications from any app not on the allowed list — silently,
-                with no indication that anything was blocked. Many users activate a Focus for one meeting
-                and forget to turn it off. The calendar continues showing events; the alerts simply never
-                arrive.
-              </p>
-              <p className="mt-2 text-sm text-zinc-500">
-                Fix: Settings → Focus → your active Focus → Apps → add your calendar app.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-white">
-                2. iPhone calendar notification permissions reset
-              </h3>
-              <p className="mt-3 text-zinc-400 leading-relaxed">
-                iOS updates occasionally reset notification permissions without warning. An app that had
-                permission before an update may silently lose it. The calendar app continues accepting events
-                and appearing to set reminders, but delivers nothing. This is especially common after major
-                iOS version upgrades.
-              </p>
-              <p className="mt-2 text-sm text-zinc-500">
-                Fix: Settings → Notifications → [your calendar app] → confirm alerts are enabled with
-                sound and banners.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-white">
-                3. Background restrictions kill Google Calendar notifications
-              </h3>
-              <p className="mt-3 text-zinc-400 leading-relaxed">
-                On iPhone, apps can be restricted from running in the background. If your calendar app is
-                restricted, it may be suspended before it fires a scheduled notification. This is more common
-                after battery optimization changes or when Low Power Mode is active. Android devices use even
-                more aggressive background process management.
-              </p>
-              <p className="mt-2 text-sm text-zinc-500">
-                Fix: Settings → General → Background App Refresh → enable for your calendar app.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-white">
-                4. Notification overload buries calendar alerts
-              </h3>
-              <p className="mt-3 text-zinc-400 leading-relaxed">
-                When dozens of notifications arrive throughout the day, calendar alerts get buried in
-                notification center. The alert fired correctly — but you scrolled past it without registering
-                the content, or cleared the pile with a swipe and accidentally dismissed it. This is alert
-                fatigue: your brain has learned to treat notification banners as low-priority background noise.
-              </p>
-              <p className="mt-2 text-sm text-zinc-500">
-                Fix: Reduce non-essential notification sources. But this won&apos;t solve the behavioral
-                problem — see below.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-white">
-                5. Silent mode misunderstandings
-              </h3>
-              <p className="mt-3 text-zinc-400 leading-relaxed">
-                On iPhone, the physical ringer switch silences calls and notification sounds, but not all
-                alarms. The inconsistency causes confusion: users assume their phone is fully silenced and
-                miss the visual alert that fires without sound. Some Focus configurations also mute
-                notification sounds while still showing banners.
-              </p>
-              <p className="mt-2 text-sm text-zinc-500">
-                Fix: Settings → Sounds &amp; Haptics → verify notification volume is not set to zero.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Troubleshooting Table */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Quick Troubleshooting Reference
-          </h2>
-          <p className="mt-4 text-zinc-400 leading-relaxed">
-            Match your symptom to the most likely cause and the fastest fix.
-          </p>
-          <div className="mt-8 overflow-hidden rounded-2xl border border-zinc-800">
-            <div className="grid grid-cols-3 border-b border-zinc-800 bg-zinc-900">
-              <div className="px-4 py-3 text-sm font-semibold text-zinc-400">Symptom</div>
-              <div className="border-l border-zinc-800 px-4 py-3 text-sm font-semibold text-zinc-400">Most Likely Cause</div>
-              <div className="border-l border-zinc-800 px-4 py-3 text-sm font-semibold text-green-500">First Check</div>
-            </div>
-            {[
-              ["Reminder never appeared", "Focus mode active", "Settings → Focus"],
-              ["Reminder appears but no sound", "Notification volume or ringer switch", "Settings → Sounds & Haptics"],
-              ["Worked last week, broken now", "OS update reset permissions", "Settings → Notifications"],
-              ["Some events fire, others don't", "Events from external calendar", "Check event source in calendar app"],
-              ["Notification appears, miss meeting anyway", "Passive design — notifications are insufficient", "Use persistent alarms"],
-              ["Reminder fires too early or late", "Wrong timezone on event", "Open event → check timezone"],
-              ["Nothing works after troubleshooting", "Systemic background restriction", "Settings → General → Background App Refresh"],
-            ].map(([symptom, cause, fix], i) => (
-              <div key={i} className="grid grid-cols-3 border-b border-zinc-800 last:border-0">
-                <div className="px-4 py-4 text-sm text-zinc-400">{symptom}</div>
-                <div className="border-l border-zinc-800 px-4 py-4 text-sm text-zinc-400">{cause}</div>
-                <div className="border-l border-zinc-800 px-4 py-4 text-sm font-medium text-white">{fix}</div>
-              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 8 Fixes */}
+      {/* Troubleshooting Guide */}
       <section className="border-t border-zinc-800 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            8 Fixes for Calendar Notifications Not Working
+            Troubleshooting Guide
           </h2>
-          <p className="mt-4 text-zinc-400 leading-relaxed">
-            Work through this list in order. Most issues are resolved by fix 1–4.
+          <p className="mt-4 leading-relaxed text-zinc-400">
+            Go in order if you are not sure where the problem is. If you already know the symptom, use the
+            Quick Diagnostic links above.
           </p>
-          <ol className="mt-8 space-y-5">
-            {[
-              {
-                fix: "Check notification permissions",
-                detail:
-                  "Go to Settings → Notifications → [your calendar app] and confirm alerts are enabled with sound and banners. iOS updates can silently reset these.",
-              },
-              {
-                fix: "Disable or configure Focus mode",
-                detail:
-                  "Go to Settings → Focus and turn off any active Focus, or add your calendar app to the Allowed Apps list for each Focus configuration. This is the most common fix.",
-              },
-              {
-                fix: "Verify calendar alert settings inside the app",
-                detail:
-                  "Inside your calendar app (Google Calendar, Apple Calendar, Outlook), open an event and confirm an alert time is set. Some apps default to 'None' after updates.",
-              },
-              {
-                fix: "Check alarm and notification volume",
-                detail:
-                  "Go to Settings → Sounds & Haptics and verify the notification volume is not set to zero. This is separate from the ringer switch.",
-              },
-              {
-                fix: "Enable Background App Refresh",
-                detail:
-                  "Settings → General → Background App Refresh → enable for your calendar app. Without this, the app may be suspended before it fires a scheduled notification.",
-              },
-              {
-                fix: "Restart the calendar app",
-                detail:
-                  "Force-quit the calendar app and reopen it. Some notification bugs are session-specific and clear on restart.",
-              },
-              {
-                fix: "Confirm event alert times on imported events",
-                detail:
-                  "Open several upcoming events and verify alerts are set. Events imported from external calendars sometimes arrive with no alert attached.",
-              },
-              {
-                fix: "Test a reminder now",
-                detail:
-                  "Create a test event 3 minutes from now with an alert. If it doesn't fire, the issue is systemic — likely a permissions or Focus configuration problem that the steps above will address.",
-              },
-            ].map((item, i) => (
-              <li key={i} className="flex gap-4">
-                <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-green-500/20 text-sm font-bold text-green-500">
-                  {i + 1}
-                </span>
-                <div>
-                  <p className="font-semibold text-zinc-200">{item.fix}</p>
-                  <p className="mt-1 text-sm text-zinc-400 leading-relaxed">{item.detail}</p>
+
+          <div className="mt-10 space-y-10">
+            {troubleshootingSteps.map((step, index) => (
+              <section key={step.id} id={step.id} className="scroll-mt-24">
+                <div className="flex gap-4">
+                  <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-500/20 text-sm font-bold text-green-500">
+                    {index + 1}
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="text-xl font-bold text-white">{step.title}</h3>
+                    <p className="mt-3 leading-relaxed text-zinc-400">{step.summary}</p>
+                    <div className="mt-5 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+                      <p className="text-sm font-semibold uppercase tracking-widest text-green-500">Steps</p>
+                      <ol className="mt-4 space-y-2">
+                        {step.steps.map((item, stepIndex) => (
+                          <li key={item} className="flex gap-3 text-sm leading-relaxed text-zinc-300">
+                            <span className="text-zinc-500">{stepIndex + 1}.</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                    <div className="mt-4 rounded-xl border border-zinc-800 bg-zinc-950/70 p-5">
+                      <p className="text-sm font-semibold text-white">Platform notes</p>
+                      <ul className="mt-3 space-y-2">
+                        {step.platformNotes.map((note) => (
+                          <li key={note} className="text-sm leading-relaxed text-zinc-500">
+                            {note}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-              </li>
+              </section>
             ))}
-          </ol>
+          </div>
         </div>
       </section>
 
-      {/* When Notifications Keep Failing */}
+      {/* If It Still Is Not Working */}
       <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            When Reminders Keep Failing Despite the Fixes
+            If Calendar Notifications Still Aren&apos;t Working
           </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
+          <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
-              If you&apos;ve applied all eight fixes and still miss events, the problem isn&apos;t in the
-              settings — it&apos;s in the design. Calendar notifications are passive by nature.
+              If you have checked notification permissions, Focus Mode, Scheduled Summary, event reminders,
+              default alert times, sync, Background App Refresh, Low Power Mode, and account reconnection,
+              the issue may be outside the normal settings path.
             </p>
-            <p>
-              A passive notification requires you to be looking at the right place at exactly the right
-              moment. It fires once and disappears. It doesn&apos;t know or care whether you acted on it.
-              If you were in flow, if you were in a meeting, if you simply didn&apos;t register it —
-              nothing fires again.
-            </p>
-            <p>
-              <strong className="text-white">Persistent alarms work differently.</strong> They occupy your
-              full screen, play audio continuously, and don&apos;t stop until you dismiss or snooze them.
-              You can&apos;t passively ignore them — you have to make an active decision. That forced
-              decision is what actually gets you out the door.
-            </p>
+            <p>At that point, the cause may be one of these deeper problems:</p>
           </div>
-          <div className="mt-8 space-y-4">
-            {[
-              {
-                layer: "Technical fix layer",
-                desc: "Apply the 8 fixes above to ensure notifications actually reach your screen. Covers Focus mode, permissions, background restrictions.",
-              },
-              {
-                layer: "Behavioral fix layer",
-                desc: "Replace passive notifications with persistent alarms for time-critical events. Use an app that reads your calendar and fires alarms that won't stop until you respond.",
-              },
-            ].map((item) => (
-              <div key={item.layer} className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-                <p className="font-bold text-green-500">{item.layer}</p>
-                <p className="mt-2 text-sm text-zinc-400 leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-6">
-            <Link
-              href="/why-calendar-notifications-fail"
-              className="text-green-500 hover:text-green-400 transition-colors text-sm font-medium"
-            >
-              Why calendar notifications fail even when they technically work →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Calendar Alerts Are Inherently Fragile */}
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Why Calendar Alerts Are Inherently Fragile
-          </h2>
-          <p className="mt-6 text-zinc-400 leading-relaxed">
-            Even after applying all eight fixes, calendar notifications remain fragile by design. They were
-            built to be low-interruption — helpful for low-stakes reminders, but structurally unreliable for
-            time-sensitive events.
-          </p>
           <ul className="mt-6 space-y-3">
-            {[
-              "A calendar alert fires once and disappears — there is no repeat if you miss it",
-              "Passive notification banners compete with dozens of other alerts for the same screen real estate",
-              "Background app restrictions can be re-applied silently after an OS update",
-              "Dismissing a notification center pile can swipe away calendar alerts accidentally",
-              "Focus mode can be reactivated automatically by time-of-day or location triggers you forgot you set",
-            ].map((item) => (
-              <li key={item} className="flex items-start gap-3 text-zinc-400">
-                <span className="mt-1 flex-shrink-0">—</span>
-                <span className="text-sm leading-relaxed">{item}</span>
+            {unresolvedIssues.map((issue) => (
+              <li key={issue} className="rounded-lg border border-zinc-800 bg-zinc-950/70 px-4 py-3 text-sm text-zinc-300">
+                {issue}
               </li>
             ))}
           </ul>
+          <p className="mt-6 leading-relaxed text-zinc-400">
+            For those cases, check the official help documentation for Apple Calendar, Google Calendar, or
+            Microsoft Outlook, especially if the issue started immediately after an operating system update,
+            account change, or calendar migration.
+          </p>
         </div>
       </section>
 
-      {/* OnTimer solution */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
+      {/* OnTimer transition */}
+      <section className="border-t border-zinc-800 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            How OnTimer Adds a Persistent Alarm Layer
+          <p className="text-sm font-semibold uppercase tracking-widest text-green-500">After troubleshooting</p>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">
+            Everything working again?
           </h2>
-          <p className="mt-6 text-zinc-400 leading-relaxed">
-            OnTimer connects directly to your Google Calendar and Microsoft 365 / Outlook and fires a
-            persistent alarm before each event — not a notification that disappears. Unlike passive calendar
-            alerts, OnTimer is designed to demand attention rather than request it.
-          </p>
-          <p className="mt-4 text-zinc-400 leading-relaxed">
-            This is especially useful for professionals with back-to-back schedules, remote workers who
-            can&apos;t rely on office context cues, and anyone with ADHD or{" "}
-            <Link href="/adhd-time-blindness-tools" className="text-green-500 hover:text-green-400 transition-colors">
-              time blindness
-            </Link>{" "}
-            who needs an alert that won&apos;t let them defer indefinitely.
-          </p>
+          <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
+            <p>Great.</p>
+            <p>
+              Native calendar notifications are designed to appear once and then disappear. If you see them at
+              the right moment, that can be enough.
+            </p>
+            <p>
+              But if you&apos;re driving, in another app, away from your phone, in a meeting, or simply
+              distracted, it&apos;s still easy to miss them even when everything is configured correctly.
+            </p>
+            <p>
+              OnTimer doesn&apos;t replace your calendar. It connects to your Apple, Google, or Microsoft
+              calendar and turns upcoming events into persistent alarm-style reminders that continue alerting
+              you until you acknowledge them.
+            </p>
+            <p>
+              The goal isn&apos;t to fix broken notifications. It&apos;s to make sure you never miss an important
+              event once they&apos;re working correctly.
+            </p>
+          </div>
           <div className="mt-8">
             <AppStoreCTA location="calendar_notifications_not_working_solution" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft 365 / Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">iPhone · Apple Calendar · Google Calendar · Microsoft calendars</p>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Frequently Asked Questions
+            Calendar Notification Troubleshooting FAQ
           </h2>
           <div className="mt-8 space-y-4">
             {faqItems.map((item) => (
               <details key={item.question} className="group rounded-xl border border-zinc-800 bg-zinc-900">
                 <summary className="flex cursor-pointer items-center justify-between p-5 text-sm font-semibold text-white">
                   {item.question}
-                  <span className="ml-4 shrink-0 text-zinc-500 group-open:rotate-180 transition-transform">▾</span>
+                  <span className="ml-4 shrink-0 text-zinc-500 transition-transform group-open:rotate-180">▾</span>
                 </summary>
-                <p className="px-5 pb-5 text-sm text-zinc-400 leading-relaxed">{item.answer}</p>
+                <p className="px-5 pb-5 text-sm leading-relaxed text-zinc-400">{item.answer}</p>
               </details>
             ))}
           </div>
@@ -511,23 +507,19 @@ export default function CalendarNotificationsNotWorking() {
       </section>
 
       {/* Related Guides */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
+      <section className="border-t border-zinc-800 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-xl font-black tracking-tight text-white">Related Guides</h2>
           <ul className="mt-6 space-y-3">
             {[
-              { href: "/why-calendar-notifications-fail", label: "Why Calendar Notifications Fail (And What Actually Works)" },
-              { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
-              { href: "/calendar-notifications-vs-alarms", label: "Calendar Notifications vs Alarms: Why Most Reminders Fail" },
-              { href: "/persistent-calendar-reminders", label: "How to Make Calendar Reminders Persistent" },
-              { href: "/turn-calendar-events-into-alarms", label: "How to Turn Calendar Events Into Real Alarms" },
-              { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Notifications Fail" },
-              { href: "/why-notifications-fail", label: "Why Notifications Fail (And Persistent Alarms Work Better)" },
-              { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
-              { href: "/alarm-didnt-go-off-late-for-work", label: "Alarm Didn't Go Off? Build a Fail-Safe Reminder System" },
+              { href: "/calendar-notifications-vs-alarms", label: "Calendar notifications vs alarms" },
+              { href: "/turn-calendar-events-into-alarms", label: "Turn calendar events into alarms" },
+              { href: "/persistent-calendar-reminders", label: "Persistent calendar reminders" },
+              { href: "/calendar-alarm-app", label: "Calendar alarm app" },
+              { href: "/why-calendar-notifications-fail", label: "Why calendar notifications can still fail after settings are correct" },
             ].map(({ href, label }) => (
               <li key={href}>
-                <Link href={href} className="text-green-500 transition-colors hover:text-green-400 text-sm">
+                <Link href={href} className="text-sm text-green-500 transition-colors hover:text-green-400">
                   {label} →
                 </Link>
               </li>
@@ -541,15 +533,15 @@ export default function CalendarNotificationsNotWorking() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-2xl px-4 text-center sm:px-6">
           <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
-            Stop relying on notifications that disappear.
+            Keep your calendar. Add alarms that stay.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            OnTimer replaces passive calendar alerts with persistent alarms — the kind that stay until you respond.
+            OnTimer turns existing calendar events into persistent alarms so important moments are harder to miss.
           </p>
           <div className="mt-8">
             <AppStoreCTA location="calendar_notifications_not_working_final_cta" />
           </div>
-          <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar &amp; Microsoft Outlook</p>
+          <p className="mt-3 text-sm text-zinc-500">iPhone · Apple Calendar · Google Calendar · Microsoft calendars</p>
         </div>
       </section>
     </>
