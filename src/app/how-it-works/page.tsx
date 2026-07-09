@@ -19,9 +19,9 @@ const steps = [
   },
   {
     number: "02",
-    title: "Connect your calendar",
+    title: "Connect your calendars",
     description:
-      "OnTimer requests access to your iPhone calendar. This is a read-only connection — OnTimer never modifies your calendar or syncs your data anywhere. It simply reads upcoming events to know when your alarms should fire.",
+      "Connect Google Calendar, Apple Calendar, or Outlook Calendar. OnTimer uses read-only calendar access, never modifies your events, and never asks you to rebuild your schedule. It simply reads upcoming events to know when your alarms should fire.",
     image: "/images/ConnectsToCalendars.png",
     imageAlt: "Calendar connection screen",
   },

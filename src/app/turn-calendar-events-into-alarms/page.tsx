@@ -160,7 +160,7 @@ export default function Page() {
             <span className="text-zinc-300">Turn Calendar Events Into Alarms</span>
           </nav>
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            Calendar alarm app for Google &amp; Outlook
+            Calendar alarm app for Google Calendar, Apple Calendar, and Outlook Calendar
           </p>
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl leading-tight">
             How to Turn Calendar Events Into Real Alarms

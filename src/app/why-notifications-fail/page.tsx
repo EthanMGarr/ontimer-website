@@ -207,7 +207,7 @@ export default function Page() {
                 explicitly tell it to stop.
               </p>
               <p className="mt-4 text-xs text-green-500/70">
-                Used by: OnTimer (turns your Google &amp; Outlook events into this)
+                Used by: OnTimer (turns Google Calendar, Apple Calendar, and Outlook Calendar events into this)
               </p>
             </div>
           </div>

@@ -245,7 +245,7 @@ export default function Page() {
                 <li className="flex items-start gap-2"><span className="text-zinc-600 mt-0.5">—</span>No response required to clear it</li>
                 <li className="flex items-start gap-2"><span className="text-zinc-600 mt-0.5">—</span>Competes with every other app alert</li>
               </ul>
-              <p className="mt-4 text-xs text-zinc-600">Used by: Google Calendar, Outlook (native)</p>
+              <p className="mt-4 text-xs text-zinc-600">Used by: Google Calendar, Apple Calendar, Outlook Calendar (native)</p>
             </div>
             <div className="rounded-2xl border border-green-500/20 bg-green-500/5 p-6">
               <p className="text-xs font-semibold uppercase tracking-widest text-green-500 mb-3">Alarm</p>
@@ -257,7 +257,7 @@ export default function Page() {
                 <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5">✓</span>Doesn&rsquo;t tolerate passive acknowledgement</li>
                 <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5">✓</span>Works even when you&rsquo;re in another app</li>
               </ul>
-              <p className="mt-4 text-xs text-green-500/70">Used by: OnTimer (for Google &amp; Outlook events)</p>
+              <p className="mt-4 text-xs text-green-500/70">Used by: OnTimer (for Google Calendar, Apple Calendar, and Outlook Calendar events)</p>
             </div>
           </div>
           <div className="mt-6">

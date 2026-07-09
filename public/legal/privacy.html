@@ -13,7 +13,7 @@ Minimal Data Collection: We collect only what's necessary to provide alarm funct
 No Data Selling: We never sell your personal information to third parties.
 2. Information We Collect
 2.1 Calendar Data (Read-Only)
-When you connect your Google Calendar or Microsoft Outlook account, OnTimer requests read-only access to the following information:
+When you connect Google Calendar, Apple Calendar, or Microsoft Outlook Calendar, OnTimer requests read-only access to the following information:
 
 Data Type	Purpose	Storage Location
 Event titles	Display in app and notifications	Stored locally on your device
@@ -22,11 +22,11 @@ Event descriptions	Display additional event details	Stored locally on your devic
 Event location	Display meeting location information	Stored locally on your device
 Calendar names	Allow you to select which calendars to monitor	Stored locally on your device
 Attendee information	Display meeting participants (optional)	Stored locally on your device
-Important: OnTimer uses the following OAuth scopes:
+Important: Google Calendar and Microsoft Outlook Calendar use OAuth scopes:
 
 Google Calendar: https://www.googleapis.com/auth/calendar.readonly (read-only access)
-Microsoft Calendar: Calendars.Read (read-only access)
-These scopes grant read-only access to your calendar events. OnTimer cannot and does not modify, create, or delete your calendar events.
+Microsoft Outlook Calendar: Calendars.Read (read-only access)
+Apple Calendar uses Apple's EventKit framework and iOS Calendar permissions instead of OAuth. These scopes and permissions grant read-only access to your calendar events. OnTimer cannot and does not modify, create, or delete your calendar events.
 
 2.2 Device Information
 We collect limited device information to provide notification services:
@@ -102,18 +102,22 @@ Purpose: Read calendar events from Google Calendar
 Data shared: OAuth authentication tokens (managed by Google)
 Privacy policy: https://policies.google.com/privacy
 5.2 Microsoft Graph API
-Purpose: Read calendar events from Outlook/Microsoft 365
+Purpose: Read calendar events from Microsoft Outlook Calendar/Microsoft 365
 Data shared: OAuth authentication tokens (managed by Microsoft)
 Privacy policy: https://privacy.microsoft.com/privacystatement
-5.3 RevenueCat
+5.3 Apple Calendar and iOS Calendar Permissions
+Purpose: Read Apple Calendar events through Apple's EventKit framework with your device-level permission
+Data shared: Controlled by iOS Calendar permissions
+Privacy policy: https://www.apple.com/legal/privacy/
+5.4 RevenueCat
 Purpose: Subscription management and payment processing
 Data shared: Anonymous user ID, subscription status
 Privacy policy: https://www.revenuecat.com/privacy
-5.4 Apple Push Notification Service (APNs)
+5.5 Apple Push Notification Service (APNs)
 Purpose: Trigger background calendar syncs
 Data shared: Device token, silent push notifications
 Privacy policy: https://www.apple.com/legal/privacy/
-5.5 Analytics Services
+5.6 Analytics Services
 Purpose: Anonymous usage analytics and crash reporting
 Data shared: Anonymized usage patterns, device information
 Note: No personally identifiable information is shared
@@ -147,7 +151,7 @@ You can revoke OnTimer's access to your calendar at any time through:
 In-App: Settings → Remove Calendar Connections
 Google: https://myaccount.google.com/permissions
 Microsoft: https://account.microsoft.com/privacy/app-access
-iOS: Settings → Privacy & Security → Calendars
+Apple Calendar on iOS: Settings → Privacy & Security → Calendars
 8.3 Data Deletion Requests
 To request deletion of your data:
 

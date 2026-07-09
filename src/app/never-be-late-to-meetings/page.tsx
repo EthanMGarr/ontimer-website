@@ -276,7 +276,7 @@ export default function NeverBeLateToMeetingsPage() {
               {
                 icon: "📅",
                 title: "Connects to your calendar",
-                body: "OnTimer reads your iPhone calendar — including Google Calendar, iCloud, Outlook, and others — and sees all your upcoming events automatically. You don't enter anything manually.",
+                body: "OnTimer connects to Google Calendar, Apple Calendar, and Outlook Calendar, then sees your upcoming events automatically. You don't enter anything manually.",
               },
               {
                 icon: "⏰",

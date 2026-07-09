@@ -219,11 +219,11 @@ export default function CalendarAlarmApp() {
             <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
               <h3 className="font-bold text-white text-lg">Apple Calendar</h3>
               <p className="mt-2 text-sm text-zinc-400 leading-relaxed">
-                Use the iPhone calendar you already trust. OnTimer reads Apple Calendar events and
+                Use Apple Calendar without rebuilding your schedule. OnTimer reads Apple Calendar events and
                 turns them into persistent alarms without asking you to rebuild your schedule.
               </p>
               <ul className="mt-4 space-y-1">
-                {["Apple Calendar", "iPhone calendar", "No manual setup"].map((i) => (
+                {["Apple Calendar", "iOS Calendar permission", "No manual setup"].map((i) => (
                   <li key={i} className="text-xs text-zinc-500 flex gap-2"><span className="text-green-500">✓</span>{i}</li>
                 ))}
               </ul>
