@@ -50,10 +50,10 @@
 </head>
 <body>
     <h1>OnTimer Privacy Policy</h1>
-    <p class="update-date">Last Updated: January 10, 2026</p>
+    <p class="update-date">Last Updated: July 9, 2026</p>
 
     <h2>1. Introduction</h2>
-    <p>Breakout Growth ("we," "our," or "us") operates the OnTimer mobile application ("the App"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use OnTimer.</p>
+    <p>Breakout Growth ("we," "our," or "us") operates OnTimer, including the ontimer.app website, the iOS mobile application, any future Android application, and related features, calculators, planning tools, content, subscriptions, and support services (collectively, "OnTimer" or "the Service"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use OnTimer.</p>
     <p><strong>By using OnTimer, you consent to the data practices described in this policy.</strong></p>
 
     <div class="important">
@@ -62,6 +62,7 @@
             <li><strong>Read-Only Calendar Access:</strong> We only READ your calendar events. We never modify, create, delete, or share your calendar data.</li>
             <li><strong>Local Storage:</strong> Calendar data is primarily stored on your device, not on our servers.</li>
             <li><strong>Minimal Data Collection:</strong> We collect only what's necessary to provide alarm functionality.</li>
+            <li><strong>Permission-Based Location:</strong> Precise location is used only if you grant permission, such as for Time to Leave reminders.</li>
             <li><strong>No Data Selling:</strong> We never sell your personal information to third parties.</li>
         </ul>
     </div>
@@ -69,7 +70,8 @@
     <h2>2. Information We Collect</h2>
 
     <h3>2.1 Calendar Data (Read-Only)</h3>
-    <p>When you connect your Google Calendar or Microsoft Outlook account, OnTimer requests <strong>read-only access</strong> to the following information:</p>
+    <p>When you connect Google Calendar, Apple Calendar, or Microsoft Outlook Calendar, OnTimer requests <strong>read-only access</strong> to the calendar information needed to display events, schedule reminders, deliver persistent notifications, calculate Time to Leave reminders, and allow you to select which calendars to monitor.</p>
+    <p>Google Calendar and Microsoft Outlook Calendar use OAuth authentication. Apple Calendar uses Apple's EventKit framework and iOS Calendar permissions instead of OAuth. In all cases, OnTimer's access is read-only: OnTimer cannot and does not create, edit, or delete your calendar events.</p>
     <table class="data-table">
         <tr>
             <th>Data Type</th>
@@ -78,12 +80,12 @@
         </tr>
         <tr>
             <td>Event titles</td>
-            <td>Display in app and notifications</td>
+            <td>Display in the app, reminders, and notifications</td>
             <td>Stored locally on your device</td>
         </tr>
         <tr>
             <td>Event start/end times</td>
-            <td>Schedule alarms and notifications</td>
+            <td>Schedule alarms, reminders, and persistent notifications</td>
             <td>Stored locally on your device</td>
         </tr>
         <tr>
@@ -93,7 +95,7 @@
         </tr>
         <tr>
             <td>Event location</td>
-            <td>Display meeting location information</td>
+            <td>Display location information and support Time to Leave calculations</td>
             <td>Stored locally on your device</td>
         </tr>
         <tr>
@@ -111,11 +113,15 @@
     <p><strong>Important:</strong> OnTimer uses the following OAuth scopes:</p>
     <ul>
         <li><strong>Google Calendar:</strong> <code>https://www.googleapis.com/auth/calendar.readonly</code> (read-only access)</li>
-        <li><strong>Microsoft Calendar:</strong> <code>Calendars.Read</code> (read-only access)</li>
+        <li><strong>Microsoft Outlook Calendar:</strong> <code>Calendars.Read</code> (read-only access)</li>
     </ul>
-    <p>These scopes grant <strong>read-only</strong> access to your calendar events. OnTimer cannot and does not modify, create, or delete your calendar events.</p>
+    <p>These scopes grant <strong>read-only</strong> access to your calendar events. Apple Calendar access is controlled by iOS Calendar permissions through EventKit. OnTimer cannot and does not modify, create, or delete your calendar events through any calendar provider.</p>
 
-    <h3>2.2 Device Information</h3>
+    <h3>2.2 Location Information</h3>
+    <p>Time to Leave reminders may optionally use your current location together with an event location to estimate when you should leave. Precise location is used only if you grant location permission on your device. If you do not grant location permission, OnTimer may still display events and schedule non-location-based reminders, but location-aware Time to Leave features may be limited or unavailable.</p>
+    <p>We do not sell location information, and we do not use precise location for advertising.</p>
+
+    <h3>2.3 Device Information</h3>
     <p>We collect limited device information to provide notification services:</p>
     <ul>
         <li><strong>Device token:</strong> For Apple Push Notifications (to trigger background syncs)</li>
@@ -124,7 +130,7 @@
         <li><strong>Device timezone:</strong> To display event times correctly</li>
     </ul>
 
-    <h3>2.3 Usage Analytics</h3>
+    <h3>2.4 App Usage Analytics</h3>
     <p>We collect anonymous usage data to improve the App:</p>
     <ul>
         <li>App opens and feature usage</li>
@@ -134,34 +140,50 @@
     </ul>
     <p><strong>This data is anonymized and cannot be used to identify you personally.</strong></p>
 
-    <h3>2.4 Account Information</h3>
+    <h3>2.5 Website Analytics and Marketing Information</h3>
+    <p>When you visit ontimer.app or use website calculators, planning tools, educational content, or support pages, we may collect standard website analytics and marketing analytics, such as:</p>
+    <ul>
+        <li>Pages viewed, links clicked, and referring pages</li>
+        <li>Browser type, device type, operating system, and approximate region</li>
+        <li>Usage of website calculators, such as airport planning, wake-up, Time to Leave, and meeting reminder tools</li>
+        <li>Campaign, attribution, and conversion information, such as whether a page visit leads to an App Store link click</li>
+        <li>Technical information used to keep the website secure and working properly</li>
+    </ul>
+    <p>This website data is used to understand page usage, improve the Service, troubleshoot issues, and measure marketing performance. We do not use your calendar event content for advertising.</p>
+
+    <h3>2.6 Account Information</h3>
     <p>If you create an account or subscribe to premium features:</p>
     <ul>
         <li><strong>Email address:</strong> Used for account management and support (optional)</li>
-        <li><strong>Subscription status:</strong> Managed by RevenueCat and Apple</li>
-        <li><strong>Purchase history:</strong> Stored by Apple App Store, not by us</li>
+        <li><strong>Subscription status:</strong> Managed by RevenueCat and the Apple App Store</li>
+        <li><strong>Purchase history:</strong> Stored by Apple App Store and RevenueCat for subscription management, not by OnTimer as payment card information</li>
     </ul>
+    <p>OnTimer does not store your payment card information. Payments and billing are processed by the Apple App Store and related subscription providers.</p>
 
-    <h3>2.5 Information We Do NOT Collect</h3>
+    <h3>2.7 Information We Do NOT Collect</h3>
     <p>OnTimer does not collect:</p>
     <ul>
         <li>Email content or messages</li>
         <li>Contacts or address book information</li>
         <li>Files or documents from your accounts</li>
-        <li>Location data beyond timezone information</li>
+        <li>Precise location data unless you grant permission for location-based features such as Time to Leave</li>
         <li>Passwords (authentication is handled securely through OAuth)</li>
-        <li>Payment information (processed by Apple)</li>
+        <li>Payment card information (processed by Apple and related subscription providers)</li>
     </ul>
 
     <h2>3. How We Use Your Information</h2>
     <p>We use the information we collect to:</p>
     <ul>
-        <li><strong>Provide alarm functionality:</strong> Schedule and deliver notifications for your calendar events</li>
+        <li><strong>Provide alarm functionality:</strong> Schedule and deliver reminders, persistent notifications, and alarms for your calendar events</li>
         <li><strong>Sync calendar data:</strong> Periodically refresh your event list to ensure accuracy</li>
         <li><strong>Display event information:</strong> Show event details in the app interface</li>
+        <li><strong>Calculate Time to Leave reminders:</strong> Estimate when to leave for events with locations, using your current location only if you grant permission</li>
+        <li><strong>Manage monitored calendars:</strong> Let you choose which connected calendars OnTimer should use for reminders</li>
+        <li><strong>Operate the website:</strong> Provide website calculators, planning tools, educational content, support pages, and related services</li>
+        <li><strong>Measure website and marketing performance:</strong> Understand page usage, App Store link activity, and campaign performance</li>
         <li><strong>Improve the App:</strong> Analyze usage patterns to fix bugs and add features</li>
         <li><strong>Provide customer support:</strong> Respond to your questions and troubleshoot issues</li>
-        <li><strong>Send service notifications:</strong> Alert you about App updates or service changes</li>
+        <li><strong>Send service notifications:</strong> Alert you about App, website, or Service updates and service changes</li>
         <li><strong>Manage subscriptions:</strong> Process premium feature access and billing</li>
     </ul>
 
@@ -179,7 +201,8 @@
     <p>Minimal data is stored on our servers:</p>
     <ul>
         <li><strong>Device tokens:</strong> Required for Apple Push Notifications (for background sync triggers)</li>
-        <li><strong>Anonymous analytics:</strong> Aggregated usage statistics</li>
+        <li><strong>Anonymous analytics:</strong> Aggregated app and website usage statistics</li>
+        <li><strong>Subscription information:</strong> RevenueCat subscription identifiers and entitlement status</li>
         <li><strong>Crash reports:</strong> For debugging (anonymized)</li>
     </ul>
     <p><strong>We do NOT store your calendar events or personal calendar data on our servers.</strong></p>
@@ -187,7 +210,8 @@
     <h3>4.3 Security Measures</h3>
     <p>We implement industry-standard security measures:</p>
     <ul>
-        <li>OAuth 2.0 authentication (no password storage)</li>
+        <li>OAuth 2.0 authentication for Google Calendar and Microsoft Outlook Calendar (no password storage)</li>
+        <li>Apple EventKit and iOS permissions for Apple Calendar access</li>
         <li>HTTPS/TLS encryption for all network communications</li>
         <li>Encrypted local storage using iOS security features</li>
         <li>Regular security audits and updates</li>
@@ -207,30 +231,44 @@
 
     <h3>5.2 Microsoft Graph API</h3>
     <ul>
-        <li><strong>Purpose:</strong> Read calendar events from Outlook/Microsoft 365</li>
+        <li><strong>Purpose:</strong> Read calendar events from Microsoft Outlook Calendar and Microsoft 365</li>
         <li><strong>Data shared:</strong> OAuth authentication tokens (managed by Microsoft)</li>
         <li><strong>Privacy policy:</strong> <a href="https://privacy.microsoft.com/privacystatement">https://privacy.microsoft.com/privacystatement</a></li>
     </ul>
 
-    <h3>5.3 RevenueCat</h3>
+    <h3>5.3 Apple EventKit and iOS Calendar Permissions</h3>
+    <ul>
+        <li><strong>Purpose:</strong> Read Apple Calendar events with your device-level permission</li>
+        <li><strong>Data shared:</strong> Calendar permission status and event information made available through Apple's EventKit framework</li>
+        <li><strong>Privacy policy:</strong> <a href="https://www.apple.com/legal/privacy/">https://www.apple.com/legal/privacy/</a></li>
+    </ul>
+
+    <h3>5.4 RevenueCat</h3>
     <ul>
         <li><strong>Purpose:</strong> Subscription management and payment processing</li>
         <li><strong>Data shared:</strong> Anonymous user ID, subscription status</li>
         <li><strong>Privacy policy:</strong> <a href="https://www.revenuecat.com/privacy">https://www.revenuecat.com/privacy</a></li>
     </ul>
 
-    <h3>5.4 Apple Push Notification Service (APNs)</h3>
+    <h3>5.5 Apple App Store</h3>
+    <ul>
+        <li><strong>Purpose:</strong> App distribution, subscriptions, renewals, cancellations, refunds, and billing</li>
+        <li><strong>Data shared:</strong> Purchase and subscription information needed to manage access to paid features</li>
+        <li><strong>Privacy policy:</strong> <a href="https://www.apple.com/legal/privacy/">https://www.apple.com/legal/privacy/</a></li>
+    </ul>
+
+    <h3>5.6 Apple Push Notification Service (APNs)</h3>
     <ul>
         <li><strong>Purpose:</strong> Trigger background calendar syncs</li>
         <li><strong>Data shared:</strong> Device token, silent push notifications</li>
         <li><strong>Privacy policy:</strong> <a href="https://www.apple.com/legal/privacy/">https://www.apple.com/legal/privacy/</a></li>
     </ul>
 
-    <h3>5.5 Analytics Services</h3>
+    <h3>5.7 Analytics Services</h3>
     <ul>
-        <li><strong>Purpose:</strong> Anonymous usage analytics and crash reporting</li>
-        <li><strong>Data shared:</strong> Anonymized usage patterns, device information</li>
-        <li><strong>Note:</strong> No personally identifiable information is shared</li>
+        <li><strong>Purpose:</strong> Anonymous app usage analytics, website analytics, marketing analytics, and crash reporting</li>
+        <li><strong>Data shared:</strong> Anonymized usage patterns, browser/device information, page usage, and error information</li>
+        <li><strong>Note:</strong> No calendar event content is used for advertising</li>
     </ul>
 
     <h2>6. Data Sharing and Disclosure</h2>
@@ -238,7 +276,7 @@
     <p>We may disclose your information only in the following circumstances:</p>
     <ul>
         <li><strong>With your consent:</strong> When you explicitly authorize us to share information</li>
-        <li><strong>Service providers:</strong> Third-party services necessary to operate the App (as listed above)</li>
+        <li><strong>Service providers:</strong> Third-party services necessary to operate the Service (as listed above)</li>
         <li><strong>Legal requirements:</strong> If required by law, court order, or government request</li>
         <li><strong>Protection of rights:</strong> To protect our legal rights, safety, or property</li>
         <li><strong>Business transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
@@ -248,8 +286,10 @@
     <ul>
         <li><strong>Calendar data:</strong> Stored on your device only; deleted when you disconnect your calendar or delete the App</li>
         <li><strong>OAuth tokens:</strong> Stored until you revoke access or disconnect your account</li>
+        <li><strong>Apple Calendar permission:</strong> Controlled through iOS settings and removed when you revoke Calendar access or delete the App</li>
+        <li><strong>Precise location:</strong> Used only with permission for location-based features and not retained longer than necessary to provide those features</li>
         <li><strong>Device tokens:</strong> Retained as long as the App is installed</li>
-        <li><strong>Analytics data:</strong> Retained for up to 2 years in anonymized form</li>
+        <li><strong>Analytics data:</strong> App and website analytics retained for up to 2 years in anonymized or aggregated form</li>
         <li><strong>Account data:</strong> Deleted within 30 days of account deletion request</li>
     </ul>
 
@@ -260,6 +300,7 @@
     <ul>
         <li><strong>View your data:</strong> Access all calendar data stored locally in the App</li>
         <li><strong>Disconnect calendars:</strong> Revoke access at any time through App settings</li>
+        <li><strong>Control location permissions:</strong> Grant or revoke precise location access through device settings</li>
         <li><strong>Delete local data:</strong> Remove the App to delete all locally stored data</li>
         <li><strong>Manage subscriptions:</strong> Cancel or modify through App Store settings</li>
     </ul>
@@ -270,7 +311,7 @@
         <li><strong>In-App:</strong> Settings → Remove Calendar Connections</li>
         <li><strong>Google:</strong> <a href="https://myaccount.google.com/permissions">https://myaccount.google.com/permissions</a></li>
         <li><strong>Microsoft:</strong> <a href="https://account.microsoft.com/privacy/app-access">https://account.microsoft.com/privacy/app-access</a></li>
-        <li><strong>iOS:</strong> Settings → Privacy & Security → Calendars</li>
+        <li><strong>Apple Calendar on iOS:</strong> Settings → Privacy & Security → Calendars</li>
     </ul>
 
     <h3>8.3 Data Deletion Requests</h3>
@@ -315,6 +356,7 @@
     <ul>
         <li>Updating the "Last Updated" date at the top of this policy</li>
         <li>Posting a notice in the App</li>
+        <li>Posting a notice on the website</li>
         <li>Sending an email notification (if you have provided your email)</li>
     </ul>
     <p>Your continued use of OnTimer after changes become effective constitutes acceptance of the updated Privacy Policy.</p>
@@ -324,7 +366,7 @@
     <p>Specifically:</p>
     <ul>
         <li>OnTimer only requests the minimum scopes necessary (read-only calendar access)</li>
-        <li>Calendar data is used solely to provide alarm and notification functionality</li>
+        <li>Google Calendar data is used solely to provide calendar event display, alarm, reminder, persistent notification, Time to Leave, and monitored-calendar selection functionality</li>
         <li>We do not transfer calendar data to third parties except as necessary to provide the App's core functionality</li>
         <li>Calendar data is not used for serving advertisements</li>
         <li>Human access to calendar data is limited to debugging and support purposes only</li>
