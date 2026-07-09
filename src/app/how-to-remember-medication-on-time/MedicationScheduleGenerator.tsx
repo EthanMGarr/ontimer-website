@@ -311,7 +311,7 @@ export default function MedicationScheduleGenerator() {
             >
               Add to Calendar
             </button>
-            <p className="mt-2 text-xs text-zinc-500">Works with Apple Calendar, Google Calendar, Outlook</p>
+            <p className="mt-2 text-xs text-zinc-500">Works with Google Calendar, Apple Calendar, and Outlook Calendar</p>
           </div>
 
           {/* SECONDARY: raw .ics link */}

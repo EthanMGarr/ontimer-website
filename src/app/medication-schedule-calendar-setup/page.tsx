@@ -104,7 +104,7 @@ export default function Page() {
           <div className="mt-8 space-y-4">
             {[
               { step: "Step 1", title: "Choose your times", text: "Decide when you need to take your medication each day. Space doses evenly — for twice daily, try 8am and 8pm." },
-              { step: "Step 2", title: "Create a recurring event", text: "In Google Calendar, Apple Calendar, or Outlook: create an event at your dose time, set it to repeat daily, and give it a clear name (e.g. 'Take Lisinopril')." },
+              { step: "Step 2", title: "Create a recurring event", text: "In Google Calendar, Apple Calendar, or Outlook Calendar: create an event at your dose time, set it to repeat daily, and give it a clear name (e.g. 'Take Lisinopril')." },
               { step: "Step 3", title: "Add a reminder", text: "Set a notification 0–5 minutes before the event. This is your prompt to act." },
               { step: "Step 4", title: "Treat it like an appointment", text: "Your medication event is a commitment, not a suggestion. Act on it immediately when it fires." },
               { step: "Step 5", title: "Or skip manual setup", text: "Use the free generator on this site to download a ready-made .ics file and import it in one click." },

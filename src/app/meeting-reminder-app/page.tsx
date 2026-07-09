@@ -184,8 +184,8 @@ export default function MeetingReminderApp() {
                 body: "Connect your calendar once. OnTimer monitors your schedule and fires alarms automatically before each event — no configuration per meeting, no manual alarm-setting.",
               },
               {
-                title: "Works across Google and Microsoft accounts",
-                body: "Link Google Calendar, Apple Calendar, and Microsoft 365 / Outlook Calendar simultaneously. Multiple calendars are supported.",
+                title: "Works across your calendars",
+                body: "Link Google Calendar, Apple Calendar, and Outlook Calendar simultaneously. Multiple calendars are supported.",
               },
               {
                 title: "Adjustable lead time",

@@ -45,7 +45,7 @@ const faqItems = [
   {
     question: "Can I get alarm-style alerts for Outlook calendar events?",
     answer:
-      "Not natively on iPhone — Outlook Calendar's mobile reminders are push notifications. OnTimer connects to Microsoft 365 and Outlook Calendar and replaces those with persistent alarms.",
+      "Not natively on iPhone — Outlook Calendar's mobile reminders are push notifications. OnTimer connects to Outlook Calendar and replaces those with persistent alarms.",
   },
 ];
 
@@ -107,8 +107,8 @@ export default function Page() {
             <span className="text-zinc-400"> Why Most Reminders Fail</span>
           </h1>
           <p className="mt-5 text-lg text-zinc-400 leading-relaxed">
-            Google Calendar sends a notification. Outlook sends a notification. Both look like
-            reminders. Neither behaves like an alarm. That distinction is why most people still
+            Google Calendar, Apple Calendar, and Outlook Calendar send notifications. They look like
+            reminders, but they do not behave like alarms. That distinction is why most people still
             miss meetings despite having reminders set.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">

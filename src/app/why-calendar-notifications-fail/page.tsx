@@ -114,7 +114,7 @@ export default function Page() {
             <span className="text-zinc-300">Why Calendar Notifications Fail</span>
           </nav>
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            Google Calendar · iPhone · Outlook
+            Google Calendar · Apple Calendar · Outlook Calendar
           </p>
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl leading-tight">
             Why Calendar Notifications Fail
@@ -299,7 +299,7 @@ export default function Page() {
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              Google Calendar, Apple Calendar, and Outlook use the operating system&apos;s standard
+              Google Calendar, Apple Calendar, and Outlook Calendar use the operating system&apos;s standard
               notification pipeline. This pipeline was designed to be low-interruption — to inform users
               without disrupting what they&apos;re doing.
             </p>

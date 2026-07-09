@@ -5,12 +5,12 @@ import { AppStoreCTA } from "@/components/CTAButton";
 export const metadata: Metadata = {
   title: "Calendar Notifications Not Working? 10 Fixes for iPhone, Google & Apple Calendar",
   description:
-    "Calendar notifications not working? Learn how to fix missing, delayed, or silent reminders on Apple Calendar, Google Calendar, and Outlook with this step-by-step troubleshooting guide.",
+    "Calendar notifications not working? Learn how to fix missing, delayed, or silent reminders on Google Calendar, Apple Calendar, and Outlook Calendar with this step-by-step troubleshooting guide.",
   alternates: { canonical: "https://www.ontimer.app/calendar-notifications-not-working" },
   openGraph: {
     title: "Calendar Notifications Not Working? 10 Fixes for iPhone, Google & Apple Calendar",
     description:
-      "Fix missing, delayed, or silent calendar reminders on Apple Calendar, Google Calendar, and Outlook with this step-by-step troubleshooting guide.",
+      "Fix missing, delayed, or silent calendar reminders on Google Calendar, Apple Calendar, and Outlook Calendar with this step-by-step troubleshooting guide.",
     url: "https://www.ontimer.app/calendar-notifications-not-working",
     type: "article",
   },
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Calendar Notifications Not Working? 10 Fixes",
     description:
-      "Calendar notifications not working? Fix missing, delayed, or silent reminders on Apple Calendar, Google Calendar, and Outlook.",
+      "Calendar notifications not working? Fix missing, delayed, or silent reminders on Google Calendar, Apple Calendar, and Outlook Calendar.",
   },
 };
 
@@ -151,7 +151,7 @@ const troubleshootingSteps = [
       "Tap General.",
       "Tap Background App Refresh.",
       "Make sure Background App Refresh is on.",
-      "Enable it for Google Calendar or Outlook.",
+      "Enable it for Google Calendar or Outlook Calendar.",
     ],
     platformNotes: [
       "Apple Calendar: Apple Calendar is built into iOS, but connected accounts still need to sync correctly.",
@@ -173,7 +173,7 @@ const troubleshootingSteps = [
     ],
     platformNotes: [
       "If notifications only work with Low Power Mode off, keep it disabled before important events while you continue troubleshooting.",
-      "This is most relevant for Google Calendar and Outlook because they depend more on app refresh behavior.",
+      "This is most relevant for Google Calendar and Outlook Calendar because they depend more on app refresh behavior.",
     ],
   },
   {
@@ -259,7 +259,7 @@ const articleJsonLd = {
   "@type": "Article",
   headline: "Calendar Notifications Not Working? 10 Things to Check",
   description:
-    "A step-by-step troubleshooting guide for missing, delayed, or silent calendar notifications on Apple Calendar, Google Calendar, and Outlook.",
+    "A step-by-step troubleshooting guide for missing, delayed, or silent calendar notifications on Google Calendar, Apple Calendar, and Outlook Calendar.",
   author: { "@type": "Organization", name: "OnTimer" },
   publisher: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
   url: "https://www.ontimer.app/calendar-notifications-not-working",
@@ -307,7 +307,7 @@ export default function CalendarNotificationsNotWorking() {
             <span className="text-zinc-300">Calendar Notifications Not Working</span>
           </nav>
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            Apple Calendar · Google Calendar · Outlook
+            Google Calendar · Apple Calendar · Outlook Calendar
           </p>
           <h1 className="text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl">
             Calendar Notifications Not Working?

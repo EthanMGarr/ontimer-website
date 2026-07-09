@@ -29,7 +29,7 @@ const faqItems = [
   {
     question: "How do I make Outlook calendar reminders persistent on iPhone?",
     answer:
-      "Outlook's native iPhone reminders are standard push notifications. OnTimer connects to your Microsoft 365 or Outlook calendar and replaces those with persistent alarms that don't disappear until you actively dismiss them.",
+      "Outlook Calendar's native iPhone reminders are standard push notifications. OnTimer connects to your Outlook Calendar and replaces those with persistent alarms that don't disappear until you actively dismiss them.",
   },
   {
     question: "What is a persistent calendar reminder?",

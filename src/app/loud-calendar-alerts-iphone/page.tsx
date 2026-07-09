@@ -87,7 +87,7 @@ export default function LoudCalendarAlertsIphone() {
             <span className="text-green-500">iPhone</span>
           </h1>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
-            If you rely on your iPhone calendar, you have probably experienced
+            If you rely on calendar alerts on your iPhone, you have probably experienced
             this: the reminder appears, you notice it for a second, and then the
             meeting still sneaks up on you.
           </p>

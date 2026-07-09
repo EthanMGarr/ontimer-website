@@ -48,7 +48,7 @@ const faqItems = [
   {
     question: "Can I get calendar alarms for Microsoft Outlook Calendar on iPhone?",
     answer:
-      "Microsoft Outlook Calendar's native iPhone reminders are push notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook Calendar and fires persistent alarms for every calendar event — they don't disappear until you dismiss them.",
+      "Microsoft Outlook Calendar's native iPhone reminders are push notifications, not alarms. OnTimer connects to Outlook Calendar and fires persistent alarms for every calendar event — they don't disappear until you dismiss them.",
   },
   {
     question: "What is the difference between a calendar notification and a calendar alarm?",
@@ -58,7 +58,7 @@ const faqItems = [
   {
     question: "Does OnTimer work with Google Calendar, Apple Calendar, and Outlook Calendar at the same time?",
     answer:
-      "Yes. OnTimer supports multiple connected calendars simultaneously — link Google Calendar, Apple Calendar, and Microsoft 365 / Outlook Calendar at the same time, and persistent alarms fire for events from each calendar. Multiple accounts are supported.",
+      "Yes. OnTimer supports multiple connected calendars simultaneously — link Google Calendar, Apple Calendar, and Outlook Calendar at the same time, and persistent alarms fire for events from each calendar. Multiple accounts are supported.",
   },
   {
     question: "Who benefits most from a calendar alarm app?",
@@ -332,7 +332,7 @@ export default function Page() {
               {[
                 "Works with Google Calendar (personal + Workspace)",
                 "Works with Apple Calendar",
-                "Works with Microsoft 365 / Outlook Calendar",
+                "Works with Outlook Calendar",
                 "Multiple accounts supported simultaneously",
                 "Persistent alarms that stay until dismissed",
                 "Optional Time To Leave alerts based on travel time",

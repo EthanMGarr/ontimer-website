@@ -50,7 +50,7 @@ const faqItems = [
   {
     question: "Does OnTimer work with Microsoft Outlook Calendar or Microsoft 365?",
     answer:
-      "Yes. OnTimer connects to Microsoft 365 and Outlook Calendar. Work calendars, Teams meetings, and personal Outlook Calendar events all get persistent alarms. Multiple Microsoft accounts are supported.",
+      "Yes. OnTimer connects to Microsoft Outlook Calendar. Work calendars, Teams meetings, and personal Outlook Calendar events all get persistent alarms. Multiple Microsoft accounts are supported.",
   },
   {
     question: "What's the difference between a calendar notification and a calendar alarm?",
@@ -60,7 +60,7 @@ const faqItems = [
   {
     question: "Can OnTimer work with Google Calendar, Apple Calendar, and Outlook Calendar at the same time?",
     answer:
-      "Yes. OnTimer supports multiple connected calendars simultaneously — you can link Google Calendar, Apple Calendar, and Microsoft 365 at the same time, and alarms will fire for events from each calendar.",
+      "Yes. OnTimer supports multiple connected calendars simultaneously — you can link Google Calendar, Apple Calendar, and Outlook Calendar at the same time, and alarms will fire for events from each calendar.",
   },
   {
     question: "Who benefits most from a calendar alarm app?",
@@ -229,13 +229,13 @@ export default function CalendarAlarmApp() {
               </ul>
             </div>
             <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-              <h3 className="font-bold text-white text-lg">Microsoft 365 &amp; Outlook Calendar</h3>
+              <h3 className="font-bold text-white text-lg">Outlook Calendar</h3>
               <p className="mt-2 text-sm text-zinc-400 leading-relaxed">
                 Connect your work Microsoft 365 account or personal Outlook Calendar. Teams meetings,
                 client calls, internal standups — all covered.
               </p>
               <ul className="mt-4 space-y-1">
-                {["Microsoft 365", "Outlook Calendar", "Multiple accounts"].map((i) => (
+                {["Outlook Calendar", "Microsoft 365", "Multiple accounts"].map((i) => (
                   <li key={i} className="text-xs text-zinc-500 flex gap-2"><span className="text-green-500">✓</span>{i}</li>
                 ))}
               </ul>

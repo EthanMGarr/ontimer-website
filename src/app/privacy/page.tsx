@@ -38,7 +38,7 @@ export default function PrivacyPage() {
           <p>
             OnTimer requests read-only access to the calendars you connect,
             including Google Calendar, Apple Calendar, and Microsoft Outlook
-            Calendar. Google Calendar and Outlook Calendar use secure account
+            Calendar. Google Calendar and Microsoft Outlook Calendar use secure account
             connection flows; Apple Calendar uses iOS Calendar permission. This
             access is used solely to read event times and titles to set your
             alarms. OnTimer cannot modify your calendar events.

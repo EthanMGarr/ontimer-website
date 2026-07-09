@@ -51,7 +51,7 @@ const howToJsonLd = {
     {
       "@type": "HowToStep",
       name: "Connect your calendar",
-      text: "Link Google Calendar, Apple Calendar, or your Microsoft 365 / Outlook Calendar account. OnTimer reads your calendar — it never stores your credentials.",
+      text: "Link Google Calendar, Apple Calendar, or Outlook Calendar. OnTimer reads your calendar — it never stores your credentials.",
     },
     {
       "@type": "HowToStep",
@@ -75,7 +75,7 @@ const faqItems = [
   {
     question: "Can you turn Outlook calendar events into alarms on iPhone?",
     answer:
-      "Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook Calendar and fires persistent alarms for every scheduled event, replacing dismissible notifications with interruptions that demand a response.",
+      "Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Outlook Calendar and fires persistent alarms for every scheduled event, replacing dismissible notifications with interruptions that demand a response.",
   },
   {
     question: "What is the difference between a calendar notification and a calendar alarm?",
@@ -90,7 +90,7 @@ const faqItems = [
   {
     question: "Does OnTimer work with Google Calendar, Apple Calendar, and Outlook Calendar?",
     answer:
-      "Yes. OnTimer connects to Google Calendar, Apple Calendar, and Microsoft 365 / Outlook Calendar. Multiple calendars are supported.",
+      "Yes. OnTimer connects to Google Calendar, Apple Calendar, and Outlook Calendar. Multiple calendars are supported.",
   },
 ];
 
@@ -284,7 +284,7 @@ export default function Page() {
             </p>
           </div>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {["Microsoft 365", "Outlook Calendar", "Multiple accounts"].map((item) => (
+            {["Outlook Calendar", "Microsoft 365", "Multiple accounts"].map((item) => (
               <div key={item} className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-medium text-zinc-300">
                 ✓ {item}
               </div>
@@ -304,7 +304,7 @@ export default function Page() {
               {
                 n: 1,
                 title: "Connect your calendars",
-                body: "Link Google Calendar, Apple Calendar, Microsoft 365, or a mix of calendars. Takes under a minute. OAuth — OnTimer never stores your credentials.",
+                body: "Link Google Calendar, Apple Calendar, Outlook Calendar, or a mix of calendars. Takes under a minute. OAuth — OnTimer never stores your credentials.",
               },
               {
                 n: 2,

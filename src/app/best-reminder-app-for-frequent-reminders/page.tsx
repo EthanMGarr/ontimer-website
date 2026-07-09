@@ -100,7 +100,7 @@ const appComparisons = [
     verdict: "Reliable, but no context or automation",
   },
   {
-    name: "Google Calendar / Apple Calendar / Outlook Calendar",
+    name: "Google Calendar, Apple Calendar, and Outlook Calendar",
     repeating: "No repeating interval support",
     persistent: "No — standard notification",
     verdict: "Designed for one-time reminders only",

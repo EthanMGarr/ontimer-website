@@ -115,7 +115,7 @@ export default function Page() {
           <div className="mt-8 space-y-4">
             {[
               { step: "Step 1", title: "Map out the schedule", text: "List every medication, dose, and time. Confirm with the prescribing doctor if anything is unclear." },
-              { step: "Step 2", title: "Create a shared calendar", text: "Use Google Calendar or Apple Calendar. Create a shared calendar your parent can see on their device. Add a recurring event for each dose." },
+              { step: "Step 2", title: "Create a shared calendar", text: "Use Google Calendar, Apple Calendar, or Outlook Calendar. Create a shared calendar your parent can see on their device. Add a recurring event for each dose." },
               { step: "Step 3", title: "Use the schedule generator", text: "Generate a medication schedule at ontimer.app/how-to-remember-medication-on-time and download the .ics file. Import it into their calendar directly." },
               { step: "Step 4", title: "Set up a high-salience alert", text: "A basic notification is often not enough. Pair with an app that fires a full-screen alarm that requires active dismissal." },
               { step: "Step 5", title: "Review weekly", text: "Check in once a week to confirm the system is working. Adjust times if doses are consistently missed." },

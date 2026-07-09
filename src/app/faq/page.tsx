@@ -29,7 +29,7 @@ const faqJsonLd = {
       name: "How do I turn Outlook calendar events into alarms on iPhone?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Microsoft Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook Calendar and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
+        text: "Microsoft Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Outlook Calendar and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
       },
     },
     {
@@ -203,7 +203,7 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
   {
     question: "How do I turn Outlook calendar events into alarms on iPhone?",
     answer:
-      "Microsoft Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook Calendar and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
+      "Microsoft Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Outlook Calendar and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
   },
   {
     question: "What is the difference between a calendar notification and a calendar alarm?",
@@ -211,7 +211,7 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
       <>
         A notification informs you — it appears briefly and disappears whether or not you act on it.
         An alarm interrupts you — it stays on screen and requires a response before it stops. Google
-        Calendar and Outlook send notifications.{" "}
+        Google Calendar, Apple Calendar, and Outlook Calendar send notifications.{" "}
         <Link href="/calendar-notifications-vs-alarms" className="text-green-500 hover:text-green-400 transition-colors">
           OnTimer turns those calendar events into alarms
         </Link>.

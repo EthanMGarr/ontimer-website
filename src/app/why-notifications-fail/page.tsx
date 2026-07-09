@@ -356,7 +356,7 @@ export default function Page() {
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              <strong className="text-white">OnTimer</strong> connects to your Google Calendar and
+              <strong className="text-white">OnTimer</strong> connects to Google Calendar,
               Apple Calendar, and Outlook Calendar and turns every event into a{" "}
               <Link href="/persistent-calendar-reminders" className="text-green-500 hover:text-green-400">
                 persistent alarm on iPhone
@@ -377,8 +377,8 @@ export default function Page() {
                 body: "Personal accounts and Workspace. Every event gets a persistent alarm automatically — no per-event setup.",
               },
               {
-                heading: "Microsoft Outlook Calendar / 365",
-                body: "Work calendars, Teams meetings, personal Outlook events. Multiple accounts supported simultaneously.",
+                heading: "Outlook Calendar",
+                body: "Work calendars, Teams meetings, and personal Outlook Calendar events. Multiple accounts supported simultaneously.",
               },
               {
                 heading: "No manual configuration",
