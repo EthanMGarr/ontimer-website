@@ -59,7 +59,7 @@ const whyRemindersFailAdhd = [
 ];
 
 const howOntimperHelps = [
-  "Connects to Google Calendar and Outlook — no manual entry required",
+  "Connects to Google Calendar, Apple Calendar, and Outlook Calendar — no manual entry required",
   "Fires a loud alarm before every meeting — not a notification, an alarm",
   "Alarm stays on screen until you dismiss it — it does not go away on its own",
   "Responds to schedule changes automatically — no updating alarms by hand",
@@ -222,7 +222,7 @@ export default function AdhdTimeBlindnessTools() {
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              Google Calendar and Outlook send notification banners that appear
+              Google Calendar, Apple Calendar, and Outlook Calendar send notification banners that appear
               briefly on your screen and then disappear.
             </p>
             <p>
@@ -344,7 +344,7 @@ export default function AdhdTimeBlindnessTools() {
               <Link href="/" className="text-green-500 hover:text-green-400">
                 OnTimer
               </Link>{" "}
-              connects to Google Calendar and Microsoft Outlook and turns every
+              connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar and turns every
               calendar event into a persistent alarm.
             </p>
           </div>
@@ -432,7 +432,7 @@ export default function AdhdTimeBlindnessTools() {
                 href="/best-calendar-alarm-app"
                 className="text-green-500 hover:text-green-400 transition-colors"
               >
-                Best Calendar Alarm App for Google &amp; Outlook →
+                Best Calendar Alarm App for iPhone Calendars →
               </Link>
             </li>
             <li>

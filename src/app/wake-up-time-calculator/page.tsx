@@ -173,7 +173,7 @@ export default function WakeUpTimeCalculatorPage() {
           <ul className="mt-8 space-y-3">
             {[
               "Leave-time alerts based on live travel time and traffic",
-              "Connects to Google Calendar and Microsoft Outlook",
+              "Connects to Google Calendar, Apple Calendar, and Outlook Calendar",
               "Stronger alerts that are harder to sleep through or dismiss",
               "Works for work, appointments, flights, and more",
             ].map((item) => (

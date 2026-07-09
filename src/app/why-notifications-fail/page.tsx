@@ -66,7 +66,7 @@ const faqItems = [
   {
     question: "What should I use instead of calendar notifications for important events?",
     answer:
-      "Use OnTimer. It connects to your Google Calendar and Microsoft Outlook and turns every event into a persistent alarm on iPhone — not a notification. The alarm stays on your screen until you dismiss it, fires for every event automatically, and works across meetings, medication reminders, flights, and any other calendar event where the timing window closing has real consequences.",
+      "Use OnTimer. It connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar and turns every event into a persistent alarm on iPhone — not a notification. The alarm stays on your screen until you dismiss it, fires for every event automatically, and works across meetings, medication reminders, flights, and any other calendar event where the timing window closing has real consequences.",
   },
 ];
 
@@ -155,7 +155,7 @@ export default function Page() {
           <div className="mt-8 flex flex-wrap gap-4">
             <AppStoreCTA location="why_notif_fail_hero" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -357,7 +357,7 @@ export default function Page() {
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
               <strong className="text-white">OnTimer</strong> connects to your Google Calendar and
-              Microsoft Outlook and turns every event into a{" "}
+              Apple Calendar, and Outlook Calendar and turns every event into a{" "}
               <Link href="/persistent-calendar-reminders" className="text-green-500 hover:text-green-400">
                 persistent alarm on iPhone
               </Link>
@@ -377,7 +377,7 @@ export default function Page() {
                 body: "Personal accounts and Workspace. Every event gets a persistent alarm automatically — no per-event setup.",
               },
               {
-                heading: "Microsoft Outlook / 365",
+                heading: "Microsoft Outlook Calendar / 365",
                 body: "Work calendars, Teams meetings, personal Outlook events. Multiple accounts supported simultaneously.",
               },
               {
@@ -398,7 +398,7 @@ export default function Page() {
           <div className="mt-8">
             <AppStoreCTA location="why_notif_fail_solution" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft 365 / Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -410,7 +410,7 @@ export default function Page() {
               Stop relying on reminders that can be ignored.
             </h2>
             <p className="mt-3 text-zinc-400">
-              OnTimer turns your Google Calendar and Outlook events into persistent alarms —
+              OnTimer turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms —
               the kind that close the execution gap instead of falling into it.
             </p>
             <div className="mt-6">
@@ -452,7 +452,7 @@ export default function Page() {
               { href: "/persistent-calendar-reminders", label: "How to Make Calendar Reminders Persistent" },
               { href: "/turn-calendar-events-into-alarms", label: "How to Turn Calendar Events Into Real Alarms" },
               { href: "/calendar-notifications-vs-alarms", label: "Calendar Notifications vs Alarms: The Full Breakdown" },
-              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for Google & Outlook" },
+              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for iPhone Calendars" },
               { href: "/adhd-time-blindness-tools", label: "ADHD Time Blindness Tools" },
               { href: "/what-time-should-i-leave", label: "What Time Should I Leave? Free Calculator" },
             ].map(({ href, label }) => (

@@ -26,12 +26,12 @@ const faqItems = [
   {
     question: "How is OnTimer different from Google Calendar reminders?",
     answer:
-      "Google Calendar and Outlook reminders are passive notifications that appear briefly and disappear. OnTimer fires a persistent alarm that stays on screen and requires active dismissal — like a morning alarm clock, not a banner. This makes it much harder to miss a meeting even during focused work.",
+      "Google Calendar, Apple Calendar, and Outlook Calendar reminders are passive notifications that appear briefly and disappear. OnTimer fires a persistent alarm that stays on screen and requires active dismissal — like a morning alarm clock, not a banner. This makes it much harder to miss a meeting even during focused work.",
   },
   {
     question: "Does OnTimer require setting up alarms for each meeting manually?",
     answer:
-      "No. Once you connect your Google Calendar or Outlook account, OnTimer automatically creates alarms for all upcoming events. You don't have to do anything for each individual meeting — the system runs in the background and covers your entire calendar.",
+      "No. Once you connect Google Calendar, Apple Calendar, or Outlook Calendar, OnTimer automatically creates alarms for all upcoming events. You don't have to do anything for each individual meeting — the system runs in the background and covers your entire calendar.",
   },
 ];
 
@@ -61,7 +61,7 @@ export default function MeetingReminderApp() {
             name: "OnTimer",
             operatingSystem: "iOS",
             applicationCategory: "ProductivityApplication",
-            description: "Meeting reminder app that turns Google Calendar and Outlook events into persistent alarms you can't miss.",
+            description: "Meeting reminder app that turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms you can't miss.",
             offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
             url: "https://www.ontimer.app",
           }),
@@ -86,7 +86,7 @@ export default function MeetingReminderApp() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.15),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            Google Calendar · Outlook · iPhone
+            Google Calendar · Apple Calendar · Outlook Calendar · iPhone
           </p>
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl leading-tight">
             Meeting Reminder App
@@ -104,7 +104,7 @@ export default function MeetingReminderApp() {
             <p className="text-zinc-200 leading-relaxed">
               <strong className="text-white">Most missed meetings happen after the reminder fires — not before.</strong>{" "}
               Passive notifications disappear whether or not you act on them. OnTimer
-              connects to Google Calendar and Outlook and fires an interruptive alarm before
+              connects to Google Calendar, Apple Calendar, and Outlook Calendar and fires an interruptive alarm before
               each event — one that demands acknowledgment and doesn&apos;t go away until you respond.
               No per-meeting setup required.
             </p>
@@ -112,7 +112,7 @@ export default function MeetingReminderApp() {
           <div className="mt-8">
             <AppStoreCTA location="meeting_reminder_app_hero" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft 365 / Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -170,7 +170,7 @@ export default function MeetingReminderApp() {
             How OnTimer Fixes This
           </h2>
           <p className="mt-6 text-zinc-400 leading-relaxed">
-            OnTimer connects to your Google Calendar and Microsoft 365 / Outlook and fires an
+            OnTimer connects to Google Calendar, Apple Calendar, and Outlook Calendar and fires an
             alarm before each event. Not a notification — an alarm. The distinction matters:
           </p>
           <div className="mt-8 space-y-4">
@@ -185,7 +185,7 @@ export default function MeetingReminderApp() {
               },
               {
                 title: "Works across Google and Microsoft accounts",
-                body: "Link Google Calendar (personal or Workspace) and Microsoft 365 / Outlook simultaneously. Multiple accounts from each provider are supported.",
+                body: "Link Google Calendar, Apple Calendar, and Microsoft 365 / Outlook Calendar simultaneously. Multiple calendars are supported.",
               },
               {
                 title: "Adjustable lead time",
@@ -332,7 +332,7 @@ export default function MeetingReminderApp() {
           <div className="mt-8">
             <AppStoreCTA location="meeting_reminder_app_final_cta" />
           </div>
-          <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar &amp; Microsoft Outlook</p>
+          <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
     </>

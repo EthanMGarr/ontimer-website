@@ -56,7 +56,7 @@ const faqItems = [
   {
     question: "Is OnTimer a reminder app?",
     answer:
-      "OnTimer is a calendar alarm app, not a general reminder app. It connects to Google Calendar and Outlook and fires persistent alarms before events — not passive notifications. If you need reminders for calendar events, appointments, or meetings that you genuinely cannot miss, OnTimer is designed for that use case.",
+      "OnTimer is a calendar alarm app, not a general reminder app. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and fires persistent alarms before events — not passive notifications. If you need reminders for calendar events, appointments, or meetings that you genuinely cannot miss, OnTimer is designed for that use case.",
   },
 ];
 
@@ -100,7 +100,7 @@ const appComparisons = [
     verdict: "Reliable, but no context or automation",
   },
   {
-    name: "Google Calendar / Outlook",
+    name: "Google Calendar / Apple Calendar / Outlook Calendar",
     repeating: "No repeating interval support",
     persistent: "No — standard notification",
     verdict: "Designed for one-time reminders only",
@@ -417,7 +417,7 @@ export default function BestReminderAppForFrequentRemindersPage() {
               <Link href="/" className="text-green-500 hover:text-green-400">
                 OnTimer
               </Link>{" "}
-              is built for this. It connects to Google Calendar and Microsoft Outlook,
+              is built for this. It connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar,
               reads your upcoming events, and fires a persistent alarm — not a
               notification — at a configurable lead time before each one.
             </p>
@@ -430,7 +430,7 @@ export default function BestReminderAppForFrequentRemindersPage() {
             {[
               "Persistent alarm that stays on screen until dismissed — not a notification",
               "Fires before every calendar event automatically — no manual setup per event",
-              "Connects to Google Calendar and Microsoft Outlook",
+              "Connects to Google Calendar, Apple Calendar, and Outlook Calendar",
               "Configurable lead time — set how early you want to be interrupted",
               "Works through Focus modes with time-sensitive alert permissions",
             ].map((item) => (
@@ -457,7 +457,7 @@ export default function BestReminderAppForFrequentRemindersPage() {
           <ul className="mt-6 space-y-3">
             {[
               "Alarm stays visible until you dismiss it — it does not disappear on its own",
-              "Syncs with Google Calendar and Outlook automatically",
+              "Syncs with Google Calendar, Apple Calendar, and Outlook Calendar automatically",
               "Updates when meetings change or get cancelled — no manual alarm management",
               "Fires early enough to actually prepare, not at the moment things start",
             ].map((item) => (

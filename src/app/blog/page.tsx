@@ -101,7 +101,7 @@ const notificationFailureGuides: GuideEntry[] = [
     href: "/calendar-notifications-vs-alarms",
     title: "Calendar Notifications vs Alarms: Why Most Reminders Fail",
     description:
-      "Notifications inform. Alarms interrupt. Understanding this difference explains why most calendar reminders fail — and what to use instead for Google and Outlook calendars.",
+      "Notifications inform. Alarms interrupt. Understanding this difference explains why most calendar reminders fail — and what to use instead for Google Calendar, Apple Calendar, and Outlook Calendar.",
     date: "2026-05-08",
   },
   {
@@ -119,7 +119,7 @@ const calendarAlarmGuides: GuideEntry[] = [
     href: "/turn-calendar-events-into-alarms",
     title: "How to Turn Calendar Events Into Real Alarms",
     description:
-      "Google Calendar and Outlook send notifications. Notifications disappear. OnTimer turns every event in your calendar into a persistent alarm — automatically, for both Google and Outlook.",
+      "Google Calendar, Apple Calendar, and Outlook Calendar send notifications. Notifications disappear. OnTimer turns every event in your calendar into a persistent alarm automatically.",
     date: "2026-05-08",
   },
   {
@@ -131,16 +131,16 @@ const calendarAlarmGuides: GuideEntry[] = [
   },
   {
     href: "/calendar-alarm-app",
-    title: "Best Calendar Alarm App for Google & Outlook Calendars",
+    title: "Best Calendar Alarm App for iPhone Calendars",
     description:
-      "OnTimer connects to your Google Calendar and Microsoft 365 / Outlook calendar and fires a persistent alarm for every event — not a notification that disappears.",
+      "OnTimer connects to Google Calendar, Apple Calendar, and Outlook Calendar and fires a persistent alarm for every event — not a notification that disappears.",
     date: "2026-05-08",
   },
   {
     href: "/calendar-notifications-vs-alarms",
     title: "Calendar Notifications vs Alarms: Why Most Reminders Fail",
     description:
-      "Notifications inform. Alarms interrupt. Understanding this difference explains why most calendar reminders fail — and what to use instead for Google and Outlook calendars.",
+      "Notifications inform. Alarms interrupt. Understanding this difference explains why most calendar reminders fail — and what to use instead for Google Calendar, Apple Calendar, and Outlook Calendar.",
     date: "2026-05-08",
   },
 ];
@@ -358,7 +358,7 @@ export default function BlogPage() {
           <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-green-500">New</p>
           <h2 className="mb-2 text-2xl font-black text-white">Calendar Alarm Guides</h2>
           <p className="mb-8 text-sm text-zinc-500">
-            Turn Google Calendar and Outlook events into persistent alarms — not notifications that disappear.
+            Turn Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms — not notifications that disappear.
           </p>
           <div className="space-y-4">
             {calendarAlarmGuides.map((guide, index) => {

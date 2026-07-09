@@ -28,7 +28,7 @@ const faqItems = [
   {
     question: "Does OnTimer work with Zoom meetings?",
     answer:
-      "Yes. OnTimer reads your Google Calendar and Microsoft Outlook events — including meetings with Zoom, Google Meet, or Teams links — and fires a persistent alarm before each one. No manual setup required; every calendar event is covered automatically.",
+      "Yes. OnTimer reads Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events — including meetings with Zoom, Google Meet, or Teams links — and fires a persistent alarm before each one. No manual setup required; every calendar event is covered automatically.",
   },
 ];
 
@@ -55,7 +55,7 @@ const alarmBenefits = [
   "stays on screen until you dismiss it",
   "fires at a set time before your meeting — not just when it starts",
   "requires active acknowledgment, breaking your focus",
-  "works with your existing Google Calendar or Outlook events",
+  "works with your existing Google Calendar, Apple Calendar, or Outlook Calendar events",
   "no manual setup — every meeting is covered automatically",
 ];
 
@@ -153,7 +153,7 @@ export default function ZoomMeetingReminder() {
               else.
             </p>
             <p>
-              Google Calendar and Outlook send their own reminders too — but
+              Google Calendar, Apple Calendar, and Outlook Calendar send their own reminders too — but
               these face exactly the same problem. A notification banner that
               appears for a few seconds isn&apos;t designed to interrupt deep
               work.
@@ -250,7 +250,7 @@ export default function ZoomMeetingReminder() {
               <Link href="/" className="text-green-500 hover:text-green-400">
                 OnTimer
               </Link>{" "}
-              connects to your Google Calendar and Microsoft Outlook accounts
+              connects to Google Calendar, Apple Calendar, and Outlook Calendar
               and automatically turns every calendar event — including Zoom and
               Teams meetings — into a persistent alarm on your iPhone.
             </p>

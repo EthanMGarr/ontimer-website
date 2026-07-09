@@ -221,7 +221,7 @@ export default function WhatTimeShouldILeavePage() {
           <ul className="mt-8 space-y-3">
             {[
               "Time-to-Leave alerts based on real travel time and live traffic",
-              "Connects to Google Calendar and Microsoft Outlook",
+              "Connects to Google Calendar, Apple Calendar, and Outlook Calendar",
               "Works for any event with a location in your calendar",
               "Stronger alerts that are harder to ignore than standard reminders",
             ].map((item) => (

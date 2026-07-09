@@ -72,7 +72,7 @@ const faqItems = [
   {
     question: "What apps help with the Last 5 Minutes Problem?",
     answer:
-      "OnTimer is designed specifically for this: it connects to your Google Calendar or Outlook and turns every event into a persistent alarm on iPhone. Instead of a passive notification that disappears, you get an alert that demands a response — designed for the final execution window when reminders need to actually work.",
+      "OnTimer is designed specifically for this: it connects to Google Calendar, Apple Calendar, or Outlook Calendar and turns every event into a persistent alarm on iPhone. Instead of a passive notification that disappears, you get an alert that demands a response — designed for the final execution window when reminders need to actually work.",
   },
   {
     question: "Does OnTimer work for medication reminders and airport timing?",
@@ -163,7 +163,7 @@ export default function Page() {
           <div className="mt-8 flex flex-wrap gap-4">
             <AppStoreCTA location="last5min_hero" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -354,7 +354,7 @@ export default function Page() {
                 calendar alarm app
               </Link>{" "}
               for iPhone. It connects to your Google Calendar and
-              Microsoft Outlook and turns every event into a{" "}
+              Apple Calendar, and Outlook Calendar and turns every event into a{" "}
               <Link href="/persistent-calendar-reminders" className="text-green-500 hover:text-green-400">
                 persistent alarm
               </Link>{" "}
@@ -390,7 +390,7 @@ export default function Page() {
           <div className="mt-8">
             <AppStoreCTA location="last5min_solution" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -402,7 +402,7 @@ export default function Page() {
               Turn your calendar events into persistent alarms.
             </h2>
             <p className="mt-3 text-zinc-400">
-              OnTimer closes the execution gap. Connect your Google Calendar or Outlook and every event
+              OnTimer closes the execution gap. Connect Google Calendar, Apple Calendar, or Outlook Calendar and every event
               gets an alarm that won&rsquo;t let you drift past the deadline.
             </p>
             <div className="mt-6">
@@ -444,7 +444,7 @@ export default function Page() {
               { href: "/turn-calendar-events-into-alarms", label: "How to Turn Calendar Events Into Real Alarms" },
               { href: "/persistent-calendar-reminders", label: "How to Make Calendar Reminders Persistent" },
               { href: "/calendar-notifications-vs-alarms", label: "Calendar Notifications vs Alarms: Why Most Reminders Fail" },
-              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for Google & Outlook" },
+              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for iPhone Calendars" },
               { href: "/what-time-should-i-leave", label: "What Time Should I Leave? Free Calculator" },
               { href: "/airport-time-to-leave-calculator", label: "Airport Time-to-Leave Calculator" },
               { href: "/how-to-remember-medication-on-time", label: "How to Remember Medication On Time" },
@@ -466,7 +466,7 @@ export default function Page() {
             Stop losing the last 5 minutes.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            OnTimer turns your Google and Outlook calendar events into persistent alarms — the kind that
+            OnTimer turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms — the kind that
             close the execution gap instead of contributing to it.
           </p>
           <div className="mt-8">

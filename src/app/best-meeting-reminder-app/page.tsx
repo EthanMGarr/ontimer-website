@@ -26,9 +26,9 @@ const faqItems = [
       "A meeting reminder is a passive notification that appears briefly and disappears whether or not you act. A meeting alarm stays on screen, keeps alerting you, and requires acknowledgment before it stops — like a morning alarm. For high-stakes meetings, you want an alarm, not a reminder.",
   },
   {
-    question: "Does OnTimer work with Google Calendar and Outlook?",
+    question: "Does OnTimer work with Google Calendar, Apple Calendar, and Outlook Calendar?",
     answer:
-      "Yes. OnTimer connects to both Google Calendar and Microsoft Outlook, reads your upcoming events, and automatically creates persistent alarms before each meeting. No manual setup required — every calendar event is covered.",
+      "Yes. OnTimer connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar, reads your upcoming events, and automatically creates persistent alarms before each meeting. No manual setup required — every calendar event is covered.",
   },
 ];
 
@@ -67,7 +67,7 @@ const professionalNeeds = [
   "back-to-back meetings with no buffer",
   "context switching between tasks",
   "working across multiple time zones",
-  "managing calls on both Google Calendar and Outlook",
+  "managing calls across Google Calendar, Apple Calendar, and Outlook Calendar",
   "staying focused in deep work sessions",
 ];
 
@@ -97,7 +97,7 @@ export default function BestMeetingReminderApp() {
             name: "OnTimer",
             operatingSystem: "iOS",
             applicationCategory: "ProductivityApplication",
-            description: "Calendar alarm app that turns Google Calendar and Outlook events into persistent alarms professionals can't miss.",
+            description: "Calendar alarm app that turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms professionals can't miss.",
             offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
             url: "https://www.ontimer.app",
           }),
@@ -278,7 +278,7 @@ export default function BestMeetingReminderApp() {
               </Link>{" "}
               is a{" "}
               <strong className="text-white">calendar alarm app</strong> that
-              connects to Google Calendar and Microsoft Outlook and turns every
+              connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar and turns every
               event into a persistent alarm.
             </p>
             <p>

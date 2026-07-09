@@ -3,21 +3,21 @@ import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Turn Google Calendar & Outlook Events Into Real Alarms",
+  title: "Turn Calendar Events Into Real Alarms",
   description:
-    "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google or Outlook calendar events into persistent alarms that are impossible to miss.",
+    "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google Calendar, Apple Calendar, or Outlook Calendar events into persistent alarms that are impossible to miss.",
   alternates: { canonical: "https://www.ontimer.app/turn-calendar-events-into-alarms" },
   openGraph: {
-    title: "Turn Google Calendar & Outlook Events Into Real Alarms",
+    title: "Turn Calendar Events Into Real Alarms",
     description:
-      "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google or Outlook calendar events into persistent alarms.",
+      "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google Calendar, Apple Calendar, or Outlook Calendar events into persistent alarms.",
     url: "https://www.ontimer.app/turn-calendar-events-into-alarms",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Turn Google Calendar & Outlook Events Into Real Alarms",
+    title: "Turn Calendar Events Into Real Alarms",
     description:
-      "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google or Outlook calendar events into persistent alarms.",
+      "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google Calendar, Apple Calendar, or Outlook Calendar events into persistent alarms.",
   },
 };
 
@@ -29,9 +29,9 @@ const softwareJsonLd = {
   applicationCategory: "ProductivityApplication",
   applicationSubCategory: "Calendar Alarm App",
   description:
-    "OnTimer turns Google Calendar and Microsoft Outlook calendar events into persistent alarms on iPhone — not notifications that disappear.",
+    "OnTimer turns Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events into persistent alarms on iPhone — not notifications that disappear.",
   url: "https://ontimer.app/turn-calendar-events-into-alarms",
-  keywords: "turn calendar events into alarms, Google Calendar alarm, Outlook calendar alarm, calendar alarm app, persistent calendar alarms, meeting alarm iPhone",
+  keywords: "turn calendar events into alarms, Google Calendar alarm, Apple Calendar alarm, Outlook Calendar alarm, calendar alarm app, persistent calendar alarms, meeting alarm iPhone",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   author: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
 };
@@ -39,9 +39,9 @@ const softwareJsonLd = {
 const howToJsonLd = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  name: "How to Turn Google Calendar Events Into Alarms on iPhone",
+  name: "How to Turn Calendar Events Into Alarms on iPhone",
   description:
-    "Turn Google Calendar and Outlook events into persistent alarms on iPhone using OnTimer.",
+    "Turn Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms on iPhone using OnTimer.",
   step: [
     {
       "@type": "HowToStep",
@@ -51,7 +51,7 @@ const howToJsonLd = {
     {
       "@type": "HowToStep",
       name: "Connect your calendar",
-      text: "Link your Google Calendar or Microsoft 365 / Outlook account using OAuth. OnTimer reads your calendar — it never stores your credentials.",
+      text: "Link Google Calendar, Apple Calendar, or your Microsoft 365 / Outlook Calendar account. OnTimer reads your calendar — it never stores your credentials.",
     },
     {
       "@type": "HowToStep",
@@ -75,7 +75,7 @@ const faqItems = [
   {
     question: "Can you turn Outlook calendar events into alarms on iPhone?",
     answer:
-      "Microsoft Outlook's built-in reminders are notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook calendars and fires persistent alarms for every scheduled event, replacing dismissible notifications with interruptions that demand a response.",
+      "Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook Calendar and fires persistent alarms for every scheduled event, replacing dismissible notifications with interruptions that demand a response.",
   },
   {
     question: "What is the difference between a calendar notification and a calendar alarm?",
@@ -88,9 +88,9 @@ const faqItems = [
       "Because calendar reminders are notifications, not alarms. They're easy to dismiss accidentally, they disappear on their own, and they compete with dozens of other notifications. If you're in deep work or hyperfocused, they fade into the background without registering.",
   },
   {
-    question: "Does OnTimer work with both Google Calendar and Outlook?",
+    question: "Does OnTimer work with Google Calendar, Apple Calendar, and Outlook Calendar?",
     answer:
-      "Yes. OnTimer connects to Google Calendar (personal and Workspace) and Microsoft 365 / Outlook calendars. Multiple accounts from each provider are supported.",
+      "Yes. OnTimer connects to Google Calendar, Apple Calendar, and Microsoft 365 / Outlook Calendar. Multiple calendars are supported.",
   },
 ];
 
@@ -140,7 +140,7 @@ export default function Page() {
             "@context": "https://schema.org",
             "@type": "Article",
             headline: "How to Turn Calendar Events Into Real Alarms",
-            description: "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google or Outlook calendar events into persistent alarms that are impossible to miss.",
+            description: "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google Calendar, Apple Calendar, or Outlook Calendar events into persistent alarms that are impossible to miss.",
             author: { "@type": "Organization", name: "OnTimer" },
             publisher: { "@type": "Organization", name: "OnTimer" },
             datePublished: "2026-04-01",
@@ -166,7 +166,7 @@ export default function Page() {
             How to Turn Calendar Events Into Real Alarms
           </h1>
           <p className="mt-5 text-lg text-zinc-400 leading-relaxed">
-            Google Calendar and Outlook send notifications. Notifications disappear.
+            Google Calendar, Apple Calendar, and Outlook Calendar send notifications. Notifications disappear.
             Real alarms interrupt you and stay on screen until you act. OnTimer turns
             every event in your calendar into an alarm — automatically.
           </p>
@@ -174,7 +174,7 @@ export default function Page() {
             <AppStoreCTA location="turn_events_into_alarms_hero" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">
-            Works with Google Calendar &amp; Microsoft 365 / Outlook Calendar
+            Works with Google Calendar · Apple Calendar · Outlook Calendar
           </p>
         </div>
       </section>
@@ -186,7 +186,7 @@ export default function Page() {
             <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
             <p className="text-zinc-200 leading-relaxed">
               <strong className="text-white">To turn calendar events into real alarms:</strong> use OnTimer. It connects
-              to your Google or Outlook calendar, detects every upcoming event, and fires an interruptive alarm before
+              to Google Calendar, Apple Calendar, or Outlook Calendar, detects every upcoming event, and fires an interruptive alarm before
               each one — not a notification that disappears, but an alert that stays on your screen and demands a
               response before it stops. No manual setup per meeting. Your calendar is the source of truth.
             </p>
@@ -202,7 +202,7 @@ export default function Page() {
           </h2>
           <div className="mt-6 space-y-4 text-lg text-zinc-400 leading-relaxed">
             <p>
-              Google Calendar sends a push notification. Outlook sends a push notification. Both
+              Google Calendar, Apple Calendar, and Outlook Calendar send notifications. Those alerts
               appear in your notification tray, compete with hundreds of other alerts, and vanish
               after a few seconds whether you saw them or not.
             </p>
@@ -240,24 +240,24 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Google Calendar Support */}
+      {/* Calendar Provider Support */}
       <section className="border-t border-zinc-800 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Works With Google Calendar
+            Works With Google Calendar, Apple Calendar, and Outlook Calendar
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              OnTimer connects directly to Google Calendar — personal accounts and Google Workspace.
-              Every event you have scheduled, across every connected Google account, gets an alarm.
+              OnTimer connects directly to Google Calendar, Apple Calendar, and Outlook Calendar.
+              Every event you have scheduled across connected calendars gets an alarm.
             </p>
             <p>
-              You don&apos;t create new events. You don&apos;t configure reminders. Google Calendar
+              You don&apos;t create new events. You don&apos;t configure reminders. Your calendar
               stays exactly as it is. OnTimer runs alongside it and fires the alarm at the right time.
             </p>
           </div>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {["Personal Gmail", "Google Workspace", "Multiple accounts"].map((item) => (
+            {["Google Calendar", "Apple Calendar", "Outlook Calendar"].map((item) => (
               <div key={item} className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-medium text-zinc-300">
                 ✓ {item}
               </div>
@@ -266,21 +266,21 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Microsoft / Outlook Support */}
+      {/* Multiple Calendar Support */}
       <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Works With Microsoft 365 &amp; Outlook Calendar
+            Works Across Multiple Calendars
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              OnTimer also connects to Microsoft 365 and Outlook calendars. If your work schedule
-              lives in Outlook — Teams meetings, client calls, internal standups — OnTimer picks
-              those up and fires alarms for them.
+              If your work schedule lives in Outlook Calendar — Teams meetings, client calls, internal standups —
+              OnTimer picks those up and fires alarms for them. If your personal schedule lives in
+              Google Calendar or Apple Calendar, those events are covered too.
             </p>
             <p>
-              For people juggling both a Google Calendar and an Outlook calendar, OnTimer consolidates
-              both into a single alarm system. You see one set of alarms across all your events.
+              For people juggling work and personal calendars, OnTimer consolidates them into a single
+              alarm system. You see one set of alarms across all your events.
             </p>
           </div>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -304,7 +304,7 @@ export default function Page() {
               {
                 n: 1,
                 title: "Connect your calendars",
-                body: "Link Google Calendar, Microsoft 365, or both. Takes under a minute. OAuth — OnTimer never stores your credentials.",
+                body: "Link Google Calendar, Apple Calendar, Microsoft 365, or a mix of calendars. Takes under a minute. OAuth — OnTimer never stores your credentials.",
               },
               {
                 n: 2,
@@ -337,7 +337,7 @@ export default function Page() {
           <div className="mt-8">
             <AppStoreCTA location="turn_events_into_alarms_how_it_works" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free download · Works with Google &amp; Outlook calendars</p>
+          <p className="mt-3 text-xs text-zinc-500">Free download · Works with Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -363,7 +363,7 @@ export default function Page() {
               },
               {
                 title: "Multi-calendar users",
-                body: "If your schedule spans Google Calendar and Outlook, OnTimer consolidates both into one alarm system so nothing slips through.",
+                body: "If your schedule spans Google Calendar, Apple Calendar, and Outlook Calendar, OnTimer consolidates them into one alarm system so nothing slips through.",
               },
             ].map(({ title, body }) => (
               <div key={title} className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
@@ -406,7 +406,7 @@ export default function Page() {
               { href: "/why-notifications-fail", label: "Why Notifications Fail (And Persistent Alarms Work Better)" },
               { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Notifications Fail" },
               { href: "/persistent-calendar-reminders", label: "How to Make Calendar Reminders Persistent" },
-              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for Google & Outlook" },
+              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for iPhone Calendars" },
               { href: "/calendar-notifications-vs-alarms", label: "Calendar Notifications vs Alarms: Why Most Reminders Fail" },
               { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
               { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
@@ -428,7 +428,7 @@ export default function Page() {
             Turn your calendar into an alarm system.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            Free for iPhone. Works with Google Calendar and Microsoft Outlook.
+            Free for iPhone. Works with Google Calendar, Apple Calendar, and Outlook Calendar.
           </p>
           <div className="mt-8">
             <AppStoreCTA location="turn_events_into_alarms_final_cta" />

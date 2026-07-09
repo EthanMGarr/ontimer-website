@@ -9,12 +9,12 @@ import { APP_STORE_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "OnTimer Homepage Preview",
   description:
-    "Preview the redesigned OnTimer homepage: automatic calendar alarms for iPhone that help you stay on time from Google Calendar, Apple Calendar, and Microsoft calendars.",
+    "Preview the redesigned OnTimer homepage: automatic calendar alarms for iPhone that help you stay on time from Google Calendar, Apple Calendar, and Outlook Calendar.",
   alternates: { canonical: "https://www.ontimer.app/homepage2" },
   openGraph: {
     title: "OnTimer Homepage Preview",
     description:
-      "Automatic calendar alarms for iPhone that help you stay on time from Google Calendar, Apple Calendar, and Microsoft calendars.",
+      "Automatic calendar alarms for iPhone that help you stay on time from Google Calendar, Apple Calendar, and Outlook Calendar.",
     url: "https://www.ontimer.app/homepage2",
     images: [
       {
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "OnTimer Homepage Preview",
     description:
-      "Automatic calendar alarms for iPhone that help you stay on time from Google Calendar, Apple Calendar, and Microsoft calendars.",
+      "Automatic calendar alarms for iPhone that help you stay on time from Google Calendar, Apple Calendar, and Outlook Calendar.",
     images: ["/images/CantMissAlerts.png"],
   },
   robots: {
@@ -46,7 +46,7 @@ const softwareJsonLd = {
   applicationCategory: "ProductivityApplication",
   applicationSubCategory: "Calendar Alarm App",
   description:
-    "OnTimer is an iPhone calendar alarm app. It connects to Google Calendar, Apple Calendar, and Microsoft calendars and turns events into persistent alarms.",
+    "OnTimer is an iPhone calendar alarm app. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and turns events into persistent alarms.",
   url: "https://www.ontimer.app/homepage2",
   offers: {
     "@type": "Offer",
@@ -72,7 +72,7 @@ const faqJsonLd = {
       name: "Which calendars does OnTimer work with?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "OnTimer works with Google Calendar, Apple Calendar, and Microsoft calendars, including multiple calendars.",
+        text: "OnTimer works with Google Calendar, Apple Calendar, and Outlook Calendar, including multiple calendars.",
       },
     },
     {
@@ -104,7 +104,7 @@ const calendarLogos = [
     text: "Apple Calendar",
   },
   {
-    label: "Microsoft calendars",
+    label: "Outlook Calendar",
     src: "/images/outlook-calendar.jpg",
   },
 ];
@@ -113,7 +113,7 @@ const steps = [
   {
     number: "01",
     title: "Connect your calendars",
-    body: "Use the Google, Apple Calendar, and Microsoft calendars you already rely on.",
+    body: "Use the calendars you already rely on: Google Calendar, Apple Calendar, and Outlook Calendar.",
   },
   {
     number: "02",
@@ -180,7 +180,7 @@ const faqItems = [
   {
     question: "Does it work with all my calendars?",
     answer:
-      "OnTimer works with all of your Google, Apple Calendar, and Microsoft Calendars, including multiple calendars across work and personal life.",
+      "OnTimer works with Google Calendar, Apple Calendar, and Outlook Calendar, including multiple calendars across work and personal life.",
   },
   {
     question: "Is this just another notification?",
@@ -271,7 +271,7 @@ export default function Homepage2() {
               Never be late again.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-zinc-300 sm:text-xl lg:mx-0">
-              Connect your Google, Apple, or Microsoft calendar once. OnTimer
+              Connect Google Calendar, Apple Calendar, or Outlook Calendar once. OnTimer
               automatically turns upcoming events into alarms that stay visible
               until you respond, without rebuilding your schedule.
             </p>

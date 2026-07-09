@@ -13,7 +13,7 @@ const faqJsonLd = {
       name: "What is a calendar alarm app?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "A calendar alarm app connects to your existing calendar and fires persistent, interruptive alarms before each event — not passive notifications that disappear on their own. Unlike standard calendar reminders from Google Calendar or Outlook, calendar alarm alerts stay on your screen until you actively dismiss them. OnTimer is a calendar alarm app for iPhone.",
+        text: "A calendar alarm app connects to your existing calendar and fires persistent, interruptive alarms before each event — not passive notifications that disappear on their own. Unlike standard calendar reminders from Google Calendar, Apple Calendar, or Outlook Calendar, calendar alarm alerts stay on your screen until you actively dismiss them. OnTimer is a calendar alarm app for iPhone.",
       },
     },
     {
@@ -29,7 +29,7 @@ const faqJsonLd = {
       name: "How do I turn Outlook calendar events into alarms on iPhone?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Microsoft Outlook's built-in reminders are notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook calendars and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
+        text: "Microsoft Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook Calendar and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
       },
     },
     {
@@ -37,7 +37,7 @@ const faqJsonLd = {
       name: "What is the difference between a calendar notification and a calendar alarm?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "A notification informs you — it appears briefly and disappears whether or not you act on it. An alarm interrupts you — it stays on screen and requires a response before it stops. Google Calendar and Outlook send notifications. OnTimer turns those calendar events into alarms.",
+        text: "A notification informs you — it appears briefly and disappears whether or not you act on it. An alarm interrupts you — it stays on screen and requires a response before it stops. Google Calendar, Apple Calendar, and Outlook Calendar send notifications. OnTimer turns those calendar events into alarms.",
       },
     },
     {
@@ -90,10 +90,10 @@ const faqJsonLd = {
     },
     {
       "@type": "Question",
-      name: "Does OnTimer work with Microsoft calendars?",
+      name: "Does OnTimer work with Microsoft Outlook Calendar?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. OnTimer works with Microsoft calendars.",
+        text: "Yes. OnTimer works with Microsoft Outlook Calendar.",
       },
     },
     {
@@ -178,7 +178,7 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
       <>
         A calendar alarm app connects to your existing calendar and fires persistent, interruptive
         alarms before each event — not passive notifications that disappear on their own. Unlike
-        standard calendar reminders from Google Calendar or Outlook, these alarms stay on your screen
+        standard calendar reminders from Google Calendar, Apple Calendar, or Outlook Calendar, these alarms stay on your screen
         until you actively dismiss them.{" "}
         <Link href="/calendar-alarm-app" className="text-green-500 hover:text-green-400 transition-colors">
           OnTimer is a calendar alarm app for iPhone
@@ -203,7 +203,7 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
   {
     question: "How do I turn Outlook calendar events into alarms on iPhone?",
     answer:
-      "Microsoft Outlook's built-in reminders are notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook calendars and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
+      "Microsoft Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Microsoft 365 and Outlook Calendar and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
   },
   {
     question: "What is the difference between a calendar notification and a calendar alarm?",
@@ -267,8 +267,8 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
     answer: "Yes. OnTimer works with Google Calendar.",
   },
   {
-    question: "Does OnTimer work with Microsoft calendars?",
-    answer: "Yes. OnTimer works with Microsoft calendars.",
+    question: "Does OnTimer work with Microsoft Outlook Calendar?",
+    answer: "Yes. OnTimer works with Microsoft Outlook Calendar.",
   },
   {
     question: "Does OnTimer support multiple calendars?",

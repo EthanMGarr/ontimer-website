@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "How to Make Calendar Reminders Persistent",
     description:
-      "Standard calendar reminders disappear. Persistent reminders stay on screen until you act. Here's how to set them up for Google Calendar and Outlook.",
+      "Standard calendar reminders disappear. Persistent reminders stay on screen until you act. Here's how to set them up for Google Calendar, Apple Calendar, and Outlook Calendar.",
   },
   twitter: {
     card: "summary_large_image",
@@ -44,7 +44,7 @@ const faqItems = [
   {
     question: "Can I get loud, persistent calendar alerts on iPhone?",
     answer:
-      "Yes. OnTimer turns your Google Calendar and Outlook events into loud, persistent alarms on iPhone. They use your system alarm sound, stay on screen until dismissed, and can override silent mode for critical events.",
+      "Yes. OnTimer turns Google Calendar, Apple Calendar, and Outlook Calendar events into loud, persistent alarms on iPhone. They use your system alarm sound, stay on screen until dismissed, and can override silent mode for critical events.",
   },
 ];
 
@@ -69,7 +69,7 @@ const softwareJsonLd = {
   applicationCategory: "ProductivityApplication",
   applicationSubCategory: "Calendar Alarm App",
   description:
-    "OnTimer is a calendar alarm app for iPhone that turns Google Calendar and Microsoft Outlook events into persistent alarms — alerts that stay on your screen until dismissed.",
+    "OnTimer is a calendar alarm app for iPhone that turns Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events into persistent alarms — alerts that stay on your screen until dismissed.",
   url: "https://ontimer.app/persistent-calendar-reminders",
   keywords: "persistent calendar reminders, persistent calendar alarms, calendar alarm app, Google Calendar alarm, Outlook persistent reminder",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
@@ -118,7 +118,7 @@ export default function Page() {
             <span className="text-zinc-300">Persistent Calendar Reminders</span>
           </nav>
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            Google Calendar &amp; Outlook · iPhone
+            Google Calendar · Apple Calendar · Outlook Calendar · iPhone
           </p>
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl leading-tight">
             How to Make Calendar Reminders Persistent
@@ -131,7 +131,7 @@ export default function Page() {
           <div className="mt-8 flex flex-wrap gap-4 items-center">
             <AppStoreCTA location="persistent_reminders_hero" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Works with Google Calendar &amp; Microsoft 365 / Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Works with Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -141,9 +141,9 @@ export default function Page() {
           <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-6">
             <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
             <p className="text-zinc-200 leading-relaxed">
-              <strong className="text-white">Google Calendar and Outlook don&apos;t support persistent reminders natively.</strong>{" "}
+              <strong className="text-white">Google Calendar, Apple Calendar, and Outlook Calendar don&apos;t support persistent reminders natively.</strong>{" "}
               Their alerts are push notifications that vanish automatically. To get persistent calendar
-              reminders on iPhone, use OnTimer — it connects to your Google or Outlook calendar and fires
+              reminders on iPhone, use OnTimer — it connects to Google Calendar, Apple Calendar, or Outlook Calendar and fires
               an alarm for each event that stays on screen until you dismiss it.
             </p>
           </div>
@@ -201,7 +201,7 @@ export default function Page() {
           </h2>
           <div className="mt-6 space-y-4 text-lg text-zinc-400 leading-relaxed">
             <p>
-              Google Calendar and Microsoft Outlook both use the same notification system as every
+              Google Calendar, Apple Calendar, and Outlook Calendar use the same notification pattern as every
               other app on your phone. Your calendar reminder is competing with Messages, email,
               Slack, social media, and whatever else fires that day.
             </p>
@@ -235,7 +235,7 @@ export default function Page() {
               <Link href="/calendar-alarm-app" className="text-green-500 hover:text-green-400">
                 calendar alarm app
               </Link>{" "}
-              for iPhone. It connects to your Google Calendar and Microsoft 365 / Outlook
+              for iPhone. It connects to Google Calendar, Apple Calendar, and Outlook Calendar
               and reads your schedule to fire a persistent alarm before each event.
             </p>
           </div>
@@ -250,7 +250,7 @@ export default function Page() {
                 body: "You don't configure reminders per meeting. OnTimer monitors your connected calendars and fires alarms automatically.",
               },
               {
-                title: "Works with Google Calendar and Outlook",
+                title: "Works with Google Calendar, Apple Calendar, and Outlook Calendar",
                 body: "Connect one or both. OnTimer handles both Google and Microsoft accounts, including multiple accounts per provider.",
               },
               {
@@ -267,7 +267,7 @@ export default function Page() {
           <div className="mt-8">
             <AppStoreCTA location="persistent_reminders_how_it_works" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft 365 / Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -328,7 +328,7 @@ export default function Page() {
               { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Notifications Fail" },
               { href: "/turn-calendar-events-into-alarms", label: "How to Turn Calendar Events Into Real Alarms" },
               { href: "/calendar-notifications-vs-alarms", label: "Calendar Notifications vs Alarms: Why Most Reminders Fail" },
-              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for Google & Outlook" },
+              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for iPhone Calendars" },
               { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
               { href: "/adhd-time-blindness-tools", label: "ADHD Time Blindness Tools" },
               { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
@@ -354,7 +354,7 @@ export default function Page() {
           <div className="mt-8">
             <AppStoreCTA location="persistent_reminders_final_cta" />
           </div>
-          <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar &amp; Microsoft Outlook</p>
+          <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
     </>

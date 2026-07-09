@@ -15,9 +15,9 @@ const features = [
     eyebrow: "01 — Calendar Connection",
     headline: "Connect the calendars you actually use",
     description:
-      "OnTimer works with your existing calendar setup so you do not have to rebuild your schedule somewhere else. Connect Google and Microsoft calendars, including multiple accounts, and OnTimer uses those events to prepare alarms.",
+      "OnTimer works with your existing calendar setup so you do not have to rebuild your schedule somewhere else. Connect Google Calendar, Apple Calendar, and Outlook Calendar, including multiple accounts, and OnTimer uses those events to prepare alarms.",
     bullets: [
-      "Works with Google and Microsoft calendars",
+      "Works with Google Calendar, Apple Calendar, and Outlook Calendar",
       "Supports multiple calendar accounts",
       "Uses your existing event schedule",
       "No need to create separate reminders by hand",

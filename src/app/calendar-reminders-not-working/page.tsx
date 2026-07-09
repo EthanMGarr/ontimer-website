@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/calendar-reminders-not-working" },
   title: "Calendar Reminders Not Working? Try a Real Calendar Alarm App",
   description:
-    "Missing meetings because calendar reminders are easy to ignore? Learn why Google Calendar and Outlook reminders fail — and how a calendar alarm app fixes the problem.",
+    "Missing meetings because calendar reminders are easy to ignore? Learn why calendar reminders fail — and how a calendar alarm app fixes the problem.",
 };
 
 const whyFailItems = [
@@ -33,7 +33,7 @@ const perfectFor = [
 const steps = [
   {
     number: 1,
-    title: "Connect your Google or Outlook calendars",
+    title: "Connect your calendars",
   },
   {
     number: 2,
@@ -57,9 +57,9 @@ const faqItems = [
       "A calendar reminder is a passive notification that appears and disappears. A calendar alarm works like a phone alarm: it stays on screen, plays audio, and requires active dismissal. For people who miss meetings despite having reminders set, the distinction is critical.",
   },
   {
-    question: "Which calendar alarm app works with Google Calendar and Outlook?",
+    question: "Which calendar alarm app works with Google Calendar, Apple Calendar, and Outlook Calendar?",
     answer:
-      "OnTimer connects to both Google Calendar and Microsoft Outlook, reads your upcoming events, and fires persistent alarms before meetings. Unlike calendar notifications, these alarms require active dismissal and stay on screen until you respond.",
+      "OnTimer connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar, reads your upcoming events, and fires persistent alarms before meetings. Unlike calendar notifications, these alarms require active dismissal and stay on screen until you respond.",
   },
 ];
 
@@ -89,7 +89,7 @@ export default function CalendarRemindersNotWorking() {
             name: "OnTimer",
             operatingSystem: "iOS",
             applicationCategory: "ProductivityApplication",
-            description: "Calendar alarm app that turns Google Calendar and Outlook events into persistent alarms you can't miss.",
+            description: "Calendar alarm app that turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms you can't miss.",
             offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
             url: "https://www.ontimer.app",
           }),
@@ -115,7 +115,7 @@ export default function CalendarRemindersNotWorking() {
             "@context": "https://schema.org",
             "@type": "Article",
             headline: "Calendar Reminders Not Working? Try a Real Calendar Alarm App",
-            description: "Missing meetings because calendar reminders are easy to ignore? Learn why Google Calendar and Outlook reminders fail — and how a calendar alarm app fixes the problem.",
+            description: "Missing meetings because calendar reminders are easy to ignore? Learn why calendar reminders fail — and how a calendar alarm app fixes the problem.",
             author: { "@type": "Organization", name: "OnTimer" },
             publisher: { "@type": "Organization", name: "OnTimer" },
             datePublished: "2026-04-01",
@@ -195,11 +195,11 @@ export default function CalendarRemindersNotWorking() {
       <section className="py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Why This Happens With Google Calendar and Outlook
+            Why This Happens With Calendar Reminders
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              Google Calendar and Outlook reminders behave like standard phone
+              Google Calendar, Apple Calendar, and Outlook Calendar reminders behave like standard phone
               notifications.
             </p>
             <p>

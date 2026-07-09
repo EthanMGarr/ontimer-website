@@ -306,7 +306,7 @@ export default function WhyCalendarRemindersFail() {
               { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working? Why Reminders Fail — and What Fixes It" },
               { href: "/why-notifications-fail", label: "Why Notifications Fail (And Persistent Alarms Work Better)" },
               { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Notifications Fail" },
-              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for Google & Outlook" },
+              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for iPhone Calendars" },
               { href: "/turn-calendar-events-into-alarms", label: "Turn Calendar Events Into Persistent Alarms" },
               { href: "/persistent-calendar-reminders", label: "How to Make Calendar Reminders Persistent" },
               { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working? 8 Fixes" },

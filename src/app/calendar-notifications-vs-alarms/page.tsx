@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/calendar-notifications-vs-alarms" },
   title: "Calendar Notifications vs Alarms: Why Most Reminders Fail",
   description:
-    "Notifications inform. Alarms interrupt. Understanding this difference explains why most calendar reminders fail — and what to use instead for Google and Outlook calendars.",
+    "Notifications inform. Alarms interrupt. Understanding this difference explains why most calendar reminders fail — and what to use instead for Google Calendar, Apple Calendar, and Outlook Calendar.",
   openGraph: {
     title: "Calendar Notifications vs Alarms: Why Most Reminders Fail",
     description:
@@ -45,7 +45,7 @@ const faqItems = [
   {
     question: "Can I get alarm-style alerts for Outlook calendar events?",
     answer:
-      "Not natively on iPhone — Outlook's mobile reminders are push notifications. OnTimer connects to Microsoft 365 and Outlook calendars and replaces those with persistent alarms.",
+      "Not natively on iPhone — Outlook Calendar's mobile reminders are push notifications. OnTimer connects to Microsoft 365 and Outlook Calendar and replaces those with persistent alarms.",
   },
 ];
 
@@ -81,7 +81,7 @@ const fullComparison = [
   { dimension: "Competes with other alerts", notification: true, alarm: false },
   { dimension: "Overrides Focus/Do Not Disturb", notification: false, alarm: true },
   { dimension: "Works during deep focus", notification: false, alarm: true },
-  { dimension: "Native to Google Calendar / Outlook", notification: true, alarm: false },
+  { dimension: "Native to calendar apps", notification: true, alarm: false },
 ];
 
 export default function Page() {
@@ -100,7 +100,7 @@ export default function Page() {
             <span className="text-zinc-300">Calendar Notifications vs Alarms</span>
           </nav>
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            Google Calendar &amp; Outlook · iPhone
+            Google Calendar · Apple Calendar · Outlook Calendar · iPhone
           </p>
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl leading-tight">
             Calendar Notifications vs Alarms:<br className="hidden sm:block" />
@@ -114,7 +114,7 @@ export default function Page() {
           <div className="mt-8 flex flex-wrap gap-4">
             <AppStoreCTA location="notif_vs_alarms_hero" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Works with Google Calendar &amp; Microsoft Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Works with Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -126,7 +126,7 @@ export default function Page() {
             <p className="text-zinc-200 leading-relaxed">
               <strong className="text-white">Calendar notifications inform. Calendar alarms interrupt.</strong>{" "}
               A notification appears briefly and disappears on its own — no action required. An alarm stays
-              on your screen and demands a response before it stops. Google Calendar and Outlook use
+              on your screen and demands a response before it stops. Google Calendar, Apple Calendar, and Outlook Calendar use
               notifications. OnTimer turns those events into alarms.
             </p>
           </div>
@@ -161,7 +161,7 @@ export default function Page() {
                 not you acted on it. It has done its job simply by appearing.
               </p>
               <p className="mt-4 text-xs text-zinc-500">
-                Used by: Google Calendar, Microsoft Outlook (native)
+                Used by: Google Calendar, Apple Calendar, Outlook Calendar (native)
               </p>
             </div>
             <div className="rounded-2xl border border-green-500/20 bg-green-500/5 p-6">
@@ -241,11 +241,11 @@ export default function Page() {
         </div>
       </section>
 
-      {/* What Google Calendar and Outlook Actually Send */}
+      {/* What Calendar Apps Actually Send */}
       <section className="border-t border-zinc-800 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            What Google Calendar and Outlook Actually Send
+            What Calendar Apps Actually Send
           </h2>
           <div className="mt-6 space-y-6">
             <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
@@ -258,7 +258,7 @@ export default function Page() {
               </p>
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-              <p className="font-semibold text-white mb-2">Microsoft Outlook / Microsoft 365</p>
+              <p className="font-semibold text-white mb-2">Microsoft Outlook Calendar / Microsoft 365</p>
               <p className="text-sm text-zinc-400 leading-relaxed">
                 Same behavior on iPhone. Outlook&apos;s mobile reminders are push notifications delivered
                 through iOS. They disappear automatically. There is no built-in mechanism to make them
@@ -278,11 +278,11 @@ export default function Page() {
       <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            OnTimer: Alarm Behavior for Google &amp; Outlook Events
+            OnTimer: Alarm Behavior for Calendar Events
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              OnTimer connects to your Google Calendar and Microsoft 365 / Outlook calendar and turns
+              OnTimer connects to Google Calendar, Apple Calendar, and Outlook Calendar and turns
               every event into a persistent alarm on iPhone — not a notification.
             </p>
             <p>
@@ -314,7 +314,7 @@ export default function Page() {
           <div className="mt-8">
             <AppStoreCTA location="notif_vs_alarms_solution" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft 365 / Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -350,7 +350,7 @@ export default function Page() {
               { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Notifications Fail" },
               { href: "/turn-calendar-events-into-alarms", label: "How to Turn Calendar Events Into Real Alarms" },
               { href: "/persistent-calendar-reminders", label: "How to Make Calendar Reminders Persistent" },
-              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for Google & Outlook" },
+              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for iPhone Calendars" },
               { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
               { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
               { href: "/adhd-time-blindness-tools", label: "ADHD Time Blindness Tools" },
@@ -371,7 +371,7 @@ export default function Page() {
             Stop relying on reminders that can be ignored.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            OnTimer turns your Google and Outlook calendar events into persistent alarms.
+            OnTimer turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms.
           </p>
           <div className="mt-8">
             <AppStoreCTA location="notif_vs_alarms_final_cta" />

@@ -22,7 +22,7 @@ const faqItems = [
   {
     question: "What is the best app for virtual meeting reminders?",
     answer:
-      "An app that connects directly to your calendar and fires a persistent alarm — not just a banner notification — before each meeting. OnTimer reads your Google Calendar and Outlook events and triggers alarms that stay on screen until you dismiss them, so meetings can't be silently missed.",
+      "An app that connects directly to your calendar and fires a persistent alarm — not just a banner notification — before each meeting. OnTimer reads Google Calendar, Apple Calendar, and Outlook Calendar events and triggers alarms that stay on screen until you dismiss them, so meetings can't be silently missed.",
   },
 ];
 
@@ -190,7 +190,7 @@ export default function StopMissingCalendarMeetings() {
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              OnTimer connects to your Google Calendar and Microsoft Outlook and creates loud, persistent
+              OnTimer connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar and creates loud, persistent
               alarms before scheduled meetings so they are harder to miss.
             </p>
             <p>

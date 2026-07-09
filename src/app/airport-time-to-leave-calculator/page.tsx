@@ -333,7 +333,7 @@ export default function AirportTimeToLeaveCalculator() {
           <ul className="mt-8 space-y-3">
             {[
               "Time-to-Leave alerts based on real travel time and traffic",
-              "Connects to Google Calendar and Microsoft Outlook",
+              "Connects to Google Calendar, Apple Calendar, and Outlook Calendar",
               "Works for flights, meetings, appointments — any event with a location",
               "Customizable lead time and buffer settings",
               "iPhone app — alarms that actually get your attention",

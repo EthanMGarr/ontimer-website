@@ -45,7 +45,7 @@ const faqItems = [
   {
     question: "What should I use instead of calendar notifications for important events?",
     answer:
-      "Use persistent alarms instead of notifications for any time-critical event. OnTimer connects to Google Calendar and Outlook and fires a persistent alarm before each event — it stays on your screen and continues alerting until you respond. Unlike a passive notification, it requires acknowledgment.",
+      "Use persistent alarms instead of notifications for any time-critical event. OnTimer connects to Google Calendar, Apple Calendar, and Outlook Calendar and fires a persistent alarm before each event — it stays on your screen and continues alerting until you respond. Unlike a passive notification, it requires acknowledgment.",
   },
   {
     question: "Why does notification fatigue cause missed reminders?",
@@ -55,7 +55,7 @@ const faqItems = [
   {
     question: "Can I make calendar reminders impossible to miss on iPhone?",
     answer:
-      "Not with standard calendar notifications — they're passive by design. The closest equivalent to an impossible-to-miss alert is an alarm: it continues making noise until you explicitly dismiss it. OnTimer turns your Google Calendar and Outlook events into persistent alarms that fire automatically before each event and stay on screen until dismissed.",
+      "Not with standard calendar notifications — they're passive by design. The closest equivalent to an impossible-to-miss alert is an alarm: it continues making noise until you explicitly dismiss it. OnTimer turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms that fire automatically before each event and stay on screen until dismissed.",
   },
 ];
 
@@ -129,7 +129,7 @@ export default function Page() {
           <div className="mt-8 flex flex-wrap gap-4 items-center">
             <AppStoreCTA location="why_calendar_notifications_fail_hero" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Works with Google Calendar &amp; Microsoft 365 / Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Works with Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -446,7 +446,7 @@ export default function Page() {
               <Link href="/calendar-alarm-app" className="text-green-500 hover:text-green-400">
                 calendar alarm app
               </Link>{" "}
-              for iPhone. It connects to your Google Calendar and Microsoft 365 / Outlook and, instead of
+              for iPhone. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and, instead of
               relying on the standard notification pipeline, fires a persistent alarm before each event —
               the same type of alert as your morning alarm.
             </p>
@@ -466,8 +466,8 @@ export default function Page() {
                 body: "Set how far in advance the alarm fires — 5 minutes before, 15 minutes, 30 minutes. Adjust based on your commute or preparation time.",
               },
               {
-                title: "Works with Google Calendar and Outlook",
-                body: "Connect Google and Microsoft accounts — including multiple accounts per provider. OnTimer consolidates them into one alarm stream.",
+                title: "Works with Google Calendar, Apple Calendar, and Outlook Calendar",
+                body: "Connect Google Calendar, Apple Calendar, and Outlook Calendar — including multiple calendars. OnTimer consolidates them into one alarm stream.",
               },
             ].map(({ title, body }) => (
               <div key={title} className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
@@ -479,7 +479,7 @@ export default function Page() {
           <div className="mt-8">
             <AppStoreCTA location="why_calendar_notifications_fail_solution" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft 365 / Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -534,7 +534,7 @@ export default function Page() {
               { href: "/turn-calendar-events-into-alarms", label: "How to Turn Calendar Events Into Real Alarms" },
               { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
               { href: "/adhd-time-blindness-tools", label: "ADHD Time Blindness Tools" },
-              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for Google & Outlook" },
+              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for iPhone Calendars" },
             ].map(({ href, label }) => (
               <li key={href}>
                 <Link href={href} className="text-green-500 hover:text-green-400 transition-colors text-sm">
@@ -561,7 +561,7 @@ export default function Page() {
           <div className="mt-8">
             <AppStoreCTA location="why_calendar_notifications_fail_final_cta" />
           </div>
-          <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar &amp; Microsoft Outlook</p>
+          <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
     </>

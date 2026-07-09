@@ -469,7 +469,7 @@ export default function CalendarNotificationsNotWorking() {
           <div className="mt-8">
             <AppStoreCTA location="calendar_notifications_not_working_solution" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">iPhone · Apple Calendar · Google Calendar · Microsoft calendars</p>
+          <p className="mt-3 text-xs text-zinc-500">iPhone · Apple Calendar · Google Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -528,7 +528,7 @@ export default function CalendarNotificationsNotWorking() {
           <div className="mt-8">
             <AppStoreCTA location="calendar_notifications_not_working_final_cta" />
           </div>
-          <p className="mt-3 text-sm text-zinc-500">iPhone · Apple Calendar · Google Calendar · Microsoft calendars</p>
+          <p className="mt-3 text-sm text-zinc-500">iPhone · Apple Calendar · Google Calendar · Outlook Calendar</p>
         </div>
       </section>
     </>
