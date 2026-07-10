@@ -13,6 +13,9 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.ontimer.app"),
+  itunes: {
+    appId: "6755317601",
+  },
   title: {
     default: "OnTimer — Calendar Alarm App to Never Be Late for Meetings",
     template: "%s | OnTimer",
