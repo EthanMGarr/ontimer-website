@@ -402,6 +402,7 @@ export default function AirportCalculator({
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
   const manualDriveMinutes = parseInt(manualTravelMinutes, 10);
   const hasManualDriveTime = !isNaN(manualDriveMinutes) && manualDriveMinutes >= 0;
+  const airportShortDisplay = buildAirportShortDisplay(airport);
   const hasAirport = airport.trim().length >= 2;
 
   type SecurityState = "empty" | "loading" | "ready";
@@ -425,6 +426,16 @@ export default function AirportCalculator({
     hasCheckedBag ? "bag drop" : null,
   ].filter(Boolean).join(" · ");
 
+  // Core trust signals shown in the collapsed smart-timing card (always visible)
+  const coreTrustSignals = [
+    hasAirport && airportShortDisplay
+      ? `TSA wait (${airportShortDisplay})`
+      : "TSA wait estimates",
+    "Parking time",
+    flightType === "international" ? "International timing" : "Domestic timing",
+    planningMode === "future" ? "Expected traffic" : "Live traffic conditions",
+  ];
+
   const includedSignals = [
     planningMode === "future" ? "Expected traffic" : "Live traffic",
     "TSA wait estimates",
@@ -435,14 +446,6 @@ export default function AirportCalculator({
       : "Domestic flight recommendations",
   ];
 
-  const timingSettingSummary = [
-    arrivalMode === "parking" ? "Parking" : arrivalMode === "rideshare" ? "Rideshare" : "Drop-off",
-    hasCheckedBag ? "Checked bag" : "Carry-on only",
-    hasPreCheck || hasClear ? "Trusted traveler" : "Standard security",
-    showBufferOverride && customBuffer ? `${customBuffer} min buffer` : `${fmtDuration(defaultBuffer)} buffer`,
-    showManualDriveTime && hasManualDriveTime ? `${manualDriveMinutes} min drive` : "Auto drive time",
-  ];
-
   function handlePlanningModeChange(mode: PlanningMode) {
     setPlanningMode(mode);
     if (mode === "today") setDepartureDate(localDateString());
@@ -451,17 +454,6 @@ export default function AirportCalculator({
   function handleDepartureDateChange(date: string) {
     setDepartureDate(date);
     setPlanningMode(planningModeForDate(date));
-  }
-
-  function handleToggleRefinements() {
-    const next = !showRefinements;
-    setShowRefinements(next);
-    if (next) {
-      track("airport_timing_settings_opened", {
-        state: computedResult ? "after_result" : "before_result",
-        ...(locationCode ? { location_code: locationCode } : {}),
-      });
-    }
   }
 
   // ── Computed result ─────────────────────────────────────────────────────────
@@ -781,26 +773,17 @@ export default function AirportCalculator({
               </p>
             )}
 
-            {/* Timing settings card */}
+            {/* Smart airport timing card */}
             <div className={`rounded-xl border p-4 ${
-              resultHeroMode ? "border-zinc-800 bg-zinc-900/60" : "border-green-500/25 bg-green-500/5"
+              resultHeroMode ? "border-zinc-800 bg-zinc-900/60" : "border-zinc-700 bg-zinc-800/70"
             }`}>
 
               {/* Header */}
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="text-sm font-semibold text-white">
-                    Timing settings
-                  </p>
-                  <p className="mt-1 text-xs leading-relaxed text-zinc-400">
-                    Adjust bags, parking, security, drive time, and arrival buffer before or after you calculate.
-                  </p>
-                </div>
-                {activeRefinementCount > 0 && (
-                  <span className="rounded-full bg-green-500/20 px-2 py-1 text-[10px] font-semibold text-green-400">
-                    {activeRefinementCount} modified
-                  </span>
-                )}
+              <div className="flex items-center gap-2">
+                <span className={`text-base leading-none ${resultHeroMode ? "text-zinc-500" : "text-green-500"}`}>✓</span>
+                <p className="text-sm font-semibold text-white">
+                  {genericRedesign ? "Already Included" : "Smart airport timing enabled"}
+                </p>
               </div>
               {!genericRedesign && (
                 <p className="mt-1 text-xs leading-relaxed text-zinc-500">
@@ -808,28 +791,45 @@ export default function AirportCalculator({
                 </p>
               )}
 
-              <div className="mt-3 flex flex-wrap gap-2">
-                {timingSettingSummary.map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full border border-zinc-700/70 bg-zinc-950/35 px-2.5 py-1 text-xs text-zinc-300"
-                  >
-                    {item}
-                  </span>
+              {/* Trust signals — 2-column grid */}
+              <div className={`${genericRedesign ? "grid" : "hidden sm:grid"} mt-3 grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2`}>
+                {coreTrustSignals.map((item) => (
+                  <div key={item} className="flex items-center gap-1.5">
+                    <span className={`flex-shrink-0 text-xs ${resultHeroMode ? "text-zinc-500" : "text-green-500"}`}>✓</span>
+                    <span className="text-xs text-zinc-300">{item}</span>
+                  </div>
                 ))}
+                {hasCheckedBag && (
+                  <div className="flex items-center gap-1.5">
+                    <span className={`flex-shrink-0 text-xs ${resultHeroMode ? "text-zinc-500" : "text-green-500"}`}>✓</span>
+                    <span className="text-xs text-zinc-300">Bag drop time</span>
+                  </div>
+                )}
+                {(hasPreCheck || hasClear) && (
+                  <div className="flex items-center gap-1.5">
+                    <span className={`flex-shrink-0 text-xs ${resultHeroMode ? "text-zinc-500" : "text-green-500"}`}>✓</span>
+                    <span className="text-xs text-zinc-300">PreCheck / CLEAR</span>
+                  </div>
+                )}
               </div>
 
               {/* Expand button — visually interactive */}
               <button
                 type="button"
-                onClick={handleToggleRefinements}
-                className="mt-4 flex w-full items-center justify-between gap-3 rounded-lg border border-green-500/30 bg-zinc-950/45 px-4 py-3 text-sm font-semibold text-zinc-100 transition-colors hover:border-green-500/50 hover:bg-zinc-900 hover:text-white"
-                aria-expanded={showRefinements}
+                onClick={() => setShowRefinements(!showRefinements)}
+                className="mt-4 flex w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:bg-zinc-700 hover:text-white"
               >
                 <span className="flex items-center gap-2">
                   <span>
-                    {showRefinements ? "Hide timing settings" : "Adjust timing settings"}
+                    {showRefinements
+                      ? genericRedesign ? "Hide advanced options" : "Hide assumptions"
+                      : genericRedesign ? "Advanced Options" : "Customize timing assumptions"}
                   </span>
+                  {activeRefinementCount > 0 && !showRefinements && (
+                    <span className="rounded-full bg-green-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-green-400">
+                      {activeRefinementCount} modified
+                    </span>
+                  )}
                 </span>
                 <span className={`flex-shrink-0 text-xs text-zinc-400 transition-transform duration-200 ${showRefinements ? "rotate-180" : ""}`}>
                   ▾
@@ -1095,25 +1095,6 @@ export default function AirportCalculator({
                   </div>
                 </div>
 
-                {genericRedesign && (
-                  <div className="mt-5 rounded-lg border border-green-500/20 bg-green-500/5 p-4">
-                    <p className="text-sm font-semibold text-white">Want a different result?</p>
-                    <p className="mt-1 text-xs leading-relaxed text-zinc-400">
-                      Change bags, parking, security, drive time, or buffer in Timing settings, then update your leave time.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (!showRefinements) handleToggleRefinements();
-                        setFormExpanded(true);
-                      }}
-                      className="mt-3 text-sm font-semibold text-green-400 transition-colors hover:text-green-300"
-                    >
-                      Adjust timing settings
-                    </button>
-                  </div>
-                )}
-
                 {/* Timing details stay available without interrupting the conversion flow. */}
                 <div className="mt-5 border-t border-zinc-800 pt-4">
                   <button
@@ -1189,26 +1170,6 @@ export default function AirportCalculator({
                   <p className="mt-1 text-xs leading-relaxed text-zinc-500">
                     Add your starting location and airport — we&apos;ll calculate:
                   </p>
-                )}
-
-                {genericRedesign && (
-                  <div className="mt-4 rounded-lg border border-green-500/20 bg-green-500/5 p-4">
-                    <p className="text-base font-bold text-white">Never be late again.</p>
-                    <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
-                      OnTimer turns calendar events with locations into automatic Time To Leave alerts, so this calculation happens for you.
-                    </p>
-                    <div className="mt-4">
-                      <AppStoreButton
-                        size="md"
-                        label="Get Leave Time Alerts"
-                        className="justify-center"
-                        location={locationCode
-                          ? `airport_${locationCode.toLowerCase()}_pre_result`
-                          : "airport_calculator_pre_result"}
-                      />
-                      <p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p>
-                    </div>
-                  </div>
                 )}
 
                 <div className="mt-4 space-y-2">
