@@ -5,6 +5,7 @@ import { AppStoreButton } from "@/components/CTAButton";
 import CalculationFactorList from "@/components/leave-time/CalculationFactorList";
 import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNotice";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
+import CurrentLocationControl from "@/components/CurrentLocationControl";
 import {
   leaveTimePlanner,
   type CalculationFactor,
@@ -207,6 +208,7 @@ export default function CruiseCalculator({
   const [boardingTime, setBoardingTime] = useState(defaultTime);
   const [eventKind, setEventKind] = useState<CruiseEventKind>("domestic");
   const [origin, setOrigin] = useState("");
+  const [currentLocation, setCurrentLocation] = useState<string | null>(null);
   const [terminal, setTerminal] = useState(initialTerminal);
   const [transportationMode, setTransportationMode] = useState<CruiseTransportationMode>("parking");
   const [hasCheckedLuggage, setHasCheckedLuggage] = useState(true);
@@ -227,6 +229,17 @@ export default function CruiseCalculator({
   const resultPanelRef = useRef<HTMLDivElement>(null);
 
   const hasRouteInputs = origin.trim().length >= 2 && terminal.trim().length >= 2;
+
+  function handleOriginChange(value: string) {
+    setOrigin(value);
+    setCurrentLocation(null);
+  }
+
+  function handleCurrentLocationChange(coordinates: string | null) {
+    setCurrentLocation(coordinates);
+    if (coordinates) setOrigin("Current location");
+    else if (origin === "Current location") setOrigin("");
+  }
   const manualDriveMinutes = parseInt(manualTravelMinutes, 10);
   const hasManualDriveTime = !isNaN(manualDriveMinutes) && manualDriveMinutes >= 0;
 
@@ -325,7 +338,7 @@ export default function CruiseCalculator({
     if (hasRouteInputs) {
       setIsFetchingTravel(true);
       try {
-        const res = await fetchTravelTime(origin, terminal, boarding);
+        const res = await fetchTravelTime(currentLocation ?? origin, terminal, boarding);
         setTravelMins(res.durationMinutes);
         setTravelSource("google");
         setHasTrafficData(res.hasTrafficData);
@@ -428,13 +441,17 @@ export default function CruiseCalculator({
           }`}>
             <p className="mb-4 text-sm font-bold text-white">Route</p>
             <div className="grid gap-3 sm:grid-cols-2">
-              <div>
+              <div className="min-w-0">
                 <FieldLabel>Leaving from</FieldLabel>
                 <PlaceAutocomplete
                   value={origin}
-                  onChange={setOrigin}
+                  onChange={handleOriginChange}
                   placeholder="Your address, hotel, or city"
                   inputClassName={inputClass}
+                />
+                <CurrentLocationControl
+                  active={currentLocation !== null}
+                  onLocationChange={handleCurrentLocationChange}
                 />
               </div>
               <div>

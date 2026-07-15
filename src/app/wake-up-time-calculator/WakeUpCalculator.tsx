@@ -19,6 +19,7 @@
 import { useState } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
+import CurrentLocationControl from "@/components/CurrentLocationControl";
 
 type TravelMode = "DRIVE" | "WALK" | "TRANSIT";
 type PlanningMode = "today" | "future";
@@ -174,6 +175,7 @@ export default function WakeUpCalculator() {
 
   const [destination, setDestination] = useState("");
   const [origin, setOrigin] = useState("");
+  const [currentLocation, setCurrentLocation] = useState<string | null>(null);
   const [arrivalDate, setArrivalDate] = useState(defaultDate);
   const [planningMode, setPlanningMode] = useState<PlanningMode>(() => planningModeForDate(defaultDate));
   const [arrivalTime, setArrivalTime] = useState(defaultTime);
@@ -190,6 +192,17 @@ export default function WakeUpCalculator() {
 
   const hasRouteInputs =
     origin.trim().length >= 2 && destination.trim().length >= 2;
+
+  function handleOriginChange(value: string) {
+    setOrigin(value);
+    setCurrentLocation(null);
+  }
+
+  function handleCurrentLocationChange(coordinates: string | null) {
+    setCurrentLocation(coordinates);
+    if (coordinates) setOrigin("Current location");
+    else if (origin === "Current location") setOrigin("");
+  }
 
   function handlePlanningModeChange(mode: PlanningMode) {
     setPlanningMode(mode);
@@ -222,7 +235,7 @@ export default function WakeUpCalculator() {
     if (hasRouteInputs) {
       setIsCalculating(true);
       try {
-        const res = await fetchTravelTime(origin, destination, arrival, travelMode);
+        const res = await fetchTravelTime(currentLocation ?? origin, destination, arrival, travelMode);
         travelMinutes = res.durationMinutes;
         travelSource = "google";
         hasTrafficData = res.hasTrafficData;
@@ -295,9 +308,13 @@ export default function WakeUpCalculator() {
               <FieldLabel>Starting location</FieldLabel>
               <PlaceAutocomplete
                 value={origin}
-                onChange={setOrigin}
+                onChange={handleOriginChange}
                 placeholder="Enter your starting address"
                 inputClassName={inputClass}
+              />
+              <CurrentLocationControl
+                active={currentLocation !== null}
+                onLocationChange={handleCurrentLocationChange}
               />
             </div>
           </div>

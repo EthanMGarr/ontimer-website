@@ -26,6 +26,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
+import CurrentLocationControl from "@/components/CurrentLocationControl";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -293,6 +294,7 @@ export default function AirportTheoryCalculator() {
   const [departureTime, setDepartureTime] = useState(defaultTime);
   const [flightType, setFlightType] = useState<FlightType>("domestic");
   const [origin, setOrigin] = useState("");
+  const [currentLocation, setCurrentLocation] = useState<string | null>(null);
   const [airport, setAirport] = useState("");
   const [hasPreCheck, setHasPreCheck] = useState(false);
   const [hasCheckedBag, setHasCheckedBag] = useState(false);
@@ -307,6 +309,17 @@ export default function AirportTheoryCalculator() {
   const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle");
 
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
+
+  function handleOriginChange(value: string) {
+    setOrigin(value);
+    setCurrentLocation(null);
+  }
+
+  function handleCurrentLocationChange(coordinates: string | null) {
+    setCurrentLocation(coordinates);
+    if (coordinates) setOrigin("Current location");
+    else if (origin === "Current location") setOrigin("");
+  }
 
   // ── Read shared URL params on mount ──────────────────────────────────────────
   useEffect(() => {
@@ -373,7 +386,7 @@ export default function AirportTheoryCalculator() {
     if (hasRouteInputs) {
       setIsCalculating(true);
       try {
-        const res = await fetchTravelTime(origin, airport, departure);
+        const res = await fetchTravelTime(currentLocation ?? origin, airport, departure);
         travelMinutes = res.durationMinutes;
         travelSource = "google";
         trafficBasis = res.trafficBasis;
@@ -472,10 +485,14 @@ export default function AirportTheoryCalculator() {
 
           {/* Route */}
           <div className="grid gap-4 sm:grid-cols-2">
-            <div>
+            <div className="min-w-0">
               <FieldLabel>Starting location</FieldLabel>
-              <PlaceAutocomplete value={origin} onChange={setOrigin}
+              <PlaceAutocomplete value={origin} onChange={handleOriginChange}
                 placeholder="Start typing an address" inputClassName={inputClass} />
+              <CurrentLocationControl
+                active={currentLocation !== null}
+                onLocationChange={handleCurrentLocationChange}
+              />
             </div>
             <div>
               <FieldLabel>Airport</FieldLabel>

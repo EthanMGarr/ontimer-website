@@ -5,6 +5,7 @@ import { AppStoreButton } from "@/components/CTAButton";
 import CalculationFactorList from "@/components/leave-time/CalculationFactorList";
 import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNotice";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
+import CurrentLocationControl from "@/components/CurrentLocationControl";
 import type { SecurityEstimate } from "@/app/api/security-wait/route";
 import type { CalculatorExample } from "@/lib/travel-locations";
 import {
@@ -322,6 +323,7 @@ export default function AirportCalculator({
   const [departureTime, setDepartureTime] = useState(defaultTime);
   const [flightType, setFlightType] = useState<FlightType>("domestic");
   const [origin, setOrigin] = useState("");
+  const [currentLocation, setCurrentLocation] = useState<string | null>(null);
   const [airport, setAirport] = useState(initialAirport);
 
   // ── Refinement state ────────────────────────────────────────────────────────
@@ -402,6 +404,17 @@ export default function AirportCalculator({
   const estimatedSecurityMins = securityEstimate?.avg ?? getAirportDefaultSecurityMinutes(flightType);
   const defaultBuffer = baseBuffer + estimatedSecurityMins;
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
+
+  function handleOriginChange(value: string) {
+    setOrigin(value);
+    setCurrentLocation(null);
+  }
+
+  function handleCurrentLocationChange(coordinates: string | null) {
+    setCurrentLocation(coordinates);
+    if (coordinates) setOrigin("Current location");
+    else if (origin === "Current location") setOrigin("");
+  }
   const manualDriveMinutes = parseInt(manualTravelMinutes, 10);
   const hasManualDriveTime = !isNaN(manualDriveMinutes) && manualDriveMinutes >= 0;
   const airportShortDisplay = buildAirportShortDisplay(airport);
@@ -568,7 +581,7 @@ export default function AirportCalculator({
     if (hasRouteInputs) {
       setIsFetchingTravel(true);
       try {
-        const res = await fetchTravelTime(origin, airport, departure);
+        const res = await fetchTravelTime(currentLocation ?? origin, airport, departure);
         setTravelMins(res.durationMinutes);
         setTravelSource("google");
         setHasTrafficData(res.hasTrafficData);
@@ -718,13 +731,17 @@ export default function AirportCalculator({
                 <p className="mb-4 text-sm font-bold text-white">Route</p>
               )}
               <div className="grid gap-3 sm:grid-cols-2">
-                <div>
+                <div className="min-w-0">
                   <FieldLabel>Leaving from</FieldLabel>
                   <PlaceAutocomplete
                     value={origin}
-                    onChange={setOrigin}
+                    onChange={handleOriginChange}
                     placeholder="Your address or city"
                     inputClassName={inputClass}
+                  />
+                  <CurrentLocationControl
+                    active={currentLocation !== null}
+                    onLocationChange={handleCurrentLocationChange}
                   />
                 </div>
                 <div>
