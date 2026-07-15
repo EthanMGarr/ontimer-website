@@ -154,7 +154,9 @@ function SegmentedControl<T extends string>({
 }
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+  "min-w-0 w-full max-w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+
+const timeInputClass = `${inputClass} h-[42px] py-0 [color-scheme:dark]`;
 
 function defaultArrival() {
   const d = new Date();
@@ -280,7 +282,7 @@ export default function WakeUpCalculator() {
         <div className="space-y-7">
           {/* Locations */}
           <div className="space-y-4">
-            <div>
+            <div className="min-w-0">
               <FieldLabel>Destination</FieldLabel>
               <PlaceAutocomplete
                 value={destination}
@@ -289,7 +291,7 @@ export default function WakeUpCalculator() {
                 inputClassName={inputClass}
               />
             </div>
-            <div>
+            <div className="min-w-0">
               <FieldLabel>Starting location</FieldLabel>
               <PlaceAutocomplete
                 value={origin}
@@ -324,13 +326,13 @@ export default function WakeUpCalculator() {
                 </div>
               )}
             </div>
-            <div>
+            <div className="min-w-0">
               <FieldLabel>When do you need to arrive?</FieldLabel>
               <input
                 type="time"
                 value={arrivalTime}
                 onChange={(e) => setArrivalTime(e.target.value)}
-                className={`${inputClass} [color-scheme:dark]`}
+                className={timeInputClass}
               />
             </div>
           </div>

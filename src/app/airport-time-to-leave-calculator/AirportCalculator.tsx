@@ -275,7 +275,9 @@ function ConfidenceBadge({ confidence }: { confidence: Confidence }) {
 }
 
 const inputClass =
-  "min-h-12 w-full touch-manipulation rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-3 text-base text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:py-2 sm:text-sm";
+  "min-h-12 min-w-0 w-full max-w-full touch-manipulation rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-3 text-base text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:py-2 sm:text-sm";
+
+const timeInputClass = `${inputClass} h-12 py-0 [color-scheme:dark]`;
 
 // ─── Default departure ────────────────────────────────────────────────────────
 
@@ -661,7 +663,7 @@ export default function AirportCalculator({
                 </p>
               )}
               <div className="grid gap-3 sm:grid-cols-2">
-                <div>
+                <div className="min-w-0">
                   <FieldLabel>Planning this trip</FieldLabel>
                   <SegmentedControl
                     options={[
@@ -683,13 +685,13 @@ export default function AirportCalculator({
                     </div>
                   )}
                 </div>
-                <div>
+                <div className="min-w-0">
                   <FieldLabel>Departure time</FieldLabel>
                   <input
                     type="time"
                     value={departureTime}
                     onChange={(e) => setDepartureTime(e.target.value)}
-                    className={`${inputClass} [color-scheme:dark]`}
+                    className={timeInputClass}
                   />
                 </div>
               </div>

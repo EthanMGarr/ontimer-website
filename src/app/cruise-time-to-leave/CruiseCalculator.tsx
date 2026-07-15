@@ -50,7 +50,9 @@ interface CruiseResult {
 }
 
 const inputClass =
-  "min-h-12 w-full touch-manipulation rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-3 text-base text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:py-2 sm:text-sm";
+  "min-h-12 min-w-0 w-full max-w-full touch-manipulation rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-3 text-base text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:py-2 sm:text-sm";
+
+const timeInputClass = `${inputClass} h-12 py-0 [color-scheme:dark]`;
 
 const defaultExample: CalculatorExample = {
   eyebrow: "Example Time to Leave",
@@ -376,7 +378,7 @@ export default function CruiseCalculator({
               {computedResult ? "Edit Cruise Details" : "Your Cruise"}
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
-              <div>
+              <div className="min-w-0">
                 <FieldLabel>Planning this cruise</FieldLabel>
                 <SegmentedControl
                   options={[
@@ -398,13 +400,13 @@ export default function CruiseCalculator({
                   </div>
                 )}
               </div>
-              <div>
+              <div className="min-w-0">
                 <FieldLabel>Boarding time</FieldLabel>
                 <input
                   type="time"
                   value={boardingTime}
                   onChange={(e) => setBoardingTime(e.target.value)}
-                  className={`${inputClass} [color-scheme:dark]`}
+                  className={timeInputClass}
                 />
               </div>
             </div>

@@ -174,7 +174,9 @@ function SkeletonResult() {
 const TRAVEL_MODE_KEY = "leaveCalc_travelMode";
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+  "min-w-0 w-full max-w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+
+const timeInputClass = `${inputClass} h-[38px] py-0 [color-scheme:dark]`;
 
 function defaultArrival() {
   const today = localDateString();
@@ -197,6 +199,9 @@ export default function LeaveTimeCalculator() {
   // Form state
   const [destination, setDestination] = useState("");
   const [origin, setOrigin] = useState("");
+  const [currentLocation, setCurrentLocation] = useState<string | null>(null);
+  const [locationStatus, setLocationStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [locationMessage, setLocationMessage] = useState<string | null>(null);
   const [arrivalDate, setArrivalDate] = useState(defaultDate);
   const [planningMode, setPlanningMode] = useState<PlanningMode>(() => planningModeForDate(defaultDate));
   const [arrivalTime, setArrivalTime] = useState(defaultTime);
@@ -254,8 +259,45 @@ export default function LeaveTimeCalculator() {
 
   function handleSwap() {
     const tmp = destination;
-    setDestination(origin);
+    setDestination(currentLocation ?? origin);
     setOrigin(tmp);
+    setCurrentLocation(null);
+    setLocationStatus("idle");
+    setLocationMessage(null);
+  }
+
+  function handleOriginChange(value: string) {
+    setOrigin(value);
+    setCurrentLocation(null);
+    setLocationStatus("idle");
+    setLocationMessage(null);
+  }
+
+  function handleUseCurrentLocation() {
+    if (!("geolocation" in navigator)) {
+      setLocationStatus("error");
+      setLocationMessage("Current location is not available in this browser. Enter an address instead.");
+      return;
+    }
+
+    setLocationStatus("loading");
+    setLocationMessage(null);
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        setCurrentLocation(`${coords.latitude},${coords.longitude}`);
+        setOrigin("Current location");
+        setLocationStatus("success");
+        setLocationMessage("Current location added.");
+        track("current_location_used", { accuracy_meters: Math.round(coords.accuracy) });
+      },
+      () => {
+        setCurrentLocation(null);
+        if (origin === "Current location") setOrigin("");
+        setLocationStatus("error");
+        setLocationMessage("We couldn’t access your location. Allow location access or enter an address.");
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
   }
 
   function handlePlanningModeChange(mode: PlanningMode) {
@@ -292,7 +334,7 @@ export default function LeaveTimeCalculator() {
     if (hasRouteInputs) {
       setIsCalculating(true);
       try {
-        const res = await fetchTravelTime(origin, destination, arrival, travelMode);
+        const res = await fetchTravelTime(currentLocation ?? origin, destination, arrival, travelMode);
         travelMinutes = res.durationMinutes;
         travelSource = "google";
         hasTrafficData = res.hasTrafficData;
@@ -511,10 +553,31 @@ export default function LeaveTimeCalculator() {
                 </FieldLabel>
                 <PlaceAutocomplete
                   value={origin}
-                  onChange={setOrigin}
+                  onChange={handleOriginChange}
                   placeholder="Your starting address"
                   inputClassName={inputClass}
                 />
+
+                <button
+                  type="button"
+                  onClick={handleUseCurrentLocation}
+                  disabled={locationStatus === "loading"}
+                  className="mt-2 inline-flex min-h-9 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-green-400 transition-colors hover:bg-green-500/10 hover:text-green-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-wait disabled:text-zinc-500"
+                >
+                  <LocationIcon />
+                  {locationStatus === "loading" ? "Finding your location…" : "Use my current location"}
+                </button>
+
+                {locationMessage && (
+                  <p
+                    className={`mt-1 text-xs ${
+                      locationStatus === "error" ? "text-amber-400" : "text-zinc-500"
+                    }`}
+                    role={locationStatus === "error" ? "alert" : "status"}
+                  >
+                    {locationMessage}
+                  </p>
+                )}
 
                 {showRouteHint && (
                   <p className="mt-1.5 text-xs text-amber-400/90">
@@ -525,7 +588,7 @@ export default function LeaveTimeCalculator() {
 
               {/* Planning mode + arrival time */}
               <div className="grid gap-3 sm:grid-cols-2">
-                <div>
+                <div className="min-w-0">
                   <FieldLabel>Planning this trip</FieldLabel>
                   <SegmentedControl
                     options={[
@@ -547,13 +610,13 @@ export default function LeaveTimeCalculator() {
                     </div>
                   )}
                 </div>
-                <div>
+                <div className="min-w-0">
                   <FieldLabel>Arrival time</FieldLabel>
                   <input
                     type="time"
                     value={arrivalTime}
                     onChange={(e) => setArrivalTime(e.target.value)}
-                    className={`${inputClass} [color-scheme:dark]`}
+                    className={timeInputClass}
                   />
                 </div>
               </div>
@@ -806,6 +869,16 @@ function SwapIcon() {
       aria-hidden="true"
     >
       <path d="M5 3L2 6l3 3M2 6h10M11 13l3-3-3-3M14 10H4" />
+    </svg>
+  );
+}
+
+function LocationIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="12" r="3" />
+      <path strokeLinecap="round" d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+      <circle cx="12" cy="12" r="8" />
     </svg>
   );
 }

@@ -278,7 +278,9 @@ function SegmentedControl<T extends string>({
 }
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+  "min-w-0 w-full max-w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
+
+const timeInputClass = `${inputClass} h-[42px] py-0 [color-scheme:dark]`;
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
@@ -432,7 +434,7 @@ export default function AirportTheoryCalculator() {
 
           {/* Planning mode + time */}
           <div className="grid gap-4 sm:grid-cols-2">
-            <div>
+            <div className="min-w-0">
               <FieldLabel>Planning this trip</FieldLabel>
               <SegmentedControl
                 options={[
@@ -450,11 +452,11 @@ export default function AirportTheoryCalculator() {
                 </div>
               )}
             </div>
-            <div>
+            <div className="min-w-0">
               <FieldLabel>Departure time</FieldLabel>
               <input type="time" value={departureTime}
                 onChange={(e) => setDepartureTime(e.target.value)}
-                className={`${inputClass} [color-scheme:dark]`} />
+                className={timeInputClass} />
             </div>
           </div>
 
