@@ -52,7 +52,7 @@ interface CruiseResult {
 const inputClass =
   "min-h-12 min-w-0 w-full max-w-full touch-manipulation rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-3 text-base text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:py-2 sm:text-sm";
 
-const timeInputClass = `${inputClass} h-12 py-0 [color-scheme:dark]`;
+const timeInputClass = `${inputClass} block h-12 appearance-none box-border py-0 [color-scheme:dark]`;
 
 const defaultExample: CalculatorExample = {
   eyebrow: "Example Time to Leave",

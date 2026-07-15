@@ -176,7 +176,7 @@ const TRAVEL_MODE_KEY = "leaveCalc_travelMode";
 const inputClass =
   "min-w-0 w-full max-w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
 
-const timeInputClass = `${inputClass} h-[38px] py-0 [color-scheme:dark]`;
+const timeInputClass = `${inputClass} block h-[38px] appearance-none box-border py-0 [color-scheme:dark]`;
 
 function defaultArrival() {
   const today = localDateString();
