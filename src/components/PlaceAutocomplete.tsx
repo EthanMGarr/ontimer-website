@@ -6,7 +6,6 @@
 ///
 /// ## Include
 /// - Debounced autocomplete (300ms, min 3 chars)
-/// - Session token lifecycle (create on first keystroke, reset on selection)
 /// - Dedup guard (skip fetch if input unchanged since last request)
 /// - Keyboard navigation (↑ ↓ Enter Escape)
 /// - Click-outside to dismiss
@@ -42,14 +41,6 @@ interface PlaceAutocompleteProps {
   types?: string;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function newToken(): string {
-  return typeof crypto !== "undefined" && crypto.randomUUID
-    ? crypto.randomUUID()
-    : Math.random().toString(36).slice(2) + Date.now().toString(36);
-}
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function PlaceAutocomplete({
@@ -64,8 +55,6 @@ export default function PlaceAutocomplete({
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Session token: created on first keystroke, cleared after selection (billing boundary)
-  const sessionTokenRef = useRef<string>("");
   // Dedup: avoid re-fetching identical input
   const lastFetchedRef = useRef<string>("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -102,7 +91,6 @@ export default function PlaceAutocomplete({
     try {
       const params = new URLSearchParams({
         input,
-        sessiontoken: sessionTokenRef.current,
         types,
       });
       const res = await fetch(`/api/places-autocomplete?${params}`);
@@ -124,11 +112,6 @@ export default function PlaceAutocomplete({
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const val = e.target.value;
       onChange(val);
-
-      // Init session token on first keystroke of a new session
-      if (!sessionTokenRef.current) {
-        sessionTokenRef.current = newToken();
-      }
 
       // Reset dedup when user keeps typing
       if (val !== lastFetchedRef.current) {
@@ -158,8 +141,6 @@ export default function PlaceAutocomplete({
       setSuggestions([]);
       setIsOpen(false);
       setActiveIndex(-1);
-      // End the billing session; next typing creates a fresh token
-      sessionTokenRef.current = "";
       lastFetchedRef.current = prediction.description;
     },
     [onChange]
