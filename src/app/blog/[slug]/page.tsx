@@ -21,6 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: post.title,
     description: post.description,
+    alternates: { canonical: `https://www.ontimer.app/blog/${slug}` },
     openGraph: {
       title: post.title,
       description: post.description,

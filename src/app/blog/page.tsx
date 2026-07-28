@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "OnTimer Blog",
   description:
     "Guides and tools to help you never miss meetings, appointments, or important events.",
+  alternates: { canonical: "https://www.ontimer.app/blog" },
   openGraph: {
     title: "OnTimer Blog",
     description: "Guides and tools to help you never miss meetings, appointments, or important events.",

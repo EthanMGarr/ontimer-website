@@ -368,7 +368,7 @@ export default function WhyAmIAlwaysLateMeetings() {
           <p className="mt-4 text-sm text-zinc-400">
             Also read:{" "}
             <Link
-              href="/how-to-never-be-late-to-meetings"
+              href="/never-be-late-to-meetings"
               className="text-green-500 transition-colors hover:text-green-400"
             >
               the full guide to never being late to meetings

@@ -409,7 +409,7 @@ export default function MissedMeetingWhatToSay() {
             What works is persistent, interruptive alerts that force acknowledgment — not ones that vanish while
             you&apos;re heads-down. See the{" "}
             <Link
-              href="/how-to-never-be-late-to-meetings"
+              href="/never-be-late-to-meetings"
               className="text-green-500 transition-colors hover:text-green-400"
             >
               full guide to never being late to meetings

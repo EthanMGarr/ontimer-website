@@ -341,7 +341,7 @@ export default function HowLateIsTooLateMeeting() {
             </Link>
             . For building a system that prevents lateness altogether:{" "}
             <Link
-              href="/how-to-never-be-late-to-meetings"
+              href="/never-be-late-to-meetings"
               className="text-green-500 transition-colors hover:text-green-400"
             >
               how to never be late to meetings

@@ -256,7 +256,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
+  const supportingContentPaths = [
+    "/adhd-medication-timing",
+    "/best-reminder-app-for-frequent-reminders",
+    "/calendar-notifications-vs-alarms",
+    "/help-elderly-parent-remember-medication",
+    "/how-to-remember-medication-on-time",
+    "/how-to-set-medication-reminders-iphone",
+    "/medication-schedule-calendar-setup",
+    "/persistent-calendar-reminders",
+    "/pet-medication-schedule",
+    "/turn-calendar-events-into-alarms",
+    "/why-medication-reminders-fail",
+  ];
+  const supportingContentRoutes: MetadataRoute.Sitemap = supportingContentPaths.map((path) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
   const locationRoutes = getDestinationSitemapRoutes(baseUrl);
 
-  return [...staticRoutes, ...locationRoutes, ...blogRoutes];
+  return [...staticRoutes, ...supportingContentRoutes, ...locationRoutes, ...blogRoutes];
 }

@@ -364,7 +364,7 @@ export default function JoinMeetingLateEtiquette() {
             </Link>
             , or{" "}
             <Link
-              href="/how-to-never-be-late-to-meetings"
+              href="/never-be-late-to-meetings"
               className="text-green-500 transition-colors hover:text-green-400"
             >
               how to build a system that keeps you on time

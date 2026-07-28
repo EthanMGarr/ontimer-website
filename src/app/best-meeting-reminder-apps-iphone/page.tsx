@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Best Apps to Remind You About Meetings on iPhone",
   description:
     "What to look for in a meeting reminder app on iPhone, including persistent alarms, leave-time alerts, and multi-calendar support.",
+  alternates: { canonical: "https://www.ontimer.app/best-meeting-reminder-apps-iphone" },
 };
 
 const comparisonRows = [
@@ -211,7 +212,7 @@ export default function BestMeetingReminderAppsIphone() {
           <ul className="space-y-3">
             <li>
               <Link
-                href="/how-to-never-be-late-to-meetings"
+                href="/never-be-late-to-meetings"
                 className="text-green-500 hover:text-green-400 transition-colors"
               >
                 How to Never Be Late to Meetings →

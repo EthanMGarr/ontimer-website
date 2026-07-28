@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Features | OnTimer Calendar Alarm App for iPhone",
   description:
     "OnTimer is built around one job: making calendar events harder to miss. Connect your calendars and get loud, persistent alarms before every meeting.",
+  alternates: { canonical: "https://www.ontimer.app/features" },
 };
 
 const features = [

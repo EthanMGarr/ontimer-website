@@ -261,7 +261,7 @@ export default function TimeToLeaveReminders() {
             </li>
             <li>
               <Link
-                href="/stop-missing-calendar-meetings"
+                href="/never-be-late-to-meetings"
                 className="text-green-500 hover:text-green-400 transition-colors"
               >
                 How to Stop Missing Zoom, Google Meet, and Other Calendar Meetings →

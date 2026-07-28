@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "How It Works",
   description:
     "Learn how OnTimer automatically connects to your calendar, creates smart alarms, and makes sure you're never late again.",
+  alternates: { canonical: "https://www.ontimer.app/how-it-works" },
 };
 
 const steps = [
