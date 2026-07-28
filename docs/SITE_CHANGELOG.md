@@ -6,6 +6,10 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-07-28
 
+- Added 25 indexable international airport time-to-leave calculators across Europe, the Middle East, Asia-Pacific, India, Canada and the Philippines, each with airport-specific terminal, road, rail and final-transfer guidance.
+- Generalized the international security-planning path so non-U.S. airports use conservative airport-security estimates and never expose TSA PreCheck/CLEAR controls or imply live TSA data.
+- Added permanent release checks for source depth, international security language and representative responsive review of large destination catalogs.
+- Verification: leave-time tests and the optimized production build passed; all 25 routes were statically generated; Changi, Mumbai, Toronto Pearson and Melbourne were reviewed locally with no console errors or horizontal overflow at 320, 375, 414 and 768 px.
 - Rewrote the Heathrow airport guide and shared airport-page guidance in direct traveler language, replacing publisher-facing and template-like phrasing with clear actions around terminals, routes, transfers, check-in deadlines and day-of-travel checks.
 - Added permanent human-readability checks for programmatic destination pages to the SEO release checklist.
 - Verification: production build and leave-time tests passed; Heathrow copy was reviewed from hero through FAQ for consumer clarity.

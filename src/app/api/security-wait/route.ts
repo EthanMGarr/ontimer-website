@@ -181,7 +181,7 @@ export async function GET(request: NextRequest) {
   const flightType   = (searchParams.get("flightType") ?? "domestic") as FlightType;
   const hasPreCheck  = searchParams.get("hasPreCheck") === "true";
   const hasClear     = searchParams.get("hasClear")    === "true";
-  const jurisdiction = searchParams.get("jurisdiction") === "uk" ? "uk" : "us";
+  const jurisdiction = searchParams.get("jurisdiction") === "international" ? "international" : "us";
 
   const departureUnix = parseInt(rawTime, 10);
   const departure = !isNaN(departureUnix) && departureUnix > 0
@@ -196,9 +196,11 @@ export async function GET(request: NextRequest) {
   let source: SecurityEstimate["source"];
   let apiAvg: number | null = null;
 
-  if (jurisdiction === "uk") {
-    // Heathrow publishes current queues but no documented public API contract.
-    // Do not present a scraped value as a dependable live estimate.
+  if (jurisdiction === "international") {
+    // International airports publish wait information in different formats and
+    // generally do not offer one dependable public API. Do not present scraped
+    // values as live data; use a conservative estimate and point travelers to
+    // the airport for current conditions.
     source = "official-guidance";
   } else if (hoursUntil <= 6 && airportCode) {
     apiAvg = await fetchTsaWait(airportCode);

@@ -124,7 +124,7 @@ export const airportDestinationType: DestinationTypeDefinition<AirportLocationPr
       { key: "traffic", label: "Traffic for your travel window" },
       {
         key: "security",
-        label: profile.airport.planningJurisdiction === "uk"
+        label: profile.airport.planningJurisdiction === "international"
           ? `${profile.code} security planning`
           : `${profile.code} TSA timing`,
       },

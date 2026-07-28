@@ -55,7 +55,7 @@ async function fetchSecurityEstimate(
   flightType: FlightType,
   hasPreCheck: boolean,
   hasClear: boolean,
-  jurisdiction: "us" | "uk"
+  jurisdiction: "us" | "international"
 ): Promise<SecurityEstimate | null> {
   try {
     const params = new URLSearchParams({
@@ -303,7 +303,7 @@ interface AirportCalculatorProps {
   locationCode?: string;
   example?: CalculatorExample;
   genericRedesign?: boolean;
-  planningJurisdiction?: "us" | "uk";
+  planningJurisdiction?: "us" | "international";
   shortHaulLabel?: string;
   longHaulLabel?: string;
   securityLabel?: string;
@@ -324,7 +324,7 @@ export default function AirportCalculator({
   planningJurisdiction = "us",
   shortHaulLabel = "Domestic",
   longHaulLabel = "International",
-  securityLabel = planningJurisdiction === "uk" ? "Airport security" : "TSA security",
+  securityLabel = planningJurisdiction === "international" ? "Airport security" : "TSA security",
 }: AirportCalculatorProps) {
   const today = localDateString();
   const { date: defaultDate, time: defaultTime } = defaultDeparture();
@@ -513,7 +513,7 @@ export default function AirportCalculator({
       useAirportBufferOverride: showBufferOverride,
       customAirportBufferMinutesInput: customBuffer,
       securityLabel,
-      securitySourceLabel: planningJurisdiction === "uk" ? "official airport guidance" : "TSA estimate",
+      securitySourceLabel: planningJurisdiction === "international" ? "airport security estimate" : "TSA estimate",
     };
 
     const result = leaveTimePlanner.plan(

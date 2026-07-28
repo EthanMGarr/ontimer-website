@@ -7,6 +7,9 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Destination-page copy speaks directly to the traveler; remove publisher language such as content classifications, template logic, SEO rationale, or instructions aimed at search engines.
 - [ ] Every airport-specific statement explains what the fact changes for the traveler: route choice, leave time, arrival target, transfer, parking, security, or walking time.
 - [ ] Read every new destination page top to bottom as a human task flow. Unique facts alone are not sufficient if the page sounds generated, repetitive, or internally focused.
+- [ ] Every indexable destination has a review date and at least two authoritative sources; do not weaken the profile validator to ship an incomplete page.
+- [ ] Non-U.S. airport pages use airport-security language and hide TSA PreCheck/CLEAR controls unless the program actually applies.
+- [ ] For catalog expansions, spot-check different airport patterns (split terminals, rail-first, single-terminal and road-dependent) at 320, 375, 414 and 768 px.
 - [ ] Every intended indexable HTML page has a unique title and description.
 - [ ] Every intended indexable HTML page has a self-referencing canonical URL on `https://www.ontimer.app`.
 - [ ] Every intended indexable content page appears in `src/app/sitemap.ts`.

@@ -1,3 +1,5 @@
+import { additionalInternationalAirportProfiles } from "@/lib/international-airports";
+
 export type TravelLocationKind = "airport" | "cruise-terminal" | "venue";
 export type PublishingStatus = "draft" | "prototype" | "published";
 
@@ -70,7 +72,7 @@ interface TravelLocationBase {
 export interface AirportLocationProfile extends TravelLocationBase {
   kind: "airport";
   airport: {
-    planningJurisdiction?: "us" | "uk";
+    planningJurisdiction?: "us" | "international";
     shortHaulLabel?: string;
     longHaulLabel?: string;
     securityLabel?: string;
@@ -1569,7 +1571,7 @@ const internationalAirportProfiles: AirportLocationProfile[] = [
       ],
     },
     airport: {
-      planningJurisdiction: "uk",
+      planningJurisdiction: "international",
       shortHaulLabel: "UK, Ireland or Europe",
       longHaulLabel: "Long-haul",
       securityLabel: "Heathrow security",
@@ -1671,6 +1673,7 @@ const internationalAirportProfiles: AirportLocationProfile[] = [
 export const travelLocations: TravelLocationProfile[] = [
   ...cruiseTerminalProfiles,
   ...internationalAirportProfiles,
+  ...additionalInternationalAirportProfiles,
   {
     kind: "airport",
     publishingStatus: "prototype",
