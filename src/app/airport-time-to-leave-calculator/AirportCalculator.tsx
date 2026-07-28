@@ -465,7 +465,7 @@ export default function AirportCalculator({
   const coreTrustSignals = [
     hasAirport && airportShortDisplay
       ? `${securityLabel} (${airportShortDisplay})`
-      : `${securityLabel} allowance`,
+      : `${securityLabel} time`,
     arrivalMode === "transit" ? "Station and terminal transfer" : "Parking or curb access",
     `${flightType === "international" ? longHaulLabel : shortHaulLabel} timing`,
     planningMode === "future" ? "Expected traffic" : "Live traffic conditions",
@@ -473,9 +473,9 @@ export default function AirportCalculator({
 
   const includedSignals = [
     planningMode === "future" ? "Expected traffic" : "Live traffic",
-    `${securityLabel} allowance`,
+    `${securityLabel} time`,
     arrivalMode === "transit" ? "Transit and terminal walking" : "Parking and terminal walking",
-    "Airport-specific timing",
+    "Time inside the airport",
     `${flightType === "international" ? longHaulLabel : shortHaulLabel} recommendations`,
   ];
 
@@ -1222,7 +1222,7 @@ export default function AirportCalculator({
                 <div className="mt-4 space-y-2">
                   {(genericRedesign ? includedSignals : [
                     planningMode === "future" ? "Expected traffic for your trip time" : "Real-time traffic conditions",
-                    `${securityLabel} allowance for your airport`,
+                    `${securityLabel} time for your airport`,
                     "Parking and terminal timing",
                     "Domestic vs international buffer",
                   ]).map((item) => (

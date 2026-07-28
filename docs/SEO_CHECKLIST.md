@@ -4,6 +4,9 @@ Use this checklist for every production change involving pages, routes, metadata
 
 ## Before Deployment
 
+- [ ] Destination-page copy speaks directly to the traveler; remove publisher language such as content classifications, template logic, SEO rationale, or instructions aimed at search engines.
+- [ ] Every airport-specific statement explains what the fact changes for the traveler: route choice, leave time, arrival target, transfer, parking, security, or walking time.
+- [ ] Read every new destination page top to bottom as a human task flow. Unique facts alone are not sufficient if the page sounds generated, repetitive, or internally focused.
 - [ ] Every intended indexable HTML page has a unique title and description.
 - [ ] Every intended indexable HTML page has a self-referencing canonical URL on `https://www.ontimer.app`.
 - [ ] Every intended indexable content page appears in `src/app/sitemap.ts`.

@@ -245,27 +245,27 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
     ),
     planningFacts: {
       sectionId: `${location.code.toLowerCase()}-planning-facts`,
-      heading: `${location.shortName}-specific planning details that change when you should leave`,
+      heading: `What can add time on the way to ${location.shortName}`,
       intro: location.authorityIntro,
-      caution: "Operational details can change, so verify your terminal and travel schedule before departure.",
+      caution: "Before you leave, confirm your terminal and check for road, rail or airport disruptions.",
       modules: location.modules,
     },
     workedExamples: {
       heading: `Worked examples for leaving for ${location.code}`,
       intro:
-        "Each example is illustrative, not live traffic guidance. The assumptions are shown so you can see the calculation and replace them with your own details above.",
+        "These examples show how to work backward from a flight. Your route and conditions will be different, so use the calculator above for your trip.",
       examples: location.workedExamples,
       note:
-        "Traffic and service conditions vary. Use the live calculator for your trip and check official transportation schedules before leaving.",
+        "Check current traffic or public-transport service before you leave. If your airline gives you an earlier check-in or bag-drop deadline, use that time.",
     },
     sources: {
-      heading: "How to use this page safely",
+      heading: "Check these details before you leave",
       body: [
-        "Stable planning facts—such as terminal names and airport transfer options—belong in this guide. Traffic, security waits, airline terminals and service disruptions are volatile, so the calculator or official operator should supply the current answer.",
-        "Recheck your airline terminal, bag-drop deadline, airport transit schedule and transfer service on the day you travel.",
+        "Airport details can change. On the day of your flight, confirm your terminal and your airline's check-in and bag-drop deadlines.",
+        "Check current road conditions or public-transport service before setting off. If you are parking or using a transfer bus, confirm its operating schedule too.",
       ],
-      sourceHeading: "Planning and traffic sources",
-      sourceIntro: `Facts on this page were checked against airport, transit, security and traffic sources. ${location.reviewedLabel}.`,
+      sourceHeading: "Official information used for this guide",
+      sourceIntro: `We checked this guidance against official airport, transport and security sources. ${location.reviewedLabel}.`,
       links: location.sources,
     },
     relatedDestinations: {

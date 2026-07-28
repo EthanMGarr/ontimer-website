@@ -6,12 +6,17 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-07-28
 
+- Rewrote the Heathrow airport guide and shared airport-page guidance in direct traveler language, replacing publisher-facing and template-like phrasing with clear actions around terminals, routes, transfers, check-in deadlines and day-of-travel checks.
+- Added permanent human-readability checks for programmatic destination pages to the SEO release checklist.
+- Verification: production build and leave-time tests passed; Heathrow copy was reviewed from hero through FAQ for consumer clarity.
 - Hardened the Google Places and Routes proxy endpoints against unauthenticated direct use and request bursts with same-origin enforcement, input bounds, per-IP limits, and global per-instance safety limits.
 - Reduced autocomplete request volume by requiring four characters, increasing debounce time to 600 ms, and cancelling stale browser requests.
 - Removed paid travel-time retry fan-out so one calculator submission can make at most one upstream Routes API request; failures now use the existing manual-entry fallback.
 - Bounded the warm-instance travel cache and corrected documentation that had incorrectly described it as cross-instance caching.
 - Added automated API cost-guard tests and a permanent paid-API cost-safety checklist.
 - Verification: API cost-guard, autocomplete, and leave-time tests passed; the optimized production build passed; deployed direct calls return 403 and invalid same-origin requests stop before paid upstream calls.
+- Confirmed from Google Cloud Billing that the incident was concentrated in the `ontimer-timetofly-calculator` project: the Places API SKU `Autocomplete without Places Details - Per Session` recorded 9,173 requests and $8.77 in charges. The July 1–28 billing overview showed $13.57 gross cost, $4.54 savings, and $9.03 net cost.
+- Verification: reviewed billing by project, service, and SKU. Places API (New) still exposed autocomplete limits of 1,500 requests/day and 600 requests/minute; provider-side quota reduction remains required.
 
 ## 2026-07-27
 

@@ -168,7 +168,7 @@ function buildContext(airportCode: string | null, source: SecurityEstimate["sour
   const ap = airportCode ?? "your airport";
   if (source === "live")       return `Live TSA wait estimate for ${ap} right now`;
   if (source === "historical") return `Estimated TSA wait time for ${ap} at your departure time`;
-  if (source === "official-guidance") return `Planning allowance for airport security at ${ap}; check the airport for current queues`;
+  if (source === "official-guidance") return `Estimated time for airport security at ${ap}; check the airport for current queues`;
   return `Estimated airport security time for ${ap}`;
 }
 
