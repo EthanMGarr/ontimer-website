@@ -65,7 +65,6 @@ ontimer-website/
 │   │   ├── terms/          # /terms
 │   │   ├── android/        # /android (waitlist)
 │   │   ├── sitemap.ts      # Auto-generated sitemap.xml
-│   │   ├── robots.ts       # Auto-generated robots.txt
 │   │   └── feed.xml/       # RSS feed at /feed.xml
 │   ├── components/
 │   │   ├── Header.tsx      # Sticky nav header
@@ -93,13 +92,11 @@ The filename (without `.md`) becomes the URL slug. For example, `my-new-post.md`
 
 Blog posts are automatically included in the sitemap and RSS feed.
 
-## Updating the App Store URL
+## App Store CTAs
 
-The App Store URL is defined in:
+All install CTAs must use the shared CTA components in `src/components/CTAButton.tsx` or `src/components/AppStoreCTA.tsx`. They provide direct App Store links on mobile and a QR-code handoff on desktop. Do not add hard-coded App Store links to individual pages.
 
-- `src/components/Header.tsx` — `APP_STORE_URL` constant
-- `src/components/CTAButton.tsx` — `APP_STORE_URL` constant
-- `src/components/Footer.tsx` — `APP_STORE_URL` constant
+Update the canonical App Store URL in the shared CTA implementation rather than in individual pages.
 
 ## Deploying to Vercel
 
@@ -129,7 +126,14 @@ vercel --prod
 
 ### Environment Variables
 
-No environment variables are required. The site runs entirely statically with no external APIs.
+The core marketing pages build without external credentials. Production integrations use these variables when their related features are enabled:
+
+- `GOOGLE_MAPS_API_KEY` — places autocomplete and travel-time APIs
+- `NEXT_PUBLIC_GA_MEASUREMENT_ID` — Google Analytics
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` — spam-report Turnstile widget
+- `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` — server-side spam reporting
+
+Store local values in `.env.local`; never commit secrets.
 
 ### Custom Domain
 
@@ -140,8 +144,16 @@ In Vercel project settings, go to **Settings → Domains** and add your custom d
 - Metadata is configured in each page's `export const metadata`
 - Root metadata (title template, OG tags, Twitter cards) is in `src/app/layout.tsx`
 - `sitemap.xml` is auto-generated at `/sitemap.xml`
-- `robots.txt` is auto-generated at `/robots.txt`
+- `robots.txt` is served from `public/robots.txt`
 - RSS feed is available at `/feed.xml`
+- Run `npm run audit:site` after production SEO, route, metadata, sitemap, canonical, or internal-link changes
+- Use `docs/SEO_CHECKLIST.md` for the release checklist
+
+## Change Tracking
+
+- Record meaningful website fixes and improvements in `docs/SITE_CHANGELOG.md` under `Unreleased`.
+- Update permanent guidance and checklists when a change establishes a reusable rule.
+- BrandOS records durable strategy and positioning changes, not routine implementation history.
 
 ## License
 

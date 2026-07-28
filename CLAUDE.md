@@ -38,6 +38,14 @@ robots
 OpenGraph
 Twitter cards
 
+Permanent SEO invariants:
+- Every indexable HTML page has a self-referencing canonical URL.
+- Every intended indexable content page is included in `src/app/sitemap.ts`.
+- Sitemap URLs return 200 and are not marked `noindex`.
+- Internal links point directly to canonical URLs rather than through redirects.
+- Airport and cruise-terminal destinations use their correct route families.
+- Run `npm run audit:site` after production deploys that affect routes, metadata, canonicals, sitemaps, or internal links.
+
 Do not introduce paid services or unnecessary complexity.
 
 ---
@@ -141,3 +149,18 @@ Never use SEO spam tactics: no keyword stuffing, invisible text, or low-quality 
 Never write copy that sounds generic or AI-generated — be specific and honest.
 Prefer simple, maintainable implementations. Clever is expensive to maintain.
 When in doubt between two approaches, pick the one that is easier to read and modify six months from now.
+
+---
+
+## Change-Logging Rule
+
+Every meaningful website fix, improvement, user-facing change, SEO correction, routing change, or maintenance change must be recorded in `docs/SITE_CHANGELOG.md` under `Unreleased`.
+
+When a change creates a durable working rule or a repeatable regression check, also update the relevant checklist or repository guidance. Use `docs/SEO_CHECKLIST.md` for search/indexing work. Keep routine implementation history out of BrandOS unless the change alters durable brand strategy or positioning.
+
+Before considering work complete:
+
+1. Verify the change in proportion to risk.
+2. Update `docs/SITE_CHANGELOG.md`.
+3. Update any affected checklist, README, or permanent rule.
+4. Include those documentation updates in the same commit whenever practical.

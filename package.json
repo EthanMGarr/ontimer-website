@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test:leave-time": "tsc --module commonjs --target es2020 --moduleResolution node --outDir /tmp/ontimer-leave-time-tests --skipLibCheck --esModuleInterop --noEmit false src/core/leave-time/__tests__/airport-planner.test.ts src/core/leave-time/__tests__/cruise-planner.test.ts && node /tmp/ontimer-leave-time-tests/__tests__/airport-planner.test.js && node /tmp/ontimer-leave-time-tests/__tests__/cruise-planner.test.js",
     "test:places-autocomplete": "tsc --module commonjs --target es2022 --moduleResolution node --outDir /tmp/ontimer-places-autocomplete-tests --skipLibCheck --esModuleInterop --noEmit false src/lib/places-autocomplete.ts src/lib/__tests__/places-autocomplete.test.ts && node /tmp/ontimer-places-autocomplete-tests/__tests__/places-autocomplete.test.js",
+    "audit:site": "node scripts/audit-site.mjs",
     "build:widget": "vite build --config vite.widget.config.ts"
   },
   "dependencies": {
