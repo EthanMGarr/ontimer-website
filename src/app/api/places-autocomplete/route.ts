@@ -5,7 +5,8 @@
 /// mirrors the same pattern as /api/travel-time.
 ///
 /// ## Include
-/// - Input validation (min chars enforced server-side)
+/// - Input validation (minimum and maximum lengths enforced server-side)
+/// - Same-origin request enforcement and rate limiting before Google is called
 /// - Per-request Autocomplete (New) requests without session tokens
 /// - Validation of supported place type filters
 /// - Minimal field extraction from Places API response
@@ -24,14 +25,36 @@ import {
   isAutocompleteInputEligible,
   requestAutocomplete,
 } from "@/lib/places-autocomplete";
+import { guardGoogleApiRequest } from "@/lib/api-cost-guard";
+
+const AUTOCOMPLETE_RATE_LIMIT = {
+  name: "places-autocomplete",
+  perIpLimit: 30,
+  perIpWindowMs: 10 * 60 * 1000,
+  globalLimit: 1_000,
+  globalWindowMs: 60 * 60 * 1000,
+};
 
 export async function GET(req: NextRequest) {
+  const guard = guardGoogleApiRequest(req, AUTOCOMPLETE_RATE_LIMIT);
+  if (!guard.allowed) {
+    return NextResponse.json(
+      { predictions: [], error: guard.reason },
+      {
+        status: guard.reason === "rate_limited" ? 429 : 403,
+        headers: guard.retryAfterSeconds
+          ? { "Retry-After": String(guard.retryAfterSeconds) }
+          : undefined,
+      }
+    );
+  }
+
   const { searchParams } = req.nextUrl;
   const input = (searchParams.get("input") ?? "").trim();
   const types = searchParams.get("types") ?? "geocode";
 
   // Enforce minimum chars server-side (client also enforces, but defense-in-depth)
-  if (!isAutocompleteInputEligible(input)) {
+  if (!isAutocompleteInputEligible(input) || input.length > 160) {
     return NextResponse.json({ predictions: [] });
   }
 

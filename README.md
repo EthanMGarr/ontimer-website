@@ -148,6 +148,7 @@ In Vercel project settings, go to **Settings → Domains** and add your custom d
 - RSS feed is available at `/feed.xml`
 - Run `npm run audit:site` after production SEO, route, metadata, sitemap, canonical, or internal-link changes
 - Use `docs/SEO_CHECKLIST.md` for the release checklist
+- Use `docs/API_COST_CHECKLIST.md` whenever adding or changing a paid API integration
 
 ## Change Tracking
 

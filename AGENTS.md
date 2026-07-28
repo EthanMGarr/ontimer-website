@@ -29,6 +29,7 @@ Treat documentation and regression prevention as part of every completed change.
 - Include the date, a concise description of the outcome, and the verification performed. Do not duplicate raw Git history or implementation minutiae.
 - Update the relevant permanent checklist or repository guidance whenever a change establishes a reusable rule or reveals a new regression risk.
 - For SEO, indexing, metadata, sitemap, redirect, canonical, or internal-link work, update `docs/SEO_CHECKLIST.md` when the operating procedure changes and run `npm run audit:site` after deployment.
+- For paid API additions or changes, follow `docs/API_COST_CHECKLIST.md`, add regression coverage for request guards, and verify provider-side quotas and billing by service/SKU after deployment.
 - Keep `README.md` and `CLAUDE.md` accurate when architecture, setup, deployment, environment variables, or permanent working rules change.
 - Do not put routine implementation changes in BrandOS. BrandOS changelogs and decision logs are reserved for durable strategy or positioning changes.
 - Before finishing, confirm that the changelog/checklist update is included in the same commit as the related work whenever practical.

@@ -1,25 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
+import { guardGoogleApiRequest } from "@/lib/api-cost-guard";
 
-/// Server-side proxy for travel-time estimation with TTL caching.
+/// Server-side proxy for travel-time estimation with bounded, best-effort caching.
 ///
 /// ## Purpose
 /// Keeps GOOGLE_MAPS_API_KEY server-only. Caches results to minimise upstream
 /// API calls. Only called on explicit user submit — never on keystrokes or
 /// page load.
 ///
-/// ## API strategy (in order of preference)
-/// 1. Google Routes API (routes.googleapis.com) — newer, richer traffic data.
+/// ## API strategy
+/// Google Routes API (routes.googleapis.com) provides traffic-aware estimates.
 ///    Requires "Routes API" to be enabled in Google Cloud Console.
-/// 2. Google Directions API (maps.googleapis.com) — older but lives on the same
-///    domain as the Places API, so it is almost always already enabled when
-///    autocomplete works. Used as a fallback if the Routes API is not enabled.
+/// Each user calculation is allowed at most one upstream request. If Google
+/// rejects it, the client falls back to manual travel-time entry rather than
+/// multiplying billable requests through automatic retries.
 ///
 /// ## Cache design
-/// Two-layer:
-///   1. In-memory TTL cache (CACHE_TTL_MS) — per-instance, gives accurate
-///      hit/miss detection for logging.
-///   2. Next.js Data Cache (fetch revalidate) — cross-instance on Vercel,
-///      transparent backup layer.
+/// The in-memory TTL cache is per serverless instance. It reduces repeat calls
+/// on warm instances but is not treated as a cross-instance cost control.
+/// Request provenance, rate limits, and Google Cloud quotas provide the
+/// cost-safety layers.
 ///
 /// Cache key = normalizedOrigin|normalizedDestination|timeBucket
 /// Time bucket rounds departure to nearest BUCKET_MINUTES to reuse estimates
@@ -36,6 +36,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 const CACHE_TTL_MS = 45 * 60 * 1000;   // 45 minutes
 const BUCKET_MINUTES = 30;             // Round departure time to this window
+const MAX_CACHE_ENTRIES = 500;
+const TRAVEL_RATE_LIMIT = {
+  name: "travel-time",
+  perIpLimit: 12,
+  perIpWindowMs: 60 * 60 * 1000,
+  globalLimit: 300,
+  globalWindowMs: 24 * 60 * 60 * 1000,
+};
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -60,18 +68,6 @@ interface RoutesApiResponse {
   error?: { code: number; message: string; status: string };
 }
 
-// Directions API (legacy, maps.googleapis.com — same domain as Places API)
-interface DirectionsApiLeg {
-  duration?: { value: number };           // base drive time in seconds
-  duration_in_traffic?: { value: number }; // traffic-aware drive time in seconds
-}
-
-interface DirectionsApiResponse {
-  routes?: Array<{ legs?: DirectionsApiLeg[] }>;
-  status?: string;       // "OK", "ZERO_RESULTS", "NOT_FOUND", etc.
-  error_message?: string;
-}
-
 // ─── In-memory TTL cache ──────────────────────────────────────────────────────
 // Per-serverless-instance. Cross-instance coverage handled by Next.js Data Cache.
 
@@ -88,6 +84,10 @@ function cacheGet(key: string): TravelResult | null {
 }
 
 function cacheSet(key: string, value: TravelResult): void {
+  if (cache.size >= MAX_CACHE_ENTRIES) {
+    const oldestKey = cache.keys().next().value;
+    if (oldestKey) cache.delete(oldestKey);
+  }
   cache.set(key, { value, expiresAt: Date.now() + CACHE_TTL_MS });
 }
 
@@ -122,19 +122,6 @@ function expandAirportCode(s: string): string {
   return /^[a-zA-Z]{2,4}$/.test(s.trim()) ? `${s.trim()} airport` : s;
 }
 
-function broaderOriginCandidate(origin: string): string | null {
-  const parts = origin.split(",").map((part) => part.trim()).filter(Boolean);
-  if (parts.length >= 2) return parts.slice(1).join(", ");
-
-  const streetSuffix =
-    /\b(?:street|st|avenue|ave|road|rd|lane|ln|drive|dr|court|ct|place|pl|way|boulevard|blvd)\b\.?/i;
-  const match = origin.match(streetSuffix);
-  if (!match || match.index === undefined) return null;
-
-  const afterStreet = origin.slice(match.index + match[0].length).trim();
-  return afterStreet.length >= 3 ? afterStreet : null;
-}
-
 function trafficBasisFor(bucketedTime: number, travelMode: string): TravelResult["trafficBasis"] {
   if (travelMode === "WALK") return "none";
   if (travelMode === "TRANSIT") return "scheduled";
@@ -155,8 +142,7 @@ async function callRoutesApi(
   destination: string,
   bucketedTime: number,
   apiKey: string,
-  travelMode: string,
-  useTraffic = true
+  travelMode: string
 ): Promise<TravelResult> {
   // Routes API requires departureTime >= now (RFC3339 UTC).
   // Clamp so a bucketed time that fell into the past is still accepted.
@@ -170,7 +156,7 @@ async function callRoutesApi(
     travelMode,
   };
 
-  if (travelMode === "DRIVE" && useTraffic) {
+  if (travelMode === "DRIVE") {
     body.routingPreference = "TRAFFIC_AWARE";
     body.departureTime = departureTime;
   } else if (travelMode === "TRANSIT") {
@@ -211,72 +197,26 @@ async function callRoutesApi(
     durationMinutes: Math.ceil(durationSec / 60),
     // hasTrafficData only meaningful for DRIVE; WALK/TRANSIT don't use traffic routing
     hasTrafficData: travelMode === "DRIVE" && durationSec !== staticSec,
-    trafficBasis: travelMode === "DRIVE" && !useTraffic
-      ? "none"
-      : trafficBasisFor(bucketedTime, travelMode),
-  };
-}
-
-// ─── Google Maps Directions API call (fallback) ───────────────────────────────
-// Uses maps.googleapis.com — same domain as the Places API, so it is almost
-// always already enabled when autocomplete is working. Serves as a reliable
-// fallback when the Routes API (routes.googleapis.com) is not enabled.
-
-async function callDirectionsApi(
-  origin: string,
-  destination: string,
-  bucketedTime: number,
-  apiKey: string
-): Promise<TravelResult> {
-  const nowUnix = Math.floor(Date.now() / 1000);
-  const safeDepartureUnix = Math.max(bucketedTime, nowUnix + 60);
-
-  const params = new URLSearchParams({
-    origin: expandAirportCode(origin),
-    destination: expandAirportCode(destination),
-    key: apiKey,
-    mode: "driving",
-    departure_time: safeDepartureUnix.toString(),
-    traffic_model: "best_guess",
-  });
-
-  const res = await fetch(
-    `https://maps.googleapis.com/maps/api/directions/json?${params}`,
-    { cache: "no-store" }
-  );
-
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-  const data: DirectionsApiResponse = await res.json();
-
-  if (data.status !== "OK" && data.status !== "ZERO_RESULTS") {
-    throw new Error(
-      `Directions API: ${data.status ?? "unknown"}${data.error_message ? ` — ${data.error_message}` : ""}`
-    );
-  }
-
-  const leg = data.routes?.[0]?.legs?.[0];
-  if (!leg) throw new Error("Directions API returned no routes");
-
-  const baseSec = leg.duration?.value ?? 0;
-  const trafficSec = leg.duration_in_traffic?.value ?? baseSec;
-  const hasTraffic = trafficSec !== baseSec;
-
-  const hoursUntil = (safeDepartureUnix * 1000 - Date.now()) / (1000 * 60 * 60);
-  const trafficBasis: TravelResult["trafficBasis"] = hasTraffic
-    ? hoursUntil <= 6 ? "live" : "predicted"
-    : "none";
-
-  return {
-    durationMinutes: Math.ceil(trafficSec / 60),
-    hasTrafficData: hasTraffic,
-    trafficBasis,
+    trafficBasis: trafficBasisFor(bucketedTime, travelMode),
   };
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 
 export async function GET(request: NextRequest) {
+  const guard = guardGoogleApiRequest(request, TRAVEL_RATE_LIMIT);
+  if (!guard.allowed) {
+    return NextResponse.json(
+      { error: guard.reason },
+      {
+        status: guard.reason === "rate_limited" ? 429 : 403,
+        headers: guard.retryAfterSeconds
+          ? { "Retry-After": String(guard.retryAfterSeconds) }
+          : undefined,
+      }
+    );
+  }
+
   const { searchParams } = request.nextUrl;
 
   const rawOrigin = searchParams.get("origin") ?? "";
@@ -290,6 +230,10 @@ export async function GET(request: NextRequest) {
       { error: "Missing required params: origin, destination" },
       { status: 400 }
     );
+  }
+
+  if (rawOrigin.length > 200 || rawDest.length > 200) {
+    return NextResponse.json({ error: "Route input is too long" }, { status: 400 });
   }
 
   const apiKey = process.env.GOOGLE_MAPS_API_KEY;
@@ -310,7 +254,7 @@ export async function GET(request: NextRequest) {
   const bucket = bucketTime(departureUnix);
   const key = cacheKey(origin, destination, bucket, travelMode);
 
-  // ── Layer 1: in-memory TTL cache ──────────────────────────────────────────
+  // ── In-memory TTL cache ──────────────────────────────────────────────────
   const cached = cacheGet(key);
   if (cached) {
     console.log(`[travel-time] cache_hit key="${key}"`);
@@ -318,7 +262,7 @@ export async function GET(request: NextRequest) {
   }
   console.log(`[travel-time] cache_miss key="${key}"`);
 
-  // ── Layer 2: in-flight deduplication ─────────────────────────────────────
+  // ── In-flight deduplication ──────────────────────────────────────────────
   const pending = inflight.get(key);
   if (pending) {
     console.log(`[travel-time] dedup_hit key="${key}"`);
@@ -330,7 +274,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // ── Layer 3: Google Maps Routes API call ─────────────────────────────────
+  // ── Single Google Maps Routes API call ───────────────────────────────────
   const promise = callRoutesApi(origin, destination, bucket, apiKey, travelMode);
   inflight.set(key, promise);
 
@@ -345,106 +289,6 @@ export async function GET(request: NextRequest) {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error(`[travel-time] routes_api_failed key="${key}" err="${msg}"`);
-
-    if (travelMode === "DRIVE") {
-      try {
-        console.warn(`[travel-time] retrying_without_traffic key="${key}"`);
-        const fallbackResult = await callRoutesApi(
-          origin,
-          destination,
-          bucket,
-          apiKey,
-          travelMode,
-          false
-        );
-        cacheSet(key, fallbackResult);
-        console.log(
-          `[travel-time] routes_api_fallback_called origin="${origin}" dest="${destination}" ` +
-          `bucket=${bucket} mode=${travelMode} duration=${fallbackResult.durationMinutes}min`
-        );
-        return NextResponse.json({
-          ...fallbackResult,
-          cacheHit: false,
-          degraded: true,
-        });
-      } catch (fallbackErr) {
-        const fallbackMsg = fallbackErr instanceof Error
-          ? fallbackErr.message
-          : String(fallbackErr);
-        console.error(
-          `[travel-time] routes_api_fallback_failed key="${key}" err="${fallbackMsg}"`
-        );
-      }
-
-      const broaderOrigin = broaderOriginCandidate(origin);
-      if (broaderOrigin && broaderOrigin !== origin) {
-        try {
-          console.warn(
-            `[travel-time] retrying_with_broader_origin key="${key}" origin="${broaderOrigin}"`
-          );
-          const broaderResult = await callRoutesApi(
-            broaderOrigin,
-            destination,
-            bucket,
-            apiKey,
-            travelMode,
-            false
-          );
-          const degradedResult: TravelResult = {
-            ...broaderResult,
-            hasTrafficData: false,
-            trafficBasis: "none",
-          };
-          cacheSet(key, degradedResult);
-          console.log(
-            `[travel-time] routes_api_broader_origin_called origin="${broaderOrigin}" dest="${destination}" ` +
-            `bucket=${bucket} mode=${travelMode} duration=${degradedResult.durationMinutes}min`
-          );
-          return NextResponse.json({
-            ...degradedResult,
-            cacheHit: false,
-            degraded: true,
-          });
-        } catch (broaderErr) {
-          const broaderMsg = broaderErr instanceof Error
-            ? broaderErr.message
-            : String(broaderErr);
-          console.error(
-            `[travel-time] routes_api_broader_origin_failed key="${key}" err="${broaderMsg}"`
-          );
-        }
-      }
-
-      // ── Layer 4: Directions API (maps.googleapis.com) ─────────────────────
-      // The Directions API lives on the same domain as the Places API, so it is
-      // almost always already enabled when autocomplete is working — unlike the
-      // Routes API which requires separate enablement in Google Cloud Console.
-      try {
-        console.warn(`[travel-time] retrying_with_directions_api key="${key}"`);
-        const directionsResult = await callDirectionsApi(
-          origin,
-          destination,
-          bucket,
-          apiKey
-        );
-        cacheSet(key, directionsResult);
-        console.log(
-          `[travel-time] directions_api_called origin="${origin}" dest="${destination}" ` +
-          `bucket=${bucket} duration=${directionsResult.durationMinutes}min traffic=${directionsResult.hasTrafficData}`
-        );
-        return NextResponse.json({
-          ...directionsResult,
-          cacheHit: false,
-        });
-      } catch (directionsErr) {
-        const directionsMsg = directionsErr instanceof Error
-          ? directionsErr.message
-          : String(directionsErr);
-        console.error(
-          `[travel-time] directions_api_failed key="${key}" err="${directionsMsg}"`
-        );
-      }
-    }
 
     return NextResponse.json(
       { error: msg, cacheHit: false },

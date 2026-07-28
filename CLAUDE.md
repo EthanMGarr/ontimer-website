@@ -164,3 +164,16 @@ Before considering work complete:
 2. Update `docs/SITE_CHANGELOG.md`.
 3. Update any affected checklist, README, or permanent rule.
 4. Include those documentation updates in the same commit whenever practical.
+
+---
+
+## Paid API Cost Safety
+
+Follow `docs/API_COST_CHECKLIST.md` for every paid API integration.
+
+- Keep keys server-side and restrict them in the provider console.
+- Reject untrusted public-proxy requests and rate-limit before upstream calls.
+- Treat serverless in-memory caching as best-effort, not a hard spending control.
+- Avoid automatic retry fan-out on billable requests.
+- Preserve manual fallback behavior when a paid lookup is unavailable.
+- Verify provider quotas and billing by service/SKU after deployment.

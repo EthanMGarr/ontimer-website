@@ -5,7 +5,7 @@
 /// All API calls are proxied through /api/places-autocomplete (key stays server-side).
 ///
 /// ## Include
-/// - Debounced autocomplete (300ms, min 3 chars)
+/// - Debounced autocomplete (600ms, min 4 chars)
 /// - Dedup guard (skip fetch if input unchanged since last request)
 /// - Keyboard navigation (↑ ↓ Enter Escape)
 /// - Click-outside to dismiss
@@ -58,6 +58,7 @@ export default function PlaceAutocomplete({
   // Dedup: avoid re-fetching identical input
   const lastFetchedRef = useRef<string>("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const requestRef = useRef<AbortController | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // ── Close on click outside ──────────────────────────────────────────────────
@@ -78,7 +79,7 @@ export default function PlaceAutocomplete({
 
   // ── Fetch suggestions ───────────────────────────────────────────────────────
   const fetchSuggestions = useCallback(async (input: string) => {
-    if (input.length < 3) {
+    if (input.trim().length < 4) {
       setSuggestions([]);
       setIsOpen(false);
       return;
@@ -93,7 +94,12 @@ export default function PlaceAutocomplete({
         input,
         types,
       });
-      const res = await fetch(`/api/places-autocomplete?${params}`);
+      requestRef.current?.abort();
+      const controller = new AbortController();
+      requestRef.current = controller;
+      const res = await fetch(`/api/places-autocomplete?${params}`, {
+        signal: controller.signal,
+      });
       if (!res.ok) return;
       const data: { predictions: Prediction[] } = await res.json();
       const preds = data.predictions ?? [];
@@ -121,7 +127,7 @@ export default function PlaceAutocomplete({
       // Clear pending debounce
       if (debounceRef.current) clearTimeout(debounceRef.current);
 
-      if (val.length < 3) {
+      if (val.trim().length < 4) {
         setSuggestions([]);
         setIsOpen(false);
         return;
@@ -129,7 +135,7 @@ export default function PlaceAutocomplete({
 
       debounceRef.current = setTimeout(() => {
         fetchSuggestions(val);
-      }, 300);
+      }, 600);
     },
     [onChange, fetchSuggestions]
   );
