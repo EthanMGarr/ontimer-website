@@ -9,7 +9,8 @@ import {
 async function main() {
   assert.equal(isAutocompleteInputEligible("ab"), false);
   assert.equal(isAutocompleteInputEligible("  ab  "), false);
-  assert.equal(isAutocompleteInputEligible("abc"), true);
+  assert.equal(isAutocompleteInputEligible("abc"), false);
+  assert.equal(isAutocompleteInputEligible("abcd"), true);
   assert.equal(includedPrimaryTypesFor("not-a-google-type"), null);
   assert.deepEqual(includedPrimaryTypesFor("geocode"), ["geocode"]);
 

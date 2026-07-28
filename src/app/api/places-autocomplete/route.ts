@@ -16,7 +16,7 @@
 /// - Any caching (Google Places content caching is restricted)
 ///
 /// ## Lifecycle & Usage
-/// Called by PlaceAutocomplete component on debounced keystrokes (≥3 chars).
+/// Called by PlaceAutocomplete component on debounced input (at least 4 chars).
 /// Returns { predictions: AutocompletePrediction[] } — empty array on any failure.
 
 import { NextRequest, NextResponse } from "next/server";

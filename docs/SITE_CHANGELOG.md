@@ -11,7 +11,7 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 - Removed paid travel-time retry fan-out so one calculator submission can make at most one upstream Routes API request; failures now use the existing manual-entry fallback.
 - Bounded the warm-instance travel cache and corrected documentation that had incorrectly described it as cross-instance caching.
 - Added automated API cost-guard tests and a permanent paid-API cost-safety checklist.
-- Verification: API cost-guard, autocomplete, and leave-time tests passed; the optimized production build passed.
+- Verification: API cost-guard, autocomplete, and leave-time tests passed; the optimized production build passed; deployed direct calls return 403 and invalid same-origin requests stop before paid upstream calls.
 
 ## 2026-07-27
 

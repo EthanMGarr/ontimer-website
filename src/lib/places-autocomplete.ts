@@ -26,7 +26,7 @@ export const AUTOCOMPLETE_FIELD_MASK = [
 ].join(",");
 
 export function isAutocompleteInputEligible(input: string): boolean {
-  return input.trim().length >= 3;
+  return input.trim().length >= 4;
 }
 
 // These are the only legacy values used or intentionally supported by the
