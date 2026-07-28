@@ -418,7 +418,7 @@ export default function WhyAmIAlwaysLateMeetings() {
           <ul className="space-y-3">
             {[
               { href: "/running-late-to-meeting", label: "Running Late to a Meeting? Here's Exactly What to Do" },
-              { href: "/how-to-never-be-late-to-meetings", label: "How to Never Be Late to Meetings" },
+              { href: "/never-be-late-to-meetings", label: "How to Never Be Late to Meetings" },
               { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
             ].map(({ href, label }) => (
               <li key={href}>

@@ -570,7 +570,7 @@ export default function HowToApologizeForMissingMeeting() {
                 label: "Why calendar reminders fail",
               },
               {
-                href: "/how-to-never-be-late-to-meetings",
+                href: "/never-be-late-to-meetings",
                 label: "How to never be late to meetings — the full system",
               },
             ].map(({ href, label }) => (

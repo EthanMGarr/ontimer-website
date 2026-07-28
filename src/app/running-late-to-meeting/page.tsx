@@ -574,7 +574,7 @@ export default function RunningLateToMeeting() {
           <ul className="space-y-3">
             {[
               {
-                href: "/how-to-never-be-late-to-meetings",
+                href: "/never-be-late-to-meetings",
                 label: "How to Never Be Late to Meetings",
               },
               {

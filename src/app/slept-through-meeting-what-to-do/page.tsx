@@ -371,7 +371,7 @@ export default function SleptThroughMeetingWhatToDo() {
             {[
               { href: "/running-late-to-meeting", label: "Running Late to a Meeting? Here's Exactly What to Do" },
               { href: "/missed-meeting-what-to-say", label: "Missed a Meeting? What to Say (Email + Slack Templates)" },
-              { href: "/how-to-never-be-late-to-meetings", label: "How to Never Be Late to Meetings" },
+              { href: "/never-be-late-to-meetings", label: "How to Never Be Late to Meetings" },
             ].map(({ href, label }) => (
               <li key={href}>
                 <Link href={href} className="text-green-500 transition-colors hover:text-green-400">

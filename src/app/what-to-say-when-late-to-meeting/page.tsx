@@ -641,7 +641,7 @@ export default function WhatToSayWhenLateMeeting() {
                 label: "Why calendar reminders fail (and what works instead)",
               },
               {
-                href: "/how-to-never-be-late-to-meetings",
+                href: "/never-be-late-to-meetings",
                 label: "How to never be late to meetings — the complete system",
               },
               {

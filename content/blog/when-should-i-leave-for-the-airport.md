@@ -89,4 +89,4 @@ You stop having to run through this math manually before every trip. The alert f
 
 - [Airport Time-to-Leave Calculator](/airport-time-to-leave-calculator)
 - [How to Get a Reminder When It's Time to Leave](/time-to-leave-reminders)
-- [How to Never Be Late to Meetings](/how-to-never-be-late-to-meetings)
+- [How to Never Be Late to Meetings](/never-be-late-to-meetings)

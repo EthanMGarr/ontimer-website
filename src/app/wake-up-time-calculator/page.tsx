@@ -315,7 +315,7 @@ export default function WakeUpTimeCalculatorPage() {
                 label: "How to Get a Reminder When It's Time to Leave →",
               },
               {
-                href: "/how-to-never-be-late-to-meetings",
+                href: "/never-be-late-to-meetings",
                 label: "How to Never Be Late to Meetings →",
               },
             ].map((link) => (
