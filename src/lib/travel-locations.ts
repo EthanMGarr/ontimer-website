@@ -70,6 +70,10 @@ interface TravelLocationBase {
 export interface AirportLocationProfile extends TravelLocationBase {
   kind: "airport";
   airport: {
+    planningJurisdiction?: "us" | "uk";
+    shortHaulLabel?: string;
+    longHaulLabel?: string;
+    securityLabel?: string;
     domesticArrivalMinutes: number;
     internationalArrivalMinutes: number;
     terminalNames: string[];
@@ -1515,8 +1519,158 @@ const additionalAirportProfiles: AirportLocationProfile[] = [
   },
 ].map(createAirportProfile);
 
+const internationalAirportProfiles: AirportLocationProfile[] = [
+  {
+    kind: "airport",
+    publishingStatus: "published",
+    indexable: true,
+    slug: "london-heathrow-lhr",
+    code: "LHR",
+    name: "London Heathrow Airport",
+    shortName: "Heathrow Airport",
+    aliases: ["Heathrow", "London Heathrow", "LHR Airport"],
+    city: "London, United Kingdom",
+    calculatorDestination: "London Heathrow Airport (LHR), Hounslow, UK",
+    reviewedOn: "2026-07-27",
+    reviewedLabel: "Reviewed July 27, 2026",
+    popularity: 100,
+    coordinates: { latitude: 51.4700, longitude: -0.4543 },
+    directAnswer:
+      "For Heathrow, target arrival 2 hours before a UK, Ireland or European flight and 3 hours before a long-haul flight, following Heathrow's published guidance. Then add the trip for the time you will actually travel plus parking, rail connections and the walk to your correct terminal.",
+    authorityIntro:
+      "Heathrow is four different departure journeys, not one airport pin. Terminals 2 and 3 use the central terminal area reached from the M4 spur, while Terminals 4 and 5 have separate approaches near M25 Junction 14. Rail services also stop differently by terminal. A useful leave-time calculation must start with the correct terminal, then work backward through the terminal walk, security and bag drop, the rail or road journey, and enough margin for a missed connection or congested airport approach.",
+    destinationKnowledge: {
+      commonDelays: [
+        "M4, M25, A4 and airport approach traffic can change sharply during London commuting periods, incidents and holiday peaks.",
+        "A route to the wrong Heathrow terminal can consume significant time because Terminals 2 and 3 share the central area while Terminals 4 and 5 use separate road and rail stops.",
+      ],
+      localPlanningNotes: [
+        "Heathrow recommends arriving 2 hours before UK, Ireland and European flights and 3 hours before longer international flights.",
+        "Gate walks vary materially: published Heathrow guidance says some Terminal 2, 3 and 5 gates can take about 15 to 20 minutes from security.",
+      ],
+      parkingGuidance: [
+        "Terminal Parking is beside the terminals, while Park & Ride requires a bus transfer. Count parking and transfer time separately from the road journey.",
+        "Terminal forecourt drop-off is chargeable. Free drop-off is available at Park & Ride, but it adds a bus transfer to the terminal.",
+      ],
+      walkingConsiderations: [
+        "Reaching a Heathrow rail station or car park is not the same as reaching airline check-in; retain time for lifts, ticket gates, covered walks and terminal navigation.",
+      ],
+      aiSearchSummary:
+        "Heathrow leave-time planning should use the correct terminal, 2-hour UK/Europe or 3-hour long-haul arrival guidance, time-specific M4/M25 or rail travel, parking or drop-off transfer time, security, bag drop and a possible 15-to-20-minute gate walk.",
+    },
+    calculatorExample: {
+      eyebrow: "Illustrative LHR example",
+      summary: "10:30 AM European flight · Paddington · Elizabeth line",
+      leaveTime: "Leave Paddington around 7:30 AM",
+      breakdown: [
+        "8:30 AM terminal arrival target",
+        "Allow for the correct terminal stop and station-to-check-in walk",
+        "Use the calculator for the scheduled rail journey and connection margin",
+      ],
+    },
+    airport: {
+      planningJurisdiction: "uk",
+      shortHaulLabel: "UK, Ireland or Europe",
+      longHaulLabel: "Long-haul",
+      securityLabel: "Heathrow security",
+      domesticArrivalMinutes: 120,
+      internationalArrivalMinutes: 180,
+      terminalNames: ["Terminal 2", "Terminal 3", "Terminal 4", "Terminal 5"],
+      accessHeading: "Choose the Heathrow terminal before choosing the route",
+      insideHeading: "Security, gate walks and terminal movement at Heathrow",
+      transitHeading: "Heathrow Express, Elizabeth line and Piccadilly line planning",
+      localTimingFaq:
+        "At LHR, confirm Terminal 2, 3, 4 or 5 first. Terminals use different motorway approaches and rail stops, Park & Ride adds a bus transfer, and some gates can be a 15-to-20-minute journey from security.",
+    },
+    modules: [
+      {
+        title: "Four terminals, three road approaches",
+        facts: [
+          "For Terminals 2 and 3, Heathrow directs drivers via M4 Junction 4 or M25 Junction 15 into the central terminal area.",
+          "For Terminals 4 and 5, Heathrow recommends M25 Junction 14. Terminal 5 has its own spur road; Terminal 4 uses the southern airport approach.",
+          "Route to the exact terminal, car park or drop-off zone—not merely to 'Heathrow Airport'. The final airport roads are part of the journey.",
+        ],
+      },
+      {
+        title: "The terminal journey continues after security",
+        facts: [
+          "Heathrow currently recommends terminal arrival 2 hours before UK, Ireland or European flights and 3 hours before long-haul flights.",
+          "Published walking guidance estimates about 20 minutes from security to Terminal 2B gates and most Terminal 3 gates, and about 15 minutes to Terminal 5B or 5C gates via transit.",
+          "Your airline's check-in and bag-drop deadline can be earlier than the security time implied by the calculator, so the airline deadline always wins.",
+        ],
+      },
+      {
+        title: "Rail, parking and forecourt choices",
+        facts: [
+          "Heathrow Express serves Paddington and the airport; the Elizabeth and Piccadilly lines provide additional London routes. Select the service and terminal stop before calculating.",
+          "Park & Ride requires a transfer bus, commonly running at scheduled intervals. Add waiting, luggage loading and the terminal walk rather than counting only the drive to the car park.",
+          "The terminal drop-off zone carries a charge and does not allow waiting or pickup. Free drop-off at Park & Ride costs time instead of the forecourt fee.",
+        ],
+      },
+    ],
+    workedExamples: [
+      {
+        title: "Paddington -> LHR Terminal 5",
+        subtitle: "10:30 AM European flight · rail · carry-on only",
+        assumptions: [
+          "2-hour terminal-arrival target from Heathrow guidance",
+          "Scheduled rail journey plus station access and service margin",
+          "Time to move from the Terminal 5 station to departures",
+        ],
+        calculation: [
+          "Flight departure: 10:30 AM",
+          "Terminal arrival target: 8:30 AM",
+          "Protect one service interval and the station-to-check-in walk",
+          "Check the live rail schedule before leaving",
+        ],
+        result: "Illustrative Paddington departure: about 7:30 AM",
+      },
+      {
+        title: "Cambridge -> LHR Terminal 3",
+        subtitle: "6:00 PM long-haul flight · driving · Park & Ride",
+        assumptions: [
+          "3-hour terminal-arrival target from Heathrow guidance",
+          "M11, M25 and M4 traffic must be calculated for the afternoon",
+          "Parking, shuttle wait and terminal transfer are separate steps",
+        ],
+        calculation: [
+          "Flight departure: 6:00 PM",
+          "Terminal arrival target: 3:00 PM",
+          "Reach Park & Ride before the terminal target",
+          "Subtract the traffic-aware road journey last",
+        ],
+        result: "Use the calculator above for a route-specific leave time",
+      },
+      {
+        title: "Reading -> LHR Terminal 5",
+        subtitle: "8:15 AM long-haul flight · RailAir coach connection",
+        assumptions: [
+          "3-hour terminal-arrival target",
+          "Scheduled coach time plus station connection margin",
+          "Terminal 5 station-to-departures movement",
+        ],
+        calculation: [
+          "Flight departure: 8:15 AM",
+          "Terminal arrival target: 5:15 AM",
+          "Choose a coach that arrives before the target",
+          "Protect one realistic connection or service-delay cushion",
+        ],
+        result: "Check the first-day service timetable before relying on this route",
+      },
+    ],
+    sources: [
+      { label: "Heathrow check-in and arrival guidance", url: "https://www.heathrow.com/departures/checking-in" },
+      { label: "Heathrow driving and terminal directions", url: "https://www.heathrow.com/transport-and-directions/by-car" },
+      { label: "Heathrow terminal drop-off guidance", url: "https://www.heathrow.com/transport-and-directions/terminal-drop-off-charge" },
+      { label: "Heathrow terminal walking guidance", url: "https://www.heathrow.com/customer-support/faq/assistance-faqs" },
+      { label: "UK government hand-luggage security rules", url: "https://www.gov.uk/hand-luggage-restrictions" },
+    ],
+  },
+];
+
 export const travelLocations: TravelLocationProfile[] = [
   ...cruiseTerminalProfiles,
+  ...internationalAirportProfiles,
   {
     kind: "airport",
     publishingStatus: "prototype",

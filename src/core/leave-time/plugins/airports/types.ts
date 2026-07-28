@@ -6,7 +6,7 @@ import type {
 
 export type AirportFlightType = "domestic" | "international";
 
-export type AirportArrivalMode = "parking" | "rideshare" | "dropoff";
+export type AirportArrivalMode = "parking" | "rideshare" | "dropoff" | "transit";
 
 export interface AirportPlanningContext {
   flightType: AirportFlightType;
@@ -23,4 +23,6 @@ export interface AirportPlanningContext {
   customSecurityMinutesInput?: string;
   useAirportBufferOverride: boolean;
   customAirportBufferMinutesInput?: string;
+  securityLabel?: string;
+  securitySourceLabel?: string;
 }

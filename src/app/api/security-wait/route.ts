@@ -27,7 +27,7 @@ export interface SecurityEstimate {
   min: number;
   avg: number;
   max: number;
-  source: "live" | "historical" | "fallback";
+  source: "live" | "historical" | "fallback" | "official-guidance";
   context: string;
 }
 
@@ -168,6 +168,7 @@ function buildContext(airportCode: string | null, source: SecurityEstimate["sour
   const ap = airportCode ?? "your airport";
   if (source === "live")       return `Live TSA wait estimate for ${ap} right now`;
   if (source === "historical") return `Estimated TSA wait time for ${ap} at your departure time`;
+  if (source === "official-guidance") return `Planning allowance for airport security at ${ap}; check the airport for current queues`;
   return `Estimated airport security time for ${ap}`;
 }
 
@@ -180,6 +181,7 @@ export async function GET(request: NextRequest) {
   const flightType   = (searchParams.get("flightType") ?? "domestic") as FlightType;
   const hasPreCheck  = searchParams.get("hasPreCheck") === "true";
   const hasClear     = searchParams.get("hasClear")    === "true";
+  const jurisdiction = searchParams.get("jurisdiction") === "uk" ? "uk" : "us";
 
   const departureUnix = parseInt(rawTime, 10);
   const departure = !isNaN(departureUnix) && departureUnix > 0
@@ -194,7 +196,11 @@ export async function GET(request: NextRequest) {
   let source: SecurityEstimate["source"];
   let apiAvg: number | null = null;
 
-  if (hoursUntil <= 6 && airportCode) {
+  if (jurisdiction === "uk") {
+    // Heathrow publishes current queues but no documented public API contract.
+    // Do not present a scraped value as a dependable live estimate.
+    source = "official-guidance";
+  } else if (hoursUntil <= 6 && airportCode) {
     apiAvg = await fetchTsaWait(airportCode);
     source = apiAvg !== null ? "live" : "historical";
   } else if (hoursUntil <= 24) {
@@ -214,7 +220,9 @@ export async function GET(request: NextRequest) {
     max: Math.round(safeAvg * (1 + spread * 0.7)),
   };
 
-  const adjusted = applyTrustedTraveler(rawEst, hasPreCheck, hasClear);
+  const adjusted = jurisdiction === "us"
+    ? applyTrustedTraveler(rawEst, hasPreCheck, hasClear)
+    : rawEst;
   const context  = buildContext(airportCode, source);
 
   return NextResponse.json({ ...adjusted, source, context } satisfies SecurityEstimate);

@@ -41,6 +41,7 @@ export function getAirportBaseBufferMinutes(
   let minutes = flightType === "domestic" ? 90 : 135;
   if (hasCheckedBag) minutes += 15;
   if (arrivalMode === "parking") minutes += 20;
+  else if (arrivalMode === "transit") minutes += 15;
   else if (arrivalMode === "rideshare" || arrivalMode === "dropoff") minutes += 5;
   return minutes;
 }
@@ -134,18 +135,20 @@ const travelRule: TimingRule<AirportPlanningContext> = {
 
 const securityRule: TimingRule<AirportPlanningContext> = {
   key: "airport.tsa-security",
-  label: "TSA Security",
+  label: "Airport security",
   priority: 20,
   calculate(context) {
     return {
       key: "tsa_security",
-      label: "TSA Security",
+      label: context.securityLabel ?? "Airport security",
       minutes: resolveSecurityMinutes(context),
       explanation: context.useSecurityOverride
         ? "Uses your manual security wait."
         : "Airport security estimate for this flight type.",
       source: context.useSecurityOverride ? "override" : "estimate",
-      sourceLabel: context.useSecurityOverride ? "manual" : "TSA estimate",
+      sourceLabel: context.useSecurityOverride
+        ? "manual"
+        : context.securitySourceLabel ?? "security estimate",
       ruleKey: "airport.tsa-security",
       priority: 20,
     };

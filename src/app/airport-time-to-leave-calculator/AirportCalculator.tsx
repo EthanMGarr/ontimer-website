@@ -54,7 +54,8 @@ async function fetchSecurityEstimate(
   departureUnix: number | null,
   flightType: FlightType,
   hasPreCheck: boolean,
-  hasClear: boolean
+  hasClear: boolean,
+  jurisdiction: "us" | "uk"
 ): Promise<SecurityEstimate | null> {
   try {
     const params = new URLSearchParams({
@@ -62,6 +63,7 @@ async function fetchSecurityEstimate(
       flightType,
       hasPreCheck: hasPreCheck.toString(),
       hasClear: hasClear.toString(),
+      jurisdiction,
     });
     if (departureUnix !== null) params.set("departureTime", departureUnix.toString());
     const res = await fetch(`/api/security-wait?${params}`);
@@ -83,12 +85,14 @@ interface TravelTimeResponse {
 async function fetchTravelTime(
   origin: string,
   destination: string,
-  departureAt: Date
+  departureAt: Date,
+  travelMode: "DRIVE" | "TRANSIT" = "DRIVE"
 ): Promise<TravelTimeResponse> {
   const params = new URLSearchParams({
     origin: origin.trim(),
     destination: destination.trim(),
     departureTime: Math.floor(departureAt.getTime() / 1000).toString(),
+    travelMode,
   });
   const res = await fetch(`/api/travel-time?${params}`);
   const body: TravelTimeResponse = await res.json();
@@ -299,6 +303,10 @@ interface AirportCalculatorProps {
   locationCode?: string;
   example?: CalculatorExample;
   genericRedesign?: boolean;
+  planningJurisdiction?: "us" | "uk";
+  shortHaulLabel?: string;
+  longHaulLabel?: string;
+  securityLabel?: string;
 }
 
 const genericExample: CalculatorExample = {
@@ -313,6 +321,10 @@ export default function AirportCalculator({
   locationCode,
   example = genericExample,
   genericRedesign = false,
+  planningJurisdiction = "us",
+  shortHaulLabel = "Domestic",
+  longHaulLabel = "International",
+  securityLabel = planningJurisdiction === "uk" ? "Airport security" : "TSA security",
 }: AirportCalculatorProps) {
   const today = localDateString();
   const { date: defaultDate, time: defaultTime } = defaultDeparture();
@@ -382,12 +394,19 @@ export default function AirportCalculator({
         if (!isNaN(dep.getTime())) departureUnix = Math.floor(dep.getTime() / 1000);
       }
       setIsFetchingSecurityEstimate(true);
-      const estimate = await fetchSecurityEstimate(airport, departureUnix, flightType, hasPreCheck, hasClear);
+      const estimate = await fetchSecurityEstimate(
+        airport,
+        departureUnix,
+        flightType,
+        hasPreCheck,
+        hasClear,
+        planningJurisdiction
+      );
       setSecurityEstimate(estimate);
       setIsFetchingSecurityEstimate(false);
     }, 500);
     return () => clearTimeout(securityDebounceRef.current);
-  }, [airport, departureDate, departureTime, flightType, hasPreCheck, hasClear]);
+  }, [airport, departureDate, departureTime, flightType, hasPreCheck, hasClear, planningJurisdiction]);
 
   // Route estimates are intentionally fetched only on explicit calculate.
   // Changing route/time inputs invalidates any prior automatic result.
@@ -436,29 +455,28 @@ export default function AirportCalculator({
   ].filter(Boolean).length;
 
   const bufferContextLabel = [
-    flightType === "international" ? "international flight" : "domestic flight",
+    flightType === "international" ? longHaulLabel.toLowerCase() : shortHaulLabel.toLowerCase(),
     arrivalMode === "parking" ? "parking" : null,
+    arrivalMode === "transit" ? "public transit" : null,
     hasCheckedBag ? "bag drop" : null,
   ].filter(Boolean).join(" · ");
 
   // Core trust signals shown in the collapsed smart-timing card (always visible)
   const coreTrustSignals = [
     hasAirport && airportShortDisplay
-      ? `TSA wait (${airportShortDisplay})`
-      : "TSA wait estimates",
-    "Parking time",
-    flightType === "international" ? "International timing" : "Domestic timing",
+      ? `${securityLabel} (${airportShortDisplay})`
+      : `${securityLabel} allowance`,
+    arrivalMode === "transit" ? "Station and terminal transfer" : "Parking or curb access",
+    `${flightType === "international" ? longHaulLabel : shortHaulLabel} timing`,
     planningMode === "future" ? "Expected traffic" : "Live traffic conditions",
   ];
 
   const includedSignals = [
     planningMode === "future" ? "Expected traffic" : "Live traffic",
-    "TSA wait estimates",
-    "Parking and terminal walking",
+    `${securityLabel} allowance`,
+    arrivalMode === "transit" ? "Transit and terminal walking" : "Parking and terminal walking",
     "Airport-specific timing",
-    flightType === "international"
-      ? "International flight recommendations"
-      : "Domestic flight recommendations",
+    `${flightType === "international" ? longHaulLabel : shortHaulLabel} recommendations`,
   ];
 
   function handlePlanningModeChange(mode: PlanningMode) {
@@ -494,6 +512,8 @@ export default function AirportCalculator({
       customSecurityMinutesInput: customSecurityMinutes,
       useAirportBufferOverride: showBufferOverride,
       customAirportBufferMinutesInput: customBuffer,
+      securityLabel,
+      securitySourceLabel: planningJurisdiction === "uk" ? "official airport guidance" : "TSA estimate",
     };
 
     const result = leaveTimePlanner.plan(
@@ -525,7 +545,7 @@ export default function AirportCalculator({
   }, [departureDate, departureTime, travelMins, travelSource, hasTrafficData, trafficBasis,
       estimatedSecurityMins, baseBuffer, defaultBuffer, showSecurityOverride,
       customSecurityMinutes, showBufferOverride, customBuffer, manualTravelMinutes,
-      planningMode, flightType, arrivalMode, hasCheckedBag, airport]);
+      planningMode, flightType, arrivalMode, hasCheckedBag, airport, securityLabel, planningJurisdiction]);
 
   const resultHeroMode = genericRedesign && computedResult !== null;
 
@@ -581,7 +601,12 @@ export default function AirportCalculator({
     if (hasRouteInputs) {
       setIsFetchingTravel(true);
       try {
-        const res = await fetchTravelTime(currentLocation ?? origin, airport, departure);
+        const res = await fetchTravelTime(
+          currentLocation ?? origin,
+          airport,
+          departure,
+          arrivalMode === "transit" ? "TRANSIT" : "DRIVE"
+        );
         setTravelMins(res.durationMinutes);
         setTravelSource("google");
         setHasTrafficData(res.hasTrafficData);
@@ -599,7 +624,7 @@ export default function AirportCalculator({
           setShowRefinements(true);
           setShowManualDriveTime(true);
           setFormExpanded(true);
-          setFallbackNotice("Live drive time did not load. Enter drive time below to calculate without live traffic.");
+          setFallbackNotice("Automatic travel time did not load. Enter the journey time below to calculate manually.");
         }
       } finally {
         setIsFetchingTravel(false);
@@ -609,7 +634,7 @@ export default function AirportCalculator({
         setShowRefinements(true);
         setShowManualDriveTime(true);
         setFormExpanded(true);
-        setFallbackNotice("Enter your starting location for automatic drive time, or enter drive time manually below.");
+        setFallbackNotice("Enter your starting location for automatic travel time, or enter the journey time manually below.");
         return;
       }
       setTravelMins(manualDriveMinutes);
@@ -714,8 +739,8 @@ export default function AirportCalculator({
                 <FieldLabel>Flight type</FieldLabel>
                 <SegmentedControl
                   options={[
-                    { value: "domestic", label: "Domestic" },
-                    { value: "international", label: "International" },
+                      { value: "domestic", label: shortHaulLabel },
+                      { value: "international", label: longHaulLabel },
                   ]}
                   value={flightType}
                   onChange={setFlightType}
@@ -788,7 +813,7 @@ export default function AirportCalculator({
             )}
             {airport.trim().length >= 2 && !origin.trim() && !hasManualDriveTime && (
               <p className="text-center text-xs text-zinc-500">
-                Add where you are leaving from, or enter drive time manually.
+                Add where you are leaving from, or enter the journey time manually.
               </p>
             )}
 
@@ -857,13 +882,13 @@ export default function AirportCalculator({
 
               {showRefinements && (
                 <div className="mt-4 space-y-5 border-t border-zinc-700 pt-4">
-                  <div>
+                  {planningJurisdiction === "us" && <div>
                     <FieldLabel>Trusted traveler programs</FieldLabel>
                     <div className="flex flex-wrap gap-2">
                       <Toggle checked={hasPreCheck} onChange={setHasPreCheck} label="TSA PreCheck / Global Entry" />
                       <Toggle checked={hasClear} onChange={setHasClear} label="CLEAR" />
                     </div>
-                  </div>
+                  </div>}
                   <div>
                     <FieldLabel>Bags</FieldLabel>
                     <Toggle checked={hasCheckedBag} onChange={setHasCheckedBag} label="Checking a bag" />
@@ -875,22 +900,25 @@ export default function AirportCalculator({
                         { value: "parking", label: "Parking" },
                         { value: "rideshare", label: "Rideshare" },
                         { value: "dropoff", label: "Drop-off" },
+                        { value: "transit", label: "Public transit" },
                       ]}
                       value={arrivalMode}
                       onChange={setArrivalMode}
                     />
                   </div>
                   <div>
-                    <FieldLabel>Drive time</FieldLabel>
+                    <FieldLabel>{arrivalMode === "transit" ? "Transit time" : "Drive time"}</FieldLabel>
                     {!showManualDriveTime ? (
                       <div>
-                        <p className="text-sm text-zinc-400">Estimated automatically from your locations.</p>
+                        <p className="text-sm text-zinc-400">
+                          Estimated automatically from your locations for the selected travel mode.
+                        </p>
                         <button
                           type="button"
                           onClick={() => setShowManualDriveTime(true)}
                           className="mt-1.5 text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
                         >
-                          Enter drive time manually instead
+                          Enter travel time manually instead
                         </button>
                       </div>
                     ) : (
@@ -1047,7 +1075,7 @@ export default function AirportCalculator({
                 <p className="mt-3 text-xs text-zinc-500">
                   {fmtDuration(factorMinutes(computedResult, "travel", computedResult.travelMinutes))} drive
                   {" · "}
-                  {fmtDuration(factorMinutes(computedResult, "tsa_security", computedResult.securityMinutes))} TSA
+                  {fmtDuration(factorMinutes(computedResult, "tsa_security", computedResult.securityMinutes))} security
                   {" · "}
                   {fmtDuration(factorMinutes(computedResult, "airport_buffer", computedResult.baseBufferMinutes))} buffer
                 </p>
@@ -1194,7 +1222,7 @@ export default function AirportCalculator({
                 <div className="mt-4 space-y-2">
                   {(genericRedesign ? includedSignals : [
                     planningMode === "future" ? "Expected traffic for your trip time" : "Real-time traffic conditions",
-                    "TSA wait estimates for your airport",
+                    `${securityLabel} allowance for your airport`,
                     "Parking and terminal timing",
                     "Domestic vs international buffer",
                   ]).map((item) => (

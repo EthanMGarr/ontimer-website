@@ -12,16 +12,16 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/airport-time-to-leave-calculator" },
   title: "Airport Time-to-Leave Calculator | What Time Should I Leave?",
   description:
-    "Calculate exactly when to leave for the airport based on traffic, TSA wait times, parking, drive time, and flight departure.",
+    "Calculate when to leave for the airport using traffic or transit time, airport security, parking, terminal access, and your flight departure.",
   openGraph: {
     title: "Airport Time-to-Leave Calculator | What Time Should I Leave?",
     description:
-      "Calculate exactly when to leave for the airport based on traffic, TSA wait times, parking, drive time, and flight departure.",
+      "Calculate when to leave for the airport using traffic or transit time, airport security, parking, terminal access, and your flight departure.",
   },
   twitter: {
     title: "Airport Time-to-Leave Calculator | What Time Should I Leave?",
     description:
-      "Calculate exactly when to leave for the airport based on traffic, TSA wait times, parking, drive time, and flight departure.",
+      "Calculate when to leave for the airport using traffic or transit time, airport security, parking, terminal access, and your flight departure.",
   },
 };
 
@@ -88,7 +88,7 @@ const softwareAppJsonLd = {
     priceCurrency: "USD",
   },
   description:
-    "A free airport departure time calculator that estimates when you should leave for the airport based on your flight time, traffic, TSA wait times, parking, and arrival method.",
+    "A free airport departure time calculator that estimates when you should leave based on your flight time, traffic or transit, security, parking, and arrival method.",
   url: "https://www.ontimer.app/airport-time-to-leave-calculator",
   author: {
     "@type": "Organization",
@@ -159,7 +159,7 @@ export default function AirportTimeToLeaveCalculator() {
             <span className="text-green-500">Airport?</span>
           </h1>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400">
-            Get a personalized airport leave time using live traffic, TSA estimates, parking time, and airport timing.
+            Get a personalized airport leave time using traffic or scheduled transit, security planning, parking, and terminal timing.
           </p>
         </div>
       </section>

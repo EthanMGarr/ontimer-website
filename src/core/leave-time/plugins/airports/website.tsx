@@ -22,6 +22,8 @@ export function getAirportDestinationPath(location: AirportLocationProfile): str
 }
 
 export function buildAirportFaqItems(location: AirportLocationProfile): FaqItem[] {
+  const shortHaulLabel = location.airport.shortHaulLabel ?? "domestic flight";
+  const longHaulLabel = location.airport.longHaulLabel ?? "international flight";
   return [
     {
       question: `What time should I leave for ${location.shortName} (${location.code})?`,
@@ -30,12 +32,12 @@ export function buildAirportFaqItems(location: AirportLocationProfile): FaqItem[
     {
       question: `How early should I arrive at ${location.code}?`,
       answer:
-        `Use about ${location.airport.domesticArrivalMinutes / 60} hours before a domestic flight and ${location.airport.internationalArrivalMinutes / 60} hours before an international flight as a planning baseline. Add time for parking, rail or terminal transfers, and follow any earlier deadline supplied by your airline.`,
+        `Use about ${location.airport.domesticArrivalMinutes / 60} hours before ${shortHaulLabel.toLowerCase()} and ${location.airport.internationalArrivalMinutes / 60} hours before ${longHaulLabel.toLowerCase()} as a planning baseline. Add time for parking, rail or terminal transfers, and follow any earlier deadline supplied by your airline.`,
     },
     {
-      question: `Does the ${location.code} calculator include traffic?`,
+      question: `Does the ${location.code} calculator include road and transit time?`,
       answer:
-        "Yes. Enter your starting location and flight time to estimate the trip for your travel window. The result also includes airport-processing assumptions and the arrival method you select.",
+        "Yes. Enter your starting location, flight time and arrival method to estimate a traffic-aware drive or scheduled public-transit trip. The result also includes airport-processing assumptions.",
     },
     {
       question: `What local airport timing details matter at ${location.code}?`,
@@ -120,7 +122,12 @@ export const airportDestinationType: DestinationTypeDefinition<AirportLocationPr
   buildTrustIndicators(profile) {
     return [
       { key: "traffic", label: "Traffic for your travel window" },
-      { key: "security", label: `${profile.code} TSA timing` },
+      {
+        key: "security",
+        label: profile.airport.planningJurisdiction === "uk"
+          ? `${profile.code} security planning`
+          : `${profile.code} TSA timing`,
+      },
       { key: "parking", label: "Parking and terminal access" },
       { key: "flight-type", label: "Domestic and international buffers" },
     ];
@@ -229,6 +236,10 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
         initialAirport={location.calculatorDestination}
         locationCode={location.code}
         example={location.calculatorExample}
+        planningJurisdiction={location.airport.planningJurisdiction}
+        shortHaulLabel={location.airport.shortHaulLabel}
+        longHaulLabel={location.airport.longHaulLabel}
+        securityLabel={location.airport.securityLabel}
         genericRedesign
       />
     ),
