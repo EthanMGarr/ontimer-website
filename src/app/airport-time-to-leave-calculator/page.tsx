@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 import { indexableTravelLocations } from "@/lib/travel-locations";
+
+const indexableAirportLocations = indexableTravelLocations.filter(
+  (location) => location.kind === "airport"
+);
 import AirportCalculator from "./AirportCalculator";
 
 export const metadata: Metadata = {
@@ -415,7 +419,7 @@ export default function AirportTimeToLeaveCalculator() {
             for an EWR calculation with airport-transfer context.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            {indexableTravelLocations.map((location) => (
+            {indexableAirportLocations.map((location) => (
               <Link
                 key={location.code}
                 href={`/airport-time-to-leave/${location.slug}`}

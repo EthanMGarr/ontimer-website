@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import DestinationPageTemplate from "@/components/destination-pages/DestinationPageTemplate";
 import {
   airportDestinationType,
@@ -33,7 +33,15 @@ export async function generateMetadata({ params }: LocationPageProps) {
 
 export default async function LocationPage({ params }: LocationPageProps) {
   const location = getTravelLocation((await params).slug);
-  if (!location || !airportDestinationType.validateDestination(location)) notFound();
+  if (!location) notFound();
+
+  // Cruise-terminal links were previously emitted under the airport route.
+  // Preserve those discovered URLs and consolidate them into the canonical route.
+  if (location.kind === "cruise-terminal" && location.indexable) {
+    permanentRedirect(`/cruise-time-to-leave/${location.slug}`);
+  }
+
+  if (!airportDestinationType.validateDestination(location)) notFound();
 
   return <DestinationPageTemplate model={buildAirportPageModel(location)} />;
 }
