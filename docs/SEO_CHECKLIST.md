@@ -6,6 +6,7 @@ Use this checklist for every production change involving pages, routes, metadata
 
 - [ ] Destination-page copy speaks directly to the traveler; remove publisher language such as content classifications, template logic, SEO rationale, or instructions aimed at search engines.
 - [ ] Every airport-specific statement explains what the fact changes for the traveler: route choice, leave time, arrival target, transfer, parking, security, or walking time.
+- [ ] International catalog records pass the contextual-texture validator: at least four substantial airport-specific facts with no exact reuse between airports.
 - [ ] Read every new destination page top to bottom as a human task flow. Unique facts alone are not sufficient if the page sounds generated, repetitive, or internally focused.
 - [ ] Every indexable destination has a review date and at least two authoritative sources; do not weaken the profile validator to ship an incomplete page.
 - [ ] Non-U.S. airport pages use airport-security language and hide TSA PreCheck/CLEAR controls unless the program actually applies.

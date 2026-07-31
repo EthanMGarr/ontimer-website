@@ -1,6 +1,6 @@
 import type { AirportLocationProfile } from "@/lib/travel-locations";
 
-/* Hallmark · pre-emit critique: P5 H4 E5 S5 R5 V4 */
+/* Hallmark · pre-emit critique: P5 H4 E5 S5 R5 V5 */
 
 interface InternationalAirportSeed {
   slug: string;
@@ -16,6 +16,7 @@ interface InternationalAirportSeed {
   finalLegAdvice: string;
   exampleOrigin: string;
   officialUrl: string;
+  reviewedOn?: string;
   popularity: number;
   coordinates: { latitude: number; longitude: number };
 }
@@ -40,8 +41,8 @@ function createInternationalAirportProfile(seed: InternationalAirportSeed): Airp
     aliases: [seed.code, `${seed.code} Airport`, seed.shortName],
     city: seed.city,
     calculatorDestination: seed.destination,
-    reviewedOn,
-    reviewedLabel,
+    reviewedOn: seed.reviewedOn ?? reviewedOn,
+    reviewedLabel: seed.reviewedOn === "2026-07-31" ? "Reviewed July 31, 2026" : reviewedLabel,
     popularity: seed.popularity,
     coordinates: seed.coordinates,
     directAnswer: `For ${seed.shortName}, start with the time your airline says you must be at the terminal. Then add the trip from your starting point, the final transfer from your car or train, bag drop, security and the walk to your gate. The calculator works backward from your flight to give you a leave time.`,
@@ -251,7 +252,7 @@ const internationalAirportSeeds: InternationalAirportSeed[] = [
   {
     slug: "singapore-changi-sin", code: "SIN", name: "Singapore Changi Airport", shortName: "Changi Airport", city: "Singapore", destination: "Singapore Changi Airport (SIN), Singapore",
     terminals: ["Terminal 1", "Terminal 2", "Terminal 3", "Terminal 4"],
-    airportAccess: "The ECP, PIE and TPE feed Changi from different parts of Singapore; rain, incidents and peak traffic can change the quickest approach.",
+    airportAccess: "The East Coast Parkway, Pan Island Expressway and Tampines Expressway feed Changi from different parts of Singapore; rain, incidents and peak traffic can change the quickest approach.",
     terminalAdvice: "Terminals 1–3 are linked by Skytrain and walkways, while Terminal 4 uses a separate shuttle connection. Confirm the terminal before taking a taxi or train.",
     transitAdvice: "MRT passengers change at Tanah Merah or Expo depending on the route. The airport station serves Terminals 2 and 3, so T1 and T4 need another transfer.",
     finalLegAdvice: "Security screening may occur nearer the gate, and Jewel is landside. Do not let time in Jewel replace the time needed for immigration and the trip to your gate.",
@@ -374,7 +375,251 @@ const internationalAirportSeeds: InternationalAirportSeed[] = [
     finalLegAdvice: "Allow for terminal-entry screening, airline document checks, bag drop, immigration, security and the walk to the gate.",
     exampleOrigin: "Makati", officialUrl: "https://www.miaa.gov.ph/", popularity: 90, coordinates: { latitude: 14.5086, longitude: 121.0198 },
   },
+  {
+    slug: "zurich-zrh", code: "ZRH", name: "Zurich Airport", shortName: "Zurich Airport", city: "Zurich, Switzerland", destination: "Zurich Airport (ZRH), Switzerland",
+    terminals: ["Check-in 1", "Check-in 2", "Check-in 3", "Gates A, B/D and E"],
+    airportAccess: "The A51 is the main motorway approach, while snow, commuting traffic and congestion around the airport exits can change driving time.",
+    terminalAdvice: "Zurich is organized by check-in areas and gate zones rather than separate airline terminals. Gates E require the Skymetro after security and passport control.",
+    transitAdvice: "The railway station is beneath the Airport Shopping complex and has frequent local and long-distance trains. Allow time to move upstairs with luggage to the assigned check-in area.",
+    finalLegAdvice: "A non-Schengen flight may add passport control, and an E-gate departure adds the Skymetro and another walk after screening.",
+    exampleOrigin: "Zurich Hauptbahnhof", officialUrl: "https://www.flughafen-zuerich.ch/en/passengers", reviewedOn: "2026-07-31", popularity: 91, coordinates: { latitude: 47.4581, longitude: 8.5555 },
+  },
+  {
+    slug: "barcelona-el-prat-bcn", code: "BCN", name: "Josep Tarradellas Barcelona-El Prat Airport", shortName: "Barcelona Airport", city: "Barcelona, Spain", destination: "Barcelona-El Prat Airport (BCN), Spain",
+    terminals: ["Terminal 1", "Terminal 2A", "Terminal 2B", "Terminal 2C"],
+    airportAccess: "The C-31, C-32 and Barcelona ring roads can slow during commuter peaks, summer travel and events in the city.",
+    terminalAdvice: "Terminal 1 and the Terminal 2 complex are separate. Aena provides a free shuttle, but a wrong-terminal arrival creates an avoidable transfer before check-in.",
+    transitAdvice: "Metro L9 Sud serves both terminal areas, while the Rodalies railway station is at Terminal 2. Terminal 1 rail passengers must include the airport shuttle unless their chosen service stops there.",
+    finalLegAdvice: "Confirm T1 or the specific T2 hall, then add the station or shuttle walk, bag drop, security and passport control for non-Schengen departures.",
+    exampleOrigin: "Plaça de Catalunya", officialUrl: "https://www.aena.es/en/josep-tarradellas-barcelona-el-prat.html", reviewedOn: "2026-07-31", popularity: 94, coordinates: { latitude: 41.2974, longitude: 2.0833 },
+  },
+  {
+    slug: "abu-dhabi-auh", code: "AUH", name: "Zayed International Airport", shortName: "Abu Dhabi Airport", city: "Abu Dhabi, United Arab Emirates", destination: "Zayed International Airport (AUH), Abu Dhabi, UAE",
+    terminals: ["Terminal A"],
+    airportAccess: "E10, E11 and Yas Island approaches can vary with Abu Dhabi commuting traffic, events and the longer road trip from Dubai.",
+    terminalAdvice: "Scheduled passenger flights use the large Terminal A. Confirm the departure zone and airline check-in row so the driver uses the most useful entrance.",
+    transitAdvice: "Public buses, airport taxis and intercity coaches are road-based. Travelers coming from Dubai should plan the full inter-emirate journey rather than a city-airport transfer.",
+    finalLegAdvice: "Terminal A has four piers and long internal distances; US-bound Etihad passengers may also need time for US preclearance before the gate.",
+    exampleOrigin: "Abu Dhabi Corniche", officialUrl: "https://www.zayedinternationalairport.ae/", reviewedOn: "2026-07-31", popularity: 92, coordinates: { latitude: 24.4330, longitude: 54.6511 },
+  },
+  {
+    slug: "taipei-taoyuan-tpe", code: "TPE", name: "Taiwan Taoyuan International Airport", shortName: "Taoyuan Airport", city: "Taipei, Taiwan", destination: "Taiwan Taoyuan International Airport (TPE), Taiwan",
+    terminals: ["Terminal 1", "Terminal 2"],
+    airportAccess: "National Freeway 2 and approaches from Taipei can slow during commuter periods, rain and holiday travel.",
+    terminalAdvice: "Terminals 1 and 2 have separate check-in halls and Airport MRT stops. Confirm the airline terminal before boarding an express train or arranging a drop-off.",
+    transitAdvice: "Taoyuan Airport MRT express and commuter trains have different stopping patterns. From Taipei Main Station, leave time for the long transfer through the station complex to the airport platforms.",
+    finalLegAdvice: "Add terminal-entry walking, airline document checks, outbound immigration, security and the trip to a distant concourse gate.",
+    exampleOrigin: "Taipei Main Station", officialUrl: "https://www.taoyuan-airport.com/?lang=en", reviewedOn: "2026-07-31", popularity: 94, coordinates: { latitude: 25.0797, longitude: 121.2342 },
+  },
+  {
+    slug: "bangkok-suvarnabhumi-bkk", code: "BKK", name: "Suvarnabhumi Airport", shortName: "Bangkok Suvarnabhumi Airport", city: "Bangkok, Thailand", destination: "Suvarnabhumi Airport (BKK), Thailand",
+    terminals: ["Main Terminal", "Satellite 1 Terminal"],
+    airportAccess: "Bangkok expressways and the airport approach can become heavily congested, particularly in rain and weekday peaks.",
+    terminalAdvice: "Suvarnabhumi and Don Mueang are different airports, so verify BKK rather than DMK first. Some BKK gates are in Satellite 1, reached by an automated train after screening.",
+    transitAdvice: "The Airport Rail Link reaches the basement of the main terminal. Include the trip to the city station, platform wait and movement from the airport station to the airline row.",
+    finalLegAdvice: "Outbound immigration, security and a possible train to Satellite 1 make the distance from check-in to the gate a meaningful part of the plan.",
+    exampleOrigin: "Phaya Thai", officialUrl: "https://suvarnabhumi.airportthai.co.th/", reviewedOn: "2026-07-31", popularity: 97, coordinates: { latitude: 13.6900, longitude: 100.7501 },
+  },
+  {
+    slug: "kuala-lumpur-kul", code: "KUL", name: "Kuala Lumpur International Airport", shortName: "Kuala Lumpur Airport", city: "Kuala Lumpur, Malaysia", destination: "Kuala Lumpur International Airport (KUL), Malaysia",
+    terminals: ["Terminal 1", "Terminal 2"],
+    airportAccess: "KUL is far south of central Kuala Lumpur, and ELITE Highway traffic, storms and crashes can affect the long road journey.",
+    terminalAdvice: "Terminal 1 and Terminal 2 are separate complexes several kilometres apart. Check the airline before choosing a KLIA Ekspres stop, bus or road destination.",
+    transitAdvice: "KLIA Ekspres and KLIA Transit serve both terminals in sequence. Account for the correct stop and do not treat arrival at the first terminal as arrival at your airline.",
+    finalLegAdvice: "Terminal 1 satellite gates and Terminal 2's long piers can add substantial walking or internal-transfer time after immigration and security.",
+    exampleOrigin: "KL Sentral", officialUrl: "https://airports.malaysiaairports.com.my/kuala-lumpur-international-airport", reviewedOn: "2026-07-31", popularity: 94, coordinates: { latitude: 2.7456, longitude: 101.7072 },
+  },
+  {
+    slug: "jakarta-soekarno-hatta-cgk", code: "CGK", name: "Soekarno-Hatta International Airport", shortName: "Jakarta Airport", city: "Jakarta, Indonesia", destination: "Soekarno-Hatta International Airport (CGK), Indonesia",
+    terminals: ["Terminal 1", "Terminal 2", "Terminal 3"],
+    airportAccess: "Jakarta toll-road congestion, flooding and crashes can turn the city-to-airport trip into the largest uncertainty in the calculation.",
+    terminalAdvice: "Terminals 1, 2 and 3 are separate and airline assignments matter. A wrong-terminal arrival requires Skytrain or road movement before check-in.",
+    transitAdvice: "The airport rail link reaches the integrated railway station, not an airline check-in desk. Add Skytrain or shuttle time from the station to the correct terminal.",
+    finalLegAdvice: "Build in terminal-entry checks, airline document review, immigration, security and long concourse walks, especially in Terminal 3.",
+    exampleOrigin: "Central Jakarta", officialUrl: "https://soekarnohatta.injourneyairports.id/", reviewedOn: "2026-07-31", popularity: 95, coordinates: { latitude: -6.1256, longitude: 106.6559 },
+  },
+  {
+    slug: "bengaluru-blr", code: "BLR", name: "Kempegowda International Airport", shortName: "Bengaluru Airport", city: "Bengaluru, India", destination: "Kempegowda International Airport Bengaluru (BLR), India",
+    terminals: ["Terminal 1", "Terminal 2"],
+    airportAccess: "The airport is north of Bengaluru, and Hebbal, Bellary Road and city traffic can make the trip far longer than the off-peak estimate.",
+    terminalAdvice: "Terminal 1 and Terminal 2 have different forecourts and airline assignments. Confirm the terminal before boarding a bus or setting a cab destination.",
+    transitAdvice: "Vayu Vajra airport buses are useful but share city roads. Their schedule is not protection against Bengaluru traffic, so include a missed or delayed service margin.",
+    finalLegAdvice: "Allow for terminal-entry document checks, bag drop, security, outbound immigration and the walk through the assigned terminal.",
+    exampleOrigin: "MG Road", officialUrl: "https://www.bengaluruairport.com/", reviewedOn: "2026-07-31", popularity: 92, coordinates: { latitude: 13.1986, longitude: 77.7066 },
+  },
+  {
+    slug: "brisbane-bne", code: "BNE", name: "Brisbane Airport", shortName: "Brisbane Airport", city: "Brisbane, Australia", destination: "Brisbane Airport (BNE), Australia",
+    terminals: ["Domestic Terminal", "International Terminal"],
+    airportAccess: "Airport Drive, the Gateway Motorway and Brisbane commuter traffic can affect both car and bus journeys to the airport precinct.",
+    terminalAdvice: "Domestic and International terminals are separate buildings. Going to the wrong one requires a train, bus or road transfer before check-in.",
+    transitAdvice: "Airtrain serves both terminals at separate stations. Check the service schedule for early or late flights and get off at the terminal named on the booking.",
+    finalLegAdvice: "International passengers need time for bag drop, outbound processing, security and the walk to the gate after leaving the station or car park.",
+    exampleOrigin: "Brisbane Central", officialUrl: "https://www.bne.com.au/", reviewedOn: "2026-07-31", popularity: 88, coordinates: { latitude: -27.3842, longitude: 153.1175 },
+  },
+  {
+    slug: "auckland-akl", code: "AKL", name: "Auckland Airport", shortName: "Auckland Airport", city: "Auckland, New Zealand", destination: "Auckland Airport (AKL), New Zealand",
+    terminals: ["Domestic Terminal", "International Terminal"],
+    airportAccess: "State Highway 20, Waterview and airport-area construction can produce significant delays from central Auckland and the North Shore.",
+    terminalAdvice: "Domestic and International terminals are separate. The marked outdoor walkway or terminal bus adds time if parking, rideshare or a connection leaves you at the wrong building.",
+    transitAdvice: "Auckland has no direct airport train. Airport buses and bus-to-train connections remain exposed to traffic and transfer timing.",
+    finalLegAdvice: "Add the terminal transfer if required, airline check-in, outbound processing, security and the walk through the international pier.",
+    exampleOrigin: "Britomart", officialUrl: "https://www.aucklandairport.co.nz/", reviewedOn: "2026-07-31", popularity: 89, coordinates: { latitude: -37.0082, longitude: 174.7850 },
+  },
+  {
+    slug: "montreal-trudeau-yul", code: "YUL", name: "Montréal-Trudeau International Airport", shortName: "Montréal-Trudeau Airport", city: "Montréal, Canada", destination: "Montréal-Trudeau International Airport (YUL), Canada",
+    terminals: ["Main Terminal", "Domestic, International and US checkpoints"],
+    airportAccess: "Autoroutes 20 and 520, Montréal construction, winter weather and interchange congestion can make road travel unpredictable.",
+    terminalAdvice: "YUL uses one terminal, but domestic, international and US departures split into different check-in and screening paths.",
+    transitAdvice: "The 747 bus shares Montréal roads and can be affected by congestion. Plan from the actual stop and include the walk from the airport bus area to check-in.",
+    finalLegAdvice: "US-bound travelers complete US preclearance before departure, so the airline's earlier check-in guidance may be the controlling deadline.",
+    exampleOrigin: "Downtown Montréal", officialUrl: "https://www.admtl.com/en", reviewedOn: "2026-07-31", popularity: 90, coordinates: { latitude: 45.4706, longitude: -73.7408 },
+  },
+  {
+    slug: "mexico-city-mex", code: "MEX", name: "Mexico City International Airport", shortName: "Mexico City Airport", city: "Mexico City, Mexico", destination: "Mexico City International Airport (MEX), Mexico",
+    terminals: ["Terminal 1", "Terminal 2"],
+    airportAccess: "Mexico City congestion, demonstrations, rain and bottlenecks on Circuito Interior can make the final kilometres highly variable.",
+    terminalAdvice: "Terminals 1 and 2 sit on opposite sides of the airfield. Confirm both the airport code MEX and terminal because the metropolitan area also has NLU and TLC airports.",
+    transitAdvice: "Metro serves the Terminal 1 side; Terminal 2 requires another ground connection. The Aerotrén between terminals has access restrictions, so do not assume it solves every wrong-terminal trip.",
+    finalLegAdvice: "Leave time for terminal-entry navigation, bag drop, security, immigration for international travel and crowded gate areas.",
+    exampleOrigin: "Paseo de la Reforma", officialUrl: "https://www.aicm.com.mx/", reviewedOn: "2026-07-31", popularity: 96, coordinates: { latitude: 19.4361, longitude: -99.0719 },
+  },
+  {
+    slug: "cancun-cun", code: "CUN", name: "Cancún International Airport", shortName: "Cancún Airport", city: "Cancún, Mexico", destination: "Cancún International Airport (CUN), Mexico",
+    terminals: ["Terminal 2", "Terminal 3", "Terminal 4", "FBO Terminal"],
+    airportAccess: "Highway 307 carries resort, construction and excursion traffic from Cancún, Playa del Carmen and the Riviera Maya.",
+    terminalAdvice: "Terminals 2, 3 and 4 serve different airlines and routes and are not one indoor hall. A free airport shuttle connects them, but it adds waiting and transfer time.",
+    transitAdvice: "Hotel transfers and ADO buses use terminal-specific stops and remain subject to Highway 307 traffic. Confirm pickup time and terminal rather than relying only on scheduled journey time.",
+    finalLegAdvice: "Tourist-season queues, bag drop, exit-document checks where applicable, security and terminal transfers all belong before the gate deadline.",
+    exampleOrigin: "Cancún Hotel Zone", officialUrl: "https://www.asur.com.mx/Contenido/Cancun/shopping", reviewedOn: "2026-07-31", popularity: 94, coordinates: { latitude: 21.0365, longitude: -86.8771 },
+  },
+  {
+    slug: "sao-paulo-guarulhos-gru", code: "GRU", name: "São Paulo/Guarulhos International Airport", shortName: "São Paulo Guarulhos Airport", city: "São Paulo, Brazil", destination: "São Paulo Guarulhos International Airport (GRU), Brazil",
+    terminals: ["Terminal 1", "Terminal 2", "Terminal 3"],
+    airportAccess: "Marginal Tietê, Ayrton Senna and Dutra traffic can make the trip from São Paulo much longer during peaks, rain and incidents.",
+    terminalAdvice: "The three terminals have different airline assignments; Terminal 3 handles many international flights. A wrong-terminal drop-off creates a walk or shuttle transfer.",
+    transitAdvice: "Airport rail services reach the airport station, with transfer arrangements depending on the service. Include the connection from the platform area to the correct terminal.",
+    finalLegAdvice: "International departures add airline document checks, emigration, security and long walks in Terminal 3.",
+    exampleOrigin: "Avenida Paulista", officialUrl: "https://www.gru.com.br/en", reviewedOn: "2026-07-31", popularity: 96, coordinates: { latitude: -23.4356, longitude: -46.4731 },
+  },
+  {
+    slug: "rio-galeao-gig", code: "GIG", name: "Rio de Janeiro/Galeão International Airport", shortName: "Rio Galeão Airport", city: "Rio de Janeiro, Brazil", destination: "Rio de Janeiro Galeão International Airport (GIG), Brazil",
+    terminals: ["Terminal 2"],
+    airportAccess: "Linha Vermelha, Avenida Brasil, bridge traffic, rain and incidents can sharply change the journey from Rio's South Zone or Niterói.",
+    terminalAdvice: "Passenger operations are concentrated in Terminal 2. The important choice is the correct departure sector and airline check-in area rather than a terminal transfer.",
+    transitAdvice: "BRT and airport buses are road-based and exposed to Rio traffic. Include the first connection to the bus and the walk from the airport stop to departures.",
+    finalLegAdvice: "Allow for bag drop, airline document review, emigration, security and the walk through the concourse after reaching Ilha do Governador.",
+    exampleOrigin: "Copacabana", officialUrl: "https://www.riogaleao.com/en", reviewedOn: "2026-07-31", popularity: 86, coordinates: { latitude: -22.8090, longitude: -43.2506 },
+  },
+  {
+    slug: "bogota-el-dorado-bog", code: "BOG", name: "El Dorado International Airport", shortName: "Bogotá El Dorado Airport", city: "Bogotá, Colombia", destination: "El Dorado International Airport (BOG), Colombia",
+    terminals: ["Terminal 1", "Puente Aéreo Terminal 2"],
+    airportAccess: "Calle 26 congestion, Bogotá rain, road incidents and city events can make the airport trip vary widely even over a short distance.",
+    terminalAdvice: "Most flights use Terminal 1, while selected domestic operations use Puente Aéreo. Confirm the terminal so a driver does not leave you at the wrong building.",
+    transitAdvice: "TransMilenio and feeder services require transfers and luggage movement; taxis and buses share Calle 26 traffic. Plan the complete door-to-terminal trip.",
+    finalLegAdvice: "International trips add airline document checks, emigration and security; the large main terminal can also involve a long walk to the gate.",
+    exampleOrigin: "Chapinero", officialUrl: "https://eldorado.aero/en/", reviewedOn: "2026-07-31", popularity: 94, coordinates: { latitude: 4.7016, longitude: -74.1469 },
+  },
+  {
+    slug: "lima-jorge-chavez-lim", code: "LIM", name: "Jorge Chávez International Airport", shortName: "Lima Airport", city: "Lima, Peru", destination: "Jorge Chávez International Airport (LIM), Peru",
+    terminals: ["New Passenger Terminal"],
+    airportAccess: "The airport's Callao location, Lima congestion and approaches to the new terminal can make travel time highly dependent on the starting district.",
+    terminalAdvice: "All commercial passengers now use the new terminal. Old directions and saved map pins may point toward the former entrance, so route to the current passenger access.",
+    transitAdvice: "Airport Express and public buses remain road-based. Confirm which terminal entrance the service uses and allow for Lima traffic plus the walk from the stop.",
+    finalLegAdvice: "The new building changes curb, parking and check-in patterns; add airline checks, emigration, security and an unfamiliar gate walk.",
+    exampleOrigin: "Miraflores", officialUrl: "https://www.lima-airport.com/en", reviewedOn: "2026-07-31", popularity: 92, coordinates: { latitude: -12.0219, longitude: -77.1143 },
+  },
+  {
+    slug: "santiago-scl", code: "SCL", name: "Arturo Merino Benítez International Airport", shortName: "Santiago Airport", city: "Santiago, Chile", destination: "Santiago International Airport (SCL), Chile",
+    terminals: ["Terminal 1 Domestic", "Terminal 2 International"],
+    airportAccess: "Costanera Norte, Vespucio Norte and Santiago commuter traffic can affect the airport approach, especially from the eastern districts.",
+    terminalAdvice: "Domestic Terminal 1 and International Terminal 2 are connected but have different forecourts and check-in halls. Route to the building that matches the flight.",
+    transitAdvice: "Airport buses connect with city metro stations but the airport leg is still on the road. Include transfer, wait and luggage time at the city interchange.",
+    finalLegAdvice: "International passengers need time for airline document checks, emigration, security and the walk through Terminal 2's piers.",
+    exampleOrigin: "Providencia", officialUrl: "https://www.nuevopudahuel.cl/", reviewedOn: "2026-07-31", popularity: 91, coordinates: { latitude: -33.3930, longitude: -70.7858 },
+  },
+  {
+    slug: "buenos-aires-ezeiza-eze", code: "EZE", name: "Ministro Pistarini International Airport", shortName: "Buenos Aires Ezeiza Airport", city: "Buenos Aires, Argentina", destination: "Ministro Pistarini International Airport (EZE), Argentina",
+    terminals: ["New Departures Terminal", "International Arrivals Terminal", "Domestic Arrivals Terminal"],
+    airportAccess: "Autopista Riccheri, Buenos Aires traffic, toll approaches and storms can affect the long journey to Ezeiza.",
+    terminalAdvice: "Buenos Aires has two major airports: EZE and AEP. Confirm EZE first, then use the airline's current check-in zone within the connected terminal complex.",
+    transitAdvice: "Airport coaches, public buses and taxis are road-based. Include city pickup, luggage loading and Riccheri traffic rather than using an advertised ride time alone.",
+    finalLegAdvice: "International departures require airline checks, emigration, security and time to reach the assigned pier after check-in.",
+    exampleOrigin: "Recoleta", officialUrl: "https://www.aeropuertosargentina.com/en/eze", reviewedOn: "2026-07-31", popularity: 91, coordinates: { latitude: -34.8222, longitude: -58.5358 },
+  },
+  {
+    slug: "johannesburg-or-tambo-jnb", code: "JNB", name: "O. R. Tambo International Airport", shortName: "Johannesburg O. R. Tambo Airport", city: "Johannesburg, South Africa", destination: "O. R. Tambo International Airport (JNB), South Africa",
+    terminals: ["Terminal A", "Terminal B"],
+    airportAccess: "R24, R21 and Johannesburg-Pretoria traffic can slow airport trips, while severe storms can disrupt both roads and rail.",
+    terminalAdvice: "Terminal A and Terminal B are connected but serve different check-in areas and route types. Confirm the airline hall before parking or drop-off.",
+    transitAdvice: "Gautrain reaches the airport above the terminal complex from Sandton and Pretoria connections. Include the transfer at Sandton where required and the walk down to check-in.",
+    finalLegAdvice: "International passengers should include airline document checks, emigration, security and the walk to gates beyond the central terminal spine.",
+    exampleOrigin: "Sandton", officialUrl: "https://www.airports.co.za/airports/or-tambo-international-airport", reviewedOn: "2026-07-31", popularity: 93, coordinates: { latitude: -26.1337, longitude: 28.2420 },
+  },
+  {
+    slug: "cape-town-cpt", code: "CPT", name: "Cape Town International Airport", shortName: "Cape Town Airport", city: "Cape Town, South Africa", destination: "Cape Town International Airport (CPT), South Africa",
+    terminals: ["Central Terminal", "Domestic Departures", "International Departures"],
+    airportAccess: "The N2 is the main city-airport route and can be affected by commuter traffic, crashes, road closures and strong winter weather.",
+    terminalAdvice: "Domestic and international departure halls connect through the central building but have different check-in and processing paths.",
+    transitAdvice: "Most travelers rely on private transfers, taxis, rideshare or rental cars. Every option uses the N2 or local roads, so live traffic matters.",
+    finalLegAdvice: "Rental-car return, bag drop and outbound processing can add more time than the relatively compact terminal map suggests.",
+    exampleOrigin: "V&A Waterfront", officialUrl: "https://www.airports.co.za/airports/cape-town-international-airport", reviewedOn: "2026-07-31", popularity: 89, coordinates: { latitude: -33.9715, longitude: 18.6021 },
+  },
+  {
+    slug: "cairo-cai", code: "CAI", name: "Cairo International Airport", shortName: "Cairo Airport", city: "Cairo, Egypt", destination: "Cairo International Airport (CAI), Egypt",
+    terminals: ["Terminal 1", "Terminal 2", "Terminal 3", "Seasonal Flights Terminal"],
+    airportAccess: "Cairo traffic, the Ring Road, Suez Road and airport-area security approaches can make travel time vary greatly by hour.",
+    terminalAdvice: "Terminals 1, 2 and 3 are separate. Confirm the airline terminal because a wrong drop-off requires an airport shuttle or another road movement.",
+    transitAdvice: "Cairo Airport has no direct metro station. Buses, taxis and hotel transfers all depend on road conditions and terminal-specific drop-off.",
+    finalLegAdvice: "Allow for terminal-entry screening, airline document checks, passport control, security and possible bus boarding to a remote stand.",
+    exampleOrigin: "Downtown Cairo", officialUrl: "https://www.cairo-airport.com/", reviewedOn: "2026-07-31", popularity: 91, coordinates: { latitude: 30.1219, longitude: 31.4056 },
+  },
+  {
+    slug: "addis-ababa-add", code: "ADD", name: "Addis Ababa Bole International Airport", shortName: "Addis Ababa Bole Airport", city: "Addis Ababa, Ethiopia", destination: "Addis Ababa Bole International Airport (ADD), Ethiopia",
+    terminals: ["Terminal 1", "Terminal 2"],
+    airportAccess: "Bole Road and city traffic can slow the short geographic trip, particularly during commuting periods and major events.",
+    terminalAdvice: "Terminal 2 handles most international traffic while Terminal 1 serves selected regional and domestic flights. Confirm the terminal before drop-off.",
+    transitAdvice: "There is no direct rail service to the terminal. Hotel shuttles, taxis and private transfers must include Addis Ababa road conditions and curb access.",
+    finalLegAdvice: "Terminal-entry checks, airline document review, immigration, security and crowded departure areas can all add time before the gate.",
+    exampleOrigin: "Meskel Square", officialUrl: "https://www.ethiopianairports.com/", reviewedOn: "2026-07-31", popularity: 88, coordinates: { latitude: 8.9779, longitude: 38.7993 },
+  },
+  {
+    slug: "nairobi-jomo-kenyatta-nbo", code: "NBO", name: "Jomo Kenyatta International Airport", shortName: "Nairobi Airport", city: "Nairobi, Kenya", destination: "Jomo Kenyatta International Airport (NBO), Kenya",
+    terminals: ["Terminal 1A", "Terminal 1B", "Terminal 1C", "Terminal 1D", "Terminal 1E", "Terminal 2"],
+    airportAccess: "Mombasa Road, the Expressway, city traffic and incidents near the airport interchange can produce large differences in journey time.",
+    terminalAdvice: "JKIA's Terminal 1 is divided into separate units and Terminal 2 is another building. Confirm the full unit, not merely Terminal 1.",
+    transitAdvice: "Taxis, hotel transfers, buses and the airport rail connection all require a final road or shuttle step to the correct departures unit.",
+    finalLegAdvice: "Include terminal-entry screening, airline checks, immigration, security and movement between the central processing area and gate.",
+    exampleOrigin: "Westlands", officialUrl: "https://www.kaa.go.ke/airports/jomo-kenyatta-international-airport/", reviewedOn: "2026-07-31", popularity: 89, coordinates: { latitude: -1.3192, longitude: 36.9278 },
+  },
 ];
 
 export const additionalInternationalAirportProfiles: AirportLocationProfile[] =
   internationalAirportSeeds.map(createInternationalAirportProfile);
+
+function validateInternationalAirportTexture(profiles: AirportLocationProfile[]): void {
+  const seenFacts = new Map<string, string>();
+
+  for (const profile of profiles) {
+    const contextualFacts = [
+      profile.modules[0]?.facts[1],
+      ...((profile.modules[1]?.facts ?? [])),
+    ].filter((fact): fact is string => Boolean(fact));
+
+    if (contextualFacts.length < 4) {
+      throw new Error(`${profile.code} needs four airport-specific planning facts`);
+    }
+
+    for (const fact of contextualFacts) {
+      if (fact.length < 80) {
+        throw new Error(`${profile.code} has an airport-specific fact that is too thin`);
+      }
+      const duplicateCode = seenFacts.get(fact);
+      if (duplicateCode) {
+        throw new Error(`${profile.code} repeats airport-specific copy from ${duplicateCode}`);
+      }
+      seenFacts.set(fact, profile.code);
+    }
+  }
+}
+
+validateInternationalAirportTexture(additionalInternationalAirportProfiles);

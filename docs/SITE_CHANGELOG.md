@@ -4,6 +4,12 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-07-31
+
+- Added the remaining 24 airports in the planned 50-airport international collection, with locally specific terminal, road, rail, bus, transfer and inside-airport guidance for each destination.
+- Added a catalog regression guard requiring four substantial airport-specific planning facts per international page and rejecting exact reuse of those contextual facts across airports.
+- Verification: leave-time tests and the optimized production build passed; all 24 new routes were statically generated; the destination-texture guard passed; Barcelona, Lima, Bangkok and Nairobi were reviewed locally with no console errors or horizontal overflow at 320, 375, 414 and 768 px.
+
 ### 2026-07-28
 
 - Added 25 indexable international airport time-to-leave calculators across Europe, the Middle East, Asia-Pacific, India, Canada and the Philippines, each with airport-specific terminal, road, rail and final-transfer guidance.
