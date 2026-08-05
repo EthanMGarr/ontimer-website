@@ -3,6 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
+import {
+  trackAutomaticAlertCTAViewed,
+  trackCalculatorCompleted,
+  trackCalculatorStarted,
+} from "@/lib/analytics";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -252,6 +257,11 @@ export default function LeaveTimeCalculator() {
     }
   }, [result]);
 
+  useEffect(() => {
+    if (!result) return;
+    trackAutomaticAlertCTAViewed("leave_time", "result_automatic_alert");
+  }, [result]);
+
   function handleTravelModeChange(mode: TravelMode) {
     setTravelMode(mode);
     localStorage.setItem(TRAVEL_MODE_KEY, mode);
@@ -320,6 +330,7 @@ export default function LeaveTimeCalculator() {
 
   async function handleCalculate() {
     if (!isFormValid) return;
+    trackCalculatorStarted("leave_time", { travel_mode: travelMode });
     setError(null);
 
     const [year, month, day] = arrivalDate.split("-").map(Number);
@@ -387,6 +398,10 @@ export default function LeaveTimeCalculator() {
       planningMode,
     });
     track("leave_calculator_used", {
+      travel_mode: travelMode,
+      travel_source: travelSource,
+    });
+    trackCalculatorCompleted("leave_time", {
       travel_mode: travelMode,
       travel_source: travelSource,
     });
@@ -487,7 +502,14 @@ export default function LeaveTimeCalculator() {
                     leave. Not a notification you&apos;ll swipe away.
                   </p>
                   <div className="mt-3">
-                    <AppStoreButton size="sm" location="leave_calculator_result" />
+                    <AppStoreButton
+                      size="sm"
+                      location="leave_calculator_result"
+                      analyticsContext={{
+                        calculator_type: "leave_time",
+                        cta_variant: "result_automatic_alert",
+                      }}
+                    />
                   </div>
                 </div>
               </div>

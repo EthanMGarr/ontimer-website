@@ -6,6 +6,11 @@ import CalculationFactorList from "@/components/leave-time/CalculationFactorList
 import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNotice";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
+import {
+  trackAutomaticAlertCTAViewed,
+  trackCalculatorCompleted,
+  trackCalculatorStarted,
+} from "@/lib/analytics";
 import type { SecurityEstimate } from "@/app/api/security-wait/route";
 import type { CalculatorExample } from "@/lib/travel-locations";
 import {
@@ -586,6 +591,11 @@ export default function AirportCalculator({
     });
   }, [computedResult, genericRedesign]);
 
+  useEffect(() => {
+    if (!computedResult) return;
+    trackAutomaticAlertCTAViewed("airport_leave_time", "result_automatic_alert");
+  }, [computedResult]);
+
 
   // ── Manual calculate fallback ───────────────────────────────────────────────
   async function handleCalculate() {
@@ -594,6 +604,10 @@ export default function AirportCalculator({
       setError("Enter your flight departure date and time.");
       return;
     }
+    trackCalculatorStarted("airport_leave_time", {
+      flight_type: flightType,
+      arrival_mode: arrivalMode,
+    });
     const [year, month, day] = departureDate.split("-").map(Number);
     const [hour, minute] = departureTime.split(":").map(Number);
     const departure = new Date(year, month - 1, day, hour, minute, 0);
@@ -646,6 +660,12 @@ export default function AirportCalculator({
       flight_type: flightType,
       arrival_mode: arrivalMode,
       trigger: "manual",
+      ...(locationCode ? { location_code: locationCode } : {}),
+    });
+    trackCalculatorCompleted("airport_leave_time", {
+      flight_type: flightType,
+      arrival_mode: arrivalMode,
+      travel_source: hasRouteInputs ? "google_or_fallback" : "manual",
       ...(locationCode ? { location_code: locationCode } : {}),
     });
   }
@@ -1133,6 +1153,11 @@ export default function AirportCalculator({
                       location={locationCode
                         ? `airport_${locationCode.toLowerCase()}_result`
                         : "airport_calculator_inline"}
+                      analyticsContext={{
+                        calculator_type: "airport_leave_time",
+                        cta_variant: "result_automatic_alert",
+                        ...(locationCode ? { location_code: locationCode } : {}),
+                      }}
                     />
                     {genericRedesign && (
                       <p className="mt-2 text-[11px] text-zinc-500">

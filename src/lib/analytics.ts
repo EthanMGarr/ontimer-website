@@ -34,9 +34,51 @@ export function getDeviceType(): DeviceType {
   return "desktop";
 }
 
-type EventParams = Record<string, string>;
+export type AnalyticsParams = Record<string, string | number>;
 
-function fireEvent(eventName: string, params: EventParams): void {
+const ATTRIBUTION_TOKEN_KEY = "ontimer_attribution_token";
+let fallbackAttributionToken: string | null = null;
+
+function getAttributionToken(): string {
+  if (typeof window === "undefined") return "server";
+  try {
+    const existing = window.localStorage.getItem(ATTRIBUTION_TOKEN_KEY);
+    if (existing) return existing;
+  } catch {
+    // Storage can be unavailable in privacy-restricted browsing contexts.
+  }
+  if (fallbackAttributionToken) return fallbackAttributionToken;
+  const token = typeof crypto.randomUUID === "function"
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  fallbackAttributionToken = token;
+  try {
+    window.localStorage.setItem(ATTRIBUTION_TOKEN_KEY, token);
+  } catch {
+    // The in-memory token still keeps this page session internally consistent.
+  }
+  return token;
+}
+
+function acquisitionParams(): AnalyticsParams {
+  const search = new URLSearchParams(window.location.search);
+  let source = search.get("utm_source") || "direct";
+  if (source === "direct" && document.referrer) {
+    try {
+      source = new URL(document.referrer).hostname || source;
+    } catch {
+      // Keep the conservative direct fallback for malformed referrers.
+    }
+  }
+  return {
+    attribution_token: getAttributionToken(),
+    landing_page: window.location.pathname,
+    traffic_source: source,
+    search_query: search.get("utm_term") || "unavailable",
+  };
+}
+
+export function fireEvent(eventName: string, params: AnalyticsParams = {}): void {
   if (typeof window === "undefined") return;
 
   if (process.env.NODE_ENV === "development") {
@@ -44,10 +86,10 @@ function fireEvent(eventName: string, params: EventParams): void {
   }
 
   if (typeof window.gtag !== "function") return;
-  window.gtag("event", eventName, params);
+  window.gtag("event", eventName, { ...acquisitionParams(), ...params });
 }
 
-function baseParams(location: string): EventParams {
+function baseParams(location: string): AnalyticsParams {
   return {
     page_path: window.location.pathname,
     button_location: location,
@@ -58,8 +100,38 @@ function baseParams(location: string): EventParams {
 // ─── Conversion events ──────────────────────────────────────────────────────
 
 /** Fire when any App Store CTA is clicked (mobile button, desktop link, or QR). */
-export function trackAppStoreClick(location: string): void {
-  fireEvent("app_store_click", baseParams(location));
+export function trackAppStoreClick(
+  location: string,
+  context: AnalyticsParams = {}
+): void {
+  const params = { ...baseParams(location), ...context };
+  fireEvent("app_store_click", params);
+  fireEvent("app_store_outbound_click", params);
+  if (context.cta_variant) fireEvent("automatic_alert_cta_clicked", params);
+}
+
+export function trackCalculatorStarted(
+  calculatorType: string,
+  context: AnalyticsParams = {}
+): void {
+  fireEvent("calculator_started", { calculator_type: calculatorType, ...context });
+}
+
+export function trackCalculatorCompleted(
+  calculatorType: string,
+  context: AnalyticsParams = {}
+): void {
+  fireEvent("calculator_completed", { calculator_type: calculatorType, ...context });
+}
+
+export function trackAutomaticAlertCTAViewed(
+  calculatorType: string,
+  ctaVariant: string
+): void {
+  fireEvent("automatic_alert_cta_viewed", {
+    calculator_type: calculatorType,
+    cta_variant: ctaVariant,
+  });
 }
 
 /** Fire when the Android waitlist CTA is clicked. */

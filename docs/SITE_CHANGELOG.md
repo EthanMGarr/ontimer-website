@@ -4,6 +4,12 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-08-03
+
+- Added canonical calculator-start, calculator-completion, automatic-alert CTA impression/click, and App Store outbound-click events to the general and airport leave-time funnels.
+- Added durable first-party attribution context (landing page, source, available search term, calculator type, CTA variant, and anonymous attribution token) to GA4 conversion events without mislabeling outbound clicks as installs.
+- Verification: TypeScript checks, leave-time tests, and the optimized production build passed.
+
 ### 2026-07-31
 
 - Added the remaining 24 airports in the planned 50-airport international collection, with locally specific terminal, road, rail, bus, transfer and inside-airport guidance for each destination.

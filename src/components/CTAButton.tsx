@@ -3,7 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { APP_STORE_URL } from "@/lib/constants";
-import { trackAppStoreClick, trackAndroidWaitlistClick } from "@/lib/analytics";
+import {
+  trackAppStoreClick,
+  trackAndroidWaitlistClick,
+  type AnalyticsParams,
+} from "@/lib/analytics";
 import { AppStoreQRPopover } from "./AppStoreQRPopover";
 
 export { AppStoreCTA } from "./AppStoreCTA";
@@ -17,6 +21,7 @@ interface CTAButtonProps {
   // Controls which direction the QR popover opens on desktop.
   // Use "above" when the button sits near the bottom of the viewport (e.g. footer).
   placement?: "above" | "below";
+  analyticsContext?: AnalyticsParams;
 }
 
 const sizeClasses = {
@@ -32,6 +37,7 @@ export function AppStoreButton({
   location = "cta",
   label = "Download on the App Store",
   placement = "below",
+  analyticsContext = {},
 }: CTAButtonProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -54,7 +60,7 @@ export function AppStoreButton({
       target="_blank"
       rel="noopener noreferrer"
       className={`${base} ${variants[variant]} ${sizeClasses[size]} ${className}`}
-      onClick={() => trackAppStoreClick(location)}
+      onClick={() => trackAppStoreClick(location, analyticsContext)}
     >
       <AppleIcon className="h-4 w-4" />
       {label}
