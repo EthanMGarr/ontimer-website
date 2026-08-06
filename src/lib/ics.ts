@@ -37,7 +37,12 @@ function fmtStamp(): string {
   return fmtDateTime(now, `${now.getHours()}:${now.getMinutes()}`);
 }
 
-export function generateICS(times: MedTime[], startDate: Date, days: number): string {
+export function generateICS(
+  times: MedTime[],
+  startDate: Date,
+  days: number,
+  timeZone?: string,
+): string {
   const stamp = fmtStamp();
   const events = times.map((t) => {
     const dtstart = fmtDateTime(startDate, t.time);
@@ -46,7 +51,7 @@ export function generateICS(times: MedTime[], startDate: Date, days: number): st
       "BEGIN:VEVENT",
       `UID:${uid()}`,
       `DTSTAMP:${stamp}`,
-      `DTSTART:${dtstart}`,
+      timeZone ? `DTSTART;TZID=${timeZone}:${dtstart}` : `DTSTART:${dtstart}`,
       `RRULE:FREQ=DAILY;COUNT=${days}`,
       `SUMMARY:${summary}`,
       "END:VEVENT",

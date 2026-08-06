@@ -12,12 +12,21 @@
 /// ## Don't Include
 /// - Page-level SEO or structured data (handled in page.tsx)
 /// - Server-side logic
+///
+/// Hallmark · component: medication schedule guard · genre: utilitarian · theme: existing OnTimer
+/// States: default · hover · focus · active · disabled · warning · confirmed · success
+/// Pre-emit critique: Philosophy 5 · Hierarchy 4 · Execution 4 · Specificity 5 · Restraint 5 · Variety 4
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import { generateICS, downloadICS } from "@/lib/ics";
+import {
+  formatMedicationTime,
+  generateMedicationTimes,
+  isOvernightTime,
+} from "@/lib/medication-schedule";
 
 type Frequency = 1 | 2 | 3;
 type Duration = 7 | 10 | 14 | 30 | "custom";
@@ -83,23 +92,25 @@ function Pill<T>({
   );
 }
 
-function generateTimes(startTime: string, frequency: Frequency): string[] {
-  const [h, m] = startTime.split(":").map(Number);
-  const startMinutes = h * 60 + m;
-  const gap = Math.floor(1440 / frequency);
-  return Array.from({ length: frequency }, (_, i) => {
-    const total = (startMinutes + i * gap) % 1440;
-    const hh = String(Math.floor(total / 60)).padStart(2, "0");
-    const mm = String(total % 60).padStart(2, "0");
-    return `${hh}:${mm}`;
-  });
+function getTimeZones(detectedTimeZone: string): string[] {
+  const fallback = [
+    "America/New_York",
+    "America/Chicago",
+    "America/Denver",
+    "America/Los_Angeles",
+    "America/Anchorage",
+    "Pacific/Honolulu",
+    "UTC",
+  ];
+  const supportedValuesOf = (
+    Intl as typeof Intl & { supportedValuesOf?: (key: "timeZone") => string[] }
+  ).supportedValuesOf;
+  const zones = supportedValuesOf ? supportedValuesOf("timeZone") : fallback;
+  return Array.from(new Set([detectedTimeZone, ...zones].filter(Boolean)));
 }
 
-function fmtTime(t: string) {
-  const [h, m] = t.split(":").map(Number);
-  const ampm = h >= 12 ? "pm" : "am";
-  const h12 = h % 12 || 12;
-  return `${h12}:${String(m).padStart(2, "0")} ${ampm}`;
+function formatTimeZone(timeZone: string): string {
+  return timeZone.replaceAll("_", " ");
 }
 
 export default function MedicationScheduleGenerator() {
@@ -112,18 +123,31 @@ export default function MedicationScheduleGenerator() {
   const [times, setTimes] = useState<string[]>([]);
   const [generated, setGenerated] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
+  const [timeZone, setTimeZone] = useState("");
+  const [overnightConfirmed, setOvernightConfirmed] = useState(false);
+  const overnightInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
+  }, []);
+
+  const timeZones = useMemo(() => getTimeZones(timeZone), [timeZone]);
+  const overnightTimes = times.filter(isOvernightTime);
+  const needsOvernightConfirmation = overnightTimes.length > 0 && !overnightConfirmed;
 
   function handleGenerate() {
-    setTimes(generateTimes(startTime, frequency));
+    setTimes(generateMedicationTimes(startTime, frequency));
     setGenerated(true);
     setDownloaded(false);
+    setOvernightConfirmed(false);
     track("medication_schedule_generated", { frequency, duration: effectiveDuration });
   }
 
   function handleDownload() {
+    if (needsOvernightConfirmation) return;
     const medTimes = times.map((t) => ({ name: medName.trim() || "Medication", time: t }));
     const start = new Date(startDate + "T00:00:00");
-    const content = generateICS(medTimes, start, effectiveDuration);
+    const content = generateICS(medTimes, start, effectiveDuration, timeZone || undefined);
     downloadICS(content, "medication-schedule.ics");
     setDownloaded(true);
     track("medication_ics_downloaded");
@@ -131,14 +155,24 @@ export default function MedicationScheduleGenerator() {
 
   function handleTimeChange(index: number, value: string) {
     setTimes((prev) => prev.map((t, i) => (i === index ? value : t)));
+    setOvernightConfirmed(false);
+    setDownloaded(false);
   }
 
   function handleRemoveTime(index: number) {
     setTimes((prev) => prev.filter((_, i) => i !== index));
+    setOvernightConfirmed(false);
+    setDownloaded(false);
   }
 
   function handleAddTime() {
     setTimes((prev) => [...prev, "08:00"]);
+    setOvernightConfirmed(false);
+    setDownloaded(false);
+  }
+
+  function handleEditOvernightTime() {
+    overnightInputRef.current?.focus();
   }
 
   const effectiveDuration = duration === "custom" ? (customDays >= 1 ? customDays : 1) : duration;
@@ -268,12 +302,13 @@ export default function MedicationScheduleGenerator() {
                 <div key={i} className="flex items-center gap-3">
                   <span className="w-6 text-center text-xs font-semibold text-zinc-500">{i + 1}</span>
                   <input
+                    ref={isOvernightTime(t) ? overnightInputRef : undefined}
                     type="time"
                     value={t}
                     onChange={(e) => handleTimeChange(i, e.target.value)}
                     className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-green-500 focus:outline-none"
                   />
-                  <span className="text-xs text-zinc-500">{fmtTime(t)}</span>
+                  <span className="text-xs text-zinc-500">{formatMedicationTime(t)}</span>
                   <button
                     type="button"
                     onClick={() => handleRemoveTime(i)}
@@ -297,6 +332,67 @@ export default function MedicationScheduleGenerator() {
             </div>
           </div>
 
+          {/* Time zone */}
+          <div>
+            <FieldLabel>Time zone</FieldLabel>
+            <select
+              value={timeZone}
+              onChange={(event) => {
+                setTimeZone(event.target.value);
+                setDownloaded(false);
+              }}
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white focus:border-green-500 focus:outline-none sm:max-w-md"
+              aria-describedby="medication-time-zone-help"
+            >
+              {!timeZone && <option value="">Detecting time zone…</option>}
+              {timeZones.map((zone) => (
+                <option key={zone} value={zone}>{formatTimeZone(zone)}</option>
+              ))}
+            </select>
+            <p id="medication-time-zone-help" className="mt-2 text-xs text-zinc-500">
+              Times will be added in {timeZone ? formatTimeZone(timeZone) : "your detected time zone"}.
+            </p>
+          </div>
+
+          {/* Overnight-dose confirmation */}
+          {overnightTimes.length > 0 && (
+            <div
+              className={`rounded-xl border p-4 ${
+                overnightConfirmed
+                  ? "border-zinc-700 bg-zinc-800/60"
+                  : "border-amber-500/50 bg-amber-500/10"
+              }`}
+              role={overnightConfirmed ? "status" : "alert"}
+            >
+              <p className="text-sm font-bold text-white">
+                {overnightTimes.length === 1
+                  ? `One dose falls at ${formatMedicationTime(overnightTimes[0])}`
+                  : `${overnightTimes.length} doses fall overnight`}
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-zinc-300">
+                These times are evenly spaced based on your first dose. Adjust them only if your prescription or healthcare provider allows it.
+              </p>
+              {!overnightConfirmed && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setOvernightConfirmed(true)}
+                    className="whitespace-nowrap rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 active:translate-y-px"
+                  >
+                    Keep overnight dose
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleEditOvernightTime}
+                    className="whitespace-nowrap rounded-full border border-zinc-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-zinc-400 hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-300 active:translate-y-px"
+                  >
+                    Edit times
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Tool result disclaimer */}
           <p className="text-sm text-zinc-300 italic">
             This schedule is for planning purposes only and does not replace medical instructions.
@@ -307,10 +403,14 @@ export default function MedicationScheduleGenerator() {
             <button
               type="button"
               onClick={handleDownload}
-              className="w-full rounded-full bg-green-500 px-6 py-3.5 text-sm font-bold text-black transition-colors hover:bg-green-400 sm:w-auto sm:px-8"
+              disabled={needsOvernightConfirmation || !timeZone}
+              className="w-full whitespace-nowrap rounded-full bg-green-500 px-6 py-3.5 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:translate-y-px disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400 sm:w-auto sm:px-8"
             >
               Add to Calendar
             </button>
+            {needsOvernightConfirmation && (
+              <p className="mt-2 text-xs text-amber-300">Confirm or edit the overnight dose first.</p>
+            )}
             <p className="mt-2 text-xs text-zinc-500">Works with Google Calendar, Apple Calendar, and Outlook Calendar</p>
           </div>
 
@@ -318,7 +418,8 @@ export default function MedicationScheduleGenerator() {
           <button
             type="button"
             onClick={handleDownload}
-            className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors underline underline-offset-2"
+            disabled={needsOvernightConfirmation || !timeZone}
+            className="whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 disabled:cursor-not-allowed disabled:text-zinc-700"
           >
             Download .ics file instead
           </button>

@@ -4,6 +4,12 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-08-06
+
+- Added an explicit time-zone selection and an overnight-dose confirmation guard to the medication schedule generator so calendar exports do not silently create surprising late-night reminders.
+- Kept dose times editable, clarified midnight labeling, and preserved evenly spaced defaults without interpreting or changing prescribed timing.
+- Verification: medication-schedule regression tests and the optimized production build passed.
+
 ### 2026-08-03
 
 - Added canonical calculator-start, calculator-completion, automatic-alert CTA impression/click, and App Store outbound-click events to the general and airport leave-time funnels.
