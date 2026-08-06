@@ -1,9 +1,11 @@
-export type MedicationFrequency = 1 | 2 | 3;
+export type MedicationFrequency = 1 | 2 | 3 | 4 | "custom";
 
 export function generateMedicationTimes(
   startTime: string,
   frequency: MedicationFrequency,
 ): string[] {
+  if (frequency === "custom") return [startTime];
+
   const [hours, minutes] = startTime.split(":").map(Number);
   const startMinutes = hours * 60 + minutes;
   const gap = Math.floor(1440 / frequency);

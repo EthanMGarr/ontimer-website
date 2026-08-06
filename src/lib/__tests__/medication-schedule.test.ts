@@ -20,4 +20,14 @@ assert(!isOvernightTime("06:00"), "6am should not be flagged as overnight");
 assert(!isOvernightTime("22:59"), "times before 11pm should not be flagged as overnight");
 assert(formatMedicationTime("00:00") === "12:00 midnight", "midnight should be unambiguous");
 
+const fourTimes = generateMedicationTimes("08:00", 4);
+assert(
+  JSON.stringify(fourTimes) === JSON.stringify(["08:00", "14:00", "20:00", "02:00"]),
+  "four daily doses should remain evenly spaced",
+);
+assert(
+  JSON.stringify(generateMedicationTimes("09:30", "custom")) === JSON.stringify(["09:30"]),
+  "custom schedules should begin with the selected first dose",
+);
+
 console.log("Medication schedule tests passed.");

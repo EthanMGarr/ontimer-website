@@ -6,8 +6,9 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-08-06
 
-- Added an explicit time-zone selection and an overnight-dose confirmation guard to the medication schedule generator so calendar exports do not silently create surprising late-night reminders.
+- Added an explicit time-zone selection and an overnight-dose notice to the medication schedule generator so calendar exports do not silently create surprising late-night reminders.
 - Kept dose times editable, clarified midnight labeling, and preserved evenly spaced defaults without interpreting or changing prescribed timing.
+- Moved the detected time zone beside the first-dose time, shortened frequency controls, added four-times-daily and custom-time schedules, and reduced the overnight warning to a compact notice before the calendar action.
 - Verification: medication-schedule regression tests and the optimized production build passed.
 
 ### 2026-08-03
