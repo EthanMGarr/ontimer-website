@@ -107,19 +107,19 @@ function getTimeZones(detectedTimeZone: string): string[] {
 
 function formatTimeZone(timeZone: string): string {
   const commonNames: Record<string, string> = {
-    "America/New_York": "Eastern Time (New York)",
-    "America/Chicago": "Central Time (Chicago)",
-    "America/Denver": "Mountain Time (Denver)",
-    "America/Los_Angeles": "Pacific Time (Los Angeles)",
-    "America/Anchorage": "Alaska Time (Anchorage)",
-    "America/Phoenix": "Arizona Time (Phoenix)",
-    "Pacific/Honolulu": "Hawaii Time (Honolulu)",
+    "America/New_York": "ET",
+    "America/Chicago": "CT",
+    "America/Denver": "MT",
+    "America/Los_Angeles": "PT",
+    "America/Anchorage": "AKT",
+    "America/Phoenix": "MST",
+    "Pacific/Honolulu": "HST",
     UTC: "UTC",
   };
   if (commonNames[timeZone]) return commonNames[timeZone];
 
   const parts = timeZone.split("/").map((part) => part.replaceAll("_", " "));
-  return parts.length > 1 ? `${parts.at(-1)} (${parts[0]})` : parts[0];
+  return parts.at(-1) || timeZone;
 }
 
 export default function MedicationScheduleGenerator() {
@@ -217,33 +217,27 @@ export default function MedicationScheduleGenerator() {
           </div>
         </div>
 
-        {/* First dose time + schedule time zone */}
-        <div className="grid gap-4 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-          <div>
-            <FieldLabel>First dose time</FieldLabel>
+        {/* First dose time + compact schedule time zone */}
+        <div>
+          <FieldLabel>First dose time</FieldLabel>
+          <div className="grid grid-cols-[minmax(0,1fr)_5.25rem] gap-2 sm:max-w-sm">
             <input
               type="time"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white focus:border-green-500 focus:outline-none"
             />
-          </div>
-          <div>
-            <FieldLabel>Time zone</FieldLabel>
             <select
               value={timeZone}
               onChange={(event) => setTimeZone(event.target.value)}
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white focus:border-green-500 focus:outline-none"
-              aria-describedby="medication-time-zone-help"
+              aria-label="Schedule time zone"
             >
-              {!timeZone && <option value="">Detecting time zone…</option>}
+              {!timeZone && <option value="">Local time</option>}
               {timeZones.map((zone) => (
                 <option key={zone} value={zone}>{formatTimeZone(zone)}</option>
               ))}
             </select>
-            <p id="medication-time-zone-help" className="mt-2 text-xs text-zinc-500">
-              Detected from this device. Change it if needed.
-            </p>
           </div>
         </div>
 
@@ -359,10 +353,6 @@ export default function MedicationScheduleGenerator() {
               </p>
             </div>
           )}
-
-          <p className="text-xs text-zinc-500">
-            Times shown in {timeZone ? formatTimeZone(timeZone) : "your detected time zone"}.
-          </p>
 
           {/* Tool result disclaimer */}
           <p className="text-sm text-zinc-300 italic">
