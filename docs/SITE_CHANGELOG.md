@@ -6,6 +6,7 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-08-07
 
+- Calendar exports now start each recurring dose series at its next future occurrence, so a same-day dose time that has already passed begins tomorrow while later doses still begin today. Overnight dose offsets are preserved without creating extra calendar series. Tightened the OnTimer handoff around persistent alarms and active dismissal. Verified with deterministic timezone-aware calendar export tests.
 - Simplified the medication generator's conversion state: removed the long explanatory pitch, introduced a compact automatic-alarm benefit, and made OnTimer the primary next step after calendar export while retaining a quiet download-again action. Verified with medication schedule tests, a production build, and responsive browser checks.
 - Reframed the medication page around its free calendar-schedule generator, replacing the long article-led hero and "Direct Answer" box with a concise outcome-led headline and an above-the-fold workbench layout.
 - Kept the supporting SEO/GEO article, FAQ schema, safety language, and related guides below the tool while updating page metadata to describe the generator directly.

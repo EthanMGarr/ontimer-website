@@ -6,16 +6,17 @@
 /// ## Include
 /// - One VEVENT per medication time slot
 /// - Daily recurrence via RRULE
+/// - Timezone-aware next-occurrence selection
 /// - Client-side download trigger
 ///
 /// ## Don't Include
-/// - Timezone conversions (floating local time only)
 /// - Server-side logic
 /// - External libraries
 
 export interface MedTime {
   name: string;
   time: string; // "HH:MM" 24h format
+  dayOffset?: number;
 }
 
 function uid(): string {
@@ -32,9 +33,78 @@ function fmtDateTime(date: Date, timeStr: string): string {
   return `${year}${month}${day}T${hour}${min}00`;
 }
 
-function fmtStamp(): string {
-  const now = new Date();
+function fmtStamp(now: Date): string {
   return fmtDateTime(now, `${now.getHours()}:${now.getMinutes()}`);
+}
+
+function datePartsInTimeZone(date: Date, timeZone?: string) {
+  if (!timeZone) {
+    return {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      day: date.getDate(),
+      hour: date.getHours(),
+      minute: date.getMinutes(),
+    };
+  }
+
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date);
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((part) => part.type === type)?.value);
+
+  return {
+    year: value("year"),
+    month: value("month"),
+    day: value("day"),
+    hour: value("hour"),
+    minute: value("minute"),
+  };
+}
+
+function nextEventStart(
+  startDate: Date,
+  time: string,
+  dayOffset: number,
+  now: Date,
+  timeZone?: string,
+): string {
+  const [hour, minute] = time.split(":").map(Number);
+  const intended = new Date(Date.UTC(
+    startDate.getFullYear(),
+    startDate.getMonth(),
+    startDate.getDate() + dayOffset,
+  ));
+  const current = datePartsInTimeZone(now, timeZone);
+  const currentDay = Date.UTC(current.year, current.month - 1, current.day);
+
+  if (
+    intended.getTime() < currentDay ||
+    (intended.getTime() === currentDay && hour * 60 + minute <= current.hour * 60 + current.minute)
+  ) {
+    intended.setUTCDate(intended.getUTCDate() + Math.max(
+      1,
+      Math.ceil((currentDay - intended.getTime()) / 86_400_000),
+    ));
+    if (
+      intended.getTime() === currentDay &&
+      hour * 60 + minute <= current.hour * 60 + current.minute
+    ) {
+      intended.setUTCDate(intended.getUTCDate() + 1);
+    }
+  }
+
+  const year = intended.getUTCFullYear();
+  const month = String(intended.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(intended.getUTCDate()).padStart(2, "0");
+  return `${year}${month}${day}T${String(hour).padStart(2, "0")}${String(minute).padStart(2, "0")}00`;
 }
 
 export function generateICS(
@@ -42,10 +112,11 @@ export function generateICS(
   startDate: Date,
   days: number,
   timeZone?: string,
+  now = new Date(),
 ): string {
-  const stamp = fmtStamp();
+  const stamp = fmtStamp(now);
   const events = times.map((t) => {
-    const dtstart = fmtDateTime(startDate, t.time);
+    const dtstart = nextEventStart(startDate, t.time, t.dayOffset || 0, now, timeZone);
     const summary = t.name.trim() || "Medication";
     return [
       "BEGIN:VEVENT",

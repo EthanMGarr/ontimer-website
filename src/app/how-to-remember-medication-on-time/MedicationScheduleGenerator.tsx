@@ -149,7 +149,11 @@ export default function MedicationScheduleGenerator() {
   }
 
   function handleDownload() {
-    const medTimes = times.map((t) => ({ name: medName.trim() || "Medication", time: t }));
+    let dayOffset = 0;
+    const medTimes = times.map((t, index) => {
+      if (index > 0 && t <= times[index - 1]) dayOffset += 1;
+      return { name: medName.trim() || "Medication", time: t, dayOffset };
+    });
     const start = new Date(startDate + "T00:00:00");
     const content = generateICS(medTimes, start, effectiveDuration, timeZone || undefined);
     downloadICS(content, "medication-schedule.ics");
@@ -366,7 +370,9 @@ export default function MedicationScheduleGenerator() {
               >
                 Add to Calendar
               </button>
-              <p className="mt-2 text-xs text-zinc-500">Works with Google Calendar, Apple Calendar, and Outlook Calendar</p>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-500">
+                Past dose times begin at their next occurrence. Works with Google Calendar, Apple Calendar, and Outlook Calendar.
+              </p>
               <button
                 type="button"
                 onClick={handleDownload}
@@ -392,15 +398,15 @@ export default function MedicationScheduleGenerator() {
 
           {/* OnTimer handoff */}
           <div className="border-l-2 border-green-500 pl-4 sm:pl-5">
-            <p className="text-lg font-black text-white">Turn on automatic alarms</p>
+            <p className="text-lg font-black text-white">Make every dose harder to miss</p>
             <p className="mt-1 max-w-md text-sm leading-relaxed text-zinc-300">
-              Get OnTimer free and turn your medication calendar events into alarms that are harder to miss.
+              OnTimer automatically turns the calendar events you just created into persistent alarms that stay on screen until you dismiss them.
             </p>
             <div className="mt-4">
               <AppStoreButton
                 size="md"
                 location={downloaded ? "medication_tool_after_export" : "medication_tool_conversion"}
-                label="Get OnTimer free"
+                label="Get automatic alarms"
               />
             </div>
           </div>
