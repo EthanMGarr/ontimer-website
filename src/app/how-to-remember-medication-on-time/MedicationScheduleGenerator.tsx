@@ -386,15 +386,15 @@ export default function MedicationScheduleGenerator() {
 
           {/* OnTimer handoff */}
           <div className="border-l-2 border-green-500 pl-4 sm:pl-5">
-            <p className="text-lg font-black text-white">Make every dose harder to miss</p>
+            <p className="text-lg font-black text-white">Don&apos;t miss your doses.</p>
             <p className="mt-1 max-w-md text-sm leading-relaxed text-zinc-300">
-              OnTimer automatically turns the calendar events you just created into persistent alarms that stay on screen until you dismiss them.
+              Get OnTimer free and turn this schedule into alarms.
             </p>
             <div className="mt-4">
               <AppStoreButton
                 size="md"
                 location={downloaded ? "medication_tool_after_export" : "medication_tool_conversion"}
-                label="Get automatic alarms"
+                label="Get OnTimer free"
               />
             </div>
           </div>
