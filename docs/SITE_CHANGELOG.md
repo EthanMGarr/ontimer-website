@@ -6,6 +6,7 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-08-07
 
+- Documented the medication generator's permanent UX, calendar-import, next-occurrence, timezone, alert, conversion, and regression-testing contracts in `CLAUDE.md` and `README.md`.
 - Restored “Add to Calendar” as the medication generator's primary export CTA while retaining the concise iPhone confirmation instruction beneath it.
 - Replaced the medication generator's OnTimer handoff with the concise dose-specific message “Don't miss your doses. Get OnTimer free and turn this schedule into alarms.”
 - Corrected the iPhone calendar-import handoff so the site no longer implies that opening an ICS preview saved the schedule: the primary action now says “Continue to Calendar,” explicitly instructs users to tap Apple’s “Add To Calendar” confirmation, and reports only that the import screen opened. Calendar events now include an at-time alert instead of the “Alert: None” shown in Apple’s preview. Replaced the exhaustive timezone picker with Local (when needed), ET, CT, MT, PT, AZ, AK, HI, and UTC. Verified against the supplied iPhone screenshots, medication export tests, production build, and browser interaction.

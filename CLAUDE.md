@@ -117,6 +117,31 @@ Implementation contract:
 
 ---
 
+## Medication Schedule Generator (permanent rules)
+
+The generator at `/how-to-remember-medication-on-time` is a tool-first experience. Keep the schedule builder above the supporting article; SEO/GEO copy must not bury the tool or obscure its purpose.
+
+Calendar export contract:
+- Keep **Add to Calendar** as the primary export label.
+- An `.ics` download opens the operating system's calendar-import preview; it does not prove that the event was saved. Never report “saved,” “added,” or equivalent based only on the download click.
+- On iPhone, tell the user to tap Apple's **Add To Calendar** confirmation on the next screen.
+- Include a standard at-time `VALARM` in every exported dose event. OnTimer is the upgrade from a passive calendar alert to a persistent alarm, not a substitute for a missing baseline calendar alert.
+- Start every recurring dose series at its next future occurrence in the selected time zone. A dose time that already passed today begins tomorrow; a later dose can still begin today.
+- Preserve overnight day offsets and the complete occurrence count without creating duplicate series. Use one recurring event per daily dose time.
+- Keep timezone selection compact. Prefer the detected local zone plus the maintained short list (ET, CT, MT, PT, AZ, AK, HI, UTC); never expose the full IANA timezone catalog in the native select.
+
+Conversion contract:
+- After the import opens, distinguish that state from confirmed calendar saving and retain a quiet way to reopen the import.
+- Keep the OnTimer handoff concise and dose-specific: **“Don't miss your doses. Get OnTimer free and turn this schedule into alarms.”**
+- Use the shared App Store CTA component so mobile links directly and desktop receives the QR handoff.
+
+Regression checks:
+- Run `npm run test:medication-schedule` and `npm run build` after changes to medication scheduling or ICS generation.
+- Keep deterministic coverage for selected-timezone behavior, past same-day doses, upcoming same-day doses, overnight offsets, recurrence counts, and `VALARM` output.
+- Verify the generated and post-import states in a real browser. For iPhone-specific import changes, review the native Calendar preview when a device is available.
+
+---
+
 ## SEO / GEO / AEO Guidance
 
 Direct answers belong near the top of each section, not buried in paragraphs.

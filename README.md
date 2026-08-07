@@ -98,6 +98,19 @@ All install CTAs must use the shared CTA components in `src/components/CTAButton
 
 Update the canonical App Store URL in the shared CTA implementation rather than in individual pages.
 
+## Medication Schedule Generator
+
+The medication tool exports one recurring `.ics` event per daily dose time. Each series begins at its next future occurrence in the selected timezone, preserves overnight offsets and duration, and includes an at-time calendar alert.
+
+Opening an `.ics` file is not proof that the event was saved. Keep the **Add to Calendar** CTA and the iPhone instruction to complete Apple's **Add To Calendar** confirmation. Never expose the full IANA timezone catalog; use the compact maintained list in `MedicationScheduleGenerator.tsx`.
+
+Before shipping generator or ICS changes, run:
+
+```bash
+npm run test:medication-schedule
+npm run build
+```
+
 ## Deploying to Vercel
 
 ### Option 1: Deploy from GitHub (recommended)
