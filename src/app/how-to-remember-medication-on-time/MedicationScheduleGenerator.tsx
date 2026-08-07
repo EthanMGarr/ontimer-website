@@ -177,18 +177,15 @@ export default function MedicationScheduleGenerator() {
   const freqLabel = `${times.length} ${times.length === 1 ? "dose" : "doses"} per day`;
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 sm:p-8">
+    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
       <h2 className="text-xl font-black tracking-tight text-white sm:text-2xl">
-        Generate Your Medication Schedule
+        Create your schedule
       </h2>
       <p className="mt-2 text-sm text-zinc-400">
-        Set it up in under a minute. Adds directly to any calendar app.
-      </p>
-      <p className="mt-2 text-sm text-zinc-300 italic">
-        For organization only. Always follow your prescribed instructions.
+        Your dose times stay editable before you add them to your calendar.
       </p>
 
-      <div className="mt-6 space-y-6">
+      <div className="mt-5 space-y-5">
         {/* Medication Name */}
         <div>
           <FieldLabel>Medication name (optional)</FieldLabel>

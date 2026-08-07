@@ -1,4 +1,4 @@
-/// Anchor SEO page — How to Remember Your Medication (The Last 5 Minutes Fix).
+/// Medication schedule generator with supporting educational content.
 ///
 /// ## Purpose
 /// Drives high-intent medication reminder search traffic to OnTimer via content + embedded tool.
@@ -16,16 +16,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreButton, AppStoreCTA } from "@/components/CTAButton";
 import MedicationScheduleGenerator from "./MedicationScheduleGenerator";
+import ResetScrollOnReload from "./ResetScrollOnReload";
 
 export const metadata: Metadata = {
-  title: "How to Remember Your Medication (The Last 5 Minutes Fix)",
+  title: "Medication Schedule Generator: Add Doses to Your Calendar",
   description:
-    "If you keep missing your medication, the problem isn't forgetting — it's what happens in the moment. Set up a system that actually works.",
+    "Turn a medication schedule into recurring calendar events for Apple Calendar, Google Calendar, or Outlook with OnTimer's free schedule generator.",
   alternates: { canonical: "https://www.ontimer.app/how-to-remember-medication-on-time" },
   openGraph: {
-    title: "How to Remember Your Medication (The Last 5 Minutes Fix)",
+    title: "Medication Schedule Generator: Add Doses to Your Calendar",
     description:
-      "If you keep missing your medication, the problem isn't forgetting — it's what happens in the moment. Set up a system that actually works.",
+      "Turn a medication schedule into recurring calendar events for Apple Calendar, Google Calendar, or Outlook.",
     url: "https://www.ontimer.app/how-to-remember-medication-on-time",
   },
 };
@@ -113,45 +114,35 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+      <ResetScrollOnReload />
 
-      {/* Hero */}
-      <section className="py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <nav className="mb-6 text-sm text-zinc-500">
+      {/* Hallmark · macrostructure: Workbench · tone: utilitarian · theme: existing OnTimer */}
+      <section className="border-b border-zinc-800 py-8 sm:py-12 lg:py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <nav className="mb-8 hidden text-sm text-zinc-500 sm:block">
             <Link href="/" className="hover:text-zinc-300 transition-colors">
               Home
             </Link>
             <span className="mx-2">›</span>
-            <span className="text-zinc-300">How to Remember Your Medication</span>
+            <span className="text-zinc-300">Medication Schedule Generator</span>
           </nav>
 
-          <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl leading-tight">
-            How to Remember Your Medication (The Last 5 Minutes Fix)
-            <span className="text-zinc-400"> (Even If You Keep Missing It)</span>
-          </h1>
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.75fr)_minmax(30rem,1.25fr)] lg:gap-12">
+            <div className="min-w-0 lg:pt-8">
+              <h1 className="min-w-0 [overflow-wrap:anywhere] text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Turn your medication schedule into calendar events
+              </h1>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-zinc-300 sm:text-xl">
+                Choose your dose times, generate the schedule, and add every dose to Apple Calendar,
+                Google Calendar, or Outlook.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-zinc-500">
+                For organization only. Always follow your prescribed instructions.
+              </p>
+            </div>
 
-          {/* Direct Answer Box */}
-          <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
-            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">
-              Direct Answer
-            </p>
-            <p className="text-zinc-200 leading-relaxed">
-              If you keep missing your medication, the problem usually isn&apos;t forgetting — it&apos;s
-              what happens in the moment. Most people see a reminder, think &ldquo;I&apos;ll take it
-              in a minute,&rdquo; get distracted, and never follow through.
-            </p>
-            <p className="mt-3 text-zinc-300 leading-relaxed">
-              The fix isn&apos;t more reminders. It&apos;s a system that interrupts you at the exact
-              moment you&apos;re about to miss it.
-            </p>
+            <MedicationScheduleGenerator />
           </div>
-        </div>
-      </section>
-
-      {/* Tool */}
-      <section className="border-t border-zinc-800 py-12 sm:py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <MedicationScheduleGenerator />
         </div>
       </section>
 

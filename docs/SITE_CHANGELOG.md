@@ -4,6 +4,13 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-08-07
+
+- Reframed the medication page around its free calendar-schedule generator, replacing the long article-led hero and "Direct Answer" box with a concise outcome-led headline and an above-the-fold workbench layout.
+- Kept the supporting SEO/GEO article, FAQ schema, safety language, and related guides below the tool while updating page metadata to describe the generator directly.
+- Prevented desktop reloads from restoring a stale mid-article scroll position while preserving ordinary history navigation behavior.
+- Verification: medication schedule tests, optimized production build, reload behavior, and responsive review at 320, 375, 414, 768, and 1280 px.
+
 ### 2026-08-06
 
 - Added an explicit time-zone selection and an overnight-dose notice to the medication schedule generator so calendar exports do not silently create surprising late-night reminders.
