@@ -351,7 +351,7 @@ export default function MedicationScheduleGenerator() {
                 disabled={!timeZone}
                 className="w-full whitespace-nowrap rounded-full bg-green-500 px-6 py-3.5 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:translate-y-px disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400 sm:w-auto sm:px-8"
               >
-                Continue to Calendar
+                Add to Calendar
               </button>
               <p className="mt-2 text-xs leading-relaxed text-zinc-500">
                 On the next screen, tap <span className="font-semibold text-zinc-300">Add To Calendar</span> to save. Past dose times begin at their next occurrence.
