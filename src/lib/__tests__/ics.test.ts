@@ -17,6 +17,8 @@ assert(
   "calendar events should include the selected time zone",
 );
 assert(content.includes("RRULE:FREQ=DAILY;COUNT=7"), "calendar events should retain duration");
+assert(content.includes("BEGIN:VALARM"), "calendar events should include an alert");
+assert(content.includes("TRIGGER:PT0M"), "calendar alerts should fire at dose time");
 
 const afternoonExport = generateICS(
   [

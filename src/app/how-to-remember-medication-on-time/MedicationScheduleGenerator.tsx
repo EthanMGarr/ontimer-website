@@ -88,38 +88,21 @@ function Pill<T>({
   );
 }
 
-function getTimeZones(detectedTimeZone: string): string[] {
-  const fallback = [
-    "America/New_York",
-    "America/Chicago",
-    "America/Denver",
-    "America/Los_Angeles",
-    "America/Anchorage",
-    "Pacific/Honolulu",
-    "UTC",
-  ];
-  const supportedValuesOf = (
-    Intl as typeof Intl & { supportedValuesOf?: (key: "timeZone") => string[] }
-  ).supportedValuesOf;
-  const zones = supportedValuesOf ? supportedValuesOf("timeZone") : fallback;
-  return Array.from(new Set([detectedTimeZone, ...zones].filter(Boolean)));
-}
+const COMMON_TIME_ZONES = [
+  { value: "America/New_York", label: "ET" },
+  { value: "America/Chicago", label: "CT" },
+  { value: "America/Denver", label: "MT" },
+  { value: "America/Los_Angeles", label: "PT" },
+  { value: "America/Phoenix", label: "AZ" },
+  { value: "America/Anchorage", label: "AK" },
+  { value: "Pacific/Honolulu", label: "HI" },
+  { value: "UTC", label: "UTC" },
+];
 
-function formatTimeZone(timeZone: string): string {
-  const commonNames: Record<string, string> = {
-    "America/New_York": "ET",
-    "America/Chicago": "CT",
-    "America/Denver": "MT",
-    "America/Los_Angeles": "PT",
-    "America/Anchorage": "AKT",
-    "America/Phoenix": "MST",
-    "Pacific/Honolulu": "HST",
-    UTC: "UTC",
-  };
-  if (commonNames[timeZone]) return commonNames[timeZone];
-
-  const parts = timeZone.split("/").map((part) => part.replaceAll("_", " "));
-  return parts.at(-1) || timeZone;
+function getTimeZones(detectedTimeZone: string) {
+  const detected = COMMON_TIME_ZONES.find((zone) => zone.value === detectedTimeZone);
+  if (detected || !detectedTimeZone) return COMMON_TIME_ZONES;
+  return [{ value: detectedTimeZone, label: "Local" }, ...COMMON_TIME_ZONES];
 }
 
 export default function MedicationScheduleGenerator() {
@@ -236,7 +219,7 @@ export default function MedicationScheduleGenerator() {
             >
               {!timeZone && <option value="">Local time</option>}
               {timeZones.map((zone) => (
-                <option key={zone} value={zone}>{formatTimeZone(zone)}</option>
+                <option key={zone.value} value={zone.value}>{zone.label}</option>
               ))}
             </select>
           </div>
@@ -368,10 +351,10 @@ export default function MedicationScheduleGenerator() {
                 disabled={!timeZone}
                 className="w-full whitespace-nowrap rounded-full bg-green-500 px-6 py-3.5 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:translate-y-px disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400 sm:w-auto sm:px-8"
               >
-                Add to Calendar
+                Continue to Calendar
               </button>
               <p className="mt-2 text-xs leading-relaxed text-zinc-500">
-                Past dose times begin at their next occurrence. Works with Google Calendar, Apple Calendar, and Outlook Calendar.
+                On the next screen, tap <span className="font-semibold text-zinc-300">Add To Calendar</span> to save. Past dose times begin at their next occurrence.
               </p>
               <button
                 type="button"
@@ -384,14 +367,19 @@ export default function MedicationScheduleGenerator() {
             </div>
           ) : (
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-              <p className="text-sm font-semibold text-green-500">✓ Schedule downloaded</p>
+              <div>
+                <p className="text-sm font-semibold text-green-500">Calendar import opened</p>
+                <p className="mt-1 max-w-md text-xs leading-relaxed text-zinc-400">
+                  Your schedule is saved only after you tap <span className="font-semibold text-zinc-200">Add To Calendar</span> on the calendar screen.
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={handleDownload}
                 disabled={!timeZone}
                 className="whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 disabled:cursor-not-allowed disabled:text-zinc-700"
               >
-                Download again
+                Open calendar import again
               </button>
             </div>
           )}

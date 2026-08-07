@@ -7,6 +7,7 @@
 /// - One VEVENT per medication time slot
 /// - Daily recurrence via RRULE
 /// - Timezone-aware next-occurrence selection
+/// - A standard calendar alert at dose time
 /// - Client-side download trigger
 ///
 /// ## Don't Include
@@ -123,8 +124,14 @@ export function generateICS(
       `UID:${uid()}`,
       `DTSTAMP:${stamp}`,
       timeZone ? `DTSTART;TZID=${timeZone}:${dtstart}` : `DTSTART:${dtstart}`,
+      "DURATION:PT5M",
       `RRULE:FREQ=DAILY;COUNT=${days}`,
       `SUMMARY:${summary}`,
+      "BEGIN:VALARM",
+      "TRIGGER:PT0M",
+      "ACTION:DISPLAY",
+      `DESCRIPTION:${summary}`,
+      "END:VALARM",
       "END:VEVENT",
     ].join("\r\n");
   });
