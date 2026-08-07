@@ -6,6 +6,7 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-08-07
 
+- Simplified the medication generator's conversion state: removed the long explanatory pitch, introduced a compact automatic-alarm benefit, and made OnTimer the primary next step after calendar export while retaining a quiet download-again action. Verified with medication schedule tests, a production build, and responsive browser checks.
 - Reframed the medication page around its free calendar-schedule generator, replacing the long article-led hero and "Direct Answer" box with a concise outcome-led headline and an above-the-fold workbench layout.
 - Kept the supporting SEO/GEO article, FAQ schema, safety language, and related guides below the tool while updating page metadata to describe the generator directly.
 - Prevented desktop reloads from restoring a stale mid-article scroll position while preserving ordinary history navigation behavior.

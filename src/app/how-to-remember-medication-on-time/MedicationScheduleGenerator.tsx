@@ -6,8 +6,8 @@
 /// ## Include
 /// - Medication name, frequency, start date, start time, duration inputs
 /// - Editable time list (add/remove slots)
-/// - Primary "Add to Calendar" CTA + secondary ".ics" link
-/// - Conversion block shown immediately after Generate
+/// - Primary "Add to Calendar" CTA before export
+/// - Compact OnTimer handoff that becomes primary after export
 ///
 /// ## Don't Include
 /// - Page-level SEO or structured data (handled in page.tsx)
@@ -15,7 +15,7 @@
 ///
 /// Hallmark · component: medication schedule guard · genre: utilitarian · theme: existing OnTimer
 /// States: default · hover · focus · active · disabled · warning · confirmed · success
-/// Pre-emit critique: Philosophy 5 · Hierarchy 4 · Execution 4 · Specificity 5 · Restraint 5 · Variety 4
+/// Pre-emit critique: Philosophy 5 · Hierarchy 5 · Execution 4 · Specificity 5 · Restraint 5 · Variety 4
 
 "use client";
 
@@ -356,50 +356,52 @@ export default function MedicationScheduleGenerator() {
             This schedule is for planning purposes only and does not replace medical instructions.
           </p>
 
-          {/* PRIMARY CTA: Add to Calendar */}
-          <div>
-            <button
-              type="button"
-              onClick={handleDownload}
-              disabled={!timeZone}
-              className="w-full whitespace-nowrap rounded-full bg-green-500 px-6 py-3.5 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:translate-y-px disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400 sm:w-auto sm:px-8"
-            >
-              Add to Calendar
-            </button>
-            <p className="mt-2 text-xs text-zinc-500">Works with Google Calendar, Apple Calendar, and Outlook Calendar</p>
-          </div>
-
-          {/* SECONDARY: raw .ics link */}
-          <button
-            type="button"
-            onClick={handleDownload}
-            disabled={!timeZone}
-            className="whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 disabled:cursor-not-allowed disabled:text-zinc-700"
-          >
-            Download .ics file instead
-          </button>
-
-          {downloaded && (
-            <p className="text-xs text-green-500">
-              ✓ File ready — open it to add events to your calendar.
-            </p>
+          {!downloaded ? (
+            <div>
+              <button
+                type="button"
+                onClick={handleDownload}
+                disabled={!timeZone}
+                className="w-full whitespace-nowrap rounded-full bg-green-500 px-6 py-3.5 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:translate-y-px disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400 sm:w-auto sm:px-8"
+              >
+                Add to Calendar
+              </button>
+              <p className="mt-2 text-xs text-zinc-500">Works with Google Calendar, Apple Calendar, and Outlook Calendar</p>
+              <button
+                type="button"
+                onClick={handleDownload}
+                disabled={!timeZone}
+                className="mt-4 whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 disabled:cursor-not-allowed disabled:text-zinc-700"
+              >
+                Download .ics file instead
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <p className="text-sm font-semibold text-green-500">✓ Schedule downloaded</p>
+              <button
+                type="button"
+                onClick={handleDownload}
+                disabled={!timeZone}
+                className="whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 disabled:cursor-not-allowed disabled:text-zinc-700"
+              >
+                Download again
+              </button>
+            </div>
           )}
 
-          {/* Conversion block */}
-          <div className="rounded-xl border border-zinc-700 bg-zinc-800/60 p-5">
-            <p className="text-sm text-zinc-300 leading-relaxed">
-              These reminders will show up on your calendar.{" "}
-              <span className="text-white font-medium">
-                But calendar reminders are easy to ignore — that&apos;s how most people still miss doses.
-              </span>{" "}
-              If you&apos;ve ever thought &ldquo;I&apos;ll take it in a minute&rdquo; and then
-              didn&apos;t, that&apos;s the problem.
+          {/* OnTimer handoff */}
+          <div className="border-l-2 border-green-500 pl-4 sm:pl-5">
+            <p className="text-lg font-black text-white">Turn on automatic alarms</p>
+            <p className="mt-1 max-w-md text-sm leading-relaxed text-zinc-300">
+              Get OnTimer free and turn your medication calendar events into alarms that are harder to miss.
             </p>
-            <p className="mt-2 text-sm font-semibold text-white">
-              OnTimer makes sure you don&apos;t miss that moment.
-            </p>
-            <div className="mt-4" onClick={() => track("medication_ontimer_click", { location: "tool" })}>
-              <AppStoreButton size="sm" location="medication_tool_conversion" />
+            <div className="mt-4">
+              <AppStoreButton
+                size="md"
+                location={downloaded ? "medication_tool_after_export" : "medication_tool_conversion"}
+                label="Get OnTimer free"
+              />
             </div>
           </div>
 
