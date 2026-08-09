@@ -592,9 +592,9 @@ export default function AirportCalculator({
   }, [computedResult, genericRedesign]);
 
   useEffect(() => {
-    if (!computedResult) return;
+    if (!computedResult || !calendarAdded) return;
     trackAutomaticAlertCTAViewed("airport_leave_time", "result_automatic_alert");
-  }, [computedResult]);
+  }, [computedResult, calendarAdded]);
 
 
   // ── Manual calculate fallback ───────────────────────────────────────────────
@@ -796,7 +796,7 @@ export default function AirportCalculator({
                     onChange={setAirport}
                     placeholder="e.g. JFK, LAX, Newark"
                     inputClassName={inputClass}
-                    types="establishment"
+                    types="airport"
                   />
                 </div>
               </div>
@@ -1100,38 +1100,55 @@ export default function AirportCalculator({
                   {fmtDuration(factorMinutes(computedResult, "airport_buffer", computedResult.baseBufferMinutes))} buffer
                 </p>
 
-                {/* Calendar CTA */}
-                <div className="mt-5">
+                {/* Next step: save the recommendation before introducing the recurring solution. */}
+                <div className={`mt-5 rounded-xl border p-4 sm:p-5 ${
+                  calendarAdded
+                    ? "border-zinc-700 bg-zinc-950/40"
+                    : "border-green-500/40 bg-green-500/[0.07]"
+                }`}>
                   {calendarAdded ? (
-                    <div className="flex items-center gap-2 rounded-lg border border-green-900/50 bg-green-950/20 px-3 py-2.5">
-                      <span className="text-green-500">✓</span>
-                      <span className="text-sm font-semibold text-green-400">Added to calendar</span>
+                    <div className="flex items-start gap-2.5">
+                      <span className="mt-0.5 text-green-500">✓</span>
+                      <div>
+                        <p className="text-sm font-semibold text-white">Calendar event opened</p>
+                        <p className="mt-1 text-xs leading-relaxed text-zinc-400">
+                          Finish saving it in Google Calendar so your leave time is on your schedule.
+                        </p>
+                      </div>
                     </div>
                   ) : (
-                    <a
-                      href={buildGCalLink(computedResult.leaveTime, airport)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => {
-                        track("calendar_link_clicked", locationCode ? { location_code: locationCode } : undefined);
-                        setCalendarAdded(true);
-                      }}
-                      className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-600 bg-zinc-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:border-zinc-500 hover:bg-zinc-600"
-                    >
-                      <span>📅</span>
-                      <span>Add Leave Time to Calendar</span>
-                    </a>
+                    <>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-green-400">Your next step</p>
+                      <p className="mt-1 text-lg font-bold text-white">Put this leave time on your calendar.</p>
+                      <p className="mt-1 text-sm leading-relaxed text-zinc-400">
+                        We&apos;ll prepare the event. You&apos;ll confirm it in Google Calendar.
+                      </p>
+                      <a
+                        href={buildGCalLink(computedResult.leaveTime, airport)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => {
+                          track("calendar_link_clicked", locationCode ? { location_code: locationCode } : undefined);
+                          setCalendarAdded(true);
+                        }}
+                        className="mt-4 flex min-h-12 w-full items-center justify-center rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"
+                      >
+                        <span>Add Leave Time to Calendar</span>
+                      </a>
+                    </>
                   )}
                 </div>
 
                 {/* App download CTA — recurring solution before optional details */}
-                <div className="mt-5 border-t border-zinc-800 pt-5">
+                <div className={`mt-5 ${calendarAdded ? "rounded-xl border border-green-500/30 bg-green-500/[0.06] p-5" : "border-t border-zinc-800 pt-5"}`}>
                   <p className="text-base font-bold text-white">
-                    {genericRedesign ? "Never be late again." : "Get this alert automatically."}
+                    {calendarAdded ? "Now make every leave time harder to miss." : genericRedesign ? "Next time, let OnTimer do this automatically." : "Get this alert automatically."}
                   </p>
                   {genericRedesign ? (
                     <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
-                      OnTimer automatically reminds you when it&apos;s time to leave—for flights, meetings, appointments, and more.
+                      {calendarAdded
+                        ? "OnTimer turns calendar events into persistent alarms that require acknowledgement, so you act when it is time to leave."
+                        : "OnTimer uses your existing calendar to create automatic Time To Leave alarms for flights, meetings, appointments, and more."}
                     </p>
                   ) : (
                     <>
@@ -1147,9 +1164,9 @@ export default function AirportCalculator({
                   )}
                   <div className="mt-4">
                     <AppStoreButton
-                      size="md"
-                      label={genericRedesign ? "Get Leave Time Alerts" : "Download on the App Store"}
-                      className={genericRedesign ? "justify-center" : "w-full justify-center"}
+                      size={calendarAdded ? "lg" : "md"}
+                      label={calendarAdded ? "Get OnTimer Free" : genericRedesign ? "Get Automatic Leave Time Alarms" : "Download on the App Store"}
+                      className={calendarAdded ? "w-full justify-center" : genericRedesign ? "justify-center" : "w-full justify-center"}
                       location={locationCode
                         ? `airport_${locationCode.toLowerCase()}_result`
                         : "airport_calculator_inline"}

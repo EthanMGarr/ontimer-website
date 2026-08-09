@@ -24,8 +24,10 @@ import {
   includedPrimaryTypesFor,
   isAutocompleteInputEligible,
   requestAutocomplete,
+  shouldRequestPaidAutocomplete,
 } from "@/lib/places-autocomplete";
 import { guardGoogleApiRequest } from "@/lib/api-cost-guard";
+import { travelLocations } from "@/lib/travel-locations";
 
 const AUTOCOMPLETE_RATE_LIMIT = {
   name: "places-autocomplete",
@@ -53,12 +55,46 @@ export async function GET(req: NextRequest) {
   const input = (searchParams.get("input") ?? "").trim();
   const types = searchParams.get("types") ?? "geocode";
 
+  if (types === "airport") {
+    const query = input.toLowerCase();
+    const localPredictions = travelLocations
+      .filter((location) => location.kind === "airport")
+      .filter((location) => {
+        const searchable = [
+          location.code,
+          location.name,
+          location.shortName,
+          location.city,
+          ...(location.aliases ?? []),
+        ];
+        return searchable.some((value) => value.toLowerCase().startsWith(query));
+      })
+      .sort((a, b) => {
+        const aExact = a.code.toLowerCase() === query ? 1 : 0;
+        const bExact = b.code.toLowerCase() === query ? 1 : 0;
+        return bExact - aExact || (b.popularity ?? 0) - (a.popularity ?? 0);
+      })
+      .slice(0, 6)
+      .map((location) => ({
+        placeId: `airport-${location.code.toLowerCase()}`,
+        description: location.calculatorDestination,
+        mainText: `${location.code} · ${location.shortName}`,
+        secondaryText: location.city,
+      }));
+
+    if (localPredictions.length > 0 || !shouldRequestPaidAutocomplete(input, "airport")) {
+      return NextResponse.json({ predictions: localPredictions });
+    }
+  }
+
   // Enforce minimum chars server-side (client also enforces, but defense-in-depth)
   if (!isAutocompleteInputEligible(input) || input.length > 160) {
     return NextResponse.json({ predictions: [] });
   }
 
-  const includedPrimaryTypes = includedPrimaryTypesFor(types);
+  const includedPrimaryTypes = includedPrimaryTypesFor(
+    types === "airport" ? "establishment" : types
+  );
   if (!includedPrimaryTypes) {
     return NextResponse.json(
       { predictions: [], error: "Invalid types parameter" },

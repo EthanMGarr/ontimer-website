@@ -5,7 +5,7 @@
 /// All API calls are proxied through /api/places-autocomplete (key stays server-side).
 ///
 /// ## Include
-/// - Debounced autocomplete (600ms, min 4 chars)
+/// - Debounced autocomplete (600ms, min 4 chars; local airport-code matches at 2)
 /// - Dedup guard (skip fetch if input unchanged since last request)
 /// - Keyboard navigation (↑ ↓ Enter Escape)
 /// - Click-outside to dismiss
@@ -54,6 +54,7 @@ export default function PlaceAutocomplete({
   const [suggestions, setSuggestions] = useState<Prediction[]>([]);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isOpen, setIsOpen] = useState(false);
+  const minimumCharacters = types === "airport" ? 2 : 4;
 
   // Dedup: avoid re-fetching identical input
   const lastFetchedRef = useRef<string>("");
@@ -79,7 +80,7 @@ export default function PlaceAutocomplete({
 
   // ── Fetch suggestions ───────────────────────────────────────────────────────
   const fetchSuggestions = useCallback(async (input: string) => {
-    if (input.trim().length < 4) {
+    if (input.trim().length < minimumCharacters) {
       setSuggestions([]);
       setIsOpen(false);
       return;
@@ -111,7 +112,7 @@ export default function PlaceAutocomplete({
       setSuggestions([]);
       setIsOpen(false);
     }
-  }, [types]);
+  }, [minimumCharacters, types]);
 
   // ── Input change handler ────────────────────────────────────────────────────
   const handleChange = useCallback(
@@ -127,7 +128,7 @@ export default function PlaceAutocomplete({
       // Clear pending debounce
       if (debounceRef.current) clearTimeout(debounceRef.current);
 
-      if (val.trim().length < 4) {
+      if (val.trim().length < minimumCharacters) {
         setSuggestions([]);
         setIsOpen(false);
         return;
@@ -137,7 +138,7 @@ export default function PlaceAutocomplete({
         fetchSuggestions(val);
       }, 600);
     },
-    [onChange, fetchSuggestions]
+    [onChange, fetchSuggestions, minimumCharacters]
   );
 
   // ── Selection ───────────────────────────────────────────────────────────────

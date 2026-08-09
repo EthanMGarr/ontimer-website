@@ -4,6 +4,12 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-08-09
+
+- Refocused the generic airport calculator result flow around one clear next step: add the recommended leave time to Google Calendar, then promote OnTimer as the automatic persistent-alarm layer after the calendar handoff opens.
+- Added local airport-catalog autocomplete for short IATA-code input such as BWI while preserving the four-character minimum for paid Google Places requests.
+- Verification: autocomplete regression tests and optimized production build passed; the BWI match, pre/post-calendar conversion states, console, and horizontal overflow were checked at 320, 375, 414, and 768 px.
+
 ### 2026-08-07
 
 - Documented the medication generator's permanent UX, calendar-import, next-occurrence, timezone, alert, conversion, and regression-testing contracts in `CLAUDE.md` and `README.md`.

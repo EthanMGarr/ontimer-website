@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import {
   AUTOCOMPLETE_FIELD_MASK,
   includedPrimaryTypesFor,
+  isAirportCodeQuery,
   isAutocompleteInputEligible,
   requestAutocomplete,
+  shouldRequestPaidAutocomplete,
 } from "../places-autocomplete";
 
 async function main() {
@@ -11,6 +13,12 @@ async function main() {
   assert.equal(isAutocompleteInputEligible("  ab  "), false);
   assert.equal(isAutocompleteInputEligible("abc"), false);
   assert.equal(isAutocompleteInputEligible("abcd"), true);
+  assert.equal(isAirportCodeQuery("BWI"), true);
+  assert.equal(isAirportCodeQuery(" bw "), true);
+  assert.equal(isAirportCodeQuery("BWI Airport"), false);
+  assert.equal(shouldRequestPaidAutocomplete("BWI", "airport"), false);
+  assert.equal(shouldRequestPaidAutocomplete("Baltimore", "airport"), true);
+  assert.equal(shouldRequestPaidAutocomplete("BWI", "place"), false);
   assert.equal(includedPrimaryTypesFor("not-a-google-type"), null);
   assert.deepEqual(includedPrimaryTypesFor("geocode"), ["geocode"]);
 

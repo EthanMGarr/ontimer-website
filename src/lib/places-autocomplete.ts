@@ -29,6 +29,18 @@ export function isAutocompleteInputEligible(input: string): boolean {
   return input.trim().length >= 4;
 }
 
+export function isAirportCodeQuery(input: string): boolean {
+  return /^[a-z]{2,3}$/i.test(input.trim());
+}
+
+export function shouldRequestPaidAutocomplete(
+  input: string,
+  mode: "place" | "airport" = "place"
+): boolean {
+  if (mode === "airport" && isAirportCodeQuery(input)) return false;
+  return isAutocompleteInputEligible(input);
+}
+
 // These are the only legacy values used or intentionally supported by the
 // component interface. `address` has no New API collection equivalent.
 const PERMITTED_TYPES: Readonly<Record<string, readonly string[]>> = {
