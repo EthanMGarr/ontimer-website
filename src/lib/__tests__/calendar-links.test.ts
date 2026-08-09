@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { buildGoogleCalendarLink } from "../calendar-links";
+import { buildGoogleCalendarLink, buildIcsCalendarDataUri } from "../calendar-links";
 
 const start = new Date(2026, 7, 9, 8, 30, 0);
 const link = new URL(buildGoogleCalendarLink({
@@ -23,5 +23,18 @@ const appointmentLink = new URL(buildGoogleCalendarLink({
 }));
 assert.equal(appointmentLink.searchParams.get("location"), "123 Main St");
 assert.equal(appointmentLink.searchParams.get("dates"), "20260809T083000/20260809T090000");
+
+const ics = decodeURIComponent(buildIcsCalendarDataUri({
+  title: "Arrive at Smith, Jones & Co.",
+  start,
+  end: new Date(2026, 7, 9, 9, 0, 0),
+  details: "Calculated by OnTimer",
+  location: "123 Main St; Suite 2",
+}).replace("data:text/calendar;charset=utf-8,", ""));
+assert.match(ics, /BEGIN:VCALENDAR\r\nVERSION:2\.0/);
+assert.match(ics, /DTSTART:20260809T123000Z/);
+assert.match(ics, /DTEND:20260809T130000Z/);
+assert.match(ics, /SUMMARY:Arrive at Smith\\, Jones & Co\./);
+assert.match(ics, /LOCATION:123 Main St\\; Suite 2/);
 
 console.log("calendar link tests passed");

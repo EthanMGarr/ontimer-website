@@ -8,7 +8,7 @@ import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNoti
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
-import { buildGoogleCalendarLink } from "@/lib/calendar-links";
+import { buildGoogleCalendarLink, buildIcsCalendarDataUri } from "@/lib/calendar-links";
 import type { SecurityEstimate } from "@/app/api/security-wait/route";
 import type { CalculatorExample } from "@/lib/travel-locations";
 import {
@@ -352,7 +352,7 @@ export default function AirportCalculator({
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
 
   // ── Interaction state ───────────────────────────────────────────────────────
-  const [calendarAdded, setCalendarAdded] = useState(false);
+  const [calendarProvider, setCalendarProvider] = useState<"google" | "ics" | null>(null);
   const [showBreakdown, setShowBreakdown] = useState(!genericRedesign);
   const [formExpanded, setFormExpanded] = useState(true);
 
@@ -403,7 +403,7 @@ export default function AirportCalculator({
     setHasTrafficData(false);
     setTrafficBasis("none");
     setIsFetchingTravel(false);
-    setCalendarAdded(false);
+    setCalendarProvider(null);
   }, [origin, airport, departureDate, departureTime]);
 
   // ── Derived values ──────────────────────────────────────────────────────────
@@ -1083,13 +1083,17 @@ export default function AirportCalculator({
                     start: computedResult.leaveTime,
                     details: "Calculated by OnTimer",
                   })}
-                  calendarLabel="Add Leave Time to Calendar"
-                  calendarOpened={calendarAdded}
-                  setCalendarOpened={setCalendarAdded}
+                  alternateCalendarHref={buildIcsCalendarDataUri({
+                    title: airport ? `Leave for ${buildAirportShortDisplay(airport)}` : "Leave for airport",
+                    start: computedResult.leaveTime,
+                    details: "Calculated by OnTimer",
+                  })}
+                  alternateCalendarFilename="airport-leave-time.ics"
+                  calendarProvider={calendarProvider}
+                  setCalendarProvider={setCalendarProvider}
                   calculatorType="airport_leave_time"
                   readyHeading="Put this leave time on your calendar."
-                  readyBody="We’ll prepare the event. You’ll confirm it in Google Calendar."
-                  openedBody="Finish saving it in Google Calendar so your leave time is on your schedule."
+                  readyBody="Choose Google Calendar, or use Apple Calendar, Outlook, or another calendar."
                   appBeforeHeading="Next time, let OnTimer do this automatically."
                   appBeforeBody="OnTimer uses your existing calendar to create automatic Time To Leave alarms for flights, meetings, appointments, and more."
                   appAfterHeading="Now make every leave time harder to miss."
@@ -1226,7 +1230,7 @@ export default function AirportCalculator({
                 {fmtTime(computedResult.leaveTime)}
               </p>
             </div>
-            {calendarAdded ? (
+            {calendarProvider ? (
               <span className="flex items-center gap-1.5 text-sm font-semibold text-green-400">
                 <span>✓</span>
                 <span>Saved</span>
@@ -1245,12 +1249,12 @@ export default function AirportCalculator({
                     "calendar_link_clicked_mobile_sticky",
                     locationCode ? { location_code: locationCode } : undefined
                   );
-                  setCalendarAdded(true);
+                  setCalendarProvider("google");
                 }}
                 className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-semibold text-white transition-colors active:bg-zinc-700"
               >
                 <span>📅</span>
-                <span>Add to Calendar</span>
+                <span>Add to Google Calendar</span>
               </a>
             )}
           </div>

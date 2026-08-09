@@ -21,7 +21,7 @@ import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHando
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
-import { buildGoogleCalendarLink } from "@/lib/calendar-links";
+import { buildGoogleCalendarLink, buildIcsCalendarDataUri } from "@/lib/calendar-links";
 
 type TravelMode = "DRIVE" | "WALK" | "TRANSIT";
 type PlanningMode = "today" | "future";
@@ -191,13 +191,13 @@ export default function WakeUpCalculator() {
   const [result, setResult] = useState<CalculatorResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
-  const [calendarOpened, setCalendarOpened] = useState(false);
+  const [calendarProvider, setCalendarProvider] = useState<"google" | "ics" | null>(null);
 
   const hasRouteInputs =
     origin.trim().length >= 2 && destination.trim().length >= 2;
 
   useEffect(() => {
-    setCalendarOpened(false);
+    setCalendarProvider(null);
   }, [destination, arrivalDate, arrivalTime, travelMode, getReadyTime, buffer, extraTime]);
 
   function handleOriginChange(value: string) {
@@ -300,15 +300,17 @@ export default function WakeUpCalculator() {
     });
   }
 
-  const arrivalCalendarHref = result
-    ? buildGoogleCalendarLink({
+  const arrivalCalendarEvent = result
+    ? {
         title: `Arrive at ${destination.split(",")[0] || "destination"}`,
         start: result.arrivalTime,
         end: new Date(result.arrivalTime.getTime() + 30 * 60 * 1000),
         details: `Wake-up time calculated by OnTimer: ${fmtTime(result.wakeUpTime)}`,
         location: destination || undefined,
-      })
-    : "";
+      }
+    : null;
+  const arrivalCalendarHref = arrivalCalendarEvent ? buildGoogleCalendarLink(arrivalCalendarEvent) : "";
+  const arrivalCalendarIcsHref = arrivalCalendarEvent ? buildIcsCalendarDataUri(arrivalCalendarEvent) : "";
 
   return (
     <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 sm:p-8">
@@ -553,14 +555,14 @@ export default function WakeUpCalculator() {
 
               <CalendarOnTimerHandoff
                 calendarHref={arrivalCalendarHref}
-                calendarLabel="Add Arrival to Calendar"
-                calendarOpened={calendarOpened}
-                setCalendarOpened={setCalendarOpened}
+                alternateCalendarHref={arrivalCalendarIcsHref}
+                alternateCalendarFilename="arrival-event.ics"
+                calendarProvider={calendarProvider}
+                setCalendarProvider={setCalendarProvider}
                 calculatorType="wake_up"
                 readyHeading="Put the appointment behind this wake-up time on your calendar."
-                readyBody="We’ll add your arrival time and destination—not pretend a calendar notification is a wake-up alarm."
-                openedHeading="Arrival event opened"
-                openedBody="Finish saving it in Google Calendar so your destination and arrival time are on your schedule."
+                readyBody="Choose Google Calendar, or use the calendar already on your device. We’ll add your arrival time and destination—not pretend a calendar event is a wake-up alarm."
+                openedItemLabel="arrival event"
                 appBeforeHeading="Then let OnTimer protect the moment to leave."
                 appBeforeBody="OnTimer uses the saved calendar event and its location to create an automatic alarm when it is time to head out."
                 appAfterHeading="Make the departure moment harder to miss."

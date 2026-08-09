@@ -9,7 +9,7 @@ import {
   trackCalculatorCompleted,
   trackCalculatorStarted,
 } from "@/lib/analytics";
-import { buildGoogleCalendarLink } from "@/lib/calendar-links";
+import { buildGoogleCalendarLink, buildIcsCalendarDataUri } from "@/lib/calendar-links";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -226,7 +226,7 @@ export default function LeaveTimeCalculator() {
   const [result, setResult] = useState<CalculatorResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
-  const [calendarOpened, setCalendarOpened] = useState(false);
+  const [calendarProvider, setCalendarProvider] = useState<"google" | "ics" | null>(null);
 
   // Mobile: form starts expanded; collapses after first result
   const [formExpanded, setFormExpanded] = useState(true);
@@ -250,7 +250,7 @@ export default function LeaveTimeCalculator() {
     setResult(null);
     setError(null);
     setFallbackNotice(null);
-    setCalendarOpened(false);
+    setCalendarProvider(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destination, origin, arrivalDate, arrivalTime, travelMode, buffer, prepTime]);
 
@@ -407,13 +407,15 @@ export default function LeaveTimeCalculator() {
   }
 
   const travelModeLabel = { DRIVE: "drive", WALK: "walk", TRANSIT: "transit" }[travelMode];
-  const leaveCalendarHref = result
-    ? buildGoogleCalendarLink({
+  const leaveCalendarEvent = result
+    ? {
         title: `Leave for ${destination.split(",")[0] || "destination"}`,
         start: result.leaveTime,
         details: "Calculated by OnTimer",
-      })
-    : "";
+      }
+    : null;
+  const leaveCalendarHref = leaveCalendarEvent ? buildGoogleCalendarLink(leaveCalendarEvent) : "";
+  const leaveCalendarIcsHref = leaveCalendarEvent ? buildIcsCalendarDataUri(leaveCalendarEvent) : "";
   const recipeStep = (n: number) => (
     <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-zinc-700 text-[11px] font-bold text-zinc-400">
       {n}
@@ -426,7 +428,7 @@ export default function LeaveTimeCalculator() {
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
 
           {/* ══ Results ══════════════════════════════════════════════════════════ */}
-          <div className={`${result ? "order-1" : "order-2"} lg:order-2 lg:sticky lg:top-6 lg:self-start`}>
+          <div className={`${result ? "order-1" : "order-2"} min-w-0 lg:order-2 lg:sticky lg:top-6 lg:self-start`}>
             {result ? (
               <div className="rounded-xl border border-zinc-700 bg-zinc-800/80 p-5 transition-all duration-300">
 
@@ -502,13 +504,13 @@ export default function LeaveTimeCalculator() {
 
                 <CalendarOnTimerHandoff
                   calendarHref={leaveCalendarHref}
-                  calendarLabel="Add Leave Time to Calendar"
-                  calendarOpened={calendarOpened}
-                  setCalendarOpened={setCalendarOpened}
+                  alternateCalendarHref={leaveCalendarIcsHref}
+                  alternateCalendarFilename="leave-time.ics"
+                  calendarProvider={calendarProvider}
+                  setCalendarProvider={setCalendarProvider}
                   calculatorType="leave_time"
                   readyHeading="Put this leave time on your calendar."
-                  readyBody="We’ll prepare the event. You’ll confirm it in Google Calendar."
-                  openedBody="Finish saving it in Google Calendar so the moment to leave is on your schedule."
+                  readyBody="Choose Google Calendar, or use the calendar already on your device."
                   appBeforeHeading="Next time, let OnTimer do this automatically."
                   appBeforeBody="OnTimer uses your existing calendar to create automatic alarms before meetings, appointments, and trips."
                   appAfterHeading="Now make every leave time harder to miss."
@@ -522,7 +524,7 @@ export default function LeaveTimeCalculator() {
           </div>
 
           {/* ══ Inputs ════════════════════════════════════════════════════════════ */}
-          <div className={`${result ? "order-2" : "order-1"} flex flex-col gap-5 lg:order-1`}>
+          <div className={`${result ? "order-2" : "order-1"} min-w-0 flex flex-col gap-5 lg:order-1`}>
 
             {/* Mobile accordion toggle — hidden on desktop */}
             <button
@@ -810,7 +812,7 @@ export default function LeaveTimeCalculator() {
 
               {/* CTA — sticky on desktop; swaps to App Store after result */}
               <div className="lg:sticky lg:bottom-4 bg-zinc-900 pb-1 pt-1">
-                {result && calendarOpened ? (
+                {result && calendarProvider ? (
                   <div>
                     <AppStoreButton
                       size="sm"
@@ -835,11 +837,11 @@ export default function LeaveTimeCalculator() {
                     rel="noopener noreferrer"
                     onClick={() => {
                       trackCalendarHandoffOpened("leave_time", "google", { placement: "desktop_sticky" });
-                      setCalendarOpened(true);
+                      setCalendarProvider("google");
                     }}
                     className="flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"
                   >
-                    Add Leave Time to Calendar
+                    Add to Google Calendar
                   </a>
                 ) : (
                   <>
@@ -882,7 +884,7 @@ export default function LeaveTimeCalculator() {
                 {fmtTime(result.leaveTime)}
               </p>
             </div>
-            {calendarOpened ? (
+            {calendarProvider ? (
               <AppStoreButton
                 size="sm"
                 label="Get OnTimer Free"
@@ -897,11 +899,11 @@ export default function LeaveTimeCalculator() {
                 rel="noopener noreferrer"
                 onClick={() => {
                   trackCalendarHandoffOpened("leave_time", "google", { placement: "mobile_sticky" });
-                  setCalendarOpened(true);
+                  setCalendarProvider("google");
                 }}
                 className="flex min-h-11 flex-shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-4 py-2 text-sm font-bold text-black active:bg-green-600"
               >
-                Add to Calendar
+                Add to Google Calendar
               </a>
             )}
           </div>

@@ -10,14 +10,14 @@ import {
 
 interface CalendarOnTimerHandoffProps {
   calendarHref: string;
-  calendarLabel: string;
-  calendarOpened: boolean;
-  setCalendarOpened: (opened: boolean) => void;
+  alternateCalendarHref: string;
+  alternateCalendarFilename: string;
+  calendarProvider: "google" | "ics" | null;
+  setCalendarProvider: (provider: "google" | "ics" | null) => void;
   calculatorType: string;
   readyHeading: string;
   readyBody: string;
-  openedHeading?: string;
-  openedBody: string;
+  openedItemLabel?: string;
   appBeforeHeading: string;
   appBeforeBody: string;
   appAfterHeading: string;
@@ -28,14 +28,14 @@ interface CalendarOnTimerHandoffProps {
 
 export default function CalendarOnTimerHandoff({
   calendarHref,
-  calendarLabel,
-  calendarOpened,
-  setCalendarOpened,
+  alternateCalendarHref,
+  alternateCalendarFilename,
+  calendarProvider,
+  setCalendarProvider,
   calculatorType,
   readyHeading,
   readyBody,
-  openedHeading = "Calendar event opened",
-  openedBody,
+  openedItemLabel = "event",
   appBeforeHeading,
   appBeforeBody,
   appAfterHeading,
@@ -44,13 +44,21 @@ export default function CalendarOnTimerHandoff({
   analyticsContext = {},
 }: CalendarOnTimerHandoffProps) {
   useEffect(() => {
-    if (!calendarOpened) return;
+    if (!calendarProvider) return;
     trackAutomaticAlertCTAViewed(calculatorType, "post_calendar_automatic_alert");
-  }, [calculatorType, calendarOpened]);
+  }, [calculatorType, calendarProvider]);
+
+  const calendarOpened = calendarProvider !== null;
+  const openedHeading = calendarProvider === "ics"
+    ? "Calendar file ready"
+    : `Google Calendar ${openedItemLabel} opened`;
+  const openedBody = calendarProvider === "ics"
+    ? "Open the .ics file with Apple Calendar, Outlook, or another calendar, then finish importing the event."
+    : "Finish saving it in Google Calendar so it is added to your schedule.";
 
   return (
     <>
-      <div className={`mt-5 rounded-xl border p-4 sm:p-5 ${
+      <div className={`mt-5 min-w-0 rounded-xl border p-4 sm:p-5 ${
         calendarOpened
           ? "border-zinc-700 bg-zinc-950/40"
           : "border-green-500/40 bg-green-500/[0.07]"
@@ -67,7 +75,19 @@ export default function CalendarOnTimerHandoff({
                 rel="noopener noreferrer"
                 className="mt-2 inline-flex whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
               >
-                Open calendar again
+                Open Google Calendar again
+              </a>
+              <span className="mx-2 text-zinc-700" aria-hidden="true">·</span>
+              <a
+                href={alternateCalendarHref}
+                download={alternateCalendarFilename}
+                onClick={() => {
+                  trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext);
+                  setCalendarProvider("ics");
+                }}
+                className="mt-2 inline-flex whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+              >
+                Other calendars
               </a>
             </div>
           </div>
@@ -82,11 +102,22 @@ export default function CalendarOnTimerHandoff({
               rel="noopener noreferrer"
               onClick={() => {
                 trackCalendarHandoffOpened(calculatorType, "google", analyticsContext);
-                setCalendarOpened(true);
+                setCalendarProvider("google");
               }}
               className="mt-4 flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"
             >
-              {calendarLabel}
+              Add to Google Calendar
+            </a>
+            <a
+              href={alternateCalendarHref}
+              download={alternateCalendarFilename}
+              onClick={() => {
+                trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext);
+                setCalendarProvider("ics");
+              }}
+              className="mt-3 inline-flex whitespace-nowrap text-xs font-medium text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+            >
+              Apple, Outlook, or another calendar
             </a>
           </>
         )}
@@ -106,7 +137,7 @@ export default function CalendarOnTimerHandoff({
         <div className="mt-4">
           <AppStoreButton
             size={calendarOpened ? "lg" : "md"}
-            label={calendarOpened ? "Get OnTimer Free" : "Get Automatic Calendar Alarms"}
+            label={calendarOpened ? "Get OnTimer Free" : "Get Automatic Alarms"}
             className={calendarOpened ? "w-full justify-center whitespace-nowrap" : "justify-center whitespace-nowrap"}
             location={appLocation}
             analyticsContext={{

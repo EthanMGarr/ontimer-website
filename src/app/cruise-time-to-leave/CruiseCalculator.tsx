@@ -22,7 +22,7 @@ import {
   type CruiseTransportationMode,
 } from "@/core/leave-time/plugins/cruise-terminals";
 import type { CalculatorExample } from "@/lib/travel-locations";
-import { buildGoogleCalendarLink } from "@/lib/calendar-links";
+import { buildGoogleCalendarLink, buildIcsCalendarDataUri } from "@/lib/calendar-links";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 
 interface TravelTimeResponse {
@@ -213,7 +213,7 @@ export default function CruiseCalculator({
   const [trafficBasis, setTrafficBasis] = useState<TrafficBasis>("none");
   const [isFetchingTravel, setIsFetchingTravel] = useState(false);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
-  const [calendarAdded, setCalendarAdded] = useState(false);
+  const [calendarProvider, setCalendarProvider] = useState<"google" | "ics" | null>(null);
   const resultPanelRef = useRef<HTMLDivElement>(null);
 
   const hasRouteInputs = origin.trim().length >= 2 && terminal.trim().length >= 2;
@@ -317,7 +317,7 @@ export default function CruiseCalculator({
   }, [computedResult]);
 
   useEffect(() => {
-    setCalendarAdded(false);
+    setCalendarProvider(null);
   }, [boardingDate, boardingTime, terminal, eventKind, transportationMode]);
 
   async function handleCalculate() {
@@ -654,13 +654,17 @@ export default function CruiseCalculator({
                   start: computedResult.leaveAt,
                   details: "Calculated by OnTimer",
                 })}
-                calendarLabel="Add Leave Time to Calendar"
-                calendarOpened={calendarAdded}
-                setCalendarOpened={setCalendarAdded}
+                alternateCalendarHref={buildIcsCalendarDataUri({
+                  title: terminal ? `Leave for ${terminal.split(",")[0]}` : "Leave for cruise terminal",
+                  start: computedResult.leaveAt,
+                  details: "Calculated by OnTimer",
+                })}
+                alternateCalendarFilename="cruise-leave-time.ics"
+                calendarProvider={calendarProvider}
+                setCalendarProvider={setCalendarProvider}
                 calculatorType="cruise_leave_time"
                 readyHeading="Put this leave time on your calendar."
-                readyBody="We’ll prepare the event. You’ll confirm it in Google Calendar."
-                openedBody="Finish saving it in Google Calendar so your cruise leave time is on your schedule."
+                readyBody="Choose Google Calendar, or use Apple Calendar, Outlook, or another calendar."
                 appBeforeHeading="Next cruise, let OnTimer protect the moment to leave."
                 appBeforeBody="OnTimer uses your existing calendar to create automatic alarms before cruises, flights, meetings, and appointments."
                 appAfterHeading="Make the departure alarm harder to miss."
