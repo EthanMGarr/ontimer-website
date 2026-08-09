@@ -134,6 +134,18 @@ export function trackAutomaticAlertCTAViewed(
   });
 }
 
+export function trackCalendarHandoffOpened(
+  calculatorType: string,
+  provider: string,
+  context: AnalyticsParams = {}
+): void {
+  fireEvent("calendar_handoff_opened", {
+    calculator_type: calculatorType,
+    calendar_provider: provider,
+    ...context,
+  });
+}
+
 /** Fire when the Android waitlist CTA is clicked. */
 export function trackAndroidWaitlistClick(location: string): void {
   fireEvent("android_waitlist_click", baseParams(location));

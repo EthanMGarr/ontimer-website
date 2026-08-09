@@ -6,6 +6,9 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-08-09
 
+- Standardized the Airport, Cruise, General Leave Time, and Wake-Up result journeys around a progressive calendar handoff: save the useful event first, then elevate OnTimer as the automatic persistent-alarm layer. Wake-Up saves the underlying arrival appointment rather than misrepresenting a calendar event as a wake-up alarm, while Airport Theory continues to route risky results through the safe calculator first.
+- Added shared Google Calendar event construction, accurate “calendar opened” states, retry actions, and funnel analytics for calendar handoffs and post-calendar App Store prompts. Medication tooling was intentionally left unchanged.
+- Verification: calendar-link, autocomplete, and leave-time regression tests passed; the optimized production build passed; calendar payloads and pre/post-handoff states were exercised for General Leave Time, Wake-Up, and Cruise; Airport, Cruise, General, Wake-Up, and Airport Theory showed no horizontal overflow at 320, 375, 414, or 768 px and emitted no console errors.
 - Refocused the generic airport calculator result flow around one clear next step: add the recommended leave time to Google Calendar, then promote OnTimer as the automatic persistent-alarm layer after the calendar handoff opens.
 - Added local airport-catalog autocomplete for short IATA-code input such as BWI while preserving the four-character minimum for paid Google Places requests.
 - Verification: autocomplete regression tests and optimized production build passed; the BWI match, pre/post-calendar conversion states, console, and horizontal overflow were checked at 320, 375, 414, and 768 px.

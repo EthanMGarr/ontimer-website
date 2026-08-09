@@ -2,12 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
+import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import {
-  trackAutomaticAlertCTAViewed,
+  trackCalendarHandoffOpened,
   trackCalculatorCompleted,
   trackCalculatorStarted,
 } from "@/lib/analytics";
+import { buildGoogleCalendarLink } from "@/lib/calendar-links";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -224,6 +226,7 @@ export default function LeaveTimeCalculator() {
   const [result, setResult] = useState<CalculatorResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
+  const [calendarOpened, setCalendarOpened] = useState(false);
 
   // Mobile: form starts expanded; collapses after first result
   const [formExpanded, setFormExpanded] = useState(true);
@@ -247,6 +250,7 @@ export default function LeaveTimeCalculator() {
     setResult(null);
     setError(null);
     setFallbackNotice(null);
+    setCalendarOpened(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destination, origin, arrivalDate, arrivalTime, travelMode, buffer, prepTime]);
 
@@ -255,11 +259,6 @@ export default function LeaveTimeCalculator() {
     if (result && typeof window !== "undefined" && window.innerWidth < 1024) {
       setFormExpanded(false);
     }
-  }, [result]);
-
-  useEffect(() => {
-    if (!result) return;
-    trackAutomaticAlertCTAViewed("leave_time", "result_automatic_alert");
   }, [result]);
 
   function handleTravelModeChange(mode: TravelMode) {
@@ -408,6 +407,13 @@ export default function LeaveTimeCalculator() {
   }
 
   const travelModeLabel = { DRIVE: "drive", WALK: "walk", TRANSIT: "transit" }[travelMode];
+  const leaveCalendarHref = result
+    ? buildGoogleCalendarLink({
+        title: `Leave for ${destination.split(",")[0] || "destination"}`,
+        start: result.leaveTime,
+        details: "Calculated by OnTimer",
+      })
+    : "";
   const recipeStep = (n: number) => (
     <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-zinc-700 text-[11px] font-bold text-zinc-400">
       {n}
@@ -494,24 +500,21 @@ export default function LeaveTimeCalculator() {
                   </span>
                 </button>
 
-                {/* App Store CTA */}
-                <div className="mt-4 border-t border-zinc-800 pt-4">
-                  <p className="text-sm font-bold text-white">Get this alert automatically.</p>
-                  <p className="mt-1 text-xs leading-relaxed text-zinc-400">
-                    OnTimer fires a real alarm — sound and haptics — when it&apos;s time to
-                    leave. Not a notification you&apos;ll swipe away.
-                  </p>
-                  <div className="mt-3">
-                    <AppStoreButton
-                      size="sm"
-                      location="leave_calculator_result"
-                      analyticsContext={{
-                        calculator_type: "leave_time",
-                        cta_variant: "result_automatic_alert",
-                      }}
-                    />
-                  </div>
-                </div>
+                <CalendarOnTimerHandoff
+                  calendarHref={leaveCalendarHref}
+                  calendarLabel="Add Leave Time to Calendar"
+                  calendarOpened={calendarOpened}
+                  setCalendarOpened={setCalendarOpened}
+                  calculatorType="leave_time"
+                  readyHeading="Put this leave time on your calendar."
+                  readyBody="We’ll prepare the event. You’ll confirm it in Google Calendar."
+                  openedBody="Finish saving it in Google Calendar so the moment to leave is on your schedule."
+                  appBeforeHeading="Next time, let OnTimer do this automatically."
+                  appBeforeBody="OnTimer uses your existing calendar to create automatic alarms before meetings, appointments, and trips."
+                  appAfterHeading="Now make every leave time harder to miss."
+                  appAfterBody="OnTimer turns calendar events into persistent alarms with sound and haptics when it is time to act."
+                  appLocation="leave_calculator_result"
+                />
               </div>
             ) : (
               <SkeletonResult />
@@ -807,7 +810,7 @@ export default function LeaveTimeCalculator() {
 
               {/* CTA — sticky on desktop; swaps to App Store after result */}
               <div className="lg:sticky lg:bottom-4 bg-zinc-900 pb-1 pt-1">
-                {result ? (
+                {result && calendarOpened ? (
                   <div>
                     <AppStoreButton
                       size="sm"
@@ -825,6 +828,19 @@ export default function LeaveTimeCalculator() {
                       ← Recalculate
                     </button>
                   </div>
+                ) : result ? (
+                  <a
+                    href={leaveCalendarHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => {
+                      trackCalendarHandoffOpened("leave_time", "google", { placement: "desktop_sticky" });
+                      setCalendarOpened(true);
+                    }}
+                    className="flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"
+                  >
+                    Add Leave Time to Calendar
+                  </a>
                 ) : (
                   <>
                     <button
@@ -866,11 +882,28 @@ export default function LeaveTimeCalculator() {
                 {fmtTime(result.leaveTime)}
               </p>
             </div>
-            <AppStoreButton
-              size="sm"
-              location="leave_calculator_mobile_sticky"
-              placement="above"
-            />
+            {calendarOpened ? (
+              <AppStoreButton
+                size="sm"
+                label="Get OnTimer Free"
+                location="leave_calculator_mobile_sticky"
+                placement="above"
+                className="whitespace-nowrap"
+              />
+            ) : (
+              <a
+                href={leaveCalendarHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  trackCalendarHandoffOpened("leave_time", "google", { placement: "mobile_sticky" });
+                  setCalendarOpened(true);
+                }}
+                className="flex min-h-11 flex-shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-4 py-2 text-sm font-bold text-black active:bg-green-600"
+              >
+                Add to Calendar
+              </a>
+            )}
           </div>
         </div>
       )}

@@ -723,8 +723,11 @@ function ResultPanel({ result, onShare, shareStatus }: {
 
       {/* App CTA */}
       <div className="pt-2">
-        <p className="mb-4 text-sm font-semibold text-zinc-300">Or stop doing this to yourself and use OnTimer.</p>
-        <AppStoreButton size="sm" location="airport_theory_result" />
+        <p className="text-sm font-semibold text-zinc-300">After you get the safe recommendation</p>
+        <p className="mb-4 mt-1 text-xs leading-relaxed text-zinc-500">
+          Put that real leave time on your calendar, then use OnTimer to make the moment harder to miss.
+        </p>
+        <AppStoreButton size="sm" label="Get OnTimer Free" location="airport_theory_result" />
       </div>
 
     </div>

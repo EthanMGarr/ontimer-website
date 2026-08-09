@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AppStoreButton } from "@/components/CTAButton";
+import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
 import CalculationFactorList from "@/components/leave-time/CalculationFactorList";
 import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNotice";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
@@ -22,6 +22,8 @@ import {
   type CruiseTransportationMode,
 } from "@/core/leave-time/plugins/cruise-terminals";
 import type { CalculatorExample } from "@/lib/travel-locations";
+import { buildGoogleCalendarLink } from "@/lib/calendar-links";
+import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 
 interface TravelTimeResponse {
   durationMinutes: number;
@@ -98,20 +100,6 @@ function confidenceLabel(confidence: CruiseResult["confidence"]) {
   if (confidence === "comfortable") return "You should have plenty of time";
   if (confidence === "tight") return "This timing may be tight";
   return "This timing may be risky";
-}
-
-function buildCalendarLink(leaveTime: Date, terminalInput: string): string {
-  const pad = (n: number) => String(n).padStart(2, "0");
-  const fmt = (d: Date) =>
-    `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
-  const end = new Date(leaveTime.getTime() + 15 * 60 * 1000);
-  const name = terminalInput ? `Leave for ${terminalInput.split(",")[0]}` : "Leave for cruise terminal";
-  return (
-    `https://calendar.google.com/calendar/r/eventedit` +
-    `?text=${encodeURIComponent(name)}` +
-    `&dates=${fmt(leaveTime)}/${fmt(end)}` +
-    `&details=${encodeURIComponent("Calculated by OnTimer")}`
-  );
 }
 
 async function fetchTravelTime(
@@ -328,9 +316,17 @@ export default function CruiseCalculator({
     });
   }, [computedResult]);
 
+  useEffect(() => {
+    setCalendarAdded(false);
+  }, [boardingDate, boardingTime, terminal, eventKind, transportationMode]);
+
   async function handleCalculate() {
     setFallbackNotice(null);
     if (!boardingDate || !boardingTime) return;
+    trackCalculatorStarted("cruise_leave_time", {
+      event_kind: eventKind,
+      transportation_mode: transportationMode,
+    });
     const [year, month, day] = boardingDate.split("-").map(Number);
     const [hour, minute] = boardingTime.split(":").map(Number);
     const boarding = new Date(year, month - 1, day, hour, minute, 0);
@@ -372,6 +368,12 @@ export default function CruiseCalculator({
     track("cruise_calculator_used", {
       event_kind: eventKind,
       transportation_mode: transportationMode,
+      ...(locationCode ? { location_code: locationCode } : {}),
+    });
+    trackCalculatorCompleted("cruise_leave_time", {
+      event_kind: eventKind,
+      transportation_mode: transportationMode,
+      travel_source: hasRouteInputs ? "google_or_fallback" : "manual",
       ...(locationCode ? { location_code: locationCode } : {}),
     });
   }
@@ -646,46 +648,26 @@ export default function CruiseCalculator({
                 {fmtDuration(computedResult.totalBufferMinutes)} cruise buffer
               </p>
 
-              <div className="mt-5">
-                {calendarAdded ? (
-                  <div className="flex items-center gap-2 rounded-lg border border-green-900/50 bg-green-950/20 px-3 py-2.5">
-                    <span className="text-green-500">✓</span>
-                    <span className="text-sm font-semibold text-green-400">Added to calendar</span>
-                  </div>
-                ) : (
-                  <a
-                    href={buildCalendarLink(computedResult.leaveAt, terminal)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => {
-                      track("cruise_calendar_link_clicked", locationCode ? { location_code: locationCode } : undefined);
-                      setCalendarAdded(true);
-                    }}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-600 bg-zinc-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:border-zinc-500 hover:bg-zinc-600"
-                  >
-                    <span>📅</span>
-                    <span>Add Leave Time to Calendar</span>
-                  </a>
-                )}
-              </div>
-
-              <div className="mt-5 border-t border-zinc-800 pt-5">
-                <p className="text-base font-bold text-white">Never be late again.</p>
-                <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
-                  OnTimer automatically reminds you when it&apos;s time to leave—for cruises, flights, meetings, appointments, and more.
-                </p>
-                <div className="mt-4">
-                  <AppStoreButton
-                    size="md"
-                    label="Get Leave Time Alerts"
-                    className="justify-center"
-                    location={locationCode
-                      ? `cruise_${locationCode.toLowerCase()}_result`
-                      : "cruise_calculator_inline"}
-                  />
-                  <p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p>
-                </div>
-              </div>
+              <CalendarOnTimerHandoff
+                calendarHref={buildGoogleCalendarLink({
+                  title: terminal ? `Leave for ${terminal.split(",")[0]}` : "Leave for cruise terminal",
+                  start: computedResult.leaveAt,
+                  details: "Calculated by OnTimer",
+                })}
+                calendarLabel="Add Leave Time to Calendar"
+                calendarOpened={calendarAdded}
+                setCalendarOpened={setCalendarAdded}
+                calculatorType="cruise_leave_time"
+                readyHeading="Put this leave time on your calendar."
+                readyBody="We’ll prepare the event. You’ll confirm it in Google Calendar."
+                openedBody="Finish saving it in Google Calendar so your cruise leave time is on your schedule."
+                appBeforeHeading="Next cruise, let OnTimer protect the moment to leave."
+                appBeforeBody="OnTimer uses your existing calendar to create automatic alarms before cruises, flights, meetings, and appointments."
+                appAfterHeading="Make the departure alarm harder to miss."
+                appAfterBody="OnTimer turns calendar events into persistent alarms that require acknowledgement when it is time to act."
+                appLocation={locationCode ? `cruise_${locationCode.toLowerCase()}_result` : "cruise_calculator_inline"}
+                analyticsContext={locationCode ? { location_code: locationCode } : {}}
+              />
 
               <div className="mt-5 border-t border-zinc-800 pt-4">
                 <div>

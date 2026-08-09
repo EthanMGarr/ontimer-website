@@ -3,14 +3,12 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import CalculationFactorList from "@/components/leave-time/CalculationFactorList";
+import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
 import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNotice";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
-import {
-  trackAutomaticAlertCTAViewed,
-  trackCalculatorCompleted,
-  trackCalculatorStarted,
-} from "@/lib/analytics";
+import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
+import { buildGoogleCalendarLink } from "@/lib/calendar-links";
 import type { SecurityEstimate } from "@/app/api/security-wait/route";
 import type { CalculatorExample } from "@/lib/travel-locations";
 import {
@@ -193,22 +191,6 @@ function buildAirportShortDisplay(input: string): string {
 }
 
 // ─── Constants & helpers ──────────────────────────────────────────────────────
-
-function buildGCalLink(leaveTime: Date, airportInput: string): string {
-  const pad = (n: number) => String(n).padStart(2, "0");
-  const fmt = (d: Date) =>
-    `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
-  const end = new Date(leaveTime.getTime() + 15 * 60 * 1000);
-  const name = airportInput
-    ? `Leave for ${buildAirportShortDisplay(airportInput)}`
-    : "Leave for airport";
-  return (
-    `https://calendar.google.com/calendar/r/eventedit` +
-    `?text=${encodeURIComponent(name)}` +
-    `&dates=${fmt(leaveTime)}/${fmt(end)}` +
-    `&details=${encodeURIComponent("Calculated by OnTimer")}`
-  );
-}
 
 // ─── UI primitives ────────────────────────────────────────────────────────────
 
@@ -421,6 +403,7 @@ export default function AirportCalculator({
     setHasTrafficData(false);
     setTrafficBasis("none");
     setIsFetchingTravel(false);
+    setCalendarAdded(false);
   }, [origin, airport, departureDate, departureTime]);
 
   // ── Derived values ──────────────────────────────────────────────────────────
@@ -590,12 +573,6 @@ export default function AirportCalculator({
       resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }, [computedResult, genericRedesign]);
-
-  useEffect(() => {
-    if (!computedResult || !calendarAdded) return;
-    trackAutomaticAlertCTAViewed("airport_leave_time", "result_automatic_alert");
-  }, [computedResult, calendarAdded]);
-
 
   // ── Manual calculate fallback ───────────────────────────────────────────────
   async function handleCalculate() {
@@ -1100,89 +1077,26 @@ export default function AirportCalculator({
                   {fmtDuration(factorMinutes(computedResult, "airport_buffer", computedResult.baseBufferMinutes))} buffer
                 </p>
 
-                {/* Next step: save the recommendation before introducing the recurring solution. */}
-                <div className={`mt-5 rounded-xl border p-4 sm:p-5 ${
-                  calendarAdded
-                    ? "border-zinc-700 bg-zinc-950/40"
-                    : "border-green-500/40 bg-green-500/[0.07]"
-                }`}>
-                  {calendarAdded ? (
-                    <div className="flex items-start gap-2.5">
-                      <span className="mt-0.5 text-green-500">✓</span>
-                      <div>
-                        <p className="text-sm font-semibold text-white">Calendar event opened</p>
-                        <p className="mt-1 text-xs leading-relaxed text-zinc-400">
-                          Finish saving it in Google Calendar so your leave time is on your schedule.
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-green-400">Your next step</p>
-                      <p className="mt-1 text-lg font-bold text-white">Put this leave time on your calendar.</p>
-                      <p className="mt-1 text-sm leading-relaxed text-zinc-400">
-                        We&apos;ll prepare the event. You&apos;ll confirm it in Google Calendar.
-                      </p>
-                      <a
-                        href={buildGCalLink(computedResult.leaveTime, airport)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => {
-                          track("calendar_link_clicked", locationCode ? { location_code: locationCode } : undefined);
-                          setCalendarAdded(true);
-                        }}
-                        className="mt-4 flex min-h-12 w-full items-center justify-center rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"
-                      >
-                        <span>Add Leave Time to Calendar</span>
-                      </a>
-                    </>
-                  )}
-                </div>
-
-                {/* App download CTA — recurring solution before optional details */}
-                <div className={`mt-5 ${calendarAdded ? "rounded-xl border border-green-500/30 bg-green-500/[0.06] p-5" : "border-t border-zinc-800 pt-5"}`}>
-                  <p className="text-base font-bold text-white">
-                    {calendarAdded ? "Now make every leave time harder to miss." : genericRedesign ? "Next time, let OnTimer do this automatically." : "Get this alert automatically."}
-                  </p>
-                  {genericRedesign ? (
-                    <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
-                      {calendarAdded
-                        ? "OnTimer turns calendar events into persistent alarms that require acknowledgement, so you act when it is time to leave."
-                        : "OnTimer uses your existing calendar to create automatic Time To Leave alarms for flights, meetings, appointments, and more."}
-                    </p>
-                  ) : (
-                    <>
-                      <p className="mt-1.5 text-xs leading-relaxed text-zinc-400">
-                        OnTimer can use your calendar location to alert you when it&apos;s time to leave,
-                        so you do not have to repeat this calculation next trip. It fires a real alarm
-                        with sound and haptics—not a notification you&apos;ll swipe away.
-                      </p>
-                      <p className="mt-1 text-[10px] text-zinc-500">
-                        Works for flights, meetings, and any calendar event with a location.
-                      </p>
-                    </>
-                  )}
-                  <div className="mt-4">
-                    <AppStoreButton
-                      size={calendarAdded ? "lg" : "md"}
-                      label={calendarAdded ? "Get OnTimer Free" : genericRedesign ? "Get Automatic Leave Time Alarms" : "Download on the App Store"}
-                      className={calendarAdded ? "w-full justify-center" : genericRedesign ? "justify-center" : "w-full justify-center"}
-                      location={locationCode
-                        ? `airport_${locationCode.toLowerCase()}_result`
-                        : "airport_calculator_inline"}
-                      analyticsContext={{
-                        calculator_type: "airport_leave_time",
-                        cta_variant: "result_automatic_alert",
-                        ...(locationCode ? { location_code: locationCode } : {}),
-                      }}
-                    />
-                    {genericRedesign && (
-                      <p className="mt-2 text-[11px] text-zinc-500">
-                        Download on the App Store
-                      </p>
-                    )}
-                  </div>
-                </div>
+                <CalendarOnTimerHandoff
+                  calendarHref={buildGoogleCalendarLink({
+                    title: airport ? `Leave for ${buildAirportShortDisplay(airport)}` : "Leave for airport",
+                    start: computedResult.leaveTime,
+                    details: "Calculated by OnTimer",
+                  })}
+                  calendarLabel="Add Leave Time to Calendar"
+                  calendarOpened={calendarAdded}
+                  setCalendarOpened={setCalendarAdded}
+                  calculatorType="airport_leave_time"
+                  readyHeading="Put this leave time on your calendar."
+                  readyBody="We’ll prepare the event. You’ll confirm it in Google Calendar."
+                  openedBody="Finish saving it in Google Calendar so your leave time is on your schedule."
+                  appBeforeHeading="Next time, let OnTimer do this automatically."
+                  appBeforeBody="OnTimer uses your existing calendar to create automatic Time To Leave alarms for flights, meetings, appointments, and more."
+                  appAfterHeading="Now make every leave time harder to miss."
+                  appAfterBody="OnTimer turns calendar events into persistent alarms that require acknowledgement, so you act when it is time to leave."
+                  appLocation={locationCode ? `airport_${locationCode.toLowerCase()}_result` : "airport_calculator_inline"}
+                  analyticsContext={locationCode ? { location_code: locationCode } : {}}
+                />
 
                 {/* Timing details stay available without interrupting the conversion flow. */}
                 <div className="mt-5 border-t border-zinc-800 pt-4">
@@ -1319,7 +1233,11 @@ export default function AirportCalculator({
               </span>
             ) : (
               <a
-                href={buildGCalLink(computedResult.leaveTime, airport)}
+                href={buildGoogleCalendarLink({
+                  title: airport ? `Leave for ${buildAirportShortDisplay(airport)}` : "Leave for airport",
+                  start: computedResult.leaveTime,
+                  details: "Calculated by OnTimer",
+                })}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => {

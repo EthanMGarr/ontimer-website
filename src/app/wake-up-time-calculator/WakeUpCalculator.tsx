@@ -16,10 +16,12 @@
 
 "use client";
 
-import { useState } from "react";
-import { AppStoreButton } from "@/components/CTAButton";
+import { useEffect, useState } from "react";
+import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
+import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
+import { buildGoogleCalendarLink } from "@/lib/calendar-links";
 
 type TravelMode = "DRIVE" | "WALK" | "TRANSIT";
 type PlanningMode = "today" | "future";
@@ -189,9 +191,14 @@ export default function WakeUpCalculator() {
   const [result, setResult] = useState<CalculatorResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
+  const [calendarOpened, setCalendarOpened] = useState(false);
 
   const hasRouteInputs =
     origin.trim().length >= 2 && destination.trim().length >= 2;
+
+  useEffect(() => {
+    setCalendarOpened(false);
+  }, [destination, arrivalDate, arrivalTime, travelMode, getReadyTime, buffer, extraTime]);
 
   function handleOriginChange(value: string) {
     setOrigin(value);
@@ -215,6 +222,7 @@ export default function WakeUpCalculator() {
   }
 
   async function handleCalculate() {
+    trackCalculatorStarted("wake_up", { travel_mode: travelMode });
     setError(null);
     setFallbackNotice(null);
 
@@ -286,7 +294,21 @@ export default function WakeUpCalculator() {
       travel_mode: travelMode,
       travel_source: travelSource,
     });
+    trackCalculatorCompleted("wake_up", {
+      travel_mode: travelMode,
+      travel_source: travelSource,
+    });
   }
+
+  const arrivalCalendarHref = result
+    ? buildGoogleCalendarLink({
+        title: `Arrive at ${destination.split(",")[0] || "destination"}`,
+        start: result.arrivalTime,
+        end: new Date(result.arrivalTime.getTime() + 30 * 60 * 1000),
+        details: `Wake-up time calculated by OnTimer: ${fmtTime(result.wakeUpTime)}`,
+        location: destination || undefined,
+      })
+    : "";
 
   return (
     <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 sm:p-8">
@@ -529,16 +551,22 @@ export default function WakeUpCalculator() {
                 , wake up at {fmtTime(result.wakeUpTime)}.
               </p>
 
-              <div className="mt-5 rounded-xl border border-green-900/40 bg-green-950/20 p-4">
-                <p className="mb-1 text-sm font-semibold text-green-400">
-                  Need more than one reminder to actually get moving?
-                </p>
-                <p className="mb-3 text-xs leading-relaxed text-zinc-400">
-                  OnTimer helps you stay on schedule with stronger alerts before
-                  important events.
-                </p>
-                <AppStoreButton size="sm" location="wakeup_calculator_result" />
-              </div>
+              <CalendarOnTimerHandoff
+                calendarHref={arrivalCalendarHref}
+                calendarLabel="Add Arrival to Calendar"
+                calendarOpened={calendarOpened}
+                setCalendarOpened={setCalendarOpened}
+                calculatorType="wake_up"
+                readyHeading="Put the appointment behind this wake-up time on your calendar."
+                readyBody="We’ll add your arrival time and destination—not pretend a calendar notification is a wake-up alarm."
+                openedHeading="Arrival event opened"
+                openedBody="Finish saving it in Google Calendar so your destination and arrival time are on your schedule."
+                appBeforeHeading="Then let OnTimer protect the moment to leave."
+                appBeforeBody="OnTimer uses the saved calendar event and its location to create an automatic alarm when it is time to head out."
+                appAfterHeading="Make the departure moment harder to miss."
+                appAfterBody="OnTimer turns the arrival event into a persistent alarm before it is time to leave. Your calculated wake-up time remains shown above."
+                appLocation="wakeup_calculator_result"
+              />
             </div>
           ) : (
             <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-zinc-700 p-10 text-center">
