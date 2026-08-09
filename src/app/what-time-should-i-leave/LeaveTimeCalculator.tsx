@@ -510,11 +510,11 @@ export default function LeaveTimeCalculator() {
                   setCalendarProvider={setCalendarProvider}
                   calculatorType="leave_time"
                   readyHeading="Put this leave time on your calendar."
-                  readyBody="Choose Google Calendar, or use the calendar already on your device."
+                  readyBody=""
                   appBeforeHeading="Next time, let OnTimer do this automatically."
                   appBeforeBody="OnTimer uses your existing calendar to create automatic alarms before meetings, appointments, and trips."
-                  appAfterHeading="Now make every leave time harder to miss."
-                  appAfterBody="OnTimer turns calendar events into persistent alarms with sound and haptics when it is time to act."
+                  appAfterHeading="Don't just get notified. Get there on time."
+                  appAfterBody={'Turn this into a "can\'t-miss" leave time alarm.'}
                   appLocation="leave_calculator_result"
                 />
               </div>

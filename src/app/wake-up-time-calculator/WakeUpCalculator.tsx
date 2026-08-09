@@ -561,12 +561,12 @@ export default function WakeUpCalculator() {
                 setCalendarProvider={setCalendarProvider}
                 calculatorType="wake_up"
                 readyHeading="Put the appointment behind this wake-up time on your calendar."
-                readyBody="Choose Google Calendar, or use the calendar already on your device. We’ll add your arrival time and destination—not pretend a calendar event is a wake-up alarm."
+                readyBody=""
                 openedItemLabel="arrival event"
                 appBeforeHeading="Then let OnTimer protect the moment to leave."
                 appBeforeBody="OnTimer uses the saved calendar event and its location to create an automatic alarm when it is time to head out."
-                appAfterHeading="Make the departure moment harder to miss."
-                appAfterBody="OnTimer turns the arrival event into a persistent alarm before it is time to leave. Your calculated wake-up time remains shown above."
+                appAfterHeading="Don't just calculate a wake-up time. Get there on time."
+                appAfterBody={'Turn the appointment into a "can\'t-miss" leave time alarm.'}
                 appLocation="wakeup_calculator_result"
               />
             </div>

@@ -1093,11 +1093,11 @@ export default function AirportCalculator({
                   setCalendarProvider={setCalendarProvider}
                   calculatorType="airport_leave_time"
                   readyHeading="Put this leave time on your calendar."
-                  readyBody="Choose Google Calendar, or use Apple Calendar, Outlook, or another calendar."
+                  readyBody=""
                   appBeforeHeading="Next time, let OnTimer do this automatically."
                   appBeforeBody="OnTimer uses your existing calendar to create automatic Time To Leave alarms for flights, meetings, appointments, and more."
-                  appAfterHeading="Now make every leave time harder to miss."
-                  appAfterBody="OnTimer turns calendar events into persistent alarms that require acknowledgement, so you act when it is time to leave."
+                  appAfterHeading="Don't just get notified. Catch your flight."
+                  appAfterBody={'Turn this into a "can\'t-miss" leave time alarm.'}
                   appLocation={locationCode ? `airport_${locationCode.toLowerCase()}_result` : "airport_calculator_inline"}
                   analyticsContext={locationCode ? { location_code: locationCode } : {}}
                 />

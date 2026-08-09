@@ -12,6 +12,7 @@ interface CalendarOnTimerHandoffProps {
   calendarHref: string;
   alternateCalendarHref: string;
   alternateCalendarFilename: string;
+  alternateCalendarLabel?: string;
   calendarProvider: "google" | "ics" | null;
   setCalendarProvider: (provider: "google" | "ics" | null) => void;
   calculatorType: string;
@@ -30,6 +31,7 @@ export default function CalendarOnTimerHandoff({
   calendarHref,
   alternateCalendarHref,
   alternateCalendarFilename,
+  alternateCalendarLabel = "Or tap here for Outlook, Apple or other calendars",
   calendarProvider,
   setCalendarProvider,
   calculatorType,
@@ -95,7 +97,9 @@ export default function CalendarOnTimerHandoff({
           <>
             <p className="text-xs font-semibold uppercase tracking-wider text-green-400">Your next step</p>
             <p className="mt-1 text-lg font-bold text-white">{readyHeading}</p>
-            <p className="mt-1 text-sm leading-relaxed text-zinc-400">{readyBody}</p>
+            {readyBody && (
+              <p className="mt-1 text-sm leading-relaxed text-zinc-400">{readyBody}</p>
+            )}
             <a
               href={calendarHref}
               target="_blank"
@@ -115,9 +119,9 @@ export default function CalendarOnTimerHandoff({
                 trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext);
                 setCalendarProvider("ics");
               }}
-              className="mt-3 inline-flex whitespace-nowrap text-xs font-medium text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+              className="mt-3 inline-flex whitespace-nowrap text-[11px] font-medium text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:text-xs"
             >
-              Apple, Outlook, or another calendar
+              {alternateCalendarLabel}
             </a>
           </>
         )}

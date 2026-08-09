@@ -6,6 +6,8 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-08-09
 
+- Simplified the calendar next-step panel across Airport, Cruise, General Leave Time, and Wake-Up, and replaced generic post-calendar conversion copy with outcome-specific promises for catching a flight, boarding a cruise, reaching a destination, or leaving for an appointment.
+- Replaced the airport calculator's generic post-calendar OnTimer pitch with flight-specific action copy and simplified the alternate-calendar link so the result funnel stays focused on catching the flight.
 - Made calendar destinations explicit across the timing calculators: Google Calendar is now labeled as such, while Apple Calendar, Outlook, and other calendar users receive a standards-based `.ics` option with provider-accurate handoff instructions.
 - Verification: calendar-link and leave-time regression tests and the optimized production build passed; the Google and `.ics` choices, alternate-calendar state transition, generated download metadata, console, and 320 px result layout were checked interactively.
 - Standardized the Airport, Cruise, General Leave Time, and Wake-Up result journeys around a progressive calendar handoff: save the useful event first, then elevate OnTimer as the automatic persistent-alarm layer. Wake-Up saves the underlying arrival appointment rather than misrepresenting a calendar event as a wake-up alarm, while Airport Theory continues to route risky results through the safe calculator first.

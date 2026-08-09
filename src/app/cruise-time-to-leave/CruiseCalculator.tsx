@@ -664,11 +664,11 @@ export default function CruiseCalculator({
                 setCalendarProvider={setCalendarProvider}
                 calculatorType="cruise_leave_time"
                 readyHeading="Put this leave time on your calendar."
-                readyBody="Choose Google Calendar, or use Apple Calendar, Outlook, or another calendar."
+                readyBody=""
                 appBeforeHeading="Next cruise, let OnTimer protect the moment to leave."
                 appBeforeBody="OnTimer uses your existing calendar to create automatic alarms before cruises, flights, meetings, and appointments."
-                appAfterHeading="Make the departure alarm harder to miss."
-                appAfterBody="OnTimer turns calendar events into persistent alarms that require acknowledgement when it is time to act."
+                appAfterHeading="Don't just get notified. Don't miss the boat."
+                appAfterBody={'Turn this into a "can\'t-miss" cruise departure alarm.'}
                 appLocation={locationCode ? `cruise_${locationCode.toLowerCase()}_result` : "cruise_calculator_inline"}
                 analyticsContext={locationCode ? { location_code: locationCode } : {}}
               />
