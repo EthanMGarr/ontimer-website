@@ -329,9 +329,16 @@ export default function MedicationScheduleGenerator() {
                         type="time"
                         value={t}
                         onChange={(e) => handleTimeChange(i, e.target.value)}
-                        className="min-w-0 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-green-500 focus:outline-none"
+                        aria-describedby={isOvernightTime(t) ? "overnight-dose-warning" : undefined}
+                        className={`min-w-0 rounded-lg border px-3 py-2 text-sm text-white focus:outline-none ${
+                          isOvernightTime(t)
+                            ? "border-amber-500/70 bg-amber-500/10 focus:border-amber-400 focus:ring-1 focus:ring-amber-400/40"
+                            : "border-zinc-700 bg-zinc-800 focus:border-green-500"
+                        }`}
                       />
-                      <span className="hidden text-xs text-zinc-500 sm:inline">{formatMedicationTime(t)}</span>
+                      <span className={`hidden text-xs sm:inline ${isOvernightTime(t) ? "font-medium text-amber-400" : "text-zinc-500"}`}>
+                        {formatMedicationTime(t)}
+                      </span>
                       <button
                         type="button"
                         onClick={() => handleRemoveTime(i)}
@@ -356,7 +363,7 @@ export default function MedicationScheduleGenerator() {
               </div>
 
               {overnightTimes.length > 0 && (
-                <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3">
+                <div id="overnight-dose-warning" className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3">
                   <p className="text-sm leading-relaxed text-zinc-300">
                     <strong className="font-semibold text-white">
                       {overnightTimes.length === 1

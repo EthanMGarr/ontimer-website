@@ -6,6 +6,8 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-08-10
 
+- Connected overnight-dose guidance to the dose time that triggered it: affected time fields and their readable labels now share the warning panel's amber treatment and reference the guidance for assistive technology without incorrectly marking an intentional overnight time as invalid.
+- Verification: a three-dose schedule highlighted only its midnight field at 375 px, exposed the warning relationship to assistive technology, and produced no horizontal overflow; medication schedule and calendar-export tests and the optimized production build passed.
 - Corrected the medication scheduler's custom-duration field so mobile users can clear and replace the default value without an injected `1` corrupting the next entry; the field now accepts a temporary empty editing state, opens a numeric keyboard, and normalizes to the supported 1–365 day range only after editing. Simplified the OnTimer benefit copy to emphasize automatic schedule-to-alarm conversion.
 - Verification: on a 375 px mobile viewport, the 60-day default was replaced directly with 5 and generated a five-day schedule without overflow; medication schedule and calendar-export tests and the optimized production build passed.
 - Reworked the medication scheduler result into a review-and-action workbench: completed setup fields now collapse after generation, dose times and safety guidance remain visible, and calendar export plus OnTimer are presented together as the next two actions. After export, technical calendar-import help moves into a collapsed disclosure beneath the OnTimer offer.
