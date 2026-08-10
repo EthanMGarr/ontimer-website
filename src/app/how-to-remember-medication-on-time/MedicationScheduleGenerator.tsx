@@ -19,7 +19,7 @@
 
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import { generateICS, downloadICS } from "@/lib/ics";
 import {
@@ -106,6 +106,7 @@ function getTimeZones(detectedTimeZone: string) {
 }
 
 export default function MedicationScheduleGenerator() {
+  const workbenchRef = useRef<HTMLDivElement>(null);
   const [medName, setMedName] = useState("");
   const [frequency, setFrequency] = useState<Frequency>(1);
   const [startTime, setStartTime] = useState("08:00");
@@ -129,6 +130,12 @@ export default function MedicationScheduleGenerator() {
     setGenerated(true);
     setDownloaded(false);
     track("medication_schedule_generated", { frequency, duration: effectiveDuration });
+    window.requestAnimationFrame(() => {
+      workbenchRef.current?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
+    });
   }
 
   function handleDownload() {
@@ -164,15 +171,17 @@ export default function MedicationScheduleGenerator() {
   const freqLabel = `${times.length} ${times.length === 1 ? "dose" : "doses"} per day`;
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-      <h2 className="text-xl font-black tracking-tight text-white sm:text-2xl">
-        Create your schedule
-      </h2>
-      <p className="mt-2 text-sm text-zinc-400">
-        Your dose times stay editable before you add them to your calendar.
-      </p>
+    <div ref={workbenchRef} className="scroll-mt-24 rounded-2xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6">
+      {!generated && (
+        <>
+          <h2 className="text-xl font-black tracking-tight text-white sm:text-2xl">
+            Create your schedule
+          </h2>
+          <p className="mt-2 text-sm text-zinc-400">
+            Your dose times stay editable before you add them to your calendar.
+          </p>
 
-      <div className="mt-5 space-y-5">
+          <div className="mt-5 space-y-5">
         {/* Medication Name */}
         <div>
           <FieldLabel>Medication name (optional)</FieldLabel>
@@ -273,132 +282,155 @@ export default function MedicationScheduleGenerator() {
         >
           Generate Schedule
         </button>
-      </div>
+          </div>
+        </>
+      )}
 
       {/* Results */}
       {generated && (
-        <div className="mt-8 space-y-6 border-t border-zinc-800 pt-8">
-
-          {/* Summary header */}
-          <div>
-            <p className="text-lg font-black text-white">Your schedule is ready</p>
-            <p className="mt-1 text-sm text-zinc-400">
-              {freqLabel} for {effectiveDuration} days &mdash; <span className="text-white font-medium">{totalReminders} reminders total</span>
-            </p>
+        <div>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-xl font-black text-white sm:text-2xl">Your medication schedule is ready</p>
+              <p className="mt-1 text-sm text-zinc-400">
+                {freqLabel} for {effectiveDuration} days &middot; <span className="font-medium text-white">{totalReminders} calendar events</span>
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setGenerated(false);
+                setDownloaded(false);
+              }}
+              className="whitespace-nowrap text-xs font-medium text-zinc-400 underline underline-offset-2 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+            >
+              Edit schedule setup
+            </button>
           </div>
 
-          {/* Editable Time List */}
-          <div>
-            <FieldLabel>Dose times</FieldLabel>
-            <div className="space-y-2">
-              {times.map((t, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <span className="w-6 text-center text-xs font-semibold text-zinc-500">{i + 1}</span>
-                  <input
-                    type="time"
-                    value={t}
-                    onChange={(e) => handleTimeChange(i, e.target.value)}
-                    className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-green-500 focus:outline-none"
-                  />
-                  <span className="text-xs text-zinc-500">{formatMedicationTime(t)}</span>
+          <div className="mt-6 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.82fr)] lg:items-start">
+            <div className="min-w-0 space-y-5">
+              <div>
+                <FieldLabel>Review dose times</FieldLabel>
+                <div className="space-y-2">
+                  {times.map((t, i) => (
+                    <div key={i} className="flex min-w-0 items-center gap-2 sm:gap-3">
+                      <span className="w-5 shrink-0 text-center text-xs font-semibold text-zinc-500">{i + 1}</span>
+                      <input
+                        type="time"
+                        value={t}
+                        onChange={(e) => handleTimeChange(i, e.target.value)}
+                        className="min-w-0 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-green-500 focus:outline-none"
+                      />
+                      <span className="hidden text-xs text-zinc-500 sm:inline">{formatMedicationTime(t)}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveTime(i)}
+                        className="ml-auto shrink-0 text-sm text-zinc-600 transition-colors hover:text-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+                        aria-label="Remove this time"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                   <button
                     type="button"
-                    onClick={() => handleRemoveTime(i)}
-                    className="ml-auto text-zinc-600 hover:text-red-400 transition-colors text-sm"
-                    aria-label="Remove this time"
+                    onClick={handleAddTime}
+                    className="text-sm text-green-500 transition-colors hover:text-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
                   >
-                    ✕
+                    + Add time
                   </button>
+                  <p className="text-xs text-zinc-500">Repeats daily for {effectiveDuration} days</p>
                 </div>
-              ))}
-            </div>
-            <div className="mt-3 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={handleAddTime}
-                className="text-sm text-green-500 hover:text-green-400 transition-colors"
-              >
-                + Add time
-              </button>
-              <p className="text-xs text-zinc-500">Repeats daily for {effectiveDuration} days</p>
-            </div>
-          </div>
-
-          {/* Overnight-dose notice */}
-          {overnightTimes.length > 0 && (
-            <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3">
-              <p className="text-sm leading-relaxed text-zinc-300">
-                <strong className="font-semibold text-white">
-                  {overnightTimes.length === 1
-                    ? `One dose falls at ${overnightTimes[0] === "00:00" ? "midnight" : formatMedicationTime(overnightTimes[0])}. `
-                    : `${overnightTimes.length} doses fall overnight. `}
-                </strong>
-                These times are evenly spaced based on your first dose. Adjust them only if your prescription or healthcare provider allows it.
-              </p>
-            </div>
-          )}
-
-          {/* Tool result disclaimer */}
-          <p className="text-sm text-zinc-300 italic">
-            This schedule is for planning purposes only and does not replace medical instructions.
-          </p>
-
-          {!downloaded ? (
-            <div>
-              <button
-                type="button"
-                onClick={handleDownload}
-                disabled={!timeZone}
-                className="w-full whitespace-nowrap rounded-full bg-green-500 px-6 py-3.5 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:translate-y-px disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400 sm:w-auto sm:px-8"
-              >
-                Add to Calendar
-              </button>
-              <p className="mt-2 text-xs leading-relaxed text-zinc-500">
-                On the next screen, tap <span className="font-semibold text-zinc-300">Add To Calendar</span> to save. Past dose times begin at their next occurrence.
-              </p>
-              <button
-                type="button"
-                onClick={handleDownload}
-                disabled={!timeZone}
-                className="mt-4 whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 disabled:cursor-not-allowed disabled:text-zinc-700"
-              >
-                Download .ics file instead
-              </button>
-            </div>
-          ) : (
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-              <div>
-                <p className="text-sm font-semibold text-green-500">Calendar import opened</p>
-                <p className="mt-1 max-w-md text-xs leading-relaxed text-zinc-400">
-                  Your schedule is saved only after you tap <span className="font-semibold text-zinc-200">Add To Calendar</span> on the calendar screen.
-                </p>
               </div>
-              <button
-                type="button"
-                onClick={handleDownload}
-                disabled={!timeZone}
-                className="whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 disabled:cursor-not-allowed disabled:text-zinc-700"
-              >
-                Open calendar import again
-              </button>
-            </div>
-          )}
 
-          {/* OnTimer handoff */}
-          <div className="border-l-2 border-green-500 pl-4 sm:pl-5">
-            <p className="text-lg font-black text-white">Don&apos;t miss your doses.</p>
-            <p className="mt-1 max-w-md text-sm leading-relaxed text-zinc-300">
-              Get OnTimer free and turn this schedule into alarms.
-            </p>
-            <div className="mt-4">
-              <AppStoreButton
-                size="md"
-                location={downloaded ? "medication_tool_after_export" : "medication_tool_conversion"}
-                label="Get OnTimer free"
-              />
+              {overnightTimes.length > 0 && (
+                <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3">
+                  <p className="text-sm leading-relaxed text-zinc-300">
+                    <strong className="font-semibold text-white">
+                      {overnightTimes.length === 1
+                        ? `One dose falls at ${overnightTimes[0] === "00:00" ? "midnight" : formatMedicationTime(overnightTimes[0])}. `
+                        : `${overnightTimes.length} doses fall overnight. `}
+                    </strong>
+                    These times are evenly spaced based on your first dose. Adjust them only if your prescription or healthcare provider allows it.
+                  </p>
+                </div>
+              )}
+
+              <p className="text-xs leading-relaxed text-zinc-400">
+                Planning tool only. Follow your prescription or healthcare provider&apos;s instructions.
+              </p>
+            </div>
+
+            <div className="min-w-0 space-y-4 lg:sticky lg:top-24">
+              <div className="rounded-xl border border-zinc-700 bg-zinc-950/35 p-4">
+                {!downloaded ? (
+                  <>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-green-400">Your next step</p>
+                    <p className="mt-1 text-lg font-bold text-white">Put this schedule on your calendar.</p>
+                    <button
+                      type="button"
+                      onClick={handleDownload}
+                      disabled={!timeZone}
+                      className="mt-4 w-full whitespace-nowrap rounded-full bg-green-500 px-5 py-3.5 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:translate-y-px disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400"
+                    >
+                      Add Schedule to Calendar
+                    </button>
+                    <p className="mt-2 text-xs leading-relaxed text-zinc-500">
+                      You&apos;ll confirm the events in your calendar. Past dose times begin at their next occurrence.
+                    </p>
+                  </>
+                ) : (
+                  <div className="flex items-start gap-2.5">
+                    <span className="mt-0.5 text-green-500" aria-hidden="true">✓</span>
+                    <div>
+                      <p className="text-sm font-semibold text-white">Calendar import opened</p>
+                      <p className="mt-0.5 text-xs leading-relaxed text-zinc-400">
+                        Confirm the events in your calendar to finish adding the schedule.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="rounded-xl border border-green-500/30 bg-green-500/[0.07] p-5">
+                <p className="text-lg font-black text-white">Make it hard to miss your doses.</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-zinc-300">
+                  Turn these calendar events into alarms that require acknowledgement.
+                </p>
+                <div className="mt-4">
+                  <AppStoreButton
+                    size="lg"
+                    className="w-full justify-center whitespace-nowrap"
+                    location={downloaded ? "medication_tool_after_export" : "medication_tool_conversion"}
+                    label="Get OnTimer Free"
+                  />
+                  <p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p>
+                </div>
+              </div>
+
+              {downloaded && (
+                <details className="rounded-lg border border-zinc-800 bg-zinc-950/30 px-4 py-3 text-xs text-zinc-400">
+                  <summary className="cursor-pointer font-medium text-zinc-300 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400">
+                    Need help adding the calendar file?
+                  </summary>
+                  <div className="mt-3 border-t border-zinc-800 pt-3 leading-relaxed">
+                    <p>Open the downloaded .ics file, choose your calendar, then confirm the events.</p>
+                    <button
+                      type="button"
+                      onClick={handleDownload}
+                      disabled={!timeZone}
+                      className="mt-2 whitespace-nowrap underline underline-offset-2 transition-colors hover:text-white disabled:cursor-not-allowed disabled:text-zinc-700"
+                    >
+                      Open calendar import again
+                    </button>
+                  </div>
+                </details>
+              )}
             </div>
           </div>
-
         </div>
       )}
     </div>

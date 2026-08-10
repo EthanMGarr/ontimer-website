@@ -4,6 +4,11 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-08-10
+
+- Reworked the medication scheduler result into a review-and-action workbench: completed setup fields now collapse after generation, dose times and safety guidance remain visible, and calendar export plus OnTimer are presented together as the next two actions. After export, technical calendar-import help moves into a collapsed disclosure beneath the OnTimer offer.
+- Verification: medication schedule and calendar-export regression tests and the optimized production build passed; generated and post-export states were checked at 320, 375, 414, 768, and 1280 px with no horizontal overflow or console errors.
+
 ### 2026-08-09
 
 - Moved alternate-calendar import help beneath the post-download OnTimer offer, replacing the oversized `.ics` instruction card with a compact, truthful download confirmation and an expandable help section so the App Store call to action remains immediately visible.
