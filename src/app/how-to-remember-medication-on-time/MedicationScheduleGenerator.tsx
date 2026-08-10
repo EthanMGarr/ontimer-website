@@ -380,8 +380,10 @@ export default function MedicationScheduleGenerator() {
               </p>
             </div>
 
-            <div className="min-w-0 space-y-4 lg:sticky lg:top-24">
-              <div className="rounded-xl border border-zinc-700 bg-zinc-950/35 p-4">
+            <div className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-24">
+              <div className={`rounded-xl border border-zinc-700 bg-zinc-950/35 p-4 ${
+                downloaded ? "order-2 lg:order-1" : "order-1"
+              }`}>
                 {!downloaded ? (
                   <>
                     <p className="text-xs font-semibold uppercase tracking-wider text-green-400">Your next step</p>
@@ -411,7 +413,9 @@ export default function MedicationScheduleGenerator() {
                 )}
               </div>
 
-              <div className="rounded-xl border border-green-500/30 bg-green-500/[0.07] p-5">
+              <div className={`rounded-xl border border-green-500/30 bg-green-500/[0.07] p-5 ${
+                downloaded ? "order-1 lg:order-2" : "order-2"
+              }`}>
                 <p className="text-lg font-black text-white">Make it hard to miss your doses.</p>
                 <p className="mt-1.5 text-sm leading-relaxed text-zinc-300">
                   Automatically turn this schedule into alarms.
@@ -428,7 +432,7 @@ export default function MedicationScheduleGenerator() {
               </div>
 
               {downloaded && (
-                <details className="rounded-lg border border-zinc-800 bg-zinc-950/30 px-4 py-3 text-xs text-zinc-400">
+                <details className="order-3 rounded-lg border border-zinc-800 bg-zinc-950/30 px-4 py-3 text-xs text-zinc-400">
                   <summary className="cursor-pointer font-medium text-zinc-300 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400">
                     Need help adding the calendar file?
                   </summary>

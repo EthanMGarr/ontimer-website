@@ -6,6 +6,8 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-08-10
 
+- Promoted OnTimer to the first mobile action after a medication calendar export, moving the compact import confirmation and troubleshooting beneath the App Store offer while preserving the desktop action-rail sequence where both steps remain visible together.
+- Verification: after export, the OnTimer offer rendered before the calendar confirmation at 375 px and the original confirmation-first sequence remained at 1280 px; neither layout produced horizontal overflow. Medication regression tests and the optimized production build passed.
 - Connected overnight-dose guidance to the dose time that triggered it: affected time fields and their readable labels now share the warning panel's amber treatment and reference the guidance for assistive technology without incorrectly marking an intentional overnight time as invalid.
 - Verification: a three-dose schedule highlighted only its midnight field at 375 px, exposed the warning relationship to assistive technology, and produced no horizontal overflow; medication schedule and calendar-export tests and the optimized production build passed.
 - Corrected the medication scheduler's custom-duration field so mobile users can clear and replace the default value without an injected `1` corrupting the next entry; the field now accepts a temporary empty editing state, opens a numeric keyboard, and normalizes to the supported 1–365 day range only after editing. Simplified the OnTimer benefit copy to emphasize automatic schedule-to-alarm conversion.
