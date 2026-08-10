@@ -6,6 +6,8 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-08-10
 
+- Corrected the medication scheduler's custom-duration field so mobile users can clear and replace the default value without an injected `1` corrupting the next entry; the field now accepts a temporary empty editing state, opens a numeric keyboard, and normalizes to the supported 1–365 day range only after editing. Simplified the OnTimer benefit copy to emphasize automatic schedule-to-alarm conversion.
+- Verification: on a 375 px mobile viewport, the 60-day default was replaced directly with 5 and generated a five-day schedule without overflow; medication schedule and calendar-export tests and the optimized production build passed.
 - Reworked the medication scheduler result into a review-and-action workbench: completed setup fields now collapse after generation, dose times and safety guidance remain visible, and calendar export plus OnTimer are presented together as the next two actions. After export, technical calendar-import help moves into a collapsed disclosure beneath the OnTimer offer.
 - Verification: medication schedule and calendar-export regression tests and the optimized production build passed; generated and post-export states were checked at 320, 375, 414, 768, and 1280 px with no horizontal overflow or console errors.
 

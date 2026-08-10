@@ -112,7 +112,7 @@ export default function MedicationScheduleGenerator() {
   const [startTime, setStartTime] = useState("08:00");
   const [startDate, setStartDate] = useState(todayISO());
   const [duration, setDuration] = useState<Duration>(30);
-  const [customDays, setCustomDays] = useState<number>(60);
+  const [customDays, setCustomDays] = useState("60");
   const [times, setTimes] = useState<string[]>([]);
   const [generated, setGenerated] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
@@ -126,6 +126,7 @@ export default function MedicationScheduleGenerator() {
   const overnightTimes = times.filter(isOvernightTime);
 
   function handleGenerate() {
+    if (duration === "custom") setCustomDays(String(effectiveDuration));
     setTimes(generateMedicationTimes(startTime, frequency));
     setGenerated(true);
     setDownloaded(false);
@@ -166,7 +167,10 @@ export default function MedicationScheduleGenerator() {
     setDownloaded(false);
   }
 
-  const effectiveDuration = duration === "custom" ? (customDays >= 1 ? customDays : 1) : duration;
+  const parsedCustomDays = Number.parseInt(customDays, 10);
+  const effectiveDuration = duration === "custom"
+    ? Math.min(365, Math.max(1, Number.isFinite(parsedCustomDays) ? parsedCustomDays : 1))
+    : duration;
   const totalReminders = times.length * effectiveDuration;
   const freqLabel = `${times.length} ${times.length === 1 ? "dose" : "doses"} per day`;
 
@@ -261,12 +265,17 @@ export default function MedicationScheduleGenerator() {
           {duration === "custom" && (
             <div className="mt-3">
               <input
-                type="number"
-                min={1}
-                max={365}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={customDays}
-                onChange={(e) => setCustomDays(Math.min(365, Math.max(1, Number(e.target.value))))}
+                onChange={(event) => {
+                  const digits = event.target.value.replace(/\D/g, "").slice(0, 3);
+                  setCustomDays(digits);
+                }}
+                onBlur={() => setCustomDays(String(effectiveDuration))}
                 placeholder="Enter number of days"
+                aria-label="Custom schedule duration in days"
                 className="w-40 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white focus:border-green-500 focus:outline-none"
               />
               <span className="ml-2 text-sm text-zinc-500">days (max 365)</span>
@@ -398,7 +407,7 @@ export default function MedicationScheduleGenerator() {
               <div className="rounded-xl border border-green-500/30 bg-green-500/[0.07] p-5">
                 <p className="text-lg font-black text-white">Make it hard to miss your doses.</p>
                 <p className="mt-1.5 text-sm leading-relaxed text-zinc-300">
-                  Turn these calendar events into alarms that require acknowledgement.
+                  Automatically turn this schedule into alarms.
                 </p>
                 <div className="mt-4">
                   <AppStoreButton
