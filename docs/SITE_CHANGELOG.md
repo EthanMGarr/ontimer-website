@@ -6,6 +6,7 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-08-09
 
+- Moved alternate-calendar import help beneath the post-download OnTimer offer, replacing the oversized `.ics` instruction card with a compact, truthful download confirmation and an expandable help section so the App Store call to action remains immediately visible.
 - Simplified the calendar next-step panel across Airport, Cruise, General Leave Time, and Wake-Up, and replaced generic post-calendar conversion copy with outcome-specific promises for catching a flight, boarding a cruise, reaching a destination, or leaving for an appointment.
 - Replaced the airport calculator's generic post-calendar OnTimer pitch with flight-specific action copy and simplified the alternate-calendar link so the result funnel stays focused on catching the flight.
 - Made calendar destinations explicit across the timing calculators: Google Calendar is now labeled as such, while Apple Calendar, Outlook, and other calendar users receive a standards-based `.ics` option with provider-accurate handoff instructions.

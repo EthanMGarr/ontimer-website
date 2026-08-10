@@ -52,15 +52,17 @@ export default function CalendarOnTimerHandoff({
 
   const calendarOpened = calendarProvider !== null;
   const openedHeading = calendarProvider === "ics"
-    ? "Calendar file ready"
+    ? "Calendar file downloaded"
     : `Google Calendar ${openedItemLabel} opened`;
   const openedBody = calendarProvider === "ics"
-    ? "Open the .ics file with Apple Calendar, Outlook, or another calendar, then finish importing the event."
+    ? "Open the downloaded file to add this leave time."
     : "Finish saving it in Google Calendar so it is added to your schedule.";
 
   return (
     <>
-      <div className={`mt-5 min-w-0 rounded-xl border p-4 sm:p-5 ${
+      <div className={`mt-5 min-w-0 rounded-xl border ${
+        calendarProvider === "ics" ? "px-4 py-3" : "p-4 sm:p-5"
+      } ${
         calendarOpened
           ? "border-zinc-700 bg-zinc-950/40"
           : "border-green-500/40 bg-green-500/[0.07]"
@@ -70,27 +72,31 @@ export default function CalendarOnTimerHandoff({
             <span className="mt-0.5 text-green-500" aria-hidden="true">✓</span>
             <div>
               <p className="text-sm font-semibold text-white">{openedHeading}</p>
-              <p className="mt-1 text-xs leading-relaxed text-zinc-400">{openedBody}</p>
-              <a
-                href={calendarHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-flex whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
-              >
-                Open Google Calendar again
-              </a>
-              <span className="mx-2 text-zinc-700" aria-hidden="true">·</span>
-              <a
-                href={alternateCalendarHref}
-                download={alternateCalendarFilename}
-                onClick={() => {
-                  trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext);
-                  setCalendarProvider("ics");
-                }}
-                className="mt-2 inline-flex whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
-              >
-                Other calendars
-              </a>
+              <p className="mt-0.5 text-xs leading-relaxed text-zinc-400">{openedBody}</p>
+              {calendarProvider === "google" && (
+                <>
+                  <a
+                    href={calendarHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+                  >
+                    Open Google Calendar again
+                  </a>
+                  <span className="mx-2 text-zinc-700" aria-hidden="true">·</span>
+                  <a
+                    href={alternateCalendarHref}
+                    download={alternateCalendarFilename}
+                    onClick={() => {
+                      trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext);
+                      setCalendarProvider("ics");
+                    }}
+                    className="mt-2 inline-flex whitespace-nowrap text-xs text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+                  >
+                    Other calendars
+                  </a>
+                </>
+              )}
             </div>
           </div>
         ) : (
@@ -153,6 +159,39 @@ export default function CalendarOnTimerHandoff({
           <p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p>
         </div>
       </div>
+
+      {calendarProvider === "ics" && (
+        <details className="mt-3 rounded-lg border border-zinc-800 bg-zinc-950/30 px-4 py-3 text-xs text-zinc-400">
+          <summary className="cursor-pointer font-medium text-zinc-300 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400">
+            Need help adding the calendar file?
+          </summary>
+          <div className="mt-3 border-t border-zinc-800 pt-3 leading-relaxed">
+            <p>Open the downloaded .ics file, choose your calendar, then confirm the event.</p>
+            <div className="mt-2 flex flex-wrap gap-x-3 gap-y-2">
+              <a
+                href={alternateCalendarHref}
+                download={alternateCalendarFilename}
+                onClick={() => trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext)}
+                className="whitespace-nowrap underline underline-offset-2 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+              >
+                Download the file again
+              </a>
+              <a
+                href={calendarHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  trackCalendarHandoffOpened(calculatorType, "google", analyticsContext);
+                  setCalendarProvider("google");
+                }}
+                className="whitespace-nowrap underline underline-offset-2 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+              >
+                Use Google Calendar instead
+              </a>
+            </div>
+          </div>
+        </details>
+      )}
     </>
   );
 }
