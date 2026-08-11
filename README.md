@@ -61,18 +61,26 @@ ontimer-website/
 │   │   ├── how-it-works/   # /how-it-works
 │   │   ├── faq/            # /faq
 │   │   ├── blog/           # /blog and /blog/[slug]
-│   │   ├── privacy/        # /privacy
-│   │   ├── terms/          # /terms
+│   │   ├── privacy/        # unreachable — /privacy redirects to public/OnTimer_Privacy_Policy.html
+│   │   ├── terms/          # unreachable — /terms redirects to public/OnTimer_Terms_of_Service.html
 │   │   ├── android/        # /android (waitlist)
 │   │   ├── sitemap.ts      # Auto-generated sitemap.xml
 │   │   └── feed.xml/       # RSS feed at /feed.xml
 │   ├── components/
-│   │   ├── Header.tsx      # Sticky nav header
-│   │   ├── Footer.tsx      # Footer with links
-│   │   └── CTAButton.tsx   # App Store + Android buttons
+│   │   ├── Header.tsx              # Sticky nav header
+│   │   ├── Footer.tsx              # Footer with links
+│   │   ├── CTAButton.tsx           # App Store + Android buttons
+│   │   ├── GoogleAnalytics.tsx     # GA4, gated by cookie consent (see below)
+│   │   └── CookieConsentBanner.tsx # EU/UK/EEA/CH consent banner
+│   ├── middleware.ts       # Geo-classifies visitors for the consent gate
 │   └── lib/
-│       └── blog.ts         # Blog post utilities
+│       ├── blog.ts         # Blog post utilities
+│       └── consent.ts      # Cookie consent state helpers
 ```
+
+**Privacy policy / terms of service:** the actual documents served to visitors are static files, `public/OnTimer_Privacy_Policy.html` and `public/OnTimer_Terms_of_Service.html` — `next.config.js` redirects `/privacy` and `/terms` to them, and the Footer links there directly. The Next.js pages under `src/app/privacy/` and `src/app/terms/` are unused legacy duplicates; edit the static HTML files for any policy change.
+
+**Cookie consent:** Google Analytics only loads immediately for visitors outside the EU/EEA/UK/Switzerland. Regulated visitors see a consent banner first (`src/middleware.ts` classifies by IP country, `src/components/CookieConsentBanner.tsx` renders the banner, `src/lib/consent.ts` holds the shared state helpers).
 
 ## Adding Blog Posts
 

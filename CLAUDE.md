@@ -117,6 +117,18 @@ Implementation contract:
 
 ---
 
+## Cookie Consent & Analytics (permanent rules)
+
+Google Analytics (`src/components/GoogleAnalytics.tsx`) is geo-gated by `src/middleware.ts`:
+- Middleware reads Vercel's `x-vercel-ip-country` header (not client-spoofable — Vercel's edge strips any client-supplied version of this header) and sets an `ontimer_region` cookie to `regulated` for EU/EEA, UK, and Switzerland, or `other` for everyone else.
+- `other` visitors (including the US) see no banner; GA loads immediately, unchanged from pre-consent behavior.
+- `regulated` visitors see `src/components/CookieConsentBanner.tsx` and GA does not load until they accept. Consent state lives in `src/lib/consent.ts`.
+- Never remove or weaken this gate to "simplify" GA loading — it exists to satisfy GDPR/UK GDPR/ePrivacy/FADP prior-consent requirements for those regions specifically.
+
+**The live privacy policy and terms of service are `public/OnTimer_Privacy_Policy.html` and `public/OnTimer_Terms_of_Service.html` — not `src/app/privacy/page.tsx` or `src/app/terms/page.tsx`.** `next.config.js` redirects `/privacy` and `/terms` to those static files, and the Footer links to them directly. The Next.js pages at those routes are unreachable, stale duplicates kept around by explicit decision — do not edit them expecting the change to reach real visitors, and do not treat their content as authoritative. Any privacy-policy or terms change (new data collection, new third-party service, new legal disclosure) must be made in the static HTML files.
+
+---
+
 ## Medication Schedule Generator (permanent rules)
 
 The generator at `/how-to-remember-medication-on-time` is a tool-first experience. Keep the schedule builder above the supporting article; SEO/GEO copy must not bury the tool or obscure its purpose.
