@@ -4,8 +4,15 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-08-11
+
+- Added a geo-targeted cookie consent gate for Google Analytics: Edge Middleware (`src/middleware.ts`) classifies visitors as regulated (EU/EEA, UK, Switzerland) or not via `x-vercel-ip-country`, and `GoogleAnalytics.tsx` only loads GA for regulated visitors after they accept a new banner (`CookieConsentBanner.tsx`). Non-regulated visitors (including the US) see no banner and GA continues to load immediately, unchanged from prior behavior. Updated the privacy policy to name Google Analytics explicitly and describe the consent choice.
+- Verification: production build passed; middleware cookie classification confirmed via direct requests with `DE`, `US`, and no `x-vercel-ip-country` header; consent-gating logic (`src/lib/consent.ts`) unit-verified for regulated+no-consent (blocked), regulated+granted (allowed), and non-regulated (allowed by default) states; homepage checked in-browser with no banner shown for the default non-regulated case.
+
 ### 2026-08-10
 
+- Added a privacy-first provider medication calendar handoff tool that reuses the existing medication scheduler's frequency, time-slot, duration, validation, and calendar-file patterns, plus provider instructions and an explicit download-then-email workflow. The form excludes patient identifiers and analytics field values.
+- Verification: provider recurrence and escaping regression coverage, the medication test suite, and the optimized production build passed; the calendar-download CTA was shortened for narrow layouts with its filename retained as supporting text.
 - Promoted OnTimer to the first mobile action after a medication calendar export, moving the compact import confirmation and troubleshooting beneath the App Store offer while preserving the desktop action-rail sequence where both steps remain visible together.
 - Verification: after export, the OnTimer offer rendered before the calendar confirmation at 375 px and the original confirmation-first sequence remained at 1280 px; neither layout produced horizontal overflow. Medication regression tests and the optimized production build passed.
 - Connected overnight-dose guidance to the dose time that triggered it: affected time fields and their readable labels now share the warning panel's amber treatment and reference the guidance for assistive technology without incorrectly marking an intentional overnight time as invalid.

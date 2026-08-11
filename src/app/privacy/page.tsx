@@ -53,9 +53,14 @@ export default function PrivacyPage() {
 
           <h2>Analytics and Tracking</h2>
           <p>
-            We do not sell personal information or calendar data. Any analytics
-            or diagnostics are used to understand app performance and improve
-            the service.
+            We do not sell personal information or calendar data. This
+            website uses Google Analytics to understand aggregate visitor
+            behavior and improve the service. Visitors in the UK, EU/EEA, and
+            Switzerland are shown a cookie banner and analytics only loads
+            after they accept; visitors elsewhere are not shown a banner. You
+            can decline at any time from the banner, or by clearing cookies
+            for this site and choosing &quot;Decline&quot; when prompted
+            again.
           </p>
 
           <h2>Third-Party Services</h2>

@@ -2,7 +2,8 @@
 
 import Script from "next/script";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { isAnalyticsAllowed, CONSENT_EVENT } from "@/lib/consent";
 
 declare global {
   interface Window {
@@ -29,7 +30,19 @@ function PageViewTracker() {
 
 export default function GoogleAnalytics() {
   const id = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  if (!id) return null;
+  const [allowed, setAllowed] = useState(false);
+
+  useEffect(() => {
+    setAllowed(isAnalyticsAllowed());
+
+    function onConsent(event: Event) {
+      if ((event as CustomEvent<string>).detail === "granted") setAllowed(true);
+    }
+    window.addEventListener(CONSENT_EVENT, onConsent);
+    return () => window.removeEventListener(CONSENT_EVENT, onConsent);
+  }, []);
+
+  if (!id || !allowed) return null;
 
   return (
     <>
