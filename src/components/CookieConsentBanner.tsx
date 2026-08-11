@@ -30,7 +30,10 @@ export default function CookieConsentBanner() {
         <p className="text-sm text-zinc-300">
           We use analytics cookies to understand how visitors use this site.
           You can accept or decline — see our{" "}
-          <a href="/privacy" className="underline hover:text-white">
+          <a
+            href="https://www.ontimer.app/OnTimer_Privacy_Policy.html"
+            className="underline hover:text-white"
+          >
             Privacy Policy
           </a>
           .
