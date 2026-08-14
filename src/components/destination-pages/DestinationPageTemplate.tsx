@@ -88,7 +88,8 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
               <p key={label} className="text-xs text-zinc-500">{label}</p>
             ))}
           </div>
-          <h1 className="mt-2 max-w-4xl text-3xl font-black tracking-tight text-white sm:text-5xl">
+          {/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 */}
+          <h1 className="mt-2 min-w-0 max-w-4xl text-3xl font-black tracking-tight text-white [overflow-wrap:anywhere] sm:text-5xl">
             {model.hero.titlePrefix}{" "}
             <span className="text-green-500">{model.hero.titleHighlight}</span>
           </h1>

@@ -135,15 +135,11 @@ Your site will be live in ~60 seconds. Future pushes to `main` deploy automatica
 ### Option 2: Deploy with Vercel CLI
 
 ```bash
-# Install Vercel CLI
-npm install -g vercel
-
-# Deploy
-vercel
-
-# Deploy to production
-vercel --prod
+# Uses the repository-pinned Vercel CLI and linked production project
+npm run deploy:prod
 ```
+
+Run `vercel login` only if Vercel explicitly reports that the saved authorization has expired. Do not use `npx vercel@latest`; it downloads a new CLI during clean deployment environments and makes releases slower and less reproducible.
 
 ### Environment Variables
 

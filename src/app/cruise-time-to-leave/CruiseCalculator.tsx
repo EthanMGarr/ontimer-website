@@ -463,7 +463,7 @@ export default function CruiseCalculator({
                   onChange={setTerminal}
                   placeholder="e.g. PortMiami"
                   inputClassName={inputClass}
-                  types="establishment"
+                  types="cruise-terminal"
                 />
               </div>
             </div>

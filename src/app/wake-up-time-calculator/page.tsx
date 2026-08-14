@@ -120,8 +120,8 @@ export default function WakeUpTimeCalculatorPage() {
       <section className="relative overflow-hidden pb-5 pt-9 md:pt-12">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-green-500">
-            Free calculator
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-green-500 sm:text-sm">
+            Free Wake-Up Time Calculator · No Sign-Up Required
           </p>
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
             Wake-Up Time{" "}

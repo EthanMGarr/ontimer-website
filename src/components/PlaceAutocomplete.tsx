@@ -5,7 +5,9 @@
 /// All API calls are proxied through /api/places-autocomplete (key stays server-side).
 ///
 /// ## Include
-/// - Debounced autocomplete (600ms, min 4 chars; local airport-code matches at 2)
+/// - Debounced autocomplete (900ms, min 4 chars; local destination-code matches at 2)
+/// - Requests only while the field is focused and actively edited
+/// - Longer pause after pasted text so complete addresses can be used as-is
 /// - Dedup guard (skip fetch if input unchanged since last request)
 /// - Keyboard navigation (↑ ↓ Enter Escape)
 /// - Click-outside to dismiss
@@ -61,6 +63,7 @@ export default function PlaceAutocomplete({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const requestRef = useRef<AbortController | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const focusedRef = useRef(false);
 
   // ── Close on click outside ──────────────────────────────────────────────────
   useEffect(() => {
@@ -80,7 +83,7 @@ export default function PlaceAutocomplete({
 
   // ── Fetch suggestions ───────────────────────────────────────────────────────
   const fetchSuggestions = useCallback(async (input: string) => {
-    if (input.trim().length < minimumCharacters) {
+    if (!focusedRef.current || input.trim().length < minimumCharacters) {
       setSuggestions([]);
       setIsOpen(false);
       return;
@@ -134,9 +137,12 @@ export default function PlaceAutocomplete({
         return;
       }
 
+      if (!focusedRef.current) return;
+
+      const isPaste = (e.nativeEvent as InputEvent).inputType === "insertFromPaste";
       debounceRef.current = setTimeout(() => {
         fetchSuggestions(val);
-      }, 600);
+      }, isPaste ? 1_400 : 900);
     },
     [onChange, fetchSuggestions, minimumCharacters]
   );
@@ -184,6 +190,14 @@ export default function PlaceAutocomplete({
         type="text"
         value={value}
         onChange={handleChange}
+        onFocus={() => {
+          focusedRef.current = true;
+        }}
+        onBlur={() => {
+          focusedRef.current = false;
+          if (debounceRef.current) clearTimeout(debounceRef.current);
+          requestRef.current?.abort();
+        }}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         autoComplete="off"

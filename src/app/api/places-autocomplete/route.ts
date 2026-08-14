@@ -31,8 +31,10 @@ import { travelLocations } from "@/lib/travel-locations";
 
 const AUTOCOMPLETE_RATE_LIMIT = {
   name: "places-autocomplete",
-  perIpLimit: 30,
-  perIpWindowMs: 10 * 60 * 1000,
+  // A normal calculator visit usually needs fewer than 10 lookups across both
+  // fields. Keep ample room for retries while bounding automated typing loops.
+  perIpLimit: 60,
+  perIpWindowMs: 60 * 60 * 1000,
   globalLimit: 1_000,
   globalWindowMs: 60 * 60 * 1000,
 };
@@ -55,10 +57,11 @@ export async function GET(req: NextRequest) {
   const input = (searchParams.get("input") ?? "").trim();
   const types = searchParams.get("types") ?? "geocode";
 
-  if (types === "airport") {
+  if (types === "airport" || types === "cruise-terminal") {
     const query = input.toLowerCase();
+    const localKind = types === "airport" ? "airport" : "cruise-terminal";
     const localPredictions = travelLocations
-      .filter((location) => location.kind === "airport")
+      .filter((location) => location.kind === localKind)
       .filter((location) => {
         const searchable = [
           location.code,
@@ -76,13 +79,13 @@ export async function GET(req: NextRequest) {
       })
       .slice(0, 6)
       .map((location) => ({
-        placeId: `airport-${location.code.toLowerCase()}`,
+        placeId: `${localKind}-${location.code.toLowerCase()}`,
         description: location.calculatorDestination,
         mainText: `${location.code} · ${location.shortName}`,
         secondaryText: location.city,
       }));
 
-    if (localPredictions.length > 0 || !shouldRequestPaidAutocomplete(input, "airport")) {
+    if (localPredictions.length > 0 || !shouldRequestPaidAutocomplete(input, types)) {
       return NextResponse.json({ predictions: localPredictions });
     }
   }
@@ -93,7 +96,7 @@ export async function GET(req: NextRequest) {
   }
 
   const includedPrimaryTypes = includedPrimaryTypesFor(
-    types === "airport" ? "establishment" : types
+    types === "airport" || types === "cruise-terminal" ? "establishment" : types
   );
   if (!includedPrimaryTypes) {
     return NextResponse.json(

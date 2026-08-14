@@ -18,6 +18,8 @@ async function main() {
   assert.equal(isAirportCodeQuery("BWI Airport"), false);
   assert.equal(shouldRequestPaidAutocomplete("BWI", "airport"), false);
   assert.equal(shouldRequestPaidAutocomplete("Baltimore", "airport"), true);
+  assert.equal(shouldRequestPaidAutocomplete("MIA", "cruise-terminal"), false);
+  assert.equal(shouldRequestPaidAutocomplete("PortMiami", "cruise-terminal"), true);
   assert.equal(shouldRequestPaidAutocomplete("BWI", "place"), false);
   assert.equal(includedPrimaryTypesFor("not-a-google-type"), null);
   assert.deepEqual(includedPrimaryTypesFor("geocode"), ["geocode"]);

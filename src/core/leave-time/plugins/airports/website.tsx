@@ -10,6 +10,11 @@ import type {
 import type { AirportLocationProfile, TravelLocationProfile } from "@/lib/travel-locations";
 import { getRelatedTravelLocationLinks } from "@/lib/travel-locations";
 import {
+  buildAirportAnswerApplicationName,
+  buildAirportAnswerDescription,
+  buildAirportAnswerTitle,
+} from "@/lib/airport-answer-seo";
+import {
   airportEventTypes,
   createAirportDestination,
 } from "./AirportPlugin";
@@ -94,8 +99,8 @@ export const airportDestinationType: DestinationTypeDefinition<AirportLocationPr
         profile.calculatorDestination,
       ],
       seo: {
-        title: `${profile.shortName} Time-to-Leave Calculator (${profile.code})`,
-        description: `Calculate when to leave for ${profile.name} using traffic, airport transfers, parking, bags and your flight time.`,
+        title: buildAirportAnswerTitle(profile),
+        description: buildAirportAnswerDescription(profile),
         canonicalUrl: getAirportUrl(profile),
       },
       supportedEventTypeIds: airportEventTypes.map((eventType) => eventType.id),
@@ -142,8 +147,8 @@ export const airportDestinationType: DestinationTypeDefinition<AirportLocationPr
   buildFaqItems: buildAirportFaqItems,
   buildSeoMetadata(profile): SeoMetadataDefinition {
     return {
-      title: `${profile.shortName} Time-to-Leave Calculator (${profile.code})`,
-      description: `Calculate when to leave for ${profile.name} using traffic, airport transfers, parking, bags and your flight time.`,
+      title: buildAirportAnswerTitle(profile),
+      description: buildAirportAnswerDescription(profile),
       canonicalUrl: getAirportUrl(profile),
       robots: { index: true, follow: true },
     };
@@ -156,11 +161,11 @@ export const airportDestinationType: DestinationTypeDefinition<AirportLocationPr
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        name: `${profile.shortName} Time-to-Leave Calculator`,
+        name: buildAirportAnswerApplicationName(profile),
         applicationCategory: "TravelApplication",
         operatingSystem: "Web",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-        description: `A free calculator for planning when to leave for ${profile.name}.`,
+        description: `A free personalized answer for when to leave for ${profile.name}, based on flight time, route, airport processing and terminal access.`,
         url,
         dateModified: profile.reviewedOn,
         author: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
@@ -193,7 +198,7 @@ export const airportDestinationType: DestinationTypeDefinition<AirportLocationPr
   buildInternalLinks(): InternalLinkDefinition[] {
     return [
       { href: "/", label: "Home" },
-      { href: airportParentPath, label: "Airport calculator" },
+      { href: airportParentPath, label: "When to leave for the airport" },
     ];
   },
   getDestinationPath: getAirportDestinationPath,
@@ -225,7 +230,7 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
     breadcrumbs: airportDestinationType.buildInternalLinks(location),
     currentBreadcrumbLabel: location.code,
     hero: {
-      eyebrow: `${location.code} · ${location.city}`,
+      eyebrow: `Free personalized leave time · ${location.code} · ${location.city}`,
       secondaryLabels: [location.reviewedLabel, "Powered by OnTimer"],
       titlePrefix: "What Time Should I Leave for",
       titleHighlight: `${location.shortName} (${location.code})?`,

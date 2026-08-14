@@ -9,6 +9,11 @@ TypeScript
 Tailwind CSS
 Deploy on Vercel
 
+Permanent deployment workflow:
+- Use `npm run deploy:prod` from the repository root. It uses the pinned local Vercel CLI and the existing `.vercel/project.json` link.
+- Do not deploy with `npx vercel@latest` or install a global Vercel CLI.
+- Run `vercel login` only when the CLI explicitly reports expired authorization.
+
 Design:
 Dark theme
 Green accent color

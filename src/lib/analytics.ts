@@ -126,11 +126,13 @@ export function trackCalculatorCompleted(
 
 export function trackAutomaticAlertCTAViewed(
   calculatorType: string,
-  ctaVariant: string
+  ctaVariant: string,
+  context: AnalyticsParams = {},
 ): void {
   fireEvent("automatic_alert_cta_viewed", {
     calculator_type: calculatorType,
     cta_variant: ctaVariant,
+    ...context,
   });
 }
 

@@ -8,9 +8,9 @@ import {
 import { getTravelLocationPath } from "@/lib/travel-locations";
 
 export const metadata: Metadata = {
-  title: "Airport Guides & Calculators | OnTimer",
+  title: "When Should I Leave for the Airport? Airport Guides",
   description:
-    "Browse OnTimer airport guides and calculators for EWR, JFK, LGA, LAX, ATL, ORD and more airport-specific leave-time pages.",
+    "Choose your airport to find out what time to leave for your flight, with local route, parking, terminal, security and arrival guidance.",
   alternates: { canonical: "https://www.ontimer.app/airport-time-calculators" },
 };
 
@@ -23,9 +23,9 @@ const airportLetters = Object.keys(groupLocationsAlphabetically(airportLocations
 const collectionJsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Airport Guides & Calculators",
+  name: "When to Leave for the Airport: Airport Guides",
   description:
-    "A directory of airport-specific leave-time guides and calculators from OnTimer.",
+    "A directory of airport-specific answers and leave-time calculators from OnTimer.",
   url: "https://www.ontimer.app/airport-time-calculators",
 };
 
@@ -44,11 +44,11 @@ export default function AirportTimeCalculatorsDirectory() {
                 Airport guides & calculators
               </p>
               <h1 className="mt-5 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl">
-                Choose your airport.
+                What time should you leave for your airport?
               </h1>
               <p className="mt-5 max-w-xl text-base leading-7 text-zinc-400">
-                Pick an airport-specific calculator for local timing details like
-                traffic, parking, terminal movement, security and arrival buffers.
+                Choose your airport, enter your flight and route, and get a leave time
+                that includes local traffic, parking, terminal movement and security planning.
               </p>
 
               <div className="mt-7 border-t border-zinc-800 pt-5">
@@ -56,14 +56,14 @@ export default function AirportTimeCalculatorsDirectory() {
                   Flying from another airport?
                 </p>
                 <p className="mt-2 text-sm leading-6 text-zinc-500">
-                  Use the generic airport calculator when you want to calculate
-                  for any airport without browsing first.
+                  Use the all-airport planner to get a personalized leave time without
+                  choosing an airport guide first.
                 </p>
                 <Link
                   href="/airport-time-to-leave-calculator"
                   className="mt-4 inline-flex min-h-11 items-center rounded-full bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200"
                 >
-                  Launch Airport Time-to-Leave Calculator
+                  Find out when to leave
                 </Link>
               </div>
             </div>

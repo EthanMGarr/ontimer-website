@@ -40,3 +40,13 @@ Use this checklist for every production change involving pages, routes, metadata
 
 - [ ] For corrected 404, redirect, canonical, or indexing issues, use **Validate Fix** in Google Search Console.
 - [ ] Allow Google time to recrawl; a clean live audit does not immediately clear historical Search Console reports.
+
+## Calculator-First Search Intent
+
+- [ ] Lead calculator metadata and H1s with the question or outcome people search for; keep “calculator” as supporting language when the broader intent is answer-seeking.
+- [ ] Apply the same answer-led language to location-page metadata, directory titles, structured-data names, navigation labels, and internal-link anchors so the intent is consistent across the whole cluster.
+- [ ] Keep the calculator and its brief orientation in the first task area. Long-form SEO/GEO guidance belongs after the tool and must not delay the primary action.
+- [ ] Give a specific result before asking for conversion: result first, calendar handoff second, OnTimer alarm handoff third.
+- [ ] Remove repeated keyword sections that restate the same answer without adding a distinct decision, example, or planning factor.
+- [ ] Explain where a planning answer can vary, identify what the traveler must verify, show the review date, and link to relevant primary sources without implying that a planning estimate is a guarantee.
+- [ ] Measure the full answer funnel separately: calculator start, personalized answer generated, calendar handoff, post-calendar alarm CTA view, and App Store outbound click. Include intent cluster and location code where available.

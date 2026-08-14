@@ -166,17 +166,17 @@ export default function Header() {
                         className="block rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
                         onClick={() => {
                           closeMenus();
-                          trackNavClick("Airport Time-to-Leave Calculator");
+                          trackNavClick("When Should I Leave for the Airport");
                         }}
                       >
                         <span className="flex gap-2">
                           <span aria-hidden="true">✈</span>
                           <span>
                             <span className="block text-sm font-semibold text-white">
-                              Airport Time-to-Leave Calculator
+                              When should I leave for the airport?
                             </span>
                             <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
-                              Calculate for any airport
+                              Get a personalized leave time
                             </span>
                           </span>
                         </span>
@@ -405,7 +405,7 @@ export default function Header() {
                 </p>
                 <div className="grid gap-1">
                   {[
-                    ["Airport Time-to-Leave Calculator", "/airport-time-to-leave-calculator"],
+                    ["When to Leave for the Airport", "/airport-time-to-leave-calculator"],
                     ["Airport Guides & Calculators", "/airport-time-calculators"],
                     ["Cruise Terminal Time Calculator", "/cruise-terminal-time-calculators"],
                     ["Wake-Up Time Calculator", "/wake-up-time-calculator"],

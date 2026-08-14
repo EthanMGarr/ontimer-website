@@ -181,7 +181,10 @@ export default function MedicationScheduleGenerator() {
           <h2 className="text-xl font-black tracking-tight text-white sm:text-2xl">
             Create your schedule
           </h2>
-          <p className="mt-2 text-sm text-zinc-400">
+          <p className="mt-2 text-sm font-semibold text-green-500">
+            Free. No account required.
+          </p>
+          <p className="mt-1 text-sm text-zinc-400">
             Your dose times stay editable before you add them to your calendar.
           </p>
 

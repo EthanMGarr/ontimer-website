@@ -10,18 +10,18 @@ import AirportCalculator from "./AirportCalculator";
 
 export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/airport-time-to-leave-calculator" },
-  title: "Airport Time-to-Leave Calculator | What Time Should I Leave?",
+  title: "When Should I Leave for the Airport?",
   description:
-    "Calculate when to leave for the airport using traffic or transit time, airport security, parking, terminal access, and your flight departure.",
+    "Find out what time to leave for your flight using your route, flight time, security planning, bags, parking and terminal access.",
   openGraph: {
-    title: "Airport Time-to-Leave Calculator | What Time Should I Leave?",
+    title: "When Should I Leave for the Airport?",
     description:
-      "Calculate when to leave for the airport using traffic or transit time, airport security, parking, terminal access, and your flight departure.",
+      "Find out what time to leave for your flight using your route, flight time, security planning, bags, parking and terminal access.",
   },
   twitter: {
-    title: "Airport Time-to-Leave Calculator | What Time Should I Leave?",
+    title: "When Should I Leave for the Airport?",
     description:
-      "Calculate when to leave for the airport using traffic or transit time, airport security, parking, terminal access, and your flight departure.",
+      "Find out what time to leave for your flight using your route, flight time, security planning, bags, parking and terminal access.",
   },
 };
 
@@ -29,17 +29,17 @@ const faqItems = [
   {
     question: "When should I leave for the airport?",
     answer:
-      "It depends on your flight type, security setup, bags, and how you're getting there. A common rule: domestic flights need you at the airport 2 hours early, international 3 hours. Add your drive time and any parking buffer on top of that. Use the calculator above to get a specific leave time.",
+      "It depends on your flight type, route, security setup, bags, parking or transit, and terminal access. A common planning baseline is to arrive 2 hours before a domestic flight or 3 hours before an international flight, then work backward through every step of your trip. Use the calculator above for a leave time based on your circumstances.",
   },
   {
     question: "How early should I get to the airport for a domestic flight?",
     answer:
-      "Most airlines and TSA recommend arriving 2 hours before a domestic flight. If you have TSA PreCheck or Global Entry, you may be able to shave 15 minutes off that. If you're checking a bag or driving to park, add extra time.",
+      "Two hours before departure is a common domestic-flight planning baseline, but your airline's check-in and bag-drop deadlines take priority. Parking, terminal transfers, peak travel periods, and checked bags can require more time.",
   },
   {
     question: "How early should I get to the airport for an international flight?",
     answer:
-      "3 hours before departure is the standard recommendation for international flights. Customs pre-clearance, longer security lines, and stricter bag drop cutoffs all add time. If traveling during peak hours or from a large hub, giving yourself more time is rarely the wrong call.",
+      "Three hours before departure is a common international-flight planning baseline. Airline check-in and bag-drop deadlines, document checks, security, border procedures, and terminal transfers may require an earlier arrival.",
   },
   {
     question: "Does traffic change when I should leave for the airport?",
@@ -79,7 +79,7 @@ const faqJsonLd = {
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "Airport Time-to-Leave Calculator",
+  name: "When Should I Leave for the Airport?",
   applicationCategory: "TravelApplication",
   operatingSystem: "Web",
   offers: {
@@ -88,8 +88,9 @@ const softwareAppJsonLd = {
     priceCurrency: "USD",
   },
   description:
-    "A free airport departure time calculator that estimates when you should leave based on your flight time, traffic or transit, security, parking, and arrival method.",
+    "A free personalized answer for when to leave for a flight, based on flight time, route, security, bags, parking, and terminal access.",
   url: "https://www.ontimer.app/airport-time-to-leave-calculator",
+  dateModified: "2026-08-13",
   author: {
     "@type": "Organization",
     name: "OnTimer",
@@ -106,7 +107,7 @@ const breadcrumbJsonLd = {
     {
       "@type": "ListItem",
       position: 3,
-      name: "Airport Time-to-Leave Calculator",
+      name: "When Should I Leave for the Airport?",
       item: "https://www.ontimer.app/airport-time-to-leave-calculator",
     },
   ],
@@ -142,24 +143,27 @@ export default function AirportTimeToLeaveCalculator() {
               <span className="text-zinc-400">Tools</span>
             </li>
             <li aria-hidden="true">›</li>
-            <li className="text-zinc-300">Airport Time-to-Leave Calculator</li>
+            <li className="text-zinc-300">When to Leave for the Airport</li>
           </ol>
         </div>
       </nav>
 
-      {/* ── HERO (compressed — calculator below) ── */}
-      <section className="relative overflow-hidden pb-3 pt-5 md:pt-7">
+      {/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 */}
+      {/* ── QUESTION + ORIENTATION (calculator remains the first task) ── */}
+      <section className="relative overflow-hidden pb-5 pt-5 md:pb-6 md:pt-7">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="mb-1.5 text-sm font-semibold uppercase tracking-wider text-green-500">
-            Free Airport Leave Time Calculator from OnTimer
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-green-500 sm:text-sm">
+            Free airport departure planner · No sign-up
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
-            What Time Should I Leave for the{" "}
-            <span className="text-green-500">Airport?</span>
+          <h1 className="min-w-0 text-3xl font-black tracking-tight text-white [overflow-wrap:anywhere] sm:text-5xl">
+            What time do I need to leave to{" "}
+            <span className="text-green-500">make my flight?</span>
           </h1>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400">
-            Get a personalized airport leave time using traffic or scheduled transit, security planning, parking, and terminal timing.
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:text-base">
+            Enter your flight and route. OnTimer works backward through travel,
+            security, bags, parking and terminal time to give you a leave time for
+            your circumstances—not a generic rule.
           </p>
         </div>
       </section>
@@ -182,11 +186,11 @@ export default function AirportTimeToLeaveCalculator() {
         </div>
       </section>
 
-      {/* ── SEO #1: How Early Should You Leave ── */}
+      {/* ── SUPPORTING GUIDANCE: useful after the calculator, not before it ── */}
       <section className="border-t border-zinc-800 bg-zinc-900/50 py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            How Early Should You Leave for the Airport?
+            The short answer
           </h2>
           <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
@@ -205,6 +209,35 @@ export default function AirportTimeToLeaveCalculator() {
               traffic window. Each of those can individually erase the buffer you thought you had.
             </p>
           </div>
+          <aside className="mt-8 border-l-2 border-green-500/60 pl-4 text-sm leading-relaxed text-zinc-400">
+            <p className="font-semibold text-zinc-200">Why this is a planning answer—not a promise</p>
+            <p className="mt-2">
+              OnTimer uses common airport-arrival baselines and then adds the circumstances you
+              enter. Your airline&apos;s check-in, bag-drop and boarding deadlines always take priority.
+              Before leaving, verify your flight with your airline and check current airport and
+              route conditions.
+            </p>
+            <p className="mt-3 text-xs text-zinc-500">
+              Guidance reviewed August 2026 ·{" "}
+              <a
+                href="https://www.tsa.gov/news/press/factsheets/tsa-travel-tips"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="whitespace-nowrap underline underline-offset-2 hover:text-zinc-300"
+              >
+                TSA travel tips ↗
+              </a>{" "}
+              ·{" "}
+              <a
+                href="https://www.faa.gov/travelers/prepare_fly"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="whitespace-nowrap underline underline-offset-2 hover:text-zinc-300"
+              >
+                FAA preparing to fly ↗
+              </a>
+            </p>
+          </aside>
         </div>
       </section>
 
@@ -231,33 +264,6 @@ export default function AirportTimeToLeaveCalculator() {
               Evening flights are the most commonly misjudged. Traffic has thinned, so the drive
               feels easy — but airports are busiest in the late afternoon and security lines reflect
               that. The drive is shorter; the airport wait often isn&apos;t.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SEO #3: When should you leave ── */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            When should you leave for the airport?
-          </h2>
-          <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
-            <p>
-              Work backwards from your flight. Start with when you need to be at the airport
-              (2 hours before domestic, 3 hours before international), then subtract your actual
-              drive time. That&apos;s your leave time.
-            </p>
-            <p>
-              The inputs that shift the answer meaningfully: parking adds 15–20 minutes, checking
-              a bag adds 15 minutes, and driving during rush hour can double a drive that looks
-              routine on the map. Most people who miss flights didn&apos;t plan to cut it close —
-              they just ran the math optimistically on one of these.
-            </p>
-            <p>
-              The calculator above runs this backwards from your flight time using live traffic,
-              TSA wait estimates for your airport, and your specific situation. Enter your departure
-              and it returns the latest reasonable moment to leave your door.
             </p>
           </div>
         </div>
@@ -327,20 +333,18 @@ export default function AirportTimeToLeaveCalculator() {
       <section className="border-t border-zinc-800 bg-zinc-900/50 py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Stop calculating this every trip
+            Know when to leave. Then make sure you do.
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-zinc-400">
-            OnTimer can automatically remind you when it&apos;s time to leave for flights,
-            meetings, appointments, and any event with a location. No more doing the math yourself
-            before every trip.
+            Save the answer to your calendar first. OnTimer can then turn calendar events into
+            automatic Time To Leave alarms that are harder to miss when it is actually time to go.
           </p>
           <ul className="mt-8 space-y-3">
             {[
-              "Time-to-Leave alerts based on real travel time and traffic",
-              "Connects to Google Calendar, Apple Calendar, and Outlook Calendar",
-              "Works for flights, meetings, appointments — any event with a location",
-              "Customizable lead time and buffer settings",
-              "iPhone app — alarms that actually get your attention",
+              "Uses your existing Google, Apple, or Microsoft calendar",
+              "Creates Time To Leave alarms automatically",
+              "Persistent alarms require acknowledgement",
+              "Works for flights, meetings, appointments, and other location-based events",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 text-zinc-400">
                 <span className="mt-0.5 flex-shrink-0 text-green-500">✓</span>
@@ -350,40 +354,6 @@ export default function AirportTimeToLeaveCalculator() {
           </ul>
           <div className="mt-8">
             <AppStoreCTA location="airport_calculator_conversion" />
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            A better way to avoid missing flights
-          </h2>
-          <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
-            <p>
-              Calculating your departure time manually every trip works, until it doesn&apos;t. You
-              forget, you rush, you underestimate. The math is not hard. The problem is remembering
-              to do it, at the right moment, with the right inputs.
-            </p>
-            <p>
-              OnTimer is an iPhone app designed to solve this automatically. It calculates when you
-              need to leave based on real-world conditions like traffic and timing, so you
-              don&apos;t have to rely on static estimates or guesswork.
-            </p>
-            <p>
-              The same feature works for meetings, appointments, pickups, and anything else in your
-              calendar with a location. You stop having to think about it. OnTimer handles the
-              departure timing.
-            </p>
-          </div>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <AppStoreCTA location="airport_calculator_seo_cta" />
-            <Link
-              href="/time-to-leave-reminders"
-              className="inline-flex items-center gap-2 rounded-full border border-zinc-700 px-6 py-3 text-sm font-semibold text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white"
-            >
-              How Time-to-Leave works →
-            </Link>
           </div>
         </div>
       </section>
@@ -413,10 +383,10 @@ export default function AirportTimeToLeaveCalculator() {
       {/* ── RELATED LINKS ── */}
       <section className="border-t border-zinc-800 py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-2xl font-black text-white">Airport-specific calculator</h2>
+          <h2 className="text-2xl font-black text-white">When should I leave for my airport?</h2>
           <p className="mt-3 text-zinc-400">
-            Newark is the first location-specific planning guide. Enter your origin and flight time
-            for an EWR calculation with airport-transfer context.
+            Choose your airport for a personalized answer with local terminal, transfer, road,
+            rail and airport-processing context.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {indexableAirportLocations.map((location) => (
@@ -426,7 +396,9 @@ export default function AirportTimeToLeaveCalculator() {
                 className="rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-4 transition-colors hover:border-green-800"
               >
                 <span className="block text-sm font-semibold text-green-500">{location.code}</span>
-                <span className="mt-1 block font-bold text-white">{location.shortName}</span>
+                <span className="mt-1 block font-bold text-white">
+                  When to leave for {location.shortName}
+                </span>
               </Link>
             ))}
           </div>

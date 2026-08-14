@@ -130,11 +130,10 @@ export default function Page() {
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.75fr)_minmax(30rem,1.25fr)] lg:gap-12">
             <div className="min-w-0 lg:pt-8">
               <h1 className="min-w-0 [overflow-wrap:anywhere] text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Turn your medication schedule into calendar events
+                Never miss another dose
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-zinc-300 sm:text-xl">
-                Choose your dose times, generate the schedule, and add every dose to Apple Calendar,
-                Google Calendar, or Outlook.
+                Turn your medication schedule into calendar events, then let OnTimer make sure you remember them.
               </p>
               <p className="mt-4 text-sm leading-relaxed text-zinc-500">
                 For organization only. Always follow your prescribed instructions.
@@ -196,6 +195,11 @@ export default function Page() {
             A Better System: Use Your Calendar
           </h2>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
+            OnTimer&apos;s free Medication Schedule Generator creates a medication schedule based on
+            your dose times and lets you add each dose as an individual event to Apple Calendar,
+            Google Calendar, or Outlook.
+          </p>
+          <p className="mt-4 text-lg text-zinc-400 leading-relaxed">
             Instead of relying on memory, use your calendar as your system. Your calendar already
             fits your day, already structures your time, and is something you actually check.
           </p>

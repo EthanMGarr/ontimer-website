@@ -497,7 +497,7 @@ export default function AirportTheoryCalculator() {
             <div>
               <FieldLabel>Airport</FieldLabel>
               <PlaceAutocomplete value={airport} onChange={setAirport}
-                placeholder="e.g. JFK, LAX, Newark" inputClassName={inputClass} types="establishment" />
+                placeholder="e.g. JFK, LAX, Newark" inputClassName={inputClass} types="airport" />
             </div>
           </div>
 

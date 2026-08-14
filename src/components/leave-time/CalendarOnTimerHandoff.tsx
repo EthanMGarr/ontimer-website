@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import {
   trackAutomaticAlertCTAViewed,
@@ -45,9 +45,16 @@ export default function CalendarOnTimerHandoff({
   appLocation,
   analyticsContext = {},
 }: CalendarOnTimerHandoffProps) {
+  const analyticsContextRef = useRef(analyticsContext);
+  analyticsContextRef.current = analyticsContext;
+
   useEffect(() => {
     if (!calendarProvider) return;
-    trackAutomaticAlertCTAViewed(calculatorType, "post_calendar_automatic_alert");
+    trackAutomaticAlertCTAViewed(
+      calculatorType,
+      "post_calendar_automatic_alert",
+      analyticsContextRef.current,
+    );
   }, [calculatorType, calendarProvider]);
 
   const calendarOpened = calendarProvider !== null;

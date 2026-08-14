@@ -103,7 +103,7 @@ export default function Footer() {
                 { href: "/time-calculators",                 label: "Time Calculators"          },
                 { href: "/airport-time-calculators",         label: "Airport Guides"            },
                 { href: "/cruise-terminal-time-calculators", label: "Cruise Time Calculators"   },
-                { href: "/airport-time-to-leave-calculator", label: "Airport Time Calculator"   },
+                { href: "/airport-time-to-leave-calculator", label: "When to Leave for Airport" },
                 { href: "/what-time-should-i-leave",         label: "Leave-Time Calculator"     },
                 { href: "/wake-up-time-calculator",          label: "Wake-Up Calculator"        },
                 { href: "/airport-theory-calculator",        label: "Airport Theory Calculator" },

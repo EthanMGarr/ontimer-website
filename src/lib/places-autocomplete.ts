@@ -35,9 +35,9 @@ export function isAirportCodeQuery(input: string): boolean {
 
 export function shouldRequestPaidAutocomplete(
   input: string,
-  mode: "place" | "airport" = "place"
+  mode: "place" | "airport" | "cruise-terminal" = "place"
 ): boolean {
-  if (mode === "airport" && isAirportCodeQuery(input)) return false;
+  if (mode !== "place" && isAirportCodeQuery(input)) return false;
   return isAutocompleteInputEligible(input);
 }
 

@@ -9,6 +9,7 @@ import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri } from "@/lib/calendar-links";
+import { getAirportDepartureStatus } from "@/lib/airport-departure-status";
 import type { SecurityEstimate } from "@/app/api/security-wait/route";
 import type { CalculatorExample } from "@/lib/travel-locations";
 import {
@@ -252,16 +253,25 @@ function Toggle({
   );
 }
 
-function ConfidenceBadge({ confidence }: { confidence: Confidence }) {
+function DepartureStatusBadge({
+  leaveTime,
+  confidence,
+  nowMs,
+}: {
+  leaveTime: Date;
+  confidence: Confidence;
+  nowMs: number;
+}) {
+  const status = getAirportDepartureStatus(leaveTime, confidence, new Date(nowMs));
   const config = {
-    comfortable: { dot: "bg-green-500", label: "You should have plenty of time", text: "text-green-500" },
-    tight:       { dot: "bg-amber-500", label: "This timing may be tight",        text: "text-amber-500" },
-    risk:        { dot: "bg-red-400",   label: "This timing may be risky",        text: "text-red-400"   },
-  }[confidence];
+    positive: { dot: "bg-green-500", text: "text-green-500" },
+    caution: { dot: "bg-amber-500", text: "text-amber-400" },
+    urgent: { dot: "bg-red-400", text: "text-red-400" },
+  }[status.tone];
   return (
     <span className={`inline-flex items-center gap-1.5 text-xs ${config.text}`}>
       <span className={`h-1.5 w-1.5 flex-shrink-0 rounded-full ${config.dot}`} />
-      {config.label}
+      {status.label}
     </span>
   );
 }
@@ -274,7 +284,7 @@ const timeInputClass = `${inputClass} block h-12 appearance-none box-border py-0
 // ─── Default departure ────────────────────────────────────────────────────────
 
 function defaultDeparture() {
-  const d = new Date(Date.now() + 2 * 60 * 60 * 1000);
+  const d = new Date(Date.now() + 4 * 60 * 60 * 1000);
   const mins = d.getMinutes();
   const remainder = mins % 15;
   if (remainder !== 0) d.setMinutes(mins + (15 - remainder), 0, 0);
@@ -358,6 +368,7 @@ export default function AirportCalculator({
 
   const securityDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const resultPanelRef = useRef<HTMLDivElement | null>(null);
+  const answerAnalyticsSignatureRef = useRef<string | null>(null);
   useEffect(() => {
     setError(null);
     setFallbackNotice(null);
@@ -535,6 +546,53 @@ export default function AirportCalculator({
       customSecurityMinutes, showBufferOverride, customBuffer, manualTravelMinutes,
       planningMode, flightType, arrivalMode, hasCheckedBag, airport, securityLabel, planningJurisdiction]);
 
+  const [statusNowMs, setStatusNowMs] = useState(() => Date.now());
+  useEffect(() => {
+    if (!computedResult) return;
+    setStatusNowMs(Date.now());
+    const interval = window.setInterval(() => setStatusNowMs(Date.now()), 30_000);
+    return () => window.clearInterval(interval);
+  }, [computedResult]);
+
+  const currentDepartureStatus = computedResult
+    ? getAirportDepartureStatus(computedResult.leaveTime, computedResult.confidence, new Date(statusNowMs))
+    : null;
+
+  useEffect(() => {
+    if (!computedResult) return;
+    const signature = [
+      computedResult.leaveTime.toISOString(),
+      computedResult.travelSource,
+      computedResult.trafficBasis,
+      flightType,
+      arrivalMode,
+      hasCheckedBag,
+      showBufferOverride,
+      showSecurityOverride,
+    ].join("|");
+    if (answerAnalyticsSignatureRef.current === signature) return;
+    answerAnalyticsSignatureRef.current = signature;
+
+    const departureStatus = getAirportDepartureStatus(
+      computedResult.leaveTime,
+      computedResult.confidence,
+      new Date(),
+    );
+    track("airport_leave_time_answer_generated", {
+      intent_cluster: "airport_when_to_leave",
+      flight_type: flightType,
+      arrival_mode: arrivalMode,
+      planning_mode: planningMode,
+      travel_source: computedResult.travelSource,
+      traffic_basis: computedResult.trafficBasis,
+      result_tone: departureStatus.tone,
+      minutes_until_leave: Math.round((computedResult.leaveTime.getTime() - Date.now()) / 60_000),
+      refinement_count: activeRefinementCount,
+      ...(locationCode ? { location_code: locationCode } : {}),
+    });
+  }, [computedResult, flightType, arrivalMode, planningMode, hasCheckedBag,
+      showBufferOverride, showSecurityOverride, activeRefinementCount, locationCode]);
+
   const resultHeroMode = genericRedesign && computedResult !== null;
 
   // ── Airport arrival preview (partial + estimating states) ───────────────────
@@ -582,8 +640,10 @@ export default function AirportCalculator({
       return;
     }
     trackCalculatorStarted("airport_leave_time", {
+      intent_cluster: "airport_when_to_leave",
       flight_type: flightType,
       arrival_mode: arrivalMode,
+      ...(locationCode ? { location_code: locationCode } : {}),
     });
     const [year, month, day] = departureDate.split("-").map(Number);
     const [hour, minute] = departureTime.split(":").map(Number);
@@ -640,6 +700,7 @@ export default function AirportCalculator({
       ...(locationCode ? { location_code: locationCode } : {}),
     });
     trackCalculatorCompleted("airport_leave_time", {
+      intent_cluster: "airport_when_to_leave",
       flight_type: flightType,
       arrival_mode: arrivalMode,
       travel_source: hasRouteInputs ? "google_or_fallback" : "manual",
@@ -857,7 +918,15 @@ export default function AirportCalculator({
               {/* Expand button — visually interactive */}
               <button
                 type="button"
-                onClick={() => setShowRefinements(!showRefinements)}
+                onClick={() => {
+                  const willOpen = !showRefinements;
+                  setShowRefinements(willOpen);
+                  if (willOpen) {
+                    track("airport_timing_options_opened", {
+                      ...(locationCode ? { location_code: locationCode } : {}),
+                    });
+                  }
+                }}
                 className="mt-4 flex w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:bg-zinc-700 hover:text-white"
               >
                 <span className="flex items-center gap-2">
@@ -1041,14 +1110,20 @@ export default function AirportCalculator({
 
                 {/* Hero */}
                 <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Leave by</p>
-                <p className={`mt-1 whitespace-nowrap font-black leading-none text-green-500 ${
+                <p className={`mt-1 whitespace-nowrap font-black leading-none ${
+                  currentDepartureStatus?.tone === "urgent" ? "text-red-400" : "text-green-500"
+                } ${
                   resultHeroMode ? "text-6xl sm:text-8xl" : "text-6xl sm:text-7xl"
                 }`}>
                   {fmtTime(computedResult.leaveTime)}
                 </p>
                 <p className="mt-2 text-base text-zinc-300">{fmtDate(computedResult.leaveTime)}</p>
                 <div className="mt-1.5">
-                  <ConfidenceBadge confidence={computedResult.confidence} />
+                  <DepartureStatusBadge
+                    leaveTime={computedResult.leaveTime}
+                    confidence={computedResult.confidence}
+                    nowMs={statusNowMs}
+                  />
                 </div>
 
                 {genericRedesign && departureTime && (
@@ -1092,21 +1167,32 @@ export default function AirportCalculator({
                   calendarProvider={calendarProvider}
                   setCalendarProvider={setCalendarProvider}
                   calculatorType="airport_leave_time"
-                  readyHeading="Put this leave time on your calendar."
+                  readyHeading="Save this leave time to your calendar."
                   readyBody=""
-                  appBeforeHeading="Next time, let OnTimer do this automatically."
+                  appBeforeHeading="Make this leave time harder to miss."
                   appBeforeBody="OnTimer uses your existing calendar to create automatic Time To Leave alarms for flights, meetings, appointments, and more."
-                  appAfterHeading="Don't just get notified. Catch your flight."
-                  appAfterBody={'Turn this into a "can\'t-miss" leave time alarm.'}
+                  appAfterHeading="Make this leave time harder to miss."
+                  appAfterBody="Turn the calendar event into a persistent alarm that requires your attention."
                   appLocation={locationCode ? `airport_${locationCode.toLowerCase()}_result` : "airport_calculator_inline"}
-                  analyticsContext={locationCode ? { location_code: locationCode } : {}}
+                  analyticsContext={{
+                    intent_cluster: "airport_when_to_leave",
+                    ...(locationCode ? { location_code: locationCode } : {}),
+                  }}
                 />
 
                 {/* Timing details stay available without interrupting the conversion flow. */}
                 <div className="mt-5 border-t border-zinc-800 pt-4">
                   <button
                     type="button"
-                    onClick={() => setShowBreakdown(!showBreakdown)}
+                    onClick={() => {
+                      const willOpen = !showBreakdown;
+                      setShowBreakdown(willOpen);
+                      if (willOpen) {
+                        track("airport_answer_breakdown_opened", {
+                          ...(locationCode ? { location_code: locationCode } : {}),
+                        });
+                      }
+                    }}
                     className="flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-400"
                     aria-expanded={showBreakdown}
                     aria-controls="airport-timing-breakdown"
@@ -1171,7 +1257,7 @@ export default function AirportCalculator({
               /* ── CAPABILITY STATE — no route inputs yet (default / initial) ── */
               <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
                 <p className="text-sm font-semibold text-white">
-                  {genericRedesign ? "Your leave time includes" : "Get your personalized leave time"}
+                  {genericRedesign ? "What your answer will account for" : "Get your personalized leave time"}
                 </p>
                 {!genericRedesign && (
                   <p className="mt-1 text-xs leading-relaxed text-zinc-500">

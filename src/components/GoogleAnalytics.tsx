@@ -30,6 +30,7 @@ function PageViewTracker() {
 
 export default function GoogleAnalytics() {
   const id = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const pathname = usePathname();
   const [allowed, setAllowed] = useState(false);
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function GoogleAnalytics() {
     return () => window.removeEventListener(CONSENT_EVENT, onConsent);
   }, []);
 
-  if (!id || !allowed) return null;
+  if (!id || !allowed || pathname === "/medication-schedule") return null;
 
   return (
     <>

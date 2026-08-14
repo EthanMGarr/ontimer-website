@@ -1,0 +1,46 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import ProviderMedicationSchedule from "./ProviderMedicationSchedule";
+
+export const metadata: Metadata = {
+  title: "Medication Calendar Handoff for Healthcare Providers",
+  description: "Create a medication calendar file in your browser, then hand it to a patient by email. No patient-identifying information or server storage required.",
+  alternates: { canonical: "https://www.ontimer.app/provider-medication-schedule" },
+};
+
+export default function ProviderMedicationSchedulePage() {
+  return (
+    <main className="min-h-screen bg-zinc-950 text-white">
+      <section className="py-12 sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <nav className="mb-8 text-sm text-zinc-500"><Link href="/" className="hover:text-zinc-300">Home</Link><span className="mx-2">›</span><span className="text-zinc-300">Provider medication schedule</span></nav>
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,.8fr)_minmax(30rem,1.2fr)] lg:gap-12">
+            <div className="lg:sticky lg:top-24">
+              <p className="text-sm font-semibold uppercase tracking-wider text-green-400">For healthcare providers</p>
+              <h1 className="mt-3 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl">Medication schedule maker</h1>
+              <p className="mt-5 text-lg leading-relaxed text-zinc-300">Quickly create a dosing schedule for your patients that they can add to their calendar.</p>
+              <p className="mt-4 text-sm leading-relaxed text-zinc-500">No patient name or account needed. This simple tool creates a calendar file you can send by email or text.</p>
+            </div>
+            <ProviderMedicationSchedule />
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-zinc-800 bg-zinc-900/40 py-14 sm:py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="min-w-0 [overflow-wrap:anywhere] text-3xl font-black tracking-tight text-white sm:text-4xl">
+            How providers can help patients adhere to their medication schedules
+          </h2>
+          <div className="mt-6 space-y-4 text-base leading-relaxed text-zinc-300 sm:text-lg">
+            <p>
+              Give patients one clear schedule they can add directly to the calendar they already use. Confirm the medication, instructions, dose times, and duration together before sending the private link.
+            </p>
+            <p>
+              Calendar events make each dose visible in the patient&apos;s day. For patients who want a stronger signal, OnTimer can turn those calendar events into persistent alarms on iPhone.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
