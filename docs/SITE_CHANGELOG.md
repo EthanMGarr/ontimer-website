@@ -6,7 +6,7 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ### 2026-08-14
 
-- Connected the production website to a dedicated GA4 web stream and replaced the fragile inline analytics initializer with a consent-aware command queue, preventing page views and early calculator interactions from being silently discarded before Google’s library finishes loading. The airport-answer funnel retains calculator, answer, calendar and App Store context for comparable 7- and 28-day reporting.
+- Connected the production website to a dedicated GA4 web stream and replaced the fragile inline analytics initializer with a consent-aware command queue, preventing page views and early calculator interactions from being silently discarded before Google’s library finishes loading. Linked the canonical Search Console property to that stream and registered the calculator, intent, airport, calendar-provider and CTA event dimensions needed for comparable 7- and 28-day airport-answer reporting.
 - Verification: production build passed; the live bundle contained the dedicated web-stream ID and consent-aware command queue, Google accepted a synthetic validation event, and the post-deployment audit passed all 165 URLs with zero issues.
 
 ### 2026-08-13
