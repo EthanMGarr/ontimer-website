@@ -4,6 +4,7 @@ import Script from "next/script";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { isAnalyticsAllowed, CONSENT_EVENT } from "@/lib/consent";
+import { initializeAnalytics } from "@/lib/analytics";
 
 declare global {
   interface Window {
@@ -17,11 +18,12 @@ function PageViewTracker() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) return;
-    if (typeof window.gtag !== "function") return;
+    if (!initializeAnalytics()) return;
 
-    window.gtag("config", process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID, {
+    window.gtag("event", "page_view", {
       page_path: pathname + (searchParams.toString() ? `?${searchParams}` : ""),
+      page_location: window.location.href,
+      page_title: document.title,
     });
   }, [pathname, searchParams]);
 
@@ -34,10 +36,15 @@ export default function GoogleAnalytics() {
   const [allowed, setAllowed] = useState(false);
 
   useEffect(() => {
-    setAllowed(isAnalyticsAllowed());
+    const initiallyAllowed = isAnalyticsAllowed();
+    setAllowed(initiallyAllowed);
+    if (initiallyAllowed) initializeAnalytics();
 
     function onConsent(event: Event) {
-      if ((event as CustomEvent<string>).detail === "granted") setAllowed(true);
+      if ((event as CustomEvent<string>).detail === "granted") {
+        initializeAnalytics();
+        setAllowed(true);
+      }
     }
     window.addEventListener(CONSENT_EVENT, onConsent);
     return () => window.removeEventListener(CONSENT_EVENT, onConsent);
@@ -51,14 +58,6 @@ export default function GoogleAnalytics() {
         src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
         strategy="afterInteractive"
       />
-      <Script id="ga4-init" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${id}');
-        `}
-      </Script>
       <Suspense fallback={null}>
         <PageViewTracker />
       </Suspense>

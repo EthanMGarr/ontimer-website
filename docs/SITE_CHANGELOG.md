@@ -4,6 +4,11 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-08-14
+
+- Connected the production website to a dedicated GA4 web stream and replaced the fragile inline analytics initializer with a consent-aware command queue, preventing page views and early calculator interactions from being silently discarded before Google’s library finishes loading. The airport-answer funnel retains calculator, answer, calendar and App Store context for comparable 7- and 28-day reporting.
+- Verification: production build passed; live stream, page-view collection and airport-funnel event delivery were checked against the connected GA4 property.
+
 ### 2026-08-13
 
 - Extended the airport answer-intent strategy across the full search cluster: all airport-specific metadata, application schema, directory messaging, navigation and internal-link anchors now lead with “when should I leave” rather than the calculator format. Added a source-backed planning caveat and review date, removed a repetitive conversion section, and instrumented personalized answer generation, timing-option interest and breakdown engagement with intent/location context through the calendar-to-alarm funnel.

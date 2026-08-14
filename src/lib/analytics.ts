@@ -1,3 +1,5 @@
+import { isAnalyticsAllowed } from "@/lib/consent";
+
 /// Centralized GA4 event tracking for OnTimer marketing site.
 ///
 /// ## Purpose
@@ -38,6 +40,31 @@ export type AnalyticsParams = Record<string, string | number>;
 
 const ATTRIBUTION_TOKEN_KEY = "ontimer_attribution_token";
 let fallbackAttributionToken: string | null = null;
+let analyticsConfigured = false;
+
+/**
+ * Create the GA command queue before the remote library finishes loading.
+ * This prevents early calculator interactions from being silently discarded.
+ */
+export function initializeAnalytics(): boolean {
+  if (typeof window === "undefined" || !isAnalyticsAllowed()) return false;
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  if (!measurementId) return false;
+
+  window.dataLayer = window.dataLayer || [];
+  if (typeof window.gtag !== "function") {
+    window.gtag = function gtag(..._args: unknown[]) {
+      window.dataLayer.push(arguments);
+    };
+  }
+
+  if (!analyticsConfigured) {
+    window.gtag("js", new Date());
+    window.gtag("config", measurementId, { send_page_view: false });
+    analyticsConfigured = true;
+  }
+  return true;
+}
 
 function getAttributionToken(): string {
   if (typeof window === "undefined") return "server";
@@ -85,7 +112,7 @@ export function fireEvent(eventName: string, params: AnalyticsParams = {}): void
     console.log(`[GA4] ${eventName}`, params);
   }
 
-  if (typeof window.gtag !== "function") return;
+  if (!initializeAnalytics()) return;
   window.gtag("event", eventName, { ...acquisitionParams(), ...params });
 }
 
