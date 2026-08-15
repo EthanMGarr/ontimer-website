@@ -14,7 +14,7 @@ export default function PrivacyPage() {
           Privacy Policy
         </h1>
         <p className="mt-3 text-sm text-zinc-400">
-          Last updated: July 9, 2026
+          Last updated: August 15, 2026
         </p>
 
         <div className="prose mt-10">
@@ -44,6 +44,20 @@ export default function PrivacyPage() {
             alarms. OnTimer cannot modify your calendar events.
           </p>
 
+          <h2>Location Data</h2>
+          <p>
+            OnTimer requests &quot;When In Use&quot; location access to
+            calculate travel time to your in-person meetings and alert you
+            when it&apos;s time to leave. We use Apple&apos;s MapKit to
+            determine directions and traffic-aware travel time between your
+            current location and an event&apos;s address; your coordinates
+            and the event address are sent to Apple&apos;s Maps service to
+            calculate this route. OnTimer does not store a history of your
+            location and does not send your location to our own servers. We
+            do not sell or share location data with third parties for
+            advertising.
+          </p>
+
           <h2>Notifications</h2>
           <p>
             OnTimer requests permission to send you local notifications (alarms).
@@ -67,7 +81,9 @@ export default function PrivacyPage() {
           <p>
             OnTimer integrates with calendar providers only to provide the
             service: Google Calendar, Apple Calendar, and Microsoft Outlook
-            Calendar. We do not use advertising networks or sell calendar data.
+            Calendar. OnTimer also uses Apple&apos;s MapKit to calculate
+            travel time, as described above under Location Data. We do not
+            use advertising networks or sell calendar or location data.
           </p>
 
           <h2>Children&apos;s Privacy</h2>
