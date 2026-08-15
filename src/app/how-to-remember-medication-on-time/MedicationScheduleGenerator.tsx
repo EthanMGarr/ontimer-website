@@ -20,6 +20,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 import { generateICS, downloadICS } from "@/lib/ics";
 import {
@@ -186,6 +187,10 @@ export default function MedicationScheduleGenerator() {
           </p>
           <p className="mt-1 text-sm text-zinc-400">
             Your dose times stay editable before you add them to your calendar.
+          </p>
+          <p className="mt-2 text-xs leading-relaxed text-zinc-500">
+            Your medication name, start date, and dose times stay in this browser. If analytics is enabled, we record tool usage such as the selected frequency and duration.{" "}
+            <Link href="/privacy" className="underline underline-offset-2 hover:text-zinc-300">Privacy Policy</Link>
           </p>
 
           <div className="mt-5 space-y-5">

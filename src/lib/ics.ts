@@ -158,3 +158,14 @@ export function downloadICS(content: string, filename: string): void {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+export function prefersNativeCalendarHandoff(userAgent: string): boolean {
+  return /Safari/i.test(userAgent) && !/(Chrome|Chromium|CriOS|Edg|EdgiOS|FxiOS|OPR|Android)/i.test(userAgent);
+}
+
+export function openICSInCalendar(content: string): void {
+  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  window.location.assign(url);
+  window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+}

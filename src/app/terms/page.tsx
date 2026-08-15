@@ -13,14 +13,16 @@ export default function TermsPage() {
           Terms of Service
         </h1>
         <p className="mt-3 text-sm text-zinc-400">
-          Last updated: January 1, 2025
+          Last updated: August 15, 2026
         </p>
 
         <div className="prose mt-10">
           <h2>Acceptance of Terms</h2>
           <p>
-            By downloading or using OnTimer, you agree to these Terms of
-            Service. If you do not agree, please do not use the app.
+            By downloading, accessing, or using OnTimer—including the app,
+            website, calculators, medication schedule generators, shared
+            schedules, calendar exports, and related services—you agree to these
+            Terms of Service. If you do not agree, do not use the service.
           </p>
 
           <h2>Use of the App</h2>
@@ -45,6 +47,21 @@ export default function TermsPage() {
             perfectly accurate in setting alarms. You are responsible for
             verifying that your alarms are correctly configured for important
             events.
+          </p>
+
+          <h2>Planning Estimates and Medication Tools</h2>
+          <p>
+            Travel-time, airport, departure, and other planning results are estimates
+            only. Conditions can change, and you remain responsible for deciding when
+            to leave and for verifying important timing information.
+          </p>
+          <p>
+            Medication schedule generators, shared schedules, calendar files, and
+            medication-related content are organizational tools only. OnTimer is not a
+            medical device and does not provide medical advice, diagnosis, dosing
+            instructions, treatment recommendations, or adherence guarantees. Verify all
+            medication information with a qualified healthcare professional and follow
+            the prescription or clinician&apos;s instructions.
           </p>
 
           <h2>Limitation of Liability</h2>

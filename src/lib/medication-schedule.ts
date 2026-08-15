@@ -24,6 +24,7 @@ export function isOvernightTime(time: string): boolean {
 }
 
 export function formatMedicationTime(time: string): string {
+  if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(time)) return "Choose a valid time";
   const [hours, minutes] = time.split(":").map(Number);
   const period = hours >= 12 ? "pm" : "am";
   const hour = hours % 12 || 12;

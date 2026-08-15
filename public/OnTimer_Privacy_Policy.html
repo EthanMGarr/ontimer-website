@@ -56,7 +56,7 @@
     <h2>1. Introduction</h2>
     <p>Breakout Growth ("we," "our," or "us") operates OnTimer, including the ontimer.app website, mobile applications, calculators, planning tools, reminder tools, educational content, subscriptions, and related services (collectively, "OnTimer" or "the Service"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use OnTimer.</p>
     <p>Some OnTimer features are available through the website, while others require the mobile application. The information we collect depends on the features you use and the permissions you grant.</p>
-    <p><strong>By using OnTimer, you consent to the data practices described in this policy.</strong></p>
+    <p>This policy is a notice describing our data practices. It is not a request to consent to every practice described below. Where applicable law requires consent, such as for certain analytics cookies or device permissions, we request it separately.</p>
 
     <div class="important">
         <h3>🔒 KEY PRIVACY PRINCIPLES</h3>
@@ -163,7 +163,16 @@
     </ul>
     <p>OnTimer does not store your payment card information. Payments and billing are processed by the Apple App Store and related subscription providers.</p>
 
-    <h3>2.7 Information We Do NOT Collect</h3>
+    <h3>2.7 Website Calculator and Medication Tool Inputs</h3>
+    <p>Different website tools handle what you enter in different ways:</p>
+    <ul>
+        <li><strong>Travel and Time to Leave calculators:</strong> Origin, destination, airport, cruise terminal, and similar location text may be sent to OnTimer's server and then to Google Maps Platform services to return place suggestions or calculate a route and travel-time estimate. We do not use those entries to build a user profile.</li>
+        <li><strong>Medication Schedule Generator:</strong> Medication names, start dates, and dose times are processed in your browser to create a calendar file and are not sent to or stored by OnTimer. If website analytics is enabled, we record a schedule-generated event that may include the selected frequency and duration, but not the medication name, start date, or dose times.</li>
+        <li><strong>Provider medication schedule links:</strong> Schedule details are encoded in the URL fragment, the portion after the <code>#</code>. Browsers do not send that fragment to OnTimer with the page request. The recipient's browser reads the schedule locally and removes the fragment from the address bar after validation. Anyone who receives the complete link can read the schedule, so it should be shared only with the intended recipient.</li>
+        <li><strong>Shared medication schedule page:</strong> Google Analytics is disabled on this route so the schedule fragment and imported schedule values are not captured by our website analytics.</li>
+    </ul>
+
+    <h3>2.8 Information We Do NOT Collect</h3>
     <p>OnTimer does not collect:</p>
     <ul>
         <li>Email content or messages</li>
@@ -282,6 +291,13 @@
         <li><strong>Privacy policy:</strong> <a href="https://www.apple.com/legal/privacy/">https://www.apple.com/legal/privacy/</a></li>
     </ul>
 
+    <h3>5.9 Google Maps Platform</h3>
+    <ul>
+        <li><strong>Purpose:</strong> Return place suggestions and calculate routes and travel-time estimates for website calculators</li>
+        <li><strong>Data shared:</strong> Location text you enter, requested travel mode, and the departure-time information needed to calculate the estimate</li>
+        <li><strong>Privacy policy:</strong> <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a></li>
+    </ul>
+
     <h2>6. Data Sharing and Disclosure</h2>
     <p><strong>We do not sell, trade, or rent your personal information to third parties.</strong></p>
     <p>We may disclose your information only in the following circumstances:</p>
@@ -370,7 +386,7 @@
         <li>Posting a notice on the website</li>
         <li>Sending an email notification (if you have provided your email)</li>
     </ul>
-    <p>Your continued use of OnTimer after changes become effective constitutes acceptance of the updated Privacy Policy.</p>
+    <p>We encourage you to review this policy when the "Last Updated" date changes.</p>
 
     <h2>12. Google API Services User Data Policy Compliance</h2>
     <p>OnTimer's use of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
@@ -391,7 +407,5 @@
         Website: <a href="https://ontimer.app">https://ontimer.app</a>
     </p>
 
-    <h2>14. Your Consent</h2>
-    <p><strong>By using OnTimer, you acknowledge that you have read this Privacy Policy and consent to our collection, use, and disclosure of your information as described herein.</strong></p>
 </body>
 </html>

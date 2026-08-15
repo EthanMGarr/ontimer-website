@@ -1,4 +1,4 @@
-import { downloadICS } from "./ics";
+import { downloadICS, openICSInCalendar, prefersNativeCalendarHandoff } from "./ics";
 
 export interface ProviderMedicationSchedule {
   medication: string;
@@ -50,4 +50,13 @@ export function generateProviderMedicationICS(schedule: ProviderMedicationSchedu
 
 export function downloadProviderMedicationICS(content: string): void {
   downloadICS(content, "medication-schedule.ics");
+}
+
+export function handoffProviderMedicationICS(content: string, userAgent: string): "native" | "download" {
+  if (prefersNativeCalendarHandoff(userAgent)) {
+    openICSInCalendar(content);
+    return "native";
+  }
+  downloadProviderMedicationICS(content);
+  return "download";
 }

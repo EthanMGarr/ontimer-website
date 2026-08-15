@@ -4,9 +4,10 @@
 
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { formatMedicationTime, generateMedicationTimes, isOvernightTime, type MedicationFrequency } from "@/lib/medication-schedule";
-import { encodeMedicationSchedule, type SharedMedicationSchedule } from "@/lib/medication-share-link";
+import { encodeMedicationSchedule, medicationShareCopy, type SharedMedicationSchedule } from "@/lib/medication-share-link";
 
 type Frequency = MedicationFrequency;
 type Duration = 7 | 10 | 14 | 30 | "custom";
@@ -38,6 +39,7 @@ const inputClass = "w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py
 
 export default function ProviderMedicationSchedule() {
   const [medication, setMedication] = useState("");
+  const [practiceName, setPracticeName] = useState("");
   const [instructions, setInstructions] = useState("");
   const [frequency, setFrequency] = useState<Frequency>(1);
   const [startTime, setStartTime] = useState("08:00");
@@ -50,6 +52,7 @@ export default function ProviderMedicationSchedule() {
   const [shareUrl, setShareUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
+  const resultRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
@@ -57,16 +60,11 @@ export default function ProviderMedicationSchedule() {
   const timeZones = useMemo(() => COMMON_TIME_ZONES.some((zone) => zone.value === timeZone) || !timeZone ? COMMON_TIME_ZONES : [{ value: timeZone, label: "Local" }, ...COMMON_TIME_ZONES], [timeZone]);
   const parsedDays = Number.parseInt(customDays, 10);
   const effectiveDuration = duration === "custom" ? Math.min(365, Math.max(1, Number.isFinite(parsedDays) ? parsedDays : 1)) : duration;
-  const mailto = useMemo(() => {
-    const subject = "I created a medication schedule for you to add to your calendar";
-    const body = `I created a medication schedule for you to add to your calendar.\n\nOpen this private link to review the dosing schedule, then tap Add schedule to calendar:\n${shareUrl}\n\nNo account is needed.`;
-    return `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  }, [shareUrl]);
-
   function handleGenerate() {
     if (!medication.trim()) { setError("Enter a medication name."); return; }
     setTimes(generateMedicationTimes(startTime, frequency));
     setGenerated(true); setShareUrl(""); setCopied(false); setError("");
+    window.requestAnimationFrame(() => resultRef.current?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }));
   }
   function sharedSchedule(): SharedMedicationSchedule {
     let dayOffset = 0;
@@ -74,7 +72,7 @@ export default function ProviderMedicationSchedule() {
       if (index > 0 && time <= times[index - 1]) dayOffset += 1;
       return { time, dayOffset };
     });
-    return { version: 1, medication: medication.trim(), instructions: instructions.trim(), startDate, days: effectiveDuration, times: scheduledTimes, timeZone: timeZone || undefined };
+    return { version: 1, medication: medication.trim(), practiceName: practiceName.trim() || undefined, instructions: instructions.trim(), startDate, days: effectiveDuration, times: scheduledTimes, timeZone: timeZone || undefined };
   }
   function createShareUrl() {
     const url = `${window.location.origin}/medication-schedule#schedule=${encodeMedicationSchedule(sharedSchedule())}`;
@@ -83,8 +81,7 @@ export default function ProviderMedicationSchedule() {
   }
   async function handleShare() {
     const url = shareUrl || createShareUrl();
-    const title = "I created a medication schedule for you to add to your calendar";
-    const text = "Open this private link to review the dosing schedule, then tap Add schedule to calendar. No account is needed.";
+    const { title, text } = medicationShareCopy(practiceName);
     try {
       if (typeof navigator.share === "function") {
         await navigator.share({ title, text, url });
@@ -96,6 +93,11 @@ export default function ProviderMedicationSchedule() {
       if (shareError instanceof DOMException && shareError.name === "AbortError") return;
       setError("This device could not open sharing. Copy the private link and paste it into an email or text instead.");
     }
+  }
+  function handleEmail() {
+    const url = shareUrl || createShareUrl();
+    const copy = medicationShareCopy(practiceName);
+    window.location.href = `mailto:?subject=${encodeURIComponent(copy.title)}&body=${encodeURIComponent(`${copy.emailBody}\n\n${url}`)}`;
   }
   async function handleCopy() {
     const url = shareUrl || createShareUrl();
@@ -109,12 +111,13 @@ export default function ProviderMedicationSchedule() {
   }
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6">
-      <div className="rounded-lg border border-green-500/30 bg-green-500/[0.07] px-4 py-3 text-sm leading-relaxed text-zinc-300"><strong className="text-white">Private by design.</strong> This tool runs in your browser. We don&apos;t see, store, or transmit what you type here.</div>
+    <div ref={resultRef} className="scroll-mt-24 rounded-2xl border border-zinc-800 bg-zinc-900 p-4 sm:p-6">
+      <div className="rounded-lg border border-green-500/30 bg-green-500/[0.07] px-3 py-2.5 text-xs leading-relaxed text-zinc-300 sm:px-4 sm:py-3 sm:text-sm"><strong className="text-white">Private by design.</strong><span className="sm:hidden"> Schedule details stay in the private link you share. </span><span className="hidden sm:inline"> This tool runs in your browser. OnTimer does not receive or store what you enter. Schedule details are placed in the private link you choose to share. </span><Link href="/privacy" className="underline underline-offset-2 hover:text-white">Privacy Policy</Link></div>
       {!generated ? <>
-        <h2 className="mt-6 text-xl font-black tracking-tight text-white sm:text-2xl">Create the schedule</h2>
-        <div className="mt-5 space-y-5">
+        <h2 className="mt-4 text-xl font-black tracking-tight text-white sm:mt-6 sm:text-2xl">Create the schedule</h2>
+        <div className="mt-4 space-y-4 sm:mt-5 sm:space-y-5">
           <div><Label>Medication name</Label><input value={medication} onChange={(e) => setMedication(e.target.value)} placeholder="e.g. Metformin" autoComplete="off" className={inputClass} /></div>
+          <div><Label>Practice or clinic name (optional)</Label><input value={practiceName} onChange={(e) => setPracticeName(e.target.value.slice(0, 120))} placeholder="e.g. Riverside Family Medicine" autoComplete="organization" className={inputClass} /></div>
           <div><Label>Instructions (optional)</Label><input value={instructions} onChange={(e) => setInstructions(e.target.value)} placeholder="Take 500mg (1 pill) with food" autoComplete="off" className={inputClass} /></div>
           <div><Label>How often per day?</Label><div className="flex flex-wrap gap-2">{FREQ_OPTIONS.map((option) => <Pill key={option.value} label={option.label} selected={frequency === option.value} onClick={() => setFrequency(option.value)} />)}</div></div>
           <div><Label>First dose time</Label><div className="grid grid-cols-[minmax(0,1fr)_5.25rem] gap-2 sm:max-w-sm"><input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} className={inputClass} /><select value={timeZone} onChange={(e) => setTimeZone(e.target.value)} className={inputClass} aria-label="Schedule time zone">{!timeZone && <option value="">Local time</option>}{timeZones.map((zone) => <option key={zone.value} value={zone.value}>{zone.label}</option>)}</select></div></div>
@@ -126,13 +129,13 @@ export default function ProviderMedicationSchedule() {
       </> : <>
         <div className="mt-6 flex flex-wrap items-start justify-between gap-3"><div><h2 className="text-xl font-black text-white sm:text-2xl">Medication schedule is ready</h2><p className="mt-1 text-sm text-zinc-400">{times.length} {times.length === 1 ? "dose" : "doses"} per day for {effectiveDuration} days</p></div><button type="button" onClick={() => { setGenerated(false); setShareUrl(""); setCopied(false); }} className="text-xs font-medium text-zinc-400 underline underline-offset-2 hover:text-white">Edit schedule setup</button></div>
         <div className="mt-6 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,.82fr)] lg:items-start">
-          <div><Label>Review dose times</Label><div className="space-y-2">{times.map((time, index) => <div key={index} className="flex min-w-0 items-center gap-2 sm:gap-3"><span className="w-5 shrink-0 text-center text-xs font-semibold text-zinc-500">{index + 1}</span><input type="time" value={time} onChange={(e) => { setTimes((current) => current.map((item, i) => i === index ? e.target.value : item)); setShareUrl(""); setCopied(false); }} className={`min-w-0 rounded-lg border px-3 py-2 text-sm text-white focus:outline-none ${isOvernightTime(time) ? "border-amber-500/70 bg-amber-500/10 focus:border-amber-400" : "border-zinc-700 bg-zinc-800 focus:border-green-500"}`} /><span className="hidden text-xs text-zinc-500 sm:inline">{formatMedicationTime(time)}</span><button type="button" onClick={() => { setTimes((current) => current.filter((_, i) => i !== index)); setShareUrl(""); setCopied(false); }} className="ml-auto text-zinc-600 hover:text-red-400" aria-label="Remove this time">✕</button></div>)}</div><button type="button" onClick={() => { setTimes((current) => [...current, "08:00"]); setShareUrl(""); setCopied(false); }} className="mt-3 text-sm text-green-500 hover:text-green-400">+ Add time</button></div>
-          <div className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-24">
-            <div className="rounded-xl border border-zinc-700 bg-zinc-950/35 p-4"><p className="text-xs font-semibold uppercase tracking-wider text-green-400">Your next step</p><p className="mt-1 text-lg font-bold text-white">Send the schedule.</p><button type="button" onClick={handleShare} disabled={!timeZone || times.length === 0} className="mt-4 w-full rounded-full bg-green-500 px-5 py-3.5 text-sm font-bold text-black hover:bg-green-400 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400">Send schedule link</button><button type="button" onClick={handleCopy} className="mt-3 w-full text-sm font-medium text-zinc-300 underline underline-offset-2 hover:text-white">{copied ? "Link copied" : "Copy private link"}</button><p className="mt-3 text-xs leading-relaxed text-zinc-500">The patient reviews the schedule, then adds it to their calendar. OnTimer never receives what you entered.</p>{shareUrl && <><input readOnly value={shareUrl} aria-label="Private medication schedule link" className="mt-3 w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs text-zinc-500" /><a href={mailto} className="mt-3 inline-flex text-sm font-medium text-green-500 underline underline-offset-2 hover:text-green-400">Open email draft</a></>}</div>
+          <div className="order-2 lg:order-1"><Label>Review dose times</Label><div className="space-y-2">{times.map((time, index) => <div key={index} className="flex min-w-0 items-center gap-2 sm:gap-3"><span className="w-5 shrink-0 text-center text-xs font-semibold text-zinc-500">{index + 1}</span><input type="time" value={time} onChange={(e) => { setTimes((current) => current.map((item, i) => i === index ? e.target.value : item)); setShareUrl(""); setCopied(false); }} aria-describedby={isOvernightTime(time) ? "provider-overnight-dose-warning" : undefined} className={`min-w-0 rounded-lg border px-3 py-2 text-sm text-white focus:outline-none ${isOvernightTime(time) ? "border-amber-500/70 bg-amber-500/10 focus:border-amber-400" : "border-zinc-700 bg-zinc-800 focus:border-green-500"}`} /><span className={`hidden text-xs sm:inline ${isOvernightTime(time) ? "font-medium text-amber-400" : "text-zinc-500"}`}>{formatMedicationTime(time)}</span><button type="button" onClick={() => { setTimes((current) => current.filter((_, i) => i !== index)); setShareUrl(""); setCopied(false); }} className="ml-auto text-zinc-600 hover:text-red-400" aria-label="Remove this time">✕</button></div>)}</div><button type="button" onClick={() => { setTimes((current) => [...current, "08:00"]); setShareUrl(""); setCopied(false); }} className="mt-3 text-sm text-green-500 hover:text-green-400">+ Add time</button>{times.some(isOvernightTime) && <div id="provider-overnight-dose-warning" className="mt-4 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3"><p className="text-sm leading-relaxed text-zinc-300"><strong className="font-semibold text-white">{times.filter(isOvernightTime).length === 1 ? `One dose falls at ${times.find(isOvernightTime) === "00:00" ? "midnight" : formatMedicationTime(times.find(isOvernightTime)!)}. ` : `${times.filter(isOvernightTime).length} doses fall overnight. `}</strong>Check that these times match the intended dosing schedule before sharing it.</p></div>}</div>
+          <div className="order-1 flex min-w-0 flex-col gap-4 lg:order-2 lg:sticky lg:top-24">
+            <div className="rounded-xl border border-zinc-700 bg-zinc-950/35 p-4"><p className="text-xs font-semibold uppercase tracking-wider text-green-400">Your next step</p><p className="mt-1 text-lg font-bold text-white">Send the schedule.</p><button type="button" onClick={handleEmail} disabled={!timeZone || times.length === 0} className="mt-4 w-full whitespace-nowrap rounded-full bg-green-500 px-5 py-3.5 text-sm font-bold text-black hover:bg-green-400 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400">Email schedule</button><button type="button" onClick={handleShare} disabled={!timeZone || times.length === 0} className="mt-3 w-full whitespace-nowrap text-sm font-medium text-zinc-300 underline underline-offset-2 hover:text-white disabled:cursor-not-allowed disabled:text-zinc-600">Text or share another way</button><button type="button" onClick={handleCopy} className="mt-3 w-full whitespace-nowrap text-sm font-medium text-zinc-400 underline underline-offset-2 hover:text-white">{copied ? "Link copied" : "Copy private link"}</button><p className="mt-3 text-xs leading-relaxed text-zinc-500">Email includes a subject and short instructions. The patient reviews the schedule, then adds it to their calendar.</p></div>
           </div>
         </div>
       </>}
-      <p className="mt-5 text-xs leading-relaxed text-zinc-500">OnTimer is not a medical device and does not provide medical advice. Confirm the schedule with your patient and make sure they understand how to follow the instructions.</p>
+      <p className="mt-5 text-xs leading-relaxed text-zinc-500">OnTimer is not a medical device and does not provide medical advice. Confirm the schedule with your patient and make sure they understand how to follow the instructions. <Link href="/terms" className="underline underline-offset-2 hover:text-zinc-300">Terms of Service</Link></p>
     </div>
   );
 }

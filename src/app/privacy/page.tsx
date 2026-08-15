@@ -77,6 +77,25 @@ export default function PrivacyPage() {
             again.
           </p>
 
+          <h2>Website Calculators and Medication Tools</h2>
+          <p>
+            Travel and Time To Leave calculators may send the location text you enter,
+            travel mode, and departure-time information through OnTimer&apos;s server to
+            Google Maps Platform services for place suggestions, routes, and travel-time
+            estimates. We do not use those entries to build a user profile.
+          </p>
+          <p>
+            Medication schedule generators create calendar files in your browser. OnTimer
+            does not receive or store medication names, start dates, or dose times. If
+            analytics is enabled, a schedule-generated event may include the selected
+            frequency and duration, but not the medication name, start date, or dose times.
+            Provider schedule details are stored in the private URL
+            fragment after the # symbol; that fragment is not sent to OnTimer with the page
+            request. Anyone with the complete link can read its contents, so share it only
+            with the intended recipient. Google Analytics is disabled on the shared
+            medication-schedule route.
+          </p>
+
           <h2>Third-Party Services</h2>
           <p>
             OnTimer integrates with calendar providers only to provide the
@@ -89,8 +108,8 @@ export default function PrivacyPage() {
           <h2>Children&apos;s Privacy</h2>
           <p>
             OnTimer does not knowingly collect any information from children
-            under 13. Because we collect no information from anyone, this is a
-            naturally satisfied condition.
+            under 13. If you believe a child has provided personal information,
+            contact us and we will take appropriate steps to delete it.
           </p>
 
           <h2>Changes to This Policy</h2>

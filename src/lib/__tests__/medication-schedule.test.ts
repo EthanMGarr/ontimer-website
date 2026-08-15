@@ -18,6 +18,7 @@ assert(isOvernightTime("05:59"), "times before 6am should be flagged as overnigh
 assert(isOvernightTime("23:00"), "times from 11pm should be flagged as overnight");
 assert(!isOvernightTime("06:00"), "6am should not be flagged as overnight");
 assert(!isOvernightTime("22:59"), "times before 11pm should not be flagged as overnight");
+assert(formatMedicationTime("") === "Choose a valid time", "empty edited times should not render a malformed label");
 assert(formatMedicationTime("00:00") === "12:00 midnight", "midnight should be unambiguous");
 
 const fourTimes = generateMedicationTimes("08:00", 4);

@@ -1,4 +1,4 @@
-import { generateICS } from "../ics";
+import { generateICS, prefersNativeCalendarHandoff } from "../ics";
 
 function assert(condition: boolean, message: string) {
   if (!condition) throw new Error(message);
@@ -44,5 +44,11 @@ assert(
   afternoonExport.includes("DTSTART;TZID=America/New_York:20260807T000000"),
   "a wrapped overnight dose should begin on the following day",
 );
+
+assert(prefersNativeCalendarHandoff("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/18.6 Safari/605.1.15"), "Mac Safari should use native calendar handoff");
+assert(prefersNativeCalendarHandoff("Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 Version/18.6 Mobile/15E148 Safari/604.1"), "iOS Safari should use native calendar handoff");
+assert(!prefersNativeCalendarHandoff("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/139.0.0.0 Safari/537.36"), "Mac Chrome should retain download fallback");
+assert(!prefersNativeCalendarHandoff("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0"), "Windows Edge should retain download fallback");
+assert(!prefersNativeCalendarHandoff("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0"), "Firefox should retain download fallback");
 
 console.log("Medication calendar export tests passed.");
