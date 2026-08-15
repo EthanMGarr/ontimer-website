@@ -18,6 +18,11 @@ export interface MedTime {
   name: string;
   time: string; // "HH:MM" 24h format
   dayOffset?: number;
+  description?: string;
+}
+
+function escapeText(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/\r?\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
 }
 
 function uid(): string {
@@ -119,6 +124,7 @@ export function generateICS(
   const events = times.map((t) => {
     const dtstart = nextEventStart(startDate, t.time, t.dayOffset || 0, now, timeZone);
     const summary = t.name.trim() || "Medication";
+    const description = t.description?.trim() || summary;
     return [
       "BEGIN:VEVENT",
       `UID:${uid()}`,
@@ -126,11 +132,12 @@ export function generateICS(
       timeZone ? `DTSTART;TZID=${timeZone}:${dtstart}` : `DTSTART:${dtstart}`,
       "DURATION:PT5M",
       `RRULE:FREQ=DAILY;COUNT=${days}`,
-      `SUMMARY:${summary}`,
+      `SUMMARY:${escapeText(summary)}`,
+      `DESCRIPTION:${escapeText(description)}`,
       "BEGIN:VALARM",
       "TRIGGER:PT0M",
       "ACTION:DISPLAY",
-      `DESCRIPTION:${summary}`,
+      `DESCRIPTION:${escapeText(description)}`,
       "END:VALARM",
       "END:VEVENT",
     ].join("\r\n");

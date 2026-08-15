@@ -22,11 +22,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
+import DoseTimeField from "@/components/DoseTimeField";
 import { generateICS, downloadICS } from "@/lib/ics";
 import {
   formatMedicationTime,
   generateMedicationTimes,
-  isOvernightTime,
 } from "@/lib/medication-schedule";
 
 type Frequency = 1 | 2 | 3 | 4 | "custom";
@@ -109,12 +109,14 @@ function getTimeZones(detectedTimeZone: string) {
 export default function MedicationScheduleGenerator() {
   const workbenchRef = useRef<HTMLDivElement>(null);
   const [medName, setMedName] = useState("");
+  const [instructions, setInstructions] = useState("");
   const [frequency, setFrequency] = useState<Frequency>(1);
   const [startTime, setStartTime] = useState("08:00");
   const [startDate, setStartDate] = useState(todayISO());
   const [duration, setDuration] = useState<Duration>(30);
   const [customDays, setCustomDays] = useState("60");
   const [times, setTimes] = useState<string[]>([]);
+  const [generatedTimes, setGeneratedTimes] = useState<string[]>([]);
   const [generated, setGenerated] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
   const [timeZone, setTimeZone] = useState("");
@@ -124,11 +126,13 @@ export default function MedicationScheduleGenerator() {
   }, []);
 
   const timeZones = useMemo(() => getTimeZones(timeZone), [timeZone]);
-  const overnightTimes = times.filter(isOvernightTime);
+  const timesChanged = times.length !== generatedTimes.length || times.some((time, index) => time !== generatedTimes[index]);
 
   function handleGenerate() {
     if (duration === "custom") setCustomDays(String(effectiveDuration));
-    setTimes(generateMedicationTimes(startTime, frequency));
+    const nextTimes = generateMedicationTimes(startTime, frequency);
+    setTimes(nextTimes);
+    setGeneratedTimes(nextTimes);
     setGenerated(true);
     setDownloaded(false);
     track("medication_schedule_generated", { frequency, duration: effectiveDuration });
@@ -144,7 +148,7 @@ export default function MedicationScheduleGenerator() {
     let dayOffset = 0;
     const medTimes = times.map((t, index) => {
       if (index > 0 && t <= times[index - 1]) dayOffset += 1;
-      return { name: medName.trim() || "Medication", time: t, dayOffset };
+      return { name: medName.trim() || "Medication", time: t, dayOffset, description: instructions.trim() || undefined };
     });
     const start = new Date(startDate + "T00:00:00");
     const content = generateICS(medTimes, start, effectiveDuration, timeZone || undefined);
@@ -183,14 +187,7 @@ export default function MedicationScheduleGenerator() {
             Create your schedule
           </h2>
           <p className="mt-2 text-sm font-semibold text-green-500">
-            Free. No account required.
-          </p>
-          <p className="mt-1 text-sm text-zinc-400">
-            Your dose times stay editable before you add them to your calendar.
-          </p>
-          <p className="mt-2 text-xs leading-relaxed text-zinc-500">
-            Your medication name, start date, and dose times stay in this browser. If analytics is enabled, we record tool usage such as the selected frequency and duration.{" "}
-            <Link href="/privacy" className="underline underline-offset-2 hover:text-zinc-300">Privacy Policy</Link>
+            Free medication schedule generator. No account required.
           </p>
 
           <div className="mt-5 space-y-5">
@@ -204,6 +201,19 @@ export default function MedicationScheduleGenerator() {
             placeholder="e.g. Lisinopril, Vitamin D…"
             className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none"
           />
+        </div>
+
+        <div>
+          <FieldLabel>Instructions (optional)</FieldLabel>
+          <input
+            type="text"
+            value={instructions}
+            onChange={(event) => setInstructions(event.target.value)}
+            placeholder="e.g. Take 500mg (1 pill) with food"
+            autoComplete="off"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none"
+          />
+          <p className="mt-1.5 text-xs text-zinc-500">Included in each calendar event.</p>
         </div>
 
         {/* Frequency */}
@@ -225,13 +235,8 @@ export default function MedicationScheduleGenerator() {
         {/* First dose time + compact schedule time zone */}
         <div>
           <FieldLabel>First dose time</FieldLabel>
-          <div className="grid grid-cols-[minmax(0,1fr)_5.25rem] gap-2 sm:max-w-sm">
-            <input
-              type="time"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white focus:border-green-500 focus:outline-none"
-            />
+          <div className="grid gap-2 sm:max-w-md sm:grid-cols-[minmax(17rem,1fr)_5.25rem]">
+            <DoseTimeField value={startTime} onChange={setStartTime} label="First dose time" />
             <select
               value={timeZone}
               onChange={(event) => setTimeZone(event.target.value)}
@@ -295,10 +300,14 @@ export default function MedicationScheduleGenerator() {
         <button
           type="button"
           onClick={handleGenerate}
-          className="rounded-full bg-green-500 px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-green-400"
+          className="whitespace-nowrap rounded-full bg-green-500 px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:translate-y-px"
         >
-          Generate Schedule
+          Review my schedule
         </button>
+        <p className="text-xs leading-relaxed text-zinc-500">
+          <strong className="font-semibold text-zinc-300">Private by design.</strong> Your medication name, instructions, start date, and dose times stay in this browser. You can review and edit every dose time before adding one complete medication schedule to your calendar. If analytics is enabled, OnTimer records tool usage such as the selected frequency and duration—not what you type. {" "}
+          <Link href="/OnTimer_Privacy_Policy.html" className="underline underline-offset-2 hover:text-zinc-300">Privacy Policy</Link>
+        </p>
           </div>
         </>
       )}
@@ -331,30 +340,19 @@ export default function MedicationScheduleGenerator() {
                 <FieldLabel>Review dose times</FieldLabel>
                 <div className="space-y-2">
                   {times.map((t, i) => (
-                    <div key={i} className="flex min-w-0 items-center gap-2 sm:gap-3">
-                      <span className="w-5 shrink-0 text-center text-xs font-semibold text-zinc-500">{i + 1}</span>
-                      <input
-                        type="time"
-                        value={t}
-                        onChange={(e) => handleTimeChange(i, e.target.value)}
-                        aria-describedby={isOvernightTime(t) ? "overnight-dose-warning" : undefined}
-                        className={`min-w-0 rounded-lg border px-3 py-2 text-sm text-white focus:outline-none ${
-                          isOvernightTime(t)
-                            ? "border-amber-500/70 bg-amber-500/10 focus:border-amber-400 focus:ring-1 focus:ring-amber-400/40"
-                            : "border-zinc-700 bg-zinc-800 focus:border-green-500"
-                        }`}
-                      />
-                      <span className={`hidden text-xs sm:inline ${isOvernightTime(t) ? "font-medium text-amber-400" : "text-zinc-500"}`}>
-                        {formatMedicationTime(t)}
-                      </span>
+                    <div key={i} className="min-w-0 rounded-xl border border-zinc-800 bg-zinc-950/20 p-3">
+                      <div className="mb-2 flex items-center justify-between gap-3">
+                        <span className="text-xs font-semibold text-zinc-400">Dose {i + 1} · {formatMedicationTime(t)}</span>
                       <button
                         type="button"
                         onClick={() => handleRemoveTime(i)}
-                        className="ml-auto shrink-0 text-sm text-zinc-600 transition-colors hover:text-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+                        className="shrink-0 text-sm text-zinc-600 transition-colors hover:text-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
                         aria-label="Remove this time"
                       >
                         ✕
                       </button>
+                      </div>
+                      <DoseTimeField value={t} onChange={(value) => handleTimeChange(i, value)} label={`Dose ${i + 1} time`} />
                     </div>
                   ))}
                 </div>
@@ -370,17 +368,10 @@ export default function MedicationScheduleGenerator() {
                 </div>
               </div>
 
-              {overnightTimes.length > 0 && (
-                <div id="overnight-dose-warning" className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3">
-                  <p className="text-sm leading-relaxed text-zinc-300">
-                    <strong className="font-semibold text-white">
-                      {overnightTimes.length === 1
-                        ? `One dose falls at ${overnightTimes[0] === "00:00" ? "midnight" : formatMedicationTime(overnightTimes[0])}. `
-                        : `${overnightTimes.length} doses fall overnight. `}
-                    </strong>
-                    These times are evenly spaced based on your first dose. Adjust them only if your prescription or healthcare provider allows it.
-                  </p>
-                </div>
+              {timesChanged && (
+                <p className="rounded-lg border border-zinc-700 bg-zinc-950/30 px-4 py-3 text-sm leading-relaxed text-zinc-300">
+                  You changed a dose time. Make sure any changes match your prescription or are cleared with your healthcare provider.
+                </p>
               )}
 
               <p className="text-xs leading-relaxed text-zinc-400">
@@ -412,9 +403,9 @@ export default function MedicationScheduleGenerator() {
                   <div className="flex items-start gap-2.5">
                     <span className="mt-0.5 text-green-500" aria-hidden="true">✓</span>
                     <div>
-                      <p className="text-sm font-semibold text-white">Calendar import opened</p>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-green-400">Calendar opened</p>
                       <p className="mt-0.5 text-xs leading-relaxed text-zinc-400">
-                        Confirm the events in your calendar to finish adding the schedule.
+                        Finish confirming the schedule in your calendar.
                       </p>
                     </div>
                   </div>

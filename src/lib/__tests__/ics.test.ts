@@ -5,7 +5,7 @@ function assert(condition: boolean, message: string) {
 }
 
 const content = generateICS(
-  [{ name: "Medication", time: "08:00" }],
+  [{ name: "Medication", time: "08:00", description: "Take 500mg (1 pill) with food" }],
   new Date(2026, 7, 6),
   7,
   "America/Los_Angeles",
@@ -19,6 +19,7 @@ assert(
 assert(content.includes("RRULE:FREQ=DAILY;COUNT=7"), "calendar events should retain duration");
 assert(content.includes("BEGIN:VALARM"), "calendar events should include an alert");
 assert(content.includes("TRIGGER:PT0M"), "calendar alerts should fire at dose time");
+assert(content.includes("DESCRIPTION:Take 500mg (1 pill) with food"), "calendar export should include optional medication instructions");
 
 const afternoonExport = generateICS(
   [

@@ -7,7 +7,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
-import { formatMedicationTime, isOvernightTime } from "@/lib/medication-schedule";
+import DoseTimeField from "@/components/DoseTimeField";
+import { formatMedicationTime } from "@/lib/medication-schedule";
 import { changedDoseTimeIndexes, scheduleFromHash, type SharedMedicationSchedule as Schedule } from "@/lib/medication-share-link";
 import { generateProviderMedicationICS, handoffProviderMedicationICS } from "@/lib/provider-medication-calendar";
 
@@ -70,7 +71,6 @@ export default function SharedMedicationSchedule() {
 
   const changedDoseIndexes = changedDoseTimeIndexes(schedule.times.map((item) => item.time), originalTimes);
   const hasInvalidTime = schedule.times.some((item) => !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(item.time));
-  const overnightTimes = schedule.times.map((item) => item.time).filter(isOvernightTime);
   const timeZoneLabel = (() => {
     if (!schedule.timeZone) return "local time";
     try {
@@ -109,17 +109,9 @@ export default function SharedMedicationSchedule() {
             <p className="mb-2 text-sm font-semibold text-zinc-300">Review dose times</p>
             <div className="space-y-2">
               {schedule.times.map((item, index) => (
-                <div key={index} className="flex min-w-0 items-center gap-2 sm:gap-3">
-                  <span className="w-5 shrink-0 text-center text-xs font-semibold text-zinc-500">{index + 1}</span>
-                  <input
-                    type="time"
-                    value={item.time}
-                    onChange={(event) => updateTime(index, event.target.value)}
-                    aria-label={`Dose time ${index + 1}`}
-                    aria-describedby={isOvernightTime(item.time) ? "recipient-overnight-dose-warning" : undefined}
-                    className={`min-w-0 rounded-lg border px-3 py-2 text-sm text-white focus:outline-none ${isOvernightTime(item.time) ? "border-amber-500/70 bg-amber-500/10 focus:border-amber-400" : "border-zinc-700 bg-zinc-800 focus:border-green-500"}`}
-                  />
-                  <span className={`hidden text-xs sm:inline ${isOvernightTime(item.time) ? "font-medium text-amber-400" : "text-zinc-500"}`}>{formatMedicationTime(item.time)} {timeZoneLabel}</span>
+                <div key={index} className="min-w-0 rounded-xl border border-zinc-800 bg-zinc-950/20 p-3">
+                  <p className="mb-2 text-xs font-semibold text-zinc-400">Dose {index + 1} · {formatMedicationTime(item.time)} {timeZoneLabel}</p>
+                  <DoseTimeField value={item.time} onChange={(value) => updateTime(index, value)} label={`Dose ${index + 1} time`} />
                 </div>
               ))}
             </div>
@@ -128,19 +120,12 @@ export default function SharedMedicationSchedule() {
           </div>
 
           {changedDoseIndexes.length > 0 && (
-            <div role="alert" className="rounded-lg border-2 border-red-400 bg-red-500/15 px-4 py-3 text-sm leading-relaxed text-red-100">
-              <strong className="font-bold text-white">You changed {changedDoseIndexes.length === 1 ? "a dose time" : `${changedDoseIndexes.length} dose times`} from what your provider sent.</strong>{" "}
-              Make sure this is okay with them before adding the schedule to your calendar.
-            </div>
+            <p className="rounded-lg border border-zinc-700 bg-zinc-950/30 px-4 py-3 text-sm leading-relaxed text-zinc-300">
+              You changed {changedDoseIndexes.length === 1 ? "a dose time" : `${changedDoseIndexes.length} dose times`}. Make sure any changes are cleared with the healthcare provider who sent this schedule before adding it to your calendar.
+            </p>
           )}
 
           {hasInvalidTime && <p role="alert" className="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-100">Choose a valid time for every dose before adding the schedule to your calendar.</p>}
-
-          {overnightTimes.length > 0 && (
-            <div id="recipient-overnight-dose-warning" className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3">
-              <p className="text-sm leading-relaxed text-zinc-300"><strong className="font-semibold text-white">{overnightTimes.length === 1 ? `One dose falls at ${overnightTimes[0] === "00:00" ? "midnight" : formatMedicationTime(overnightTimes[0])}. ` : `${overnightTimes.length} doses fall overnight. `}</strong>Check that this matches the schedule your healthcare provider sent before adding it to your calendar.</p>
-            </div>
-          )}
 
           <dl className="grid gap-4 border-t border-zinc-800 pt-5 sm:grid-cols-2">
             <div><dt className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Starts</dt><dd className="mt-1 text-sm font-medium text-white">{new Date(`${schedule.startDate}T12:00:00`).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</dd></div>
@@ -181,7 +166,7 @@ export default function SharedMedicationSchedule() {
         </div>
       </div>
 
-      <div className="mt-6 rounded-lg border border-green-500/20 bg-green-500/[0.05] px-4 py-3 text-xs leading-relaxed text-zinc-400"><strong className="text-zinc-200">Private by design.</strong> The schedule was read from the private part of this link in your browser and then removed from the address bar. OnTimer did not receive or store its contents. <Link href="/privacy" className="underline underline-offset-2 hover:text-zinc-200">Privacy Policy</Link></div>
+      <div className="mt-6 rounded-lg border border-green-500/20 bg-green-500/[0.05] px-4 py-3 text-xs leading-relaxed text-zinc-400"><strong className="text-zinc-200">Private by design.</strong> The schedule was read from the private part of this link in your browser and then removed from the address bar. OnTimer did not receive or store its contents. <Link href="/OnTimer_Privacy_Policy.html" className="underline underline-offset-2 hover:text-zinc-200">Privacy Policy</Link></div>
       <p className="mt-5 text-xs leading-relaxed text-zinc-500">OnTimer is not a medical device and does not provide medical advice. Verify the medication, dose times, and instructions with your healthcare provider before relying on this schedule. <Link href="/terms" className="underline underline-offset-2 hover:text-zinc-300">Terms of Service</Link></p>
 
     </div>

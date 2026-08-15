@@ -6,7 +6,7 @@
 /// ## Include
 /// - Full article copy per spec
 /// - MedicationScheduleGenerator tool
-/// - Multiple AppStoreButton CTAs with analytics
+/// - A contextual App Store CTA after the educational explanation
 /// - FAQ, disclaimer, related guides
 ///
 /// ## Don't Include
@@ -14,7 +14,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreButton, AppStoreCTA } from "@/components/CTAButton";
+import { AppStoreCTA } from "@/components/CTAButton";
 import MedicationScheduleGenerator from "./MedicationScheduleGenerator";
 import ResetScrollOnReload from "./ResetScrollOnReload";
 
@@ -53,12 +53,12 @@ const faqItems = [
   {
     question: "What is the best way to remember medication daily?",
     answer:
-      "The most reliable system combines calendar events (so your medication fits into your day) with a high-salience alert that interrupts you in the moment. Adding your medication to your calendar as a recurring event gives it structure. OnTimer pairs with your calendar to make those moments impossible to ignore.",
+      "A useful system combines calendar events, so medication timing fits into your day, with a high-salience alert that interrupts you in the moment. Adding medication times to your calendar as recurring events gives the schedule structure. OnTimer pairs with your calendar to make those reminders harder to miss.",
   },
   {
     question: "Are medication reminder apps effective?",
     answer:
-      "They can be — but most fail at the critical moment. A standard notification is too easy to swipe away or defer. The best reminder systems combine visibility (calendar integration) with interruption (an alert that demands acknowledgment). The goal is not just to remind you, but to make sure you act.",
+      "They can help, but a standard notification can still be easy to swipe away or defer. Stronger reminder systems combine visibility through calendar integration with an alert that requires acknowledgment. The goal is to support follow-through after the reminder appears.",
   },
   {
     question: "How do I set medication reminders on iPhone?",
@@ -91,14 +91,6 @@ const breadcrumbJsonLd = {
   ],
 };
 
-function ArticleCTA({ location }: { location: string }) {
-  return (
-    <div className="my-8 flex justify-center">
-      <AppStoreButton size="md" location={location} />
-    </div>
-  );
-}
-
 export default function Page() {
   return (
     <>
@@ -130,10 +122,10 @@ export default function Page() {
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.75fr)_minmax(30rem,1.25fr)] lg:gap-12">
             <div className="min-w-0 lg:pt-8">
               <h1 className="min-w-0 [overflow-wrap:anywhere] text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Never miss another dose
+                Put your medication schedule on your calendar
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-zinc-300 sm:text-xl">
-                Turn your medication schedule into calendar events, then let OnTimer make sure you remember them.
+                Create recurring calendar events for every dose, then use OnTimer to make those reminders harder to miss.
               </p>
               <p className="mt-4 text-sm leading-relaxed text-zinc-500">
                 For organization only. Always follow your prescribed instructions.
@@ -186,8 +178,6 @@ export default function Page() {
         </div>
       </section>
 
-      <ArticleCTA location="medication_article_mid" />
-
       {/* Section 3: Calendar System */}
       <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
@@ -195,9 +185,9 @@ export default function Page() {
             A Better System: Use Your Calendar
           </h2>
           <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
-            OnTimer&apos;s free Medication Schedule Generator creates a medication schedule based on
-            your dose times and lets you add each dose as an individual event to Apple Calendar,
-            Google Calendar, or Outlook.
+            OnTimer&apos;s free Medication Schedule Generator creates one calendar file containing
+            your complete recurring medication schedule. You can add it to Apple Calendar,
+            Google Calendar, Microsoft Outlook, or another compatible calendar.
           </p>
           <p className="mt-4 text-lg text-zinc-400 leading-relaxed">
             Instead of relying on memory, use your calendar as your system. Your calendar already
@@ -205,9 +195,9 @@ export default function Page() {
           </p>
           <div className="mt-8 space-y-4">
             {[
-              { step: "Step 1", text: "Create recurring events for your medication." },
-              { step: "Step 2", text: "Label them clearly so you know exactly what to take." },
-              { step: "Step 3", text: "Treat them like appointments — not suggestions." },
+              { step: "Step 1", text: "Enter the medication, instructions, dose times, and schedule duration." },
+              { step: "Step 2", text: "Review the complete recurring schedule before adding it." },
+              { step: "Step 3", text: "Open one calendar file and confirm the events in your calendar." },
             ].map(({ step, text }) => (
               <div key={step} className="flex gap-4 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
                 <span className="text-sm font-bold text-green-500 whitespace-nowrap">{step}</span>
@@ -225,8 +215,6 @@ export default function Page() {
           </div>
         </div>
       </section>
-
-      <ArticleCTA location="medication_article_post_calendar" />
 
       {/* Section 4: Last 5 Minutes Problem */}
       <section className="border-t border-zinc-800 py-16 sm:py-20">

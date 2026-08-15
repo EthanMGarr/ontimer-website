@@ -1,4 +1,31 @@
 export type MedicationFrequency = 1 | 2 | 3 | 4 | "custom";
+export type MedicationTimePeriod = "AM" | "PM";
+
+export function medicationTimeParts(time: string): {
+  hour: number;
+  minute: number;
+  period: MedicationTimePeriod;
+} {
+  const match = /^(?:[01]\d|2[0-3]):[0-5]\d$/.exec(time);
+  if (!match) return { hour: 8, minute: 0, period: "AM" };
+  const [hours, minutes] = time.split(":").map(Number);
+  return {
+    hour: hours % 12 || 12,
+    minute: minutes,
+    period: hours >= 12 ? "PM" : "AM",
+  };
+}
+
+export function medicationTimeFromParts(
+  hour: number,
+  minute: number,
+  period: MedicationTimePeriod,
+): string {
+  const safeHour = Math.min(12, Math.max(1, Math.trunc(hour)));
+  const safeMinute = Math.min(59, Math.max(0, Math.trunc(minute)));
+  const hours24 = (safeHour % 12) + (period === "PM" ? 12 : 0);
+  return `${String(hours24).padStart(2, "0")}:${String(safeMinute).padStart(2, "0")}`;
+}
 
 export function generateMedicationTimes(
   startTime: string,

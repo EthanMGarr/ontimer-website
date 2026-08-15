@@ -266,7 +266,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/medication-schedule-calendar-setup",
     "/persistent-calendar-reminders",
     "/pet-medication-schedule",
-    "/provider-medication-schedule",
     "/turn-calendar-events-into-alarms",
     "/why-medication-reminders-fail",
   ];

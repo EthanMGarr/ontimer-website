@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Medication Calendar Handoff for Healthcare Providers",
   description: "Create a medication calendar file in your browser, then hand it to a patient by email. No patient-identifying information or server storage required.",
   alternates: { canonical: "https://www.ontimer.app/provider-medication-schedule" },
+  robots: { index: false, follow: false, noarchive: true },
 };
 
 export default function ProviderMedicationSchedulePage() {
