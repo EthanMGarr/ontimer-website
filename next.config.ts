@@ -56,6 +56,11 @@ const nextConfig: NextConfig = {
         destination: "/never-be-late-to-meetings",
         permanent: true,
       },
+      {
+        source: "/tools",
+        destination: "/time-calculators",
+        permanent: true,
+      },
     ];
   },
 };

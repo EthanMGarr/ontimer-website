@@ -103,7 +103,7 @@ const breadcrumbJsonLd = {
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
-    { "@type": "ListItem", position: 2, name: "Tools", item: "https://www.ontimer.app/tools" },
+    { "@type": "ListItem", position: 2, name: "Tools", item: "https://www.ontimer.app/time-calculators" },
     {
       "@type": "ListItem",
       position: 3,

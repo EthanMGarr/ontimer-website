@@ -4,6 +4,10 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-08-17
+
+- Corrected the stale `/tools` URL emitted by calculator breadcrumb structured data: breadcrumb items now point directly to the canonical `/time-calculators` directory, while `/tools` permanently redirects there for previously discovered URLs. Confirmed the separately reported Seattle cruise-terminal URL now permanently redirects from the former airport namespace to its live canonical cruise page.
+
 ### 2026-08-16
 
 - Added a separately protected caregiver medication-schedule flow for family members helping an older parent or loved one. It reuses the private client-only link, recipient review, calendar handoff, dose-time wheel, and early/late safeguards while replacing clinical provider language with warmer caregiver guidance and caregiver-specific email copy. Verification: caregiver share-role encoding and email-copy regressions passed; protected-route redirects, mobile layout, recipient handoff, and production build were verified.

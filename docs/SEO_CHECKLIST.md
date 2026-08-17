@@ -17,6 +17,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Utility, spam, test, preview, and private tool pages are excluded from the sitemap unless explicitly intended for search.
 - [ ] Sitemap pages do not use `noindex`.
 - [ ] Internal links point directly to canonical routes and do not depend on redirects.
+- [ ] URLs emitted only in structured data (including breadcrumb `item` URLs) also resolve to canonical, indexable pages rather than 404s or avoidable redirects.
 - [ ] Redirects are permanent only when the destination is genuinely canonical.
 - [ ] Redirect destinations use the canonical `www.ontimer.app` hostname and avoid redirect chains.
 - [ ] Airport destinations use `/airport-time-to-leave/[slug]`.
