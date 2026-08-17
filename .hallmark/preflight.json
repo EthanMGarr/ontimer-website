@@ -1,0 +1,9 @@
+{
+  "scannedAt": "2026-08-16",
+  "framework": "Next.js 15 App Router",
+  "fontStack": "existing site sans-serif stack",
+  "palette": "Tailwind zinc surfaces with #22c55e accent",
+  "motion": "motion-cut; no dedicated motion library",
+  "spacing": "Tailwind default spacing scale",
+  "preserve": ["font stack", "palette", "spacing scale", "task-first medication workbench"]
+}

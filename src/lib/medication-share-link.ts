@@ -2,6 +2,7 @@ export interface SharedMedicationSchedule {
   version: 1;
   medication: string;
   practiceName?: string;
+  senderRole?: "provider" | "caregiver";
   instructions: string;
   startDate: string;
   days: number;
@@ -32,6 +33,7 @@ export function decodeMedicationSchedule(value: string): SharedMedicationSchedul
       parsed.version !== 1 ||
       typeof parsed.medication !== "string" || !parsed.medication.trim() || parsed.medication.length > 120 ||
       (parsed.practiceName !== undefined && (typeof parsed.practiceName !== "string" || parsed.practiceName.length > 120)) ||
+      (parsed.senderRole !== undefined && parsed.senderRole !== "provider" && parsed.senderRole !== "caregiver") ||
       typeof parsed.instructions !== "string" || parsed.instructions.length > 500 ||
       typeof parsed.startDate !== "string" || !DATE_PATTERN.test(parsed.startDate) ||
       typeof parsed.days !== "number" || !Number.isInteger(parsed.days) || parsed.days < 1 || parsed.days > 365 ||
@@ -51,12 +53,15 @@ export function scheduleFromHash(hash: string): SharedMedicationSchedule | null 
   return encoded ? decodeMedicationSchedule(encoded) : null;
 }
 
-export function medicationShareCopy(practiceName?: string) {
+export function medicationShareCopy(practiceName?: string, senderRole: "provider" | "caregiver" = "provider") {
   const sender = practiceName?.trim();
+  const caregiver = senderRole === "caregiver";
   return {
     title: sender ? `Your medication schedule from ${sender}` : "Your medication schedule",
-    text: `${sender ? `${sender} sent you a medication schedule. ` : "Here’s the medication schedule we discussed. "}Open this private link to review it, then add it to your calendar. No account needed.`,
-    emailBody: "Here’s the medication schedule we discussed. Open the link below to review it and add it to your calendar. No account needed.",
+    text: `${sender ? `${sender} sent you a medication schedule. ` : caregiver ? "A family member made a medication schedule for you. " : "Here’s the medication schedule we discussed. "}Open this private link to review it, then add it to your calendar. No account needed.`,
+    emailBody: caregiver
+      ? "I made this medication schedule to help keep the dose times in one place. Open the link below to review it and add it to your calendar. No account needed."
+      : "Here’s the medication schedule we discussed. Open the link below to review it and add it to your calendar. No account needed.",
   };
 }
 

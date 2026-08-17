@@ -14,6 +14,7 @@ const CONSENT_REQUIRED_COUNTRIES = new Set([
 ]);
 
 const PRIVATE_MEDICATION_ROUTES = new Set([
+  "/caregiver-medication-schedule",
   "/provider-medication-schedule",
   "/medication-schedule",
 ]);

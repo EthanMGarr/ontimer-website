@@ -64,7 +64,7 @@ export default function SharedMedicationSchedule() {
       <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 sm:p-8">
         <p className="text-sm font-semibold uppercase tracking-wider text-amber-400">Link unavailable</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight text-white">This medication schedule link is incomplete.</h1>
-        <p className="mt-4 leading-relaxed text-zinc-400">Ask the healthcare provider who sent it to create and share a new link.</p>
+        <p className="mt-4 leading-relaxed text-zinc-400">Ask the person who sent it to create and share a new link.</p>
       </div>
     );
   }
@@ -121,7 +121,7 @@ export default function SharedMedicationSchedule() {
 
           {changedDoseIndexes.length > 0 && (
             <p className="rounded-lg border border-zinc-700 bg-zinc-950/30 px-4 py-3 text-sm leading-relaxed text-zinc-300">
-              You changed {changedDoseIndexes.length === 1 ? "a dose time" : `${changedDoseIndexes.length} dose times`}. Make sure any changes are cleared with the healthcare provider who sent this schedule before adding it to your calendar.
+              You changed {changedDoseIndexes.length === 1 ? "a dose time" : `${changedDoseIndexes.length} dose times`}. Make sure any changes are cleared with your healthcare provider before adding the schedule to your calendar.
             </p>
           )}
 
@@ -132,7 +132,7 @@ export default function SharedMedicationSchedule() {
             <div><dt className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Duration</dt><dd className="mt-1 text-sm font-medium text-white">{schedule.days} days</dd></div>
           </dl>
 
-          <p className="text-xs leading-relaxed text-zinc-400">If anything looks wrong, contact the healthcare provider who sent you this link before adding it.</p>
+          <p className="text-xs leading-relaxed text-zinc-400">If anything looks wrong, {schedule.senderRole === "caregiver" ? "check with the family member who sent this link and your healthcare provider" : "contact the healthcare provider who sent you this link"} before adding it.</p>
         </div>
 
         <div className="order-1 flex min-w-0 flex-col gap-4 lg:order-2 lg:sticky lg:top-24">

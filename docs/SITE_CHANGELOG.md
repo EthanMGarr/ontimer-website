@@ -4,6 +4,10 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-08-16
+
+- Added a separately protected caregiver medication-schedule flow for family members helping an older parent or loved one. It reuses the private client-only link, recipient review, calendar handoff, dose-time wheel, and early/late safeguards while replacing clinical provider language with warmer caregiver guidance and caregiver-specific email copy. Verification: caregiver share-role encoding and email-copy regressions passed; protected-route redirects, mobile layout, recipient handoff, and production build were verified.
+
 ### 2026-08-15
 
 - Reworked medication time entry across the personal generator, provider handoff, and shared recipient review: a purpose-built three-column hour/minute/AM-PM wheel now mirrors the iOS alarm-setting pattern and updates schedule state immediately without requiring blur. Dose fields from 11 PM–4:59 AM and 5–6:59 AM receive yellow late/early emphasis with patient and provider-specific confirmation copy; the prior generic even-spacing warning was removed. Improved the personal medication page’s action hierarchy and trust copy while preserving its visible SEO/GEO terminology, added optional instructions to calendar events, clarified the one-file calendar workflow, reduced redundant App Store interruptions, and aligned the post-calendar state with the recipient flow. Verification: medication schedule and calendar export regressions passed, including midnight/noon/11 PM conversion and exported instruction coverage; browser checks at 320, 375, and 414 pixels found no overflow or framework errors; and immediate calendar export/private-link tests preserved a just-edited 11 PM dose without an intervening blur.

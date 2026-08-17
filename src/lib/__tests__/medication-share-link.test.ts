@@ -29,6 +29,8 @@ assert(decodeMedicationSchedule(encodeURIComponent(JSON.stringify({ ...schedule,
 assert(scheduleFromHash("#schedule=not-json") === null, "malformed links should fail safely");
 assert(medicationShareCopy("Riverside Family Medicine").title === "Your medication schedule from Riverside Family Medicine", "practice name should frame the share subject");
 assert(medicationShareCopy().emailBody.includes("No account needed."), "email drafts should explain the private link before showing it");
+assert(medicationShareCopy("Ethan", "caregiver").emailBody.includes("help keep the dose times in one place"), "caregiver email copy should feel helpful rather than clinical");
+assert(decodeMedicationSchedule(encodeMedicationSchedule({ ...schedule, senderRole: "caregiver" }))?.senderRole === "caregiver", "caregiver role should stay in the client-side hash payload");
 assert(changedDoseTimeIndexes(["09:00", "20:00"], ["08:00", "20:00"]).length === 1, "a changed dose time should be detected");
 assert(changedDoseTimeIndexes(["08:00", "20:00"], ["08:00", "20:00"]).length === 0, "reverting a dose time should clear the change state");
 

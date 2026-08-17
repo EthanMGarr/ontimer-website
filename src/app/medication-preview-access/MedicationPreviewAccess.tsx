@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-const ALLOWED_DESTINATIONS = new Set(["/provider-medication-schedule", "/medication-schedule"]);
+const ALLOWED_DESTINATIONS = new Set(["/caregiver-medication-schedule", "/provider-medication-schedule", "/medication-schedule"]);
 
 export default function MedicationPreviewAccess() {
   const searchParams = useSearchParams();
