@@ -151,6 +151,16 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/help/getting-the-most-out" className="text-sm text-zinc-400 transition-colors hover:text-white">
+                  Get the Most Out of OnTimer
+                </Link>
+              </li>
+              <li>
+                <Link href="/help/troubleshooting" className="text-sm text-zinc-400 transition-colors hover:text-white">
+                  Help &amp; Troubleshooting
+                </Link>
+              </li>
+              <li>
                 <a href="mailto:support@ontimer.app" className="text-sm text-zinc-400 transition-colors hover:text-white">
                   support@ontimer.app
                 </a>

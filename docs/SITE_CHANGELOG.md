@@ -5,6 +5,7 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 ## Unreleased
 
 - 2026-08-18: Added a public, mobile-first Help hub with linked troubleshooting and getting-started guides for the iOS in-app browser. The pages preserve the site’s lightweight legal-document treatment, support automatic light and dark appearance, and omit analytics and the marketing chrome for a faster support experience. Verification: production build passed; all three Help routes are statically generated.
+- 2026-08-18: Added direct Help hub, troubleshooting, and getting-started links to the site footer so visitors can reach support from any public page.
 
 ### 2026-08-17
 
