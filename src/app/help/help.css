@@ -1,0 +1,46 @@
+/* Hallmark · audience: existing iPhone users · use: in-app support documents · tone: calm, direct, trustworthy · macrostructure: Long Document · theme: existing OnTimer */
+.help-page {
+  --help-bg: #ffffff;
+  --help-text: #333333;
+  --help-heading: #2c3e50;
+  --help-muted: #667085;
+  --help-border: #d7dee5;
+  --help-card-bg: #f8fafb;
+  --help-primary: #2e7d9f;
+  min-height: 100%;
+  background: var(--help-bg);
+  color: var(--help-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.help-container { max-width: 800px; margin: 0 auto; padding: 32px 20px 48px; }
+.help-header { margin-bottom: 30px; }
+.help-wordmark { display: inline-block; color: var(--help-primary); font-size: 17px; font-weight: 700; letter-spacing: -0.02em; text-decoration: none; margin-bottom: 28px; }
+.help-header h1, .help-prose h1 { color: var(--help-heading); border-bottom: 3px solid var(--help-primary); font-size: clamp(1.9rem, 7vw, 2.5rem); line-height: 1.18; font-weight: 700; letter-spacing: -0.025em; margin: 0; padding-bottom: 12px; }
+.help-intro { color: var(--help-muted); font-size: 1.05rem; line-height: 1.65; margin: 0 0 24px; }
+.help-card-list { display: grid; gap: 12px; }
+.help-card { align-items: center; background: var(--help-card-bg); border: 1px solid var(--help-border); border-radius: 12px; color: var(--help-text); display: flex; gap: 16px; justify-content: space-between; padding: 18px; text-decoration: none; transition: border-color .15s ease, background-color .15s ease; }
+.help-card:hover, .help-card:focus-visible { border-color: var(--help-primary); background: color-mix(in srgb, var(--help-primary) 6%, var(--help-bg)); outline: none; }
+.help-card strong { color: var(--help-heading); display: block; font-size: 1.05rem; margin-bottom: 4px; }
+.help-card span span { color: var(--help-muted); display: block; font-size: .94rem; line-height: 1.45; }
+.help-card-arrow { color: var(--help-primary); flex: 0 0 auto; font-size: 2rem; font-weight: 300; line-height: 1; }
+.help-contact { color: var(--help-muted); font-size: .94rem; margin: 32px 0 0; text-align: center; }
+.help-page a { color: var(--help-primary); text-underline-offset: 2px; }
+.help-back { display: inline-block; font-size: .95rem; margin-bottom: 26px; text-decoration: none; }
+.help-back:hover, .help-back:focus-visible { text-decoration: underline; }
+.help-prose { font-size: 1rem; line-height: 1.7; }
+.help-prose h1 { margin-bottom: 28px; }
+.help-prose h2 { color: var(--help-heading); font-size: 1.34rem; line-height: 1.35; margin: 34px 0 12px; }
+.help-prose h3 { color: var(--help-heading); font-size: 1.08rem; line-height: 1.4; margin: 26px 0 8px; }
+.help-prose p { margin: 0 0 18px; }
+.help-prose ul, .help-prose ol { margin: 0 0 18px; padding-left: 24px; }
+.help-prose li { margin-bottom: 7px; padding-left: 2px; }
+.help-prose strong { color: var(--help-heading); font-weight: 650; }
+.help-prose a { font-weight: 600; }
+
+@media (prefers-color-scheme: dark) {
+  .help-page { --help-bg: #101518; --help-text: #e6edf1; --help-heading: #f2f7f9; --help-muted: #aab9c1; --help-border: #2c3d45; --help-card-bg: #172126; --help-primary: #69b9dd; }
+}
+
+@media (min-width: 640px) { .help-container { padding: 48px 32px 64px; } .help-card { padding: 20px 22px; } }

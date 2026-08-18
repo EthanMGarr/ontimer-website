@@ -146,6 +146,11 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
+                <Link href="/help" className="text-sm text-zinc-400 transition-colors hover:text-white">
+                  Help Center
+                </Link>
+              </li>
+              <li>
                 <a href="mailto:support@ontimer.app" className="text-sm text-zinc-400 transition-colors hover:text-white">
                   support@ontimer.app
                 </a>
