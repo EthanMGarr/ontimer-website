@@ -59,8 +59,11 @@ export function initializeAnalytics(): boolean {
   }
 
   if (!analyticsConfigured) {
-    window.gtag("js", new Date());
-    window.gtag("config", measurementId, { send_page_view: false });
+    if (!window.__ontimerAnalyticsConfigured) {
+      window.gtag("js", new Date());
+      window.gtag("config", measurementId, { send_page_view: false });
+      window.__ontimerAnalyticsConfigured = true;
+    }
     analyticsConfigured = true;
   }
   return true;

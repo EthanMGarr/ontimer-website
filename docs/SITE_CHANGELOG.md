@@ -160,3 +160,4 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 - Shortened privacy and terms redirects by sending them directly to the canonical `www` hostname.
 - Added a repeatable production SEO audit and release checklist.
 - Verified production with a complete crawl: 114 sitemap URLs, 115 discovered internal URLs, zero broken links, zero avoidable internal redirects, zero canonical issues, zero erroneous `noindex` pages, and zero destination-route mismatches.
+- 2026-08-20: Repaired GA4 production initialization by bootstrapping the analytics command queue before Google’s external tag loads, so initial page views and immediate calculator interactions are retained. The EU/EEA/UK/Swiss consent gate and private medication-route exclusion remain intact. Verification: production build and live airport-calculator tag bootstrap check passed.

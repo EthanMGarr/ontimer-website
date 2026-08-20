@@ -10,6 +10,7 @@ declare global {
   interface Window {
     gtag: (command: string, ...args: unknown[]) => void;
     dataLayer: unknown[];
+    __ontimerAnalyticsConfigured?: boolean;
   }
 }
 
@@ -54,6 +55,17 @@ export default function GoogleAnalytics() {
 
   return (
     <>
+      <Script id="ga4-bootstrap" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
+          if (!window.__ontimerAnalyticsConfigured) {
+            window.gtag('js', new Date());
+            window.gtag('config', '${id}', { send_page_view: false });
+            window.__ontimerAnalyticsConfigured = true;
+          }
+        `}
+      </Script>
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
         strategy="afterInteractive"
