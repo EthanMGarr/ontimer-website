@@ -316,7 +316,7 @@ export default function WakeUpCalculator() {
     <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 sm:p-8">
       <div className="grid gap-10 lg:grid-cols-2">
         {/* ── Inputs ── */}
-        <div className="space-y-7">
+        <div id="wake-up-calculator-form" className="scroll-mt-28 space-y-7">
           {/* Locations */}
           <div className="space-y-4">
             <div className="min-w-0">
@@ -552,6 +552,13 @@ export default function WakeUpCalculator() {
                   : ""}
                 , wake up at {fmtTime(result.wakeUpTime)}.
               </p>
+              <button
+                type="button"
+                onClick={() => document.getElementById("wake-up-calculator-form")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-green-400 underline underline-offset-4 hover:text-green-300"
+              >
+                Adjust assumptions
+              </button>
 
               <CalendarOnTimerHandoff
                 calendarHref={arrivalCalendarHref}
@@ -560,13 +567,12 @@ export default function WakeUpCalculator() {
                 calendarProvider={calendarProvider}
                 setCalendarProvider={setCalendarProvider}
                 calculatorType="wake_up"
-                readyHeading="Put the appointment behind this wake-up time on your calendar."
-                readyBody=""
+                readyHeading="Put your arrival appointment on your calendar."
                 openedItemLabel="arrival event"
-                appBeforeHeading="Then let OnTimer protect the moment to leave."
-                appBeforeBody="OnTimer uses the saved calendar event and its location to create an automatic alarm when it is time to head out."
-                appAfterHeading="Don't just calculate a wake-up time. Get there on time."
-                appAfterBody={'Turn the appointment into a "can\'t-miss" leave time alarm.'}
+                exclusivePrimaryAction
+                compactOpenedStatus
+                postCalendarHeading={`Don’t miss ${fmtTime(result.wakeUpTime)}.`}
+                postCalendarBody="OnTimer sets an automatic alarm for this calendar event."
                 appLocation="wakeup_calculator_result"
               />
             </div>

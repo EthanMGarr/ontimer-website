@@ -12,6 +12,7 @@ import { getRelatedTravelLocationLinks } from "@/lib/travel-locations";
 import {
   buildAirportAnswerApplicationName,
   buildAirportAnswerDescription,
+  buildAirportSnippetCandidate,
   buildAirportAnswerTitle,
 } from "@/lib/airport-answer-seo";
 import {
@@ -234,7 +235,7 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
       secondaryLabels: [location.reviewedLabel, "Powered by OnTimer"],
       titlePrefix: "What Time Should I Leave for",
       titleHighlight: `${location.shortName} (${location.code})?`,
-      description: location.directAnswer,
+      description: buildAirportSnippetCandidate(location),
     },
     planner: (
       <AirportCalculator
@@ -281,6 +282,7 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
       heading: `${location.shortName} leave-time questions`,
       items: faqItems,
       ctaLocation: `airport_${location.code.toLowerCase()}_final`,
+      noSnippetQuestions: [faqItems[0].question],
     },
     calculatorExample: location.calculatorExample,
   };

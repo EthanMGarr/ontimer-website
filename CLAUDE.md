@@ -13,6 +13,8 @@ Permanent deployment workflow:
 - Use `npm run deploy:prod` from the repository root. It uses the pinned local Vercel CLI and the existing `.vercel/project.json` link.
 - Do not deploy with `npx vercel@latest` or install a global Vercel CLI.
 - Run `vercel login` only when the CLI explicitly reports expired authorization.
+- Treat production publishing as part of completing user-facing website changes after the relevant tests and production build pass. Do not stop at a local implementation unless the user explicitly says `local only`, `do not publish`, or `preview only`.
+- After publishing, wait for Vercel to report `Ready` and verify the changed behavior on the canonical production URL before reporting completion.
 
 Design:
 Dark theme
@@ -93,6 +95,16 @@ Users arrive skeptical. Pages should build understanding in this sequence:
 
 Never ask for install before the core value is clear.
 Trust is built before action is requested — not after.
+
+### Calculator conversion contract
+
+Every calculator must preserve one repeatable action sequence, especially on mobile:
+
+1. Enter only the inputs required for a useful answer.
+2. Show the answer, the minimum visible evidence needed to trust it, an immediately discoverable way to adjust it, and the primary save/export action in the same visual location.
+3. After that action opens, replace that action area with the OnTimer offer so the next step is visible without first reading explanations or status cards.
+
+Keep the visible evidence compact—normally one or two lines using the user’s actual result—and keep the complete calculation progressively disclosed. “Adjust assumptions” belongs beside the answer rather than at the bottom of an explanation. Labels must say what changing them does, never use generic labels such as “Advanced options.” Do not use redundant “Your next step” eyebrows, repeated checkmarks, placeholder examples, or large explanation cards between a calculated answer and its primary action. Preserve search-answer copy, metadata, FAQ, and substantive guidance below the tool rather than turning the calculator viewport into an SEO article.
 
 ---
 

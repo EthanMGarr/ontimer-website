@@ -137,8 +137,8 @@ export default function SharedMedicationSchedule() {
 
         <div className="order-1 flex min-w-0 flex-col gap-4 lg:order-2 lg:sticky lg:top-24">
           <div className={`${downloaded ? "order-2" : "order-1"} rounded-xl border border-zinc-700 bg-zinc-950/35 p-4 lg:order-1`}>
-            <p className="text-xs font-semibold uppercase tracking-wider text-green-400">{downloaded ? "Added to calendar" : "Your next step"}</p>
-            <p className="mt-1 text-lg font-bold text-white">Put this schedule on your calendar.</p>
+            {downloaded && <p className="text-xs font-semibold uppercase tracking-wider text-green-400">Added to calendar</p>}
+            <p className={`${downloaded ? "mt-1" : ""} text-lg font-bold text-white`}>{downloaded ? "This schedule is on your calendar." : "Add this schedule to your calendar."}</p>
 
             <button type="button" onClick={handleDownload} disabled={hasInvalidTime} className="mt-4 w-full whitespace-nowrap rounded-full bg-green-500 px-5 py-3.5 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:translate-y-px disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400">Add Schedule to Calendar</button>
             <p className="mt-2 text-xs leading-relaxed text-zinc-500">One calendar file includes every dose time for all {schedule.days} days.</p>
@@ -152,8 +152,8 @@ export default function SharedMedicationSchedule() {
           </div>
 
           <div ref={onTimerRef} tabIndex={-1} className={`rounded-xl border border-green-500/30 bg-green-500/[0.07] p-5 outline-none focus-visible:ring-2 focus-visible:ring-green-400 ${downloaded ? "order-1 lg:order-2" : "order-2"}`}>
-            <p className="text-lg font-black text-white">Make it hard to miss your doses.</p>
-            <p className="mt-1.5 text-sm leading-relaxed text-zinc-300">Automatically turn this schedule into alarms.</p>
+            <p className="text-lg font-black text-white">Get an alarm for every dose.</p>
+            <p className="mt-1.5 text-sm leading-relaxed text-zinc-300">OnTimer turns the schedule on your calendar into automatic alarms.</p>
             <div className="mt-4"><AppStoreButton size="lg" className="w-full justify-center whitespace-nowrap" location={downloaded ? "shared_medication_after_export" : "shared_medication_schedule"} label="Get OnTimer Free" /><p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p></div>
           </div>
 

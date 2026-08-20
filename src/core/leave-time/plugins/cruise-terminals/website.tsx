@@ -10,6 +10,10 @@ import type {
 import type { CruiseTerminalLocationProfile, TravelLocationProfile } from "@/lib/travel-locations";
 import { getRelatedTravelLocationLinks } from "@/lib/travel-locations";
 import {
+  buildCruiseSnippetCandidate,
+  buildCruiseSnippetDescription,
+} from "@/lib/cruise-answer-seo";
+import {
   createCruiseDestination,
   cruiseEventTypes,
 } from "./CruisePlugin";
@@ -95,7 +99,7 @@ export const cruiseDestinationType: DestinationTypeDefinition<CruiseTerminalLoca
       ],
       seo: {
         title: `${profile.shortName} Time-to-Leave Calculator`,
-        description: `Calculate when to leave for ${profile.name} using traffic, cruise check-in, parking, luggage drop and your boarding time.`,
+        description: buildCruiseSnippetDescription(profile),
         canonicalUrl: getCruiseUrl(profile),
       },
       supportedEventTypeIds: cruiseEventTypes.map((eventType) => eventType.id),
@@ -138,7 +142,7 @@ export const cruiseDestinationType: DestinationTypeDefinition<CruiseTerminalLoca
   buildSeoMetadata(profile): SeoMetadataDefinition {
     return {
       title: `${profile.shortName} Time-to-Leave Calculator`,
-      description: `Calculate when to leave for ${profile.name} using traffic, cruise check-in, parking, luggage drop and your boarding time.`,
+      description: buildCruiseSnippetDescription(profile),
       canonicalUrl: getCruiseUrl(profile),
       robots: { index: true, follow: true },
     };
@@ -224,7 +228,7 @@ export function buildCruisePageModel(location: CruiseTerminalLocationProfile): D
       secondaryLabels: [location.reviewedLabel, "Powered by OnTimer"],
       titlePrefix: "What Time Should I Leave for",
       titleHighlight: `${location.shortName}?`,
-      description: location.directAnswer,
+      description: buildCruiseSnippetCandidate(location),
     },
     planner: (
       <CruiseCalculator
@@ -266,6 +270,7 @@ export function buildCruisePageModel(location: CruiseTerminalLocationProfile): D
       heading: `${location.shortName} leave-time questions`,
       items: faqItems,
       ctaLocation: `cruise_${location.code.toLowerCase()}_final`,
+      noSnippetQuestions: [faqItems[0].question],
     },
     calculatorExample: location.calculatorExample,
   };

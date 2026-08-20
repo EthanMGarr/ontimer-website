@@ -10,6 +10,17 @@ export interface SharedMedicationSchedule {
   timeZone?: string;
 }
 
+const TIME_ZONE_LABELS: Record<string, string> = {
+  "America/New_York": "ET",
+  "America/Chicago": "CT",
+  "America/Denver": "MT",
+  "America/Los_Angeles": "PT",
+  "America/Phoenix": "AZ",
+  "America/Anchorage": "AK",
+  "Pacific/Honolulu": "HI",
+  UTC: "UTC",
+};
+
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_PATTERN = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
 
@@ -62,6 +73,57 @@ export function medicationShareCopy(practiceName?: string, senderRole: "provider
     emailBody: caregiver
       ? "I made this medication schedule to help keep the dose times in one place. Open the link below to review it and add it to your calendar. No account needed."
       : "Here’s the medication schedule we discussed. Open the link below to review it and add it to your calendar. No account needed.",
+  };
+}
+
+function readableDate(isoDate: string): string {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, day)));
+}
+
+function readableTime(time: string): string {
+  const [hours, minutes] = time.split(":").map(Number);
+  if (hours === 0 && minutes === 0) return "12:00 midnight";
+  const period = hours >= 12 ? "PM" : "AM";
+  return `${hours % 12 || 12}:${String(minutes).padStart(2, "0")} ${period}`;
+}
+
+export function medicationEmailDraft(schedule: SharedMedicationSchedule, url: string) {
+  const sender = schedule.practiceName?.trim();
+  const caregiver = schedule.senderRole === "caregiver";
+  const subject = caregiver
+    ? "A medication schedule to help you stay on track"
+    : sender ? `Your medication schedule from ${sender}` : "Your medication schedule";
+  const introduction = caregiver
+    ? "I put this medication schedule together to help keep your dose times in one place."
+    : sender ? `${sender} created this medication schedule for you.` : "Here’s the medication schedule we discussed.";
+  const scheduleLines = [
+    `Medication: ${schedule.medication}`,
+    ...(schedule.instructions ? [`Instructions: ${schedule.instructions}`] : []),
+    `Starts: ${readableDate(schedule.startDate)}`,
+    `Duration: ${schedule.days} ${schedule.days === 1 ? "day" : "days"}`,
+    `Dose ${schedule.times.length === 1 ? "time" : "times"}: ${schedule.times.map(({ time }) => readableTime(time)).join(", ")}${schedule.timeZone ? ` ${TIME_ZONE_LABELS[schedule.timeZone] || schedule.timeZone}` : ""}`,
+  ];
+  const review = caregiver
+    ? "Please compare these details with the prescription or confirm them with a healthcare provider before adding the schedule. If anything differs or is unclear, contact the prescribing healthcare professional."
+    : `Please review the medication, instructions, and dose times before adding the schedule. If anything looks wrong or is unclear, contact ${sender || "the healthcare provider who sent this schedule"}.`;
+  const limitation = "This schedule is for organization only. It does not change or replace the medication label, prescription, or advice from a healthcare professional. OnTimer is not a medical device and does not provide medical advice.";
+
+  return {
+    subject,
+    body: [
+      "Hello,",
+      introduction,
+      `REVIEW AND ADD IT TO YOUR CALENDAR\n${url}`,
+      `YOUR SCHEDULE\n${scheduleLines.join("\n")}`,
+      review,
+      limitation,
+    ].join("\n\n"),
   };
 }
 

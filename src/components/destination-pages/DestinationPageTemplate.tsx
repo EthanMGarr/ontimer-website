@@ -45,6 +45,7 @@ export interface DestinationPageModel {
     heading: string;
     items: FaqItem[];
     ctaLocation: string;
+    noSnippetQuestions?: string[];
   };
   calculatorExample?: CalculatorExample;
 }
@@ -252,7 +253,12 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
             {model.faq.items.map(({ question, answer }) => (
               <div key={question} className="py-6">
                 <h3 className="text-lg font-bold text-white">{question}</h3>
-                <p className="mt-2 leading-relaxed text-zinc-400">{answer}</p>
+                <p
+                  className="mt-2 leading-relaxed text-zinc-400"
+                  data-nosnippet={model.faq.noSnippetQuestions?.includes(question) || undefined}
+                >
+                  {answer}
+                </p>
               </div>
             ))}
           </div>

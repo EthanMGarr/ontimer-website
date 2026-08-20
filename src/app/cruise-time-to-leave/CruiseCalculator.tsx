@@ -216,6 +216,13 @@ export default function CruiseCalculator({
   const [calendarProvider, setCalendarProvider] = useState<"google" | "ics" | null>(null);
   const resultPanelRef = useRef<HTMLDivElement>(null);
 
+  function openResultAdjustments() {
+    setShowAdvanced(true);
+    window.requestAnimationFrame(() => {
+      document.getElementById("cruise-calculator-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
   const hasRouteInputs = origin.trim().length >= 2 && terminal.trim().length >= 2;
 
   function handleOriginChange(value: string) {
@@ -385,7 +392,7 @@ export default function CruiseCalculator({
           ? "lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.75fr)] lg:items-start"
           : "lg:grid-cols-[1fr_1fr] lg:gap-8"
       }`}>
-        <div className={`${computedResult ? "order-2 lg:order-2 lg:opacity-80" : "order-1"} space-y-4`}>
+        <div id="cruise-calculator-form" className={`${computedResult ? "order-2 lg:order-2 lg:opacity-80" : "order-1"} scroll-mt-28 space-y-4`}>
           <div className={`rounded-xl border p-4 ${
             computedResult ? "border-zinc-800/70 bg-zinc-950/25" : "border-zinc-800 bg-zinc-950/40"
           }`}>
@@ -495,9 +502,8 @@ export default function CruiseCalculator({
           <div className={`rounded-xl border p-4 ${
             computedResult ? "border-zinc-800 bg-zinc-900/60" : "border-zinc-700 bg-zinc-800/70"
           }`}>
-            <div className="flex items-center gap-2">
-              <span className={`text-base leading-none ${computedResult ? "text-zinc-500" : "text-green-500"}`}>✓</span>
-              <p className="text-sm font-semibold text-white">Cruise timing included</p>
+            <div>
+              <p className="text-sm font-semibold text-white">What we use</p>
             </div>
             <div className="mt-3 grid grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2">
               {[
@@ -517,7 +523,7 @@ export default function CruiseCalculator({
               onClick={() => setShowAdvanced(!showAdvanced)}
               className="mt-4 flex w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:bg-zinc-700 hover:text-white"
             >
-              <span>{showAdvanced ? "Hide advanced options" : "Advanced Options"}</span>
+              <span>{showAdvanced ? "Hide adjustments" : "Adjust assumptions"}</span>
               <span className={`flex-shrink-0 text-xs text-zinc-400 transition-transform duration-200 ${showAdvanced ? "rotate-180" : ""}`}>
                 ▾
               </span>
@@ -629,24 +635,17 @@ export default function CruiseCalculator({
               <p className="mt-2 text-base text-zinc-300">{fmtDate(computedResult.leaveAt)}</p>
               <p className="mt-1.5 text-xs text-green-500">{confidenceLabel(computedResult.confidence)}</p>
 
-              <div className="mt-5 rounded-lg border border-zinc-700/60 bg-zinc-950/50 p-4">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                  <p className="text-sm font-semibold text-white">Why this recommendation?</p>
-                  <p className="text-xs text-zinc-500">{fmtTime(computedResult.targetTime)} boarding</p>
-                </div>
-                <div className="mt-3">
-                  <CalculationFactorList
-                    factors={computedResult.factors}
-                    formatDuration={fmtDuration}
-                  />
-                </div>
+              <div className="mt-5 border-t border-zinc-800 pt-4">
+                <p className="text-sm text-zinc-300">
+                  {fmtDuration(computedResult.travelMinutes)} travel · arrive by {fmtTime(computedResult.arriveBy)}
+                </p>
+                <p className="mt-0.5 text-sm text-zinc-400">
+                  {fmtDuration(computedResult.totalBufferMinutes)} terminal and boarding buffer
+                </p>
+                <button type="button" onClick={openResultAdjustments} className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-green-400 underline underline-offset-4 hover:text-green-300">
+                  Adjust assumptions
+                </button>
               </div>
-
-              <p className="mt-3 text-xs text-zinc-500">
-                {fmtDuration(computedResult.travelMinutes)} travel
-                {" · "}
-                {fmtDuration(computedResult.totalBufferMinutes)} cruise buffer
-              </p>
 
               <CalendarOnTimerHandoff
                 calendarHref={buildGoogleCalendarLink({
@@ -663,21 +662,20 @@ export default function CruiseCalculator({
                 calendarProvider={calendarProvider}
                 setCalendarProvider={setCalendarProvider}
                 calculatorType="cruise_leave_time"
-                readyHeading="Put this leave time on your calendar."
-                readyBody=""
-                appBeforeHeading="Next cruise, let OnTimer protect the moment to leave."
-                appBeforeBody="OnTimer uses your existing calendar to create automatic alarms before cruises, flights, meetings, and appointments."
-                appAfterHeading="Don't just get notified. Don't miss the boat."
-                appAfterBody={'Turn this into a "can\'t-miss" cruise departure alarm.'}
+                exclusivePrimaryAction
+                compactOpenedStatus
+                postCalendarHeading={`Don’t miss ${fmtTime(computedResult.leaveAt)}.`}
+                postCalendarBody="OnTimer sets an automatic alarm for this calendar event."
                 appLocation={locationCode ? `cruise_${locationCode.toLowerCase()}_result` : "cruise_calculator_inline"}
                 analyticsContext={locationCode ? { location_code: locationCode } : {}}
               />
 
-              <div className="mt-5 border-t border-zinc-800 pt-4">
-                <div>
-                  <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                    Timing breakdown
-                  </p>
+              <details className="group mt-5 border-t border-zinc-800 pt-4">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-lg border border-zinc-800 px-3 text-sm font-semibold text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 [&::-webkit-details-marker]:hidden">
+                  <span>How we calculated your leave time</span>
+                  <span className="text-base leading-none text-zinc-500" aria-hidden="true">⌄</span>
+                </summary>
+                <div className="mt-4">
                   <CalculationFactorList
                     factors={computedResult.factors}
                     formatDuration={fmtDuration}
@@ -688,7 +686,7 @@ export default function CruiseCalculator({
                     <p className="text-sm font-semibold text-white">{fmtTime(computedResult.arriveBy)}</p>
                   </div>
                 </div>
-              </div>
+              </details>
 
               <PlanningEstimateNotice requirement="verify your cruise line's boarding and embarkation requirements before leaving." />
             </div>

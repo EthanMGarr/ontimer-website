@@ -161,9 +161,8 @@ export default function AirportTimeToLeaveCalculator() {
             <span className="text-green-500">make my flight?</span>
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:text-base">
-            Enter your flight and route. OnTimer works backward through travel,
-            security, bags, parking and terminal time to give you a leave time for
-            your circumstances—not a generic rule.
+            Enter your starting address and airport. OnTimer calculates when you should leave
+            based on your flight type, travel, security, bags, parking and terminal time.
           </p>
         </div>
       </section>
@@ -365,7 +364,7 @@ export default function AirportTimeToLeaveCalculator() {
             Frequently asked questions
           </h2>
           <div className="divide-y divide-zinc-800">
-            {faqItems.map((item) => (
+            {faqItems.map((item, index) => (
               <details key={item.question} className="group py-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-white">
                   <span className="font-semibold leading-snug">{item.question}</span>
@@ -373,7 +372,12 @@ export default function AirportTimeToLeaveCalculator() {
                     +
                   </span>
                 </summary>
-                <p className="mt-4 text-sm leading-relaxed text-zinc-400">{item.answer}</p>
+                <p
+                  className="mt-4 text-sm leading-relaxed text-zinc-400"
+                  data-nosnippet={index === 0 || undefined}
+                >
+                  {item.answer}
+                </p>
               </details>
             ))}
           </div>

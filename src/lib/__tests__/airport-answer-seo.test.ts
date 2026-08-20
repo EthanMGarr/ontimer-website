@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import {
   buildAirportAnswerApplicationName,
   buildAirportAnswerDescription,
+  buildAirportSnippetCandidate,
   buildAirportAnswerTitle,
 } from "../airport-answer-seo";
 
@@ -18,10 +19,11 @@ assert.equal(
 );
 assert.match(
   buildAirportAnswerDescription(newark),
-  /^Find out what time to leave for Newark Liberty International Airport\./,
+  /^Calculate what time to leave for Newark Liberty International Airport/,
   "descriptions should promise the answer before describing its inputs",
 );
-assert(!buildAirportAnswerDescription(newark).startsWith("Calculate"));
+assert.match(buildAirportSnippetCandidate(newark), /Newark Liberty International Airport \(EWR\)/);
+assert.match(buildAirportSnippetCandidate(newark), /not a generic rule of thumb/);
 assert.equal(
   buildAirportAnswerApplicationName(newark),
   "When to Leave for Newark Airport (EWR)",

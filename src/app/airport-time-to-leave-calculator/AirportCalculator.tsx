@@ -130,11 +130,7 @@ function fmtDuration(minutes: number): string {
   return m === 0 ? `${h} hr` : `${h} hr ${m} min`;
 }
 
-function factorMinutes(
-  result: ComputedResult,
-  key: string,
-  fallback: number
-): number {
+function factorMinutes(result: ComputedResult, key: string, fallback: number): number {
   return result.factors.find((factor) => factor.key === key)?.minutes ?? fallback;
 }
 
@@ -594,6 +590,20 @@ export default function AirportCalculator({
       showBufferOverride, showSecurityOverride, activeRefinementCount, locationCode]);
 
   const resultHeroMode = genericRedesign && computedResult !== null;
+  // Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4
+  const ewrResultExperiment = genericRedesign;
+
+  function openResultAdjustments() {
+    setFormExpanded(true);
+    setShowRefinements(true);
+    track("airport_result_adjustments_opened", { location_code: locationCode ?? "generic" });
+    window.requestAnimationFrame(() => {
+      document.getElementById("airport-calculator-form")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }
 
   // ── Airport arrival preview (partial + estimating states) ───────────────────
   const arrivalOnlyPreview = useMemo((): Date | null => {
@@ -715,7 +725,9 @@ export default function AirportCalculator({
         <div className={`grid gap-6 ${
           resultHeroMode
             ? "lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.75fr)] lg:items-start"
-            : "lg:grid-cols-[1fr_1fr] lg:gap-8"
+            : genericRedesign
+              ? "mx-auto max-w-2xl"
+              : "lg:grid-cols-[1fr_1fr] lg:gap-8"
         }`}>
 
           {/* ══ Inputs ════════════════════════════════════════════════════════ */}
@@ -881,10 +893,9 @@ export default function AirportCalculator({
             }`}>
 
               {/* Header */}
-              <div className="flex items-center gap-2">
-                <span className={`text-base leading-none ${resultHeroMode ? "text-zinc-500" : "text-green-500"}`}>✓</span>
+              <div>
                 <p className="text-sm font-semibold text-white">
-                  {genericRedesign ? "Already Included" : "Smart airport timing enabled"}
+                  {genericRedesign ? "What we use" : "Smart airport timing enabled"}
                 </p>
               </div>
               {!genericRedesign && (
@@ -932,8 +943,8 @@ export default function AirportCalculator({
                 <span className="flex items-center gap-2">
                   <span>
                     {showRefinements
-                      ? genericRedesign ? "Hide advanced options" : "Hide assumptions"
-                      : genericRedesign ? "Advanced Options" : "Customize timing assumptions"}
+                      ? genericRedesign ? "Hide adjustments" : "Hide assumptions"
+                      : genericRedesign ? "Adjust assumptions" : "Customize timing assumptions"}
                   </span>
                   {activeRefinementCount > 0 && !showRefinements && (
                     <span className="rounded-full bg-green-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-green-400">
@@ -1126,31 +1137,35 @@ export default function AirportCalculator({
                   />
                 </div>
 
-                {genericRedesign && departureTime && (
-                  <div className="mt-5 rounded-lg border border-zinc-700/60 bg-zinc-950/50 p-4">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                      <p className="text-sm font-semibold text-white">Why this recommendation?</p>
-                      <p className="text-xs text-zinc-500">
-                        {fmtDepartureTime(departureTime)} {flightType} flight
-                      </p>
-                    </div>
-                    <div className="mt-3">
-                      <CalculationFactorList
-                        factors={computedResult.factors}
-                        formatDuration={fmtDuration}
-                      />
-                    </div>
+                {ewrResultExperiment && (
+                  <div className="mt-5 border-t border-zinc-800 pt-4">
+                    <p className="text-sm leading-relaxed text-zinc-300">
+                      {fmtDuration(factorMinutes(computedResult, "travel", computedResult.travelMinutes))}
+                      {arrivalMode === "transit" ? " transit" : " drive"}
+                      {" · "}
+                      {fmtDuration(factorMinutes(computedResult, "tsa_security", computedResult.securityMinutes))} security
+                    </p>
+                    <p className="mt-0.5 text-sm leading-relaxed text-zinc-400">
+                      Arrive by {fmtTime(computedResult.arrivalTime)}
+                      {" · "}
+                      {arrivalMode === "parking"
+                        ? "Parking included"
+                        : arrivalMode === "transit"
+                          ? "Terminal transfer included"
+                          : arrivalMode === "rideshare"
+                            ? "Rideshare access included"
+                            : "Drop-off access included"}
+                      {hasCheckedBag ? " · Bag drop included" : ""}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={openResultAdjustments}
+                      className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-green-400 underline underline-offset-4 transition-colors hover:text-green-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+                    >
+                      Adjust assumptions
+                    </button>
                   </div>
                 )}
-
-                {/* Inline summary — actual numbers, not category labels */}
-                <p className="mt-3 text-xs text-zinc-500">
-                  {fmtDuration(factorMinutes(computedResult, "travel", computedResult.travelMinutes))} drive
-                  {" · "}
-                  {fmtDuration(factorMinutes(computedResult, "tsa_security", computedResult.securityMinutes))} security
-                  {" · "}
-                  {fmtDuration(factorMinutes(computedResult, "airport_buffer", computedResult.baseBufferMinutes))} buffer
-                </p>
 
                 <CalendarOnTimerHandoff
                   calendarHref={buildGoogleCalendarLink({
@@ -1167,12 +1182,10 @@ export default function AirportCalculator({
                   calendarProvider={calendarProvider}
                   setCalendarProvider={setCalendarProvider}
                   calculatorType="airport_leave_time"
-                  readyHeading="Save this leave time to your calendar."
-                  readyBody=""
-                  appBeforeHeading="Make this leave time harder to miss."
-                  appBeforeBody="OnTimer uses your existing calendar to create automatic Time To Leave alarms for flights, meetings, appointments, and more."
-                  appAfterHeading="Make this leave time harder to miss."
-                  appAfterBody="Turn the calendar event into a persistent alarm that requires your attention."
+                  exclusivePrimaryAction={ewrResultExperiment}
+                  compactOpenedStatus={ewrResultExperiment}
+                  postCalendarHeading={ewrResultExperiment ? `Don’t miss ${fmtTime(computedResult.leaveTime)}.` : undefined}
+                  postCalendarBody={ewrResultExperiment ? "OnTimer sets an automatic alarm for this calendar event." : undefined}
                   appLocation={locationCode ? `airport_${locationCode.toLowerCase()}_result` : "airport_calculator_inline"}
                   analyticsContext={{
                     intent_cluster: "airport_when_to_leave",
@@ -1193,12 +1206,12 @@ export default function AirportCalculator({
                         });
                       }
                     }}
-                    className="flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-400"
+                    className="flex min-h-11 w-full items-center justify-between rounded-lg border border-zinc-800 px-3 text-sm font-semibold text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
                     aria-expanded={showBreakdown}
                     aria-controls="airport-timing-breakdown"
                   >
-                    <span>{showBreakdown ? "▾" : "▸"}</span>
-                    <span>{showBreakdown ? "Hide timing breakdown" : "See timing breakdown"}</span>
+                    <span>{showBreakdown ? "Hide calculation details" : "How we calculated your leave time"}</span>
+                    <span className="text-base leading-none text-zinc-500" aria-hidden="true">{showBreakdown ? "⌃" : "⌄"}</span>
                   </button>
 
                   {showBreakdown && (
@@ -1212,6 +1225,13 @@ export default function AirportCalculator({
                         <p className="text-sm text-zinc-400">Arrive at airport by</p>
                         <p className="text-sm font-semibold text-white">{fmtTime(computedResult.arrivalTime)}</p>
                       </div>
+                      <button
+                        type="button"
+                        onClick={openResultAdjustments}
+                        className="mt-4 text-xs font-medium text-zinc-400 underline underline-offset-2 transition-colors hover:text-white"
+                      >
+                        Adjust assumptions
+                      </button>
                     </div>
                   )}
                 </div>
@@ -1253,7 +1273,7 @@ export default function AirportCalculator({
                 )}
               </div>
 
-            ) : (
+            ) : genericRedesign ? null : (
               /* ── CAPABILITY STATE — no route inputs yet (default / initial) ── */
               <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
                 <p className="text-sm font-semibold text-white">

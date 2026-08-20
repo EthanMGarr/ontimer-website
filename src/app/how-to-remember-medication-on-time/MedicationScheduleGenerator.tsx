@@ -385,8 +385,7 @@ export default function MedicationScheduleGenerator() {
               }`}>
                 {!downloaded ? (
                   <>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-green-400">Your next step</p>
-                    <p className="mt-1 text-lg font-bold text-white">Put this schedule on your calendar.</p>
+                    <p className="text-lg font-bold text-white">Put this schedule on your calendar.</p>
                     <button
                       type="button"
                       onClick={handleDownload}

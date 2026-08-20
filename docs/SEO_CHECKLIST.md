@@ -51,3 +51,8 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Remove repeated keyword sections that restate the same answer without adding a distinct decision, example, or planning factor.
 - [ ] Explain where a planning answer can vary, identify what the traveler must verify, show the review date, and link to relevant primary sources without implying that a planning estimate is a guarantee.
 - [ ] Measure the full answer funnel separately: calculator start, personalized answer generated, calendar handoff, post-calendar alarm CTA view, and App Store outbound click. Include intent cluster and location code where available.
+
+## Search Snippet Candidates
+
+- Keep the first visible passage after a calculator H1 focused on the personalized result, user inputs, and factors the calculator actually uses.
+- Preserve useful rule-of-thumb guidance below the calculator. Use `data-nosnippet` only on a narrowly identified passage that is likely to replace the calculator value proposition in search results; do not suppress whole guidance or FAQ sections.

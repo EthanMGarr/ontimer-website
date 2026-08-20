@@ -416,12 +416,6 @@ export default function LeaveTimeCalculator() {
     : null;
   const leaveCalendarHref = leaveCalendarEvent ? buildGoogleCalendarLink(leaveCalendarEvent) : "";
   const leaveCalendarIcsHref = leaveCalendarEvent ? buildIcsCalendarDataUri(leaveCalendarEvent) : "";
-  const recipeStep = (n: number) => (
-    <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-zinc-700 text-[11px] font-bold text-zinc-400">
-      {n}
-    </span>
-  );
-
   return (
     <>
       <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6">
@@ -445,47 +439,15 @@ export default function LeaveTimeCalculator() {
                 </p>
                 <p className="mt-1.5 text-sm text-zinc-400">{fmtDate(result.leaveTime)}</p>
 
-                {/* Ordered recipe */}
-                <ol className="mt-5 space-y-2.5 border-t border-zinc-800 pt-4" aria-label="Leave-time breakdown">
-                  <li className="flex items-center gap-3 text-sm">
-                    <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-green-500/20 text-[11px] font-bold text-green-400">
-                      1
-                    </span>
-                    <span className="font-semibold text-white">
-                      Leave by {fmtTime(result.leaveTime)}
-                    </span>
-                  </li>
-
-                  <li className="flex items-center gap-3 text-sm">
-                    {recipeStep(2)}
-                    <span className="text-zinc-300">
-                      {result.travelMinutes} min {travelModeLabel}
-                      {result.travelSource === "google" && (
-                        <span className="ml-1.5 inline-flex items-center rounded-full bg-green-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-green-400">
-                          {trafficLabel(result.trafficBasis, result.planningMode)}
-                        </span>
-                      )}
-                    </span>
-                  </li>
-
-                  {result.bufferMinutes > 0 && (
-                    <li className="flex items-center gap-3 text-sm">
-                      {recipeStep(3)}
-                      <span className="text-zinc-300">
-                        {result.bufferMinutes} min personal buffer
-                      </span>
-                    </li>
-                  )}
-
-                  {result.prepMinutes > 0 && (
-                    <li className="flex items-center gap-3 text-sm">
-                      {recipeStep(result.bufferMinutes > 0 ? 4 : 3)}
-                      <span className="text-zinc-300">
-                        {result.prepMinutes} min parking / walk-in
-                      </span>
-                    </li>
-                  )}
-                </ol>
+                <div className="mt-5 border-t border-zinc-800 pt-4">
+                  <p className="text-sm text-zinc-300">
+                    {result.travelMinutes} min {travelModeLabel}
+                    {result.travelSource === "google" ? ` · ${trafficLabel(result.trafficBasis, result.planningMode)}` : ""}
+                  </p>
+                  <p className="mt-0.5 text-sm text-zinc-400">
+                    {[result.bufferMinutes > 0 ? `${result.bufferMinutes} min buffer` : null, result.prepMinutes > 0 ? `${result.prepMinutes} min parking / walk-in` : null].filter(Boolean).join(" · ") || "No extra buffer selected"}
+                  </p>
+                </div>
 
                 {/* Customize link */}
                 <button
@@ -495,7 +457,7 @@ export default function LeaveTimeCalculator() {
                 >
                   <span className="flex items-center gap-2">
                     <span className="text-zinc-400">⚙</span>
-                    <span>Customize timing assumptions</span>
+                    <span>Adjust assumptions</span>
                   </span>
                   <span className="text-xs text-zinc-500">
                     Drive time, buffer, or walk-in different? Edit →
@@ -509,12 +471,10 @@ export default function LeaveTimeCalculator() {
                   calendarProvider={calendarProvider}
                   setCalendarProvider={setCalendarProvider}
                   calculatorType="leave_time"
-                  readyHeading="Put this leave time on your calendar."
-                  readyBody=""
-                  appBeforeHeading="Next time, let OnTimer do this automatically."
-                  appBeforeBody="OnTimer uses your existing calendar to create automatic alarms before meetings, appointments, and trips."
-                  appAfterHeading="Don't just get notified. Get there on time."
-                  appAfterBody={'Turn this into a "can\'t-miss" leave time alarm.'}
+                  exclusivePrimaryAction
+                  compactOpenedStatus
+                  postCalendarHeading={`Don’t miss ${fmtTime(result.leaveTime)}.`}
+                  postCalendarBody="OnTimer sets an automatic alarm for this calendar event."
                   appLocation="leave_calculator_result"
                 />
               </div>
@@ -717,8 +677,8 @@ export default function LeaveTimeCalculator() {
                     <span className="text-zinc-500">⚙</span>
                     <span>
                       {showAssumptions
-                        ? "Hide timing assumptions"
-                        : "Customize timing assumptions"}
+                        ? "Hide adjustments"
+                        : "Adjust assumptions"}
                     </span>
                   </span>
                   <span
@@ -812,37 +772,15 @@ export default function LeaveTimeCalculator() {
 
               {/* CTA — sticky on desktop; swaps to App Store after result */}
               <div className="lg:sticky lg:bottom-4 bg-zinc-900 pb-1 pt-1">
-                {result && calendarProvider ? (
-                  <div>
-                    <AppStoreButton
-                      size="sm"
-                      location="leave_calculator_sticky_cta"
-                      className="w-full justify-center"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setResult(null);
-                        setError(null);
-                      }}
-                      className="mt-2 w-full text-center text-xs text-zinc-500 transition-colors hover:text-zinc-400"
-                    >
-                      ← Recalculate
-                    </button>
-                  </div>
-                ) : result ? (
-                  <a
-                    href={leaveCalendarHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => {
-                      trackCalendarHandoffOpened("leave_time", "google", { placement: "desktop_sticky" });
-                      setCalendarProvider("google");
-                    }}
-                    className="flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"
+                {result ? (
+                  <button
+                    type="button"
+                    onClick={handleCalculate}
+                    disabled={isCalculating}
+                    className="w-full rounded-full border border-zinc-600 bg-zinc-800 px-6 py-3 font-semibold text-zinc-100 transition-colors hover:border-zinc-500 hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    Add to Google Calendar
-                  </a>
+                    {isCalculating ? "Updating leave time…" : "Update Leave Time"}
+                  </button>
                 ) : (
                   <>
                     <button
@@ -872,7 +810,7 @@ export default function LeaveTimeCalculator() {
 
       {/* ── Mobile sticky leave-time bar ── */}
       {result && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-800 bg-zinc-950/95 px-4 py-3 backdrop-blur-sm lg:hidden">
+        <div className="hidden fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-800 bg-zinc-950/95 px-4 py-3 backdrop-blur-sm lg:hidden">
           <div className="mx-auto flex max-w-lg items-center justify-between gap-4">
             <div>
               <p className="text-[10px] font-medium text-zinc-500">Leave by</p>

@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import DoseTimeField from "@/components/DoseTimeField";
 import { formatMedicationTime, generateMedicationTimes, type MedicationFrequency } from "@/lib/medication-schedule";
-import { encodeMedicationSchedule, medicationShareCopy, type SharedMedicationSchedule } from "@/lib/medication-share-link";
+import { encodeMedicationSchedule, medicationEmailDraft, medicationShareCopy, type SharedMedicationSchedule } from "@/lib/medication-share-link";
 
 type Frequency = MedicationFrequency;
 type Duration = 7 | 10 | 14 | 30 | "custom";
@@ -101,8 +101,8 @@ export default function ProviderMedicationSchedule({ variant = "provider" }: { v
   }
   function handleEmail() {
     const url = shareUrl || createShareUrl();
-    const copy = medicationShareCopy(practiceName, variant);
-    window.location.href = `mailto:?subject=${encodeURIComponent(copy.title)}&body=${encodeURIComponent(`${copy.emailBody}\n\n${url}`)}`;
+    const draft = medicationEmailDraft(sharedSchedule(), url);
+    window.location.href = `mailto:?subject=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`;
   }
   async function handleCopy() {
     const url = shareUrl || createShareUrl();
@@ -136,7 +136,7 @@ export default function ProviderMedicationSchedule({ variant = "provider" }: { v
         <div className="mt-6 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,.82fr)] lg:items-start">
           <div className="order-2 lg:order-1"><Label>Review dose times</Label><div className="space-y-2">{times.map((time, index) => <div key={index} className="min-w-0 rounded-xl border border-zinc-800 bg-zinc-950/20 p-3"><div className="mb-2 flex items-center justify-between gap-3"><span className="text-xs font-semibold text-zinc-400">Dose {index + 1} · {formatMedicationTime(time)}</span><button type="button" onClick={() => { setTimes((current) => current.filter((_, i) => i !== index)); setShareUrl(""); setCopied(false); }} className="text-zinc-600 hover:text-red-400" aria-label="Remove this time">✕</button></div><DoseTimeField value={time} onChange={(value) => { setTimes((current) => current.map((item, i) => i === index ? value : item)); setShareUrl(""); setCopied(false); }} label={`Dose ${index + 1} time`} audience={isCaregiver ? "patient" : "provider"} /></div>)}</div><button type="button" onClick={() => { setTimes((current) => [...current, "08:00"]); setShareUrl(""); setCopied(false); }} className="mt-3 text-sm text-green-500 hover:text-green-400">+ Add time</button>{(times.length !== generatedTimes.length || times.some((time, index) => time !== generatedTimes[index])) && <p className="mt-4 rounded-lg border border-zinc-700 bg-zinc-950/30 px-4 py-3 text-sm leading-relaxed text-zinc-300">You changed a dose time. {isCaregiver ? "Make sure the change is cleared with their healthcare provider before sharing it." : "Confirm the updated schedule before sharing it."}</p>}</div>
           <div className="order-1 flex min-w-0 flex-col gap-4 lg:order-2 lg:sticky lg:top-24">
-            <div className="rounded-xl border border-zinc-700 bg-zinc-950/35 p-4"><p className="text-xs font-semibold uppercase tracking-wider text-green-400">Your next step</p><p className="mt-1 text-lg font-bold text-white">Send the schedule.</p><button type="button" onClick={handleEmail} disabled={!timeZone || times.length === 0} className="mt-4 w-full whitespace-nowrap rounded-full bg-green-500 px-5 py-3.5 text-sm font-bold text-black hover:bg-green-400 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400">Email schedule</button><button type="button" onClick={handleShare} disabled={!timeZone || times.length === 0} className="mt-3 w-full whitespace-nowrap text-sm font-medium text-zinc-300 underline underline-offset-2 hover:text-white disabled:cursor-not-allowed disabled:text-zinc-600">Text or share another way</button><button type="button" onClick={handleCopy} className="mt-3 w-full whitespace-nowrap text-sm font-medium text-zinc-400 underline underline-offset-2 hover:text-white">{copied ? "Link copied" : "Copy private link"}</button><p className="mt-3 text-xs leading-relaxed text-zinc-500">Email includes a subject and short instructions. {isCaregiver ? "Your family member reviews the schedule, then adds it to their calendar." : "The patient reviews the schedule, then adds it to their calendar."}</p></div>
+            <div className="rounded-xl border border-zinc-700 bg-zinc-950/35 p-4"><p className="text-lg font-bold text-white">Send the schedule.</p><button type="button" onClick={handleEmail} disabled={!timeZone || times.length === 0} className="mt-4 w-full whitespace-nowrap rounded-full bg-green-500 px-5 py-3.5 text-sm font-bold text-black hover:bg-green-400 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400">Email schedule</button><button type="button" onClick={handleShare} disabled={!timeZone || times.length === 0} className="mt-3 w-full whitespace-nowrap text-sm font-medium text-zinc-300 underline underline-offset-2 hover:text-white disabled:cursor-not-allowed disabled:text-zinc-600">Text or share another way</button><button type="button" onClick={handleCopy} className="mt-3 w-full whitespace-nowrap text-sm font-medium text-zinc-400 underline underline-offset-2 hover:text-white">{copied ? "Link copied" : "Copy private link"}</button><p className="mt-3 text-xs leading-relaxed text-zinc-500">Email includes a subject and short instructions. {isCaregiver ? "Your family member reviews the schedule, then adds it to their calendar." : "The patient reviews the schedule, then adds it to their calendar."}</p></div>
           </div>
         </div>
       </>}
