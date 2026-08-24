@@ -14,6 +14,7 @@ import { getAirportDepartureStatus } from "@/lib/airport-departure-status";
 import type { SecurityEstimate } from "@/app/api/security-wait/route";
 import type { CalculatorExample } from "@/lib/travel-locations";
 import type { AirportAutocompleteOption } from "@/lib/airport-autocomplete";
+import { formatAirportDateLabel } from "@/lib/airport-date-label";
 import {
   leaveTimePlanner,
   type CalculationFactor,
@@ -153,15 +154,6 @@ function localDateString(date = new Date()): string {
 
 function planningModeForDate(date: string): PlanningMode {
   return date === localDateString() ? "today" : "future";
-}
-
-function formatTodayLabel(date: string): string {
-  const [year, month, day] = date.split("-").map(Number);
-  return new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  }).format(new Date(year, month - 1, day, 12));
 }
 
 // ─── Airport display ──────────────────────────────────────────────────────────
@@ -337,7 +329,6 @@ export default function AirportCalculator({
 
   // ── Form state ──────────────────────────────────────────────────────────────
   const [departureDate, setDepartureDate] = useState(defaultDate);
-  const [planningMode, setPlanningMode] = useState<PlanningMode>(() => planningModeForDate(defaultDate));
   const [departureTime, setDepartureTime] = useState(defaultTime);
   const [flightType, setFlightType] = useState<FlightType>("domestic");
   const [origin, setOrigin] = useState("");
@@ -431,6 +422,7 @@ export default function AirportCalculator({
   const estimatedSecurityMins = securityEstimate?.avg ?? getAirportDefaultSecurityMinutes(flightType);
   const defaultBuffer = baseBuffer + estimatedSecurityMins;
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
+  const planningMode = planningModeForDate(departureDate);
 
   function handleOriginChange(value: string) {
     setOrigin(value);
@@ -487,16 +479,6 @@ export default function AirportCalculator({
     "Time inside the airport",
     `${flightType === "international" ? longHaulLabel : shortHaulLabel} recommendations`,
   ];
-
-  function handlePlanningModeChange(mode: PlanningMode) {
-    setPlanningMode(mode);
-    if (mode === "today") setDepartureDate(localDateString());
-  }
-
-  function handleDepartureDateChange(date: string) {
-    setDepartureDate(date);
-    setPlanningMode(planningModeForDate(date));
-  }
 
   // ── Computed result ─────────────────────────────────────────────────────────
   const computedResult = useMemo((): ComputedResult | null => {
@@ -775,7 +757,7 @@ export default function AirportCalculator({
               className={`space-y-4 ${genericRedesign || formExpanded ? "block" : "hidden lg:block"}`}
             >
 
-            {/* Planning mode + time */}
+            {/* Flight date + time */}
             <div className={genericRedesign ? `rounded-xl border p-4 ${
               resultHeroMode ? "border-zinc-800/70 bg-zinc-950/25" : "border-zinc-800 bg-zinc-950/40"
             }` : ""}>
@@ -786,32 +768,36 @@ export default function AirportCalculator({
               )}
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="min-w-0">
-                  <FieldLabel>Planning this trip</FieldLabel>
-                  <SegmentedControl
-                    options={[
-                      { value: "today", label: "Today" },
-                      { value: "future", label: "Future date" },
-                    ]}
-                    value={planningMode}
-                    onChange={handlePlanningModeChange}
-                  />
-                  <p className="mt-2 flex items-center gap-2 text-[11px] text-zinc-500">
-                    <span className="rounded border border-zinc-700 bg-zinc-900 px-1.5 py-0.5 font-semibold text-zinc-300">
-                      Today
+                  <FieldLabel>Flight date</FieldLabel>
+                  <div
+                    className={`${inputClass} relative flex items-center justify-between gap-3 focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500`}
+                  >
+                    <span className="truncate text-white" aria-hidden="true">
+                      {formatAirportDateLabel(departureDate, today)}
                     </span>
-                    {formatTodayLabel(today)}
-                  </p>
-                  {planningMode === "future" && (
-                    <div className="mt-3">
-                      <input
-                        type="date"
-                        value={departureDate}
-                        min={today}
-                        onChange={(e) => handleDepartureDateChange(e.target.value)}
-                        className={`${inputClass} [color-scheme:dark]`}
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      className="h-5 w-5 shrink-0 text-zinc-400"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6.75 3v2.25M17.25 3v2.25M3.75 9h16.5M5.25 5.25h13.5a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-12a1.5 1.5 0 0 1 1.5-1.5Z"
                       />
-                    </div>
-                  )}
+                    </svg>
+                    <input
+                      type="date"
+                      aria-label="Flight date"
+                      value={departureDate}
+                      min={today}
+                      onChange={(e) => setDepartureDate(e.target.value)}
+                      className="absolute inset-0 h-full w-full cursor-pointer opacity-0 [color-scheme:dark]"
+                    />
+                  </div>
                 </div>
                 <div className="min-w-0">
                   <FieldLabel>Flight departs at</FieldLabel>
