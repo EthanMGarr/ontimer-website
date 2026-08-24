@@ -2,10 +2,29 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 import { indexableTravelLocations } from "@/lib/travel-locations";
+import {
+  buildAirportCalendarLocation,
+  type AirportAutocompleteOption,
+} from "@/lib/airport-autocomplete";
 
 const indexableAirportLocations = indexableTravelLocations.filter(
   (location) => location.kind === "airport"
 );
+const airportAutocompleteOptions: AirportAutocompleteOption[] = indexableAirportLocations
+  .map((location) => ({
+    code: location.code,
+    name: location.name,
+    city: location.city,
+    location: buildAirportCalendarLocation(location),
+    searchText: [
+      location.code,
+      location.name,
+      location.shortName,
+      location.city,
+      ...(location.aliases ?? []),
+    ].join(" ").toLowerCase(),
+  }))
+  .toSorted((left, right) => left.name.localeCompare(right.name));
 import AirportCalculator from "./AirportCalculator";
 
 export const metadata: Metadata = {
@@ -90,7 +109,7 @@ const softwareAppJsonLd = {
   description:
     "A free personalized answer for when to leave for a flight, based on flight time, route, security, bags, parking, and terminal access.",
   url: "https://www.ontimer.app/airport-time-to-leave-calculator",
-  dateModified: "2026-08-13",
+  dateModified: "2026-08-24",
   author: {
     "@type": "Organization",
     name: "OnTimer",
@@ -170,7 +189,7 @@ export default function AirportTimeToLeaveCalculator() {
       {/* ── CALCULATOR ── */}
       <section id="calculator" className="border-t border-zinc-800 pb-6 pt-3 md:pb-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <AirportCalculator genericRedesign />
+          <AirportCalculator genericRedesign airportOptions={airportAutocompleteOptions} />
           <p className="mt-5 text-center text-sm text-zinc-400">
             This calculator is for realistic departure planning. For a fun take on risky airport
             timing, see the{" "}

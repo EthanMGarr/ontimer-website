@@ -6,12 +6,14 @@ import CalculationFactorList from "@/components/leave-time/CalculationFactorList
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
 import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNotice";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
+import AirportAutocomplete from "@/components/AirportAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri } from "@/lib/calendar-links";
 import { getAirportDepartureStatus } from "@/lib/airport-departure-status";
 import type { SecurityEstimate } from "@/app/api/security-wait/route";
 import type { CalculatorExample } from "@/lib/travel-locations";
+import type { AirportAutocompleteOption } from "@/lib/airport-autocomplete";
 import {
   leaveTimePlanner,
   type CalculationFactor,
@@ -151,6 +153,15 @@ function localDateString(date = new Date()): string {
 
 function planningModeForDate(date: string): PlanningMode {
   return date === localDateString() ? "today" : "future";
+}
+
+function formatTodayLabel(date: string): string {
+  const [year, month, day] = date.split("-").map(Number);
+  return new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(year, month - 1, day, 12));
 }
 
 // ─── Airport display ──────────────────────────────────────────────────────────
@@ -300,6 +311,7 @@ interface AirportCalculatorProps {
   shortHaulLabel?: string;
   longHaulLabel?: string;
   securityLabel?: string;
+  airportOptions?: AirportAutocompleteOption[];
 }
 
 const genericExample: CalculatorExample = {
@@ -318,6 +330,7 @@ export default function AirportCalculator({
   shortHaulLabel = "Domestic",
   longHaulLabel = "International",
   securityLabel = planningJurisdiction === "international" ? "Airport security" : "TSA security",
+  airportOptions = [],
 }: AirportCalculatorProps) {
   const today = localDateString();
   const { date: defaultDate, time: defaultTime } = defaultDeparture();
@@ -432,6 +445,7 @@ export default function AirportCalculator({
   const manualDriveMinutes = parseInt(manualTravelMinutes, 10);
   const hasManualDriveTime = !isNaN(manualDriveMinutes) && manualDriveMinutes >= 0;
   const airportShortDisplay = buildAirportShortDisplay(airport);
+  const calendarEventTitle = airportShortDisplay ? `Leave for ${airportShortDisplay}` : "Leave for airport";
   const hasAirport = airport.trim().length >= 2;
 
   type SecurityState = "empty" | "loading" | "ready";
@@ -781,6 +795,12 @@ export default function AirportCalculator({
                     value={planningMode}
                     onChange={handlePlanningModeChange}
                   />
+                  <p className="mt-2 flex items-center gap-2 text-[11px] text-zinc-500">
+                    <span className="rounded border border-zinc-700 bg-zinc-900 px-1.5 py-0.5 font-semibold text-zinc-300">
+                      Today
+                    </span>
+                    {formatTodayLabel(today)}
+                  </p>
                   {planningMode === "future" && (
                     <div className="mt-3">
                       <input
@@ -794,7 +814,7 @@ export default function AirportCalculator({
                   )}
                 </div>
                 <div className="min-w-0">
-                  <FieldLabel>Departure time</FieldLabel>
+                  <FieldLabel>Flight departs at</FieldLabel>
                   <input
                     type="time"
                     value={departureTime}
@@ -841,13 +861,23 @@ export default function AirportCalculator({
                 </div>
                 <div>
                   <FieldLabel>Airport</FieldLabel>
-                  <PlaceAutocomplete
-                    value={airport}
-                    onChange={setAirport}
-                    placeholder="e.g. JFK, LAX, Newark"
-                    inputClassName={inputClass}
-                    types="airport"
-                  />
+                  {genericRedesign && airportOptions.length > 0 ? (
+                    <AirportAutocomplete
+                      value={airport}
+                      onChange={setAirport}
+                      options={airportOptions}
+                      placeholder="Airport name or IATA code"
+                      inputClassName={inputClass}
+                    />
+                  ) : (
+                    <PlaceAutocomplete
+                      value={airport}
+                      onChange={setAirport}
+                      placeholder="e.g. JFK, LAX, Newark"
+                      inputClassName={inputClass}
+                      types="airport"
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -1169,14 +1199,16 @@ export default function AirportCalculator({
 
                 <CalendarOnTimerHandoff
                   calendarHref={buildGoogleCalendarLink({
-                    title: airport ? `Leave for ${buildAirportShortDisplay(airport)}` : "Leave for airport",
+                    title: calendarEventTitle,
                     start: computedResult.leaveTime,
                     details: "Calculated by OnTimer",
+                    location: airport || undefined,
                   })}
                   alternateCalendarHref={buildIcsCalendarDataUri({
-                    title: airport ? `Leave for ${buildAirportShortDisplay(airport)}` : "Leave for airport",
+                    title: calendarEventTitle,
                     start: computedResult.leaveTime,
                     details: "Calculated by OnTimer",
+                    location: airport || undefined,
                   })}
                   alternateCalendarFilename="airport-leave-time.ics"
                   calendarProvider={calendarProvider}
@@ -1184,13 +1216,18 @@ export default function AirportCalculator({
                   calculatorType="airport_leave_time"
                   exclusivePrimaryAction={ewrResultExperiment}
                   compactOpenedStatus={ewrResultExperiment}
-                  postCalendarHeading={ewrResultExperiment ? `Don’t miss ${fmtTime(computedResult.leaveTime)}.` : undefined}
+                  postCalendarHeading={ewrResultExperiment ? "Don’t be late. Turn this into an alarm." : undefined}
                   postCalendarBody={ewrResultExperiment ? "OnTimer sets an automatic alarm for this calendar event." : undefined}
                   appLocation={locationCode ? `airport_${locationCode.toLowerCase()}_result` : "airport_calculator_inline"}
                   analyticsContext={{
                     intent_cluster: "airport_when_to_leave",
                     ...(locationCode ? { location_code: locationCode } : {}),
                   }}
+                  eventPreview={genericRedesign ? {
+                    title: calendarEventTitle,
+                    startLabel: `${fmtDate(computedResult.leaveTime)} at ${fmtTime(computedResult.leaveTime)}`,
+                    location: airport,
+                  } : undefined}
                 />
 
                 {/* Timing details stay available without interrupting the conversion flow. */}

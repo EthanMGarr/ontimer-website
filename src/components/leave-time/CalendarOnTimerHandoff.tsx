@@ -22,6 +22,11 @@ interface CalendarOnTimerHandoffProps {
   postCalendarBody?: string;
   appLocation: string;
   analyticsContext?: AnalyticsParams;
+  eventPreview?: {
+    title: string;
+    startLabel: string;
+    location: string;
+  };
 }
 
 export default function CalendarOnTimerHandoff({
@@ -40,6 +45,7 @@ export default function CalendarOnTimerHandoff({
   postCalendarBody = "OnTimer sets automatic alarms for your calendar events.",
   appLocation,
   analyticsContext = {},
+  eventPreview,
 }: CalendarOnTimerHandoffProps) {
   const calendarOpened = calendarProvider !== null;
   const openedHeading = calendarProvider === "ics"
@@ -99,6 +105,25 @@ export default function CalendarOnTimerHandoff({
         ) : (
           <>
             <p className="text-lg font-bold text-white">{readyHeading}</p>
+            {eventPreview && (
+              <div className="mt-3 rounded-lg border border-zinc-700/80 bg-zinc-950/50 p-3" aria-label="Calendar event preview">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Calendar event preview</p>
+                <dl className="mt-2 space-y-1.5 text-xs">
+                  <div className="grid grid-cols-[4.25rem_minmax(0,1fr)] gap-2">
+                    <dt className="text-zinc-500">Title</dt>
+                    <dd className="font-medium text-zinc-200">{eventPreview.title}</dd>
+                  </div>
+                  <div className="grid grid-cols-[4.25rem_minmax(0,1fr)] gap-2">
+                    <dt className="text-zinc-500">Leave by</dt>
+                    <dd className="text-zinc-300">{eventPreview.startLabel}</dd>
+                  </div>
+                  <div className="grid grid-cols-[4.25rem_minmax(0,1fr)] gap-2">
+                    <dt className="text-zinc-500">Location</dt>
+                    <dd className="break-words text-zinc-300">{eventPreview.location}</dd>
+                  </div>
+                </dl>
+              </div>
+            )}
             <a
               href={calendarHref}
               target="_blank"
