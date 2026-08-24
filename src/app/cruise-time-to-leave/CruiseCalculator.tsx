@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
+import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
 import CalculationFactorList from "@/components/leave-time/CalculationFactorList";
 import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNotice";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
@@ -22,7 +23,7 @@ import {
   type CruiseTransportationMode,
 } from "@/core/leave-time/plugins/cruise-terminals";
 import type { CalculatorExample } from "@/lib/travel-locations";
-import { buildGoogleCalendarLink, buildIcsCalendarDataUri } from "@/lib/calendar-links";
+import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 
 interface TravelTimeResponse {
@@ -192,7 +193,7 @@ export default function CruiseCalculator({
   const { date: defaultDate, time: defaultTime } = defaultBoarding();
 
   const [boardingDate, setBoardingDate] = useState(defaultDate);
-  const [planningMode, setPlanningMode] = useState<PlanningMode>(() => planningModeForDate(defaultDate));
+  const planningMode = planningModeForDate(boardingDate);
   const [boardingTime, setBoardingTime] = useState(defaultTime);
   const [eventKind, setEventKind] = useState<CruiseEventKind>("domestic");
   const [origin, setOrigin] = useState("");
@@ -237,16 +238,6 @@ export default function CruiseCalculator({
   }
   const manualDriveMinutes = parseInt(manualTravelMinutes, 10);
   const hasManualDriveTime = !isNaN(manualDriveMinutes) && manualDriveMinutes >= 0;
-
-  function handlePlanningModeChange(mode: PlanningMode) {
-    setPlanningMode(mode);
-    if (mode === "today") setBoardingDate(localDateString());
-  }
-
-  function handleBoardingDateChange(date: string) {
-    setBoardingDate(date);
-    setPlanningMode(planningModeForDate(date));
-  }
 
   const computedResult = useMemo((): CruiseResult | null => {
     if (!boardingDate || !boardingTime) return null;
@@ -400,28 +391,13 @@ export default function CruiseCalculator({
               {computedResult ? "Edit Cruise Details" : "Your Cruise"}
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="min-w-0">
-                <FieldLabel>Planning this cruise</FieldLabel>
-                <SegmentedControl
-                  options={[
-                    { value: "today", label: "Today" },
-                    { value: "future", label: "Future date" },
-                  ]}
-                  value={planningMode}
-                  onChange={handlePlanningModeChange}
-                />
-                {planningMode === "future" && (
-                  <div className="mt-3">
-                    <input
-                      type="date"
-                      value={boardingDate}
-                      min={today}
-                      onChange={(e) => handleBoardingDateChange(e.target.value)}
-                      className={`${inputClass} [color-scheme:dark]`}
-                    />
-                  </div>
-                )}
-              </div>
+              <CalculatorDateField
+                label="Cruise date"
+                value={boardingDate}
+                today={today}
+                inputClassName={inputClass}
+                onChange={setBoardingDate}
+              />
               <div className="min-w-0">
                 <FieldLabel>Boarding time</FieldLabel>
                 <input
@@ -651,12 +627,14 @@ export default function CruiseCalculator({
                 calendarHref={buildGoogleCalendarLink({
                   title: terminal ? `Leave for ${terminal.split(",")[0]}` : "Leave for cruise terminal",
                   start: computedResult.leaveAt,
-                  details: "Calculated by OnTimer",
+                  details: ONTIMER_CALENDAR_DESCRIPTION,
+                  location: terminal || undefined,
                 })}
                 alternateCalendarHref={buildIcsCalendarDataUri({
                   title: terminal ? `Leave for ${terminal.split(",")[0]}` : "Leave for cruise terminal",
                   start: computedResult.leaveAt,
-                  details: "Calculated by OnTimer",
+                  details: ONTIMER_CALENDAR_DESCRIPTION,
+                  location: terminal || undefined,
                 })}
                 alternateCalendarFilename="cruise-leave-time.ics"
                 calendarProvider={calendarProvider}
@@ -664,10 +642,14 @@ export default function CruiseCalculator({
                 calculatorType="cruise_leave_time"
                 exclusivePrimaryAction
                 compactOpenedStatus
-                postCalendarHeading={`Don’t miss ${fmtTime(computedResult.leaveAt)}.`}
+                postCalendarHeading="Don’t be late. Turn this into an alarm."
                 postCalendarBody="OnTimer sets an automatic alarm for this calendar event."
                 appLocation={locationCode ? `cruise_${locationCode.toLowerCase()}_result` : "cruise_calculator_inline"}
                 analyticsContext={locationCode ? { location_code: locationCode } : {}}
+                eventPreview={{
+                  title: terminal ? `Leave for ${terminal.split(",")[0]}` : "Leave for cruise terminal",
+                  startLabel: fmtTime(computedResult.leaveAt),
+                }}
               />
 
               <details className="group mt-5 border-t border-zinc-800 pt-4">

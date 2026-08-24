@@ -4,17 +4,17 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import CalculationFactorList from "@/components/leave-time/CalculationFactorList";
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
+import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
 import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNotice";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import AirportAutocomplete from "@/components/AirportAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
-import { buildGoogleCalendarLink, buildIcsCalendarDataUri } from "@/lib/calendar-links";
+import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 import { getAirportDepartureStatus } from "@/lib/airport-departure-status";
 import type { SecurityEstimate } from "@/app/api/security-wait/route";
 import type { CalculatorExample } from "@/lib/travel-locations";
 import type { AirportAutocompleteOption } from "@/lib/airport-autocomplete";
-import { formatAirportDateLabel } from "@/lib/airport-date-label";
 import {
   leaveTimePlanner,
   type CalculationFactor,
@@ -767,38 +767,13 @@ export default function AirportCalculator({
                 </p>
               )}
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="min-w-0">
-                  <FieldLabel>Flight date</FieldLabel>
-                  <div
-                    className={`${inputClass} relative flex items-center justify-between gap-3 focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500`}
-                  >
-                    <span className="truncate text-white" aria-hidden="true">
-                      {formatAirportDateLabel(departureDate, today)}
-                    </span>
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      className="h-5 w-5 shrink-0 text-zinc-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6.75 3v2.25M17.25 3v2.25M3.75 9h16.5M5.25 5.25h13.5a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-12a1.5 1.5 0 0 1 1.5-1.5Z"
-                      />
-                    </svg>
-                    <input
-                      type="date"
-                      aria-label="Flight date"
-                      value={departureDate}
-                      min={today}
-                      onChange={(e) => setDepartureDate(e.target.value)}
-                      className="absolute inset-0 h-full w-full cursor-pointer opacity-0 [color-scheme:dark]"
-                    />
-                  </div>
-                </div>
+                <CalculatorDateField
+                  label="Flight date"
+                  value={departureDate}
+                  today={today}
+                  inputClassName={inputClass}
+                  onChange={setDepartureDate}
+                />
                 <div className="min-w-0">
                   <FieldLabel>Flight departs at</FieldLabel>
                   <input
@@ -1187,13 +1162,13 @@ export default function AirportCalculator({
                   calendarHref={buildGoogleCalendarLink({
                     title: calendarEventTitle,
                     start: computedResult.leaveTime,
-                    details: "Calculated by OnTimer",
+                    details: ONTIMER_CALENDAR_DESCRIPTION,
                     location: airport || undefined,
                   })}
                   alternateCalendarHref={buildIcsCalendarDataUri({
                     title: calendarEventTitle,
                     start: computedResult.leaveTime,
-                    details: "Calculated by OnTimer",
+                    details: ONTIMER_CALENDAR_DESCRIPTION,
                     location: airport || undefined,
                   })}
                   alternateCalendarFilename="airport-leave-time.ics"
@@ -1202,17 +1177,17 @@ export default function AirportCalculator({
                   calculatorType="airport_leave_time"
                   exclusivePrimaryAction={ewrResultExperiment}
                   compactOpenedStatus={ewrResultExperiment}
-                  postCalendarHeading={ewrResultExperiment ? "Don’t be late. Turn this into an alarm." : undefined}
-                  postCalendarBody={ewrResultExperiment ? "OnTimer sets an automatic alarm for this calendar event." : undefined}
+                  postCalendarHeading="Don’t be late. Turn this into an alarm."
+                  postCalendarBody="OnTimer sets an automatic alarm for this calendar event."
                   appLocation={locationCode ? `airport_${locationCode.toLowerCase()}_result` : "airport_calculator_inline"}
                   analyticsContext={{
                     intent_cluster: "airport_when_to_leave",
                     ...(locationCode ? { location_code: locationCode } : {}),
                   }}
-                  eventPreview={genericRedesign ? {
+                  eventPreview={{
                     title: calendarEventTitle,
                     startLabel: fmtTime(computedResult.leaveTime),
-                  } : undefined}
+                  }}
                 />
 
                 {/* Timing details stay available without interrupting the conversion flow. */}
@@ -1368,7 +1343,8 @@ export default function AirportCalculator({
                 href={buildGoogleCalendarLink({
                   title: airport ? `Leave for ${buildAirportShortDisplay(airport)}` : "Leave for airport",
                   start: computedResult.leaveTime,
-                  details: "Calculated by OnTimer",
+                  details: ONTIMER_CALENDAR_DESCRIPTION,
+                  location: airport || undefined,
                 })}
                 target="_blank"
                 rel="noopener noreferrer"

@@ -27,6 +27,7 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
+import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -290,7 +291,7 @@ export default function AirportTheoryCalculator() {
   const { date: defaultDate, time: defaultTime } = defaultDeparture();
 
   const [departureDate, setDepartureDate] = useState(defaultDate);
-  const [planningMode, setPlanningMode] = useState<PlanningMode>(() => planningModeForDate(defaultDate));
+  const planningMode = planningModeForDate(departureDate);
   const [departureTime, setDepartureTime] = useState(defaultTime);
   const [flightType, setFlightType] = useState<FlightType>("domestic");
   const [origin, setOrigin] = useState("");
@@ -355,16 +356,6 @@ export default function AirportTheoryCalculator() {
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  function handlePlanningModeChange(mode: PlanningMode) {
-    setPlanningMode(mode);
-    if (mode === "today") setDepartureDate(localDateString());
-  }
-
-  function handleDepartureDateChange(date: string) {
-    setDepartureDate(date);
-    setPlanningMode(planningModeForDate(date));
-  }
 
   async function handleCalculate() {
     setError(null);
@@ -447,26 +438,15 @@ export default function AirportTheoryCalculator() {
 
           {/* Planning mode + time */}
           <div className="grid gap-4 sm:grid-cols-2">
+            <CalculatorDateField
+              label="Flight date"
+              value={departureDate}
+              today={today}
+              inputClassName={inputClass}
+              onChange={setDepartureDate}
+            />
             <div className="min-w-0">
-              <FieldLabel>Planning this trip</FieldLabel>
-              <SegmentedControl
-                options={[
-                  { value: "today", label: "Today" },
-                  { value: "future", label: "Future date" },
-                ]}
-                value={planningMode}
-                onChange={handlePlanningModeChange}
-              />
-              {planningMode === "future" && (
-                <div className="mt-3">
-                  <input type="date" value={departureDate} min={today}
-                    onChange={(e) => handleDepartureDateChange(e.target.value)}
-                    className={`${inputClass} [color-scheme:dark]`} />
-                </div>
-              )}
-            </div>
-            <div className="min-w-0">
-              <FieldLabel>Departure time</FieldLabel>
+              <FieldLabel>Flight departs at</FieldLabel>
               <input type="time" value={departureTime}
                 onChange={(e) => setDepartureTime(e.target.value)}
                 className={timeInputClass} />

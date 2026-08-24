@@ -3,13 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
+import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import {
   trackCalendarHandoffOpened,
   trackCalculatorCompleted,
   trackCalculatorStarted,
 } from "@/lib/analytics";
-import { buildGoogleCalendarLink, buildIcsCalendarDataUri } from "@/lib/calendar-links";
+import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -210,7 +211,7 @@ export default function LeaveTimeCalculator() {
   const [locationStatus, setLocationStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [locationMessage, setLocationMessage] = useState<string | null>(null);
   const [arrivalDate, setArrivalDate] = useState(defaultDate);
-  const [planningMode, setPlanningMode] = useState<PlanningMode>(() => planningModeForDate(defaultDate));
+  const planningMode = planningModeForDate(arrivalDate);
   const [arrivalTime, setArrivalTime] = useState(defaultTime);
   const [travelMode, setTravelMode] = useState<TravelMode>("DRIVE");
   const [buffer, setBuffer] = useState(10);
@@ -309,16 +310,6 @@ export default function LeaveTimeCalculator() {
     );
   }
 
-  function handlePlanningModeChange(mode: PlanningMode) {
-    setPlanningMode(mode);
-    if (mode === "today") setArrivalDate(localDateString());
-  }
-
-  function handleArrivalDateChange(date: string) {
-    setArrivalDate(date);
-    setPlanningMode(planningModeForDate(date));
-  }
-
   function handleCustomize() {
     setFormExpanded(true);
     setShowAssumptions(true);
@@ -411,7 +402,8 @@ export default function LeaveTimeCalculator() {
     ? {
         title: `Leave for ${destination.split(",")[0] || "destination"}`,
         start: result.leaveTime,
-        details: "Calculated by OnTimer",
+        details: ONTIMER_CALENDAR_DESCRIPTION,
+        location: destination || undefined,
       }
     : null;
   const leaveCalendarHref = leaveCalendarEvent ? buildGoogleCalendarLink(leaveCalendarEvent) : "";
@@ -473,9 +465,13 @@ export default function LeaveTimeCalculator() {
                   calculatorType="leave_time"
                   exclusivePrimaryAction
                   compactOpenedStatus
-                  postCalendarHeading={`Don’t miss ${fmtTime(result.leaveTime)}.`}
+                  postCalendarHeading="Don’t be late. Turn this into an alarm."
                   postCalendarBody="OnTimer sets an automatic alarm for this calendar event."
                   appLocation="leave_calculator_result"
+                  eventPreview={{
+                    title: leaveCalendarEvent?.title ?? "Leave for destination",
+                    startLabel: fmtTime(result.leaveTime),
+                  }}
                 />
               </div>
             ) : (
@@ -575,30 +571,15 @@ export default function LeaveTimeCalculator() {
 
               {/* Planning mode + arrival time */}
               <div className="grid gap-3 sm:grid-cols-2">
+                <CalculatorDateField
+                  label="Arrival date"
+                  value={arrivalDate}
+                  today={today}
+                  inputClassName={inputClass}
+                  onChange={setArrivalDate}
+                />
                 <div className="min-w-0">
-                  <FieldLabel>Planning this trip</FieldLabel>
-                  <SegmentedControl
-                    options={[
-                      { value: "today", label: "Today" },
-                      { value: "future", label: "Future date" },
-                    ]}
-                    value={planningMode}
-                    onChange={handlePlanningModeChange}
-                  />
-                  {planningMode === "future" && (
-                    <div className="mt-3">
-                      <input
-                        type="date"
-                        value={arrivalDate}
-                        min={today}
-                        onChange={(e) => handleArrivalDateChange(e.target.value)}
-                        className={`${inputClass} [color-scheme:dark]`}
-                      />
-                    </div>
-                  )}
-                </div>
-                <div className="min-w-0">
-                  <FieldLabel>Arrival time</FieldLabel>
+                  <FieldLabel>Arrive by</FieldLabel>
                   <input
                     type="time"
                     value={arrivalTime}

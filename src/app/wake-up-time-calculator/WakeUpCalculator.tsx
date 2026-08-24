@@ -18,10 +18,11 @@
 
 import { useEffect, useState } from "react";
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
+import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
-import { buildGoogleCalendarLink, buildIcsCalendarDataUri } from "@/lib/calendar-links";
+import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 
 type TravelMode = "DRIVE" | "WALK" | "TRANSIT";
 type PlanningMode = "today" | "future";
@@ -179,7 +180,7 @@ export default function WakeUpCalculator() {
   const [origin, setOrigin] = useState("");
   const [currentLocation, setCurrentLocation] = useState<string | null>(null);
   const [arrivalDate, setArrivalDate] = useState(defaultDate);
-  const [planningMode, setPlanningMode] = useState<PlanningMode>(() => planningModeForDate(defaultDate));
+  const planningMode = planningModeForDate(arrivalDate);
   const [arrivalTime, setArrivalTime] = useState(defaultTime);
   const [travelMode, setTravelMode] = useState<TravelMode>("DRIVE");
   const [getReadyTime, setGetReadyTime] = useState(45);
@@ -209,16 +210,6 @@ export default function WakeUpCalculator() {
     setCurrentLocation(coordinates);
     if (coordinates) setOrigin("Current location");
     else if (origin === "Current location") setOrigin("");
-  }
-
-  function handlePlanningModeChange(mode: PlanningMode) {
-    setPlanningMode(mode);
-    if (mode === "today") setArrivalDate(localDateString());
-  }
-
-  function handleArrivalDateChange(date: string) {
-    setArrivalDate(date);
-    setPlanningMode(planningModeForDate(date));
   }
 
   async function handleCalculate() {
@@ -305,7 +296,7 @@ export default function WakeUpCalculator() {
         title: `Arrive at ${destination.split(",")[0] || "destination"}`,
         start: result.arrivalTime,
         end: new Date(result.arrivalTime.getTime() + 30 * 60 * 1000),
-        details: `Wake-up time calculated by OnTimer: ${fmtTime(result.wakeUpTime)}`,
+        details: `Wake-up time: ${fmtTime(result.wakeUpTime)}\n${ONTIMER_CALENDAR_DESCRIPTION}`,
         location: destination || undefined,
       }
     : null;
@@ -345,30 +336,15 @@ export default function WakeUpCalculator() {
 
           {/* Planning mode + arrival time */}
           <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <FieldLabel>Planning this trip</FieldLabel>
-              <SegmentedControl
-                options={[
-                  { value: "today", label: "Today" },
-                  { value: "future", label: "Future date" },
-                ]}
-                value={planningMode}
-                onChange={handlePlanningModeChange}
-              />
-              {planningMode === "future" && (
-                <div className="mt-3">
-                  <input
-                    type="date"
-                    value={arrivalDate}
-                    min={today}
-                    onChange={(e) => handleArrivalDateChange(e.target.value)}
-                    className={`${inputClass} [color-scheme:dark]`}
-                  />
-                </div>
-              )}
-            </div>
+            <CalculatorDateField
+              label="Arrival date"
+              value={arrivalDate}
+              today={today}
+              inputClassName={inputClass}
+              onChange={setArrivalDate}
+            />
             <div className="min-w-0">
-              <FieldLabel>When do you need to arrive?</FieldLabel>
+              <FieldLabel>Arrive by</FieldLabel>
               <input
                 type="time"
                 value={arrivalTime}
@@ -571,9 +547,13 @@ export default function WakeUpCalculator() {
                 openedItemLabel="arrival event"
                 exclusivePrimaryAction
                 compactOpenedStatus
-                postCalendarHeading={`Don’t miss ${fmtTime(result.wakeUpTime)}.`}
+                postCalendarHeading="Don’t be late. Turn this into an alarm."
                 postCalendarBody="OnTimer sets an automatic alarm for this calendar event."
                 appLocation="wakeup_calculator_result"
+                eventPreview={{
+                  title: arrivalCalendarEvent?.title ?? "Arrive at destination",
+                  startLabel: fmtTime(result.arrivalTime),
+                }}
               />
             </div>
           ) : (
