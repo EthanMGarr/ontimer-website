@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { APP_STORE_URL } from "@/lib/constants";
 import {
   trackAppStoreClick,
+  trackAutomaticAlertCTAViewed,
   trackAndroidWaitlistClick,
   type AnalyticsParams,
 } from "@/lib/analytics";
@@ -41,11 +42,36 @@ export function AppStoreButton({
 }: CTAButtonProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const buttonRef = useRef<HTMLAnchorElement>(null);
+  const ctaViewTrackedRef = useRef(false);
 
   useEffect(() => {
     setMounted(true);
     setIsDesktop(!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
   }, []);
+
+  useEffect(() => {
+    const ctaVariant = analyticsContext.cta_variant;
+    if (typeof ctaVariant !== "string" || ctaViewTrackedRef.current) return;
+    const button = buttonRef.current;
+    if (!button) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      ctaViewTrackedRef.current = true;
+      trackAutomaticAlertCTAViewed(
+        typeof analyticsContext.calculator_type === "string"
+          ? analyticsContext.calculator_type
+          : "unknown",
+        ctaVariant,
+        analyticsContext,
+      );
+      observer.disconnect();
+    }, { threshold: 0.5 });
+
+    observer.observe(button);
+    return () => observer.disconnect();
+  }, [analyticsContext]);
 
   const base = "inline-flex items-center gap-2.5 rounded-full font-semibold transition-colors";
   const variants = {
@@ -56,6 +82,7 @@ export function AppStoreButton({
 
   const link = (
     <a
+      ref={buttonRef}
       href={APP_STORE_URL}
       target="_blank"
       rel="noopener noreferrer"
