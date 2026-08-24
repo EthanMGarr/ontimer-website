@@ -1211,8 +1211,7 @@ export default function AirportCalculator({
                   }}
                   eventPreview={genericRedesign ? {
                     title: calendarEventTitle,
-                    startLabel: `${fmtDate(computedResult.leaveTime)} at ${fmtTime(computedResult.leaveTime)}`,
-                    location: airport,
+                    startLabel: fmtTime(computedResult.leaveTime),
                   } : undefined}
                 />
 

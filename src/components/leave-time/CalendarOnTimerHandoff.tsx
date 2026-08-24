@@ -25,7 +25,6 @@ interface CalendarOnTimerHandoffProps {
   eventPreview?: {
     title: string;
     startLabel: string;
-    location: string;
   };
 }
 
@@ -106,23 +105,9 @@ export default function CalendarOnTimerHandoff({
           <>
             <p className="text-lg font-bold text-white">{readyHeading}</p>
             {eventPreview && (
-              <div className="mt-3 rounded-lg border border-zinc-700/80 bg-zinc-950/50 p-3" aria-label="Calendar event preview">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Calendar event preview</p>
-                <dl className="mt-2 space-y-1.5 text-xs">
-                  <div className="grid grid-cols-[4.25rem_minmax(0,1fr)] gap-2">
-                    <dt className="text-zinc-500">Title</dt>
-                    <dd className="font-medium text-zinc-200">{eventPreview.title}</dd>
-                  </div>
-                  <div className="grid grid-cols-[4.25rem_minmax(0,1fr)] gap-2">
-                    <dt className="text-zinc-500">Leave by</dt>
-                    <dd className="text-zinc-300">{eventPreview.startLabel}</dd>
-                  </div>
-                  <div className="grid grid-cols-[4.25rem_minmax(0,1fr)] gap-2">
-                    <dt className="text-zinc-500">Location</dt>
-                    <dd className="break-words text-zinc-300">{eventPreview.location}</dd>
-                  </div>
-                </dl>
-              </div>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-400">
+                Adds “{eventPreview.title}” to your calendar at {eventPreview.startLabel}.
+              </p>
             )}
             <a
               href={calendarHref}
@@ -132,7 +117,7 @@ export default function CalendarOnTimerHandoff({
                 trackCalendarHandoffOpened(calculatorType, "google", analyticsContext);
                 setCalendarProvider("google");
               }}
-              className="mt-4 flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"
+              className={`${eventPreview ? "mt-2" : "mt-4"} flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600`}
             >
               Add to Google Calendar
             </a>
