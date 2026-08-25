@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { HelpFooter, HelpNavigation } from "@/components/HelpShell";
 
 export const metadata: Metadata = {
   title: "OnTimer Help",
@@ -27,7 +28,7 @@ export default function HelpPage() {
     <div className="help-page">
       <div className="help-container help-hub">
         <header className="help-header">
-          <Link href="/" className="help-wordmark" aria-label="OnTimer home">OnTimer</Link>
+          <HelpNavigation />
           <h1>OnTimer Help</h1>
         </header>
 
@@ -46,6 +47,7 @@ export default function HelpPage() {
         </nav>
 
         <p className="help-contact">Need a hand? <a href="mailto:support@ontimer.app">Contact Support</a></p>
+        <HelpFooter />
       </div>
     </div>
   );

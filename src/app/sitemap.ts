@@ -276,7 +276,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  const helpPaths = [
+    "/help",
+    "/help/getting-the-most-out",
+    "/help/troubleshooting",
+  ];
+  const helpRoutes: MetadataRoute.Sitemap = helpPaths.map((path) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
   const locationRoutes = getDestinationSitemapRoutes(baseUrl);
 
-  return [...staticRoutes, ...supportingContentRoutes, ...locationRoutes, ...blogRoutes];
+  return [...staticRoutes, ...supportingContentRoutes, ...helpRoutes, ...locationRoutes, ...blogRoutes];
 }

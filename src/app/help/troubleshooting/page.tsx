@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { HelpFooter, HelpNavigation, HelpProductHandoff } from "@/components/HelpShell";
 import { getHelpDocument } from "@/lib/help-documents";
 
 export const metadata: Metadata = {
@@ -16,8 +17,11 @@ export default async function TroubleshootingPage() {
   return (
     <div className="help-page">
       <article className="help-container help-document">
+        <HelpNavigation />
         <Link href="/help" className="help-back">‹ OnTimer Help</Link>
         <div className="help-prose" dangerouslySetInnerHTML={{ __html: content }} />
+        <HelpProductHandoff />
+        <HelpFooter />
       </article>
     </div>
   );
