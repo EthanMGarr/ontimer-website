@@ -37,7 +37,19 @@ We recommend also allowing:
 
 OnTimer can only alert you if iOS allows it to send notifications.
 
-### 2. Make sure Background App Refresh is enabled
+### 2. Check Focus, Do Not Disturb, and your Ring/Silent switch
+
+Even with notifications allowed, two other iPhone settings can still keep OnTimer quiet.
+
+**A Focus is on** — Do Not Disturb, Sleep, Work, or a custom one. iPhone silences notifications from apps you haven't specifically allowed while a Focus is active, and that includes OnTimer by default. Fix it with:
+
+**Settings → Focus → [the Focus you use] → Apps → Allow Notifications From → OnTimer**
+
+If you use more than one Focus, repeat this for each one you turn on — the allow list is separate per Focus. You can also turn on that Focus's own **Time Sensitive Notifications** switch, and make sure OnTimer's own is on too, in **Settings → Notifications → OnTimer**. Either one lets OnTimer through.
+
+**Your Ring/Silent switch is set to silent.** OnTimer's alarms won't make sound — the same as almost every app's notifications. Only Apple's built-in Clock app can sound through that switch. You should still feel it vibrate, as long as **Settings → Sounds & Haptics → Haptics** isn't set to "Never Play" or "Don't Play in Silent Mode." Keep your iPhone set to Ring if you want to hear your alarms, and use the Focus setting above to keep everything else quiet.
+
+### 3. Make sure Background App Refresh is enabled
 
 OnTimer needs to stay up to date even when you aren't actively using the app.
 
@@ -49,7 +61,7 @@ Make sure **Background App Refresh** is on and that **OnTimer** is enabled.
 
 **You do not need to leave OnTimer open on your screen.** Use your iPhone normally. OnTimer is designed to work in the background.
 
-### 3. Open OnTimer and check your event
+### 4. Open OnTimer and check your event
 
 Open OnTimer and find the upcoming event.
 
@@ -102,6 +114,8 @@ Check:
 and make sure notifications and sounds are allowed.
 
 Also confirm that **Background App Refresh** is enabled for OnTimer, and that OnTimer isn't paused (see above).
+
+This can also happen if a Focus is on and your calendar app is allowed through it while OnTimer isn't — see "Check Focus, Do Not Disturb, and your Ring/Silent switch" above.
 
 ## 🚗 Time to Leave isn't working
 

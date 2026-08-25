@@ -26,6 +26,8 @@ Also check:
 
 and make sure OnTimer is enabled.
 
+**One more thing worth setting up:** if you use Do Not Disturb, Sleep, Work, or another Focus, add OnTimer to that Focus's Allowed Apps (**Settings → Focus → [your Focus] → Apps**) so your alarms can still get through while everything else stays quiet. And keep in mind — like almost every app, OnTimer can't make sound while your iPhone's Ring/Silent switch is set to silent (it'll still vibrate). Keep it set to Ring if you want to hear your alarms. See our [Help & Troubleshooting guide](/help/troubleshooting) for the full walkthrough.
+
 Once that's done, you shouldn't have to think much about OnTimer. That's the point.
 
 ## 📅 2. Put the things you really need to remember on your calendar
