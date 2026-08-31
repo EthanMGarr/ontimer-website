@@ -197,20 +197,19 @@ export default function WakeUpTimeCalculatorPage() {
           </h2>
           <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
-              The math is simple but it is easy to get wrong. Start from when you need
-              to arrive, then subtract travel time, then subtract how long you need to
-              get ready, then add a buffer. What is left is your wake-up time.
+              Calculate what time to wake up using your arrival time, travel conditions,
+              getting-ready time and buffer—not just a generic subtract-and-guess formula.
+            </p>
+            <p>
+              A common approach is to work backward from your arrival time: subtract travel
+              time, subtract getting-ready time, then add a buffer. This calculator does that
+              math for you, using live traffic data instead of a guess.
             </p>
             <p>
               Most people underestimate at least one variable. Getting ready almost
               always takes longer than expected. Traffic during morning commute hours is
               often significantly worse than mid-day. And the buffer almost never feels
               necessary — until it is.
-            </p>
-            <p>
-              This calculator does that math for you, using Google&apos;s live traffic
-              data for the travel estimate. Enter your destination and arrival time and
-              it handles the rest.
             </p>
           </div>
         </div>

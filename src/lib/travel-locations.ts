@@ -1952,7 +1952,7 @@ export const travelLocations: TravelLocationProfile[] = [
     slug: "los-angeles-lax",
     code: "LAX",
     name: "Los Angeles International Airport",
-    shortName: "LAX",
+    shortName: "Los Angeles International Airport",
     city: "Los Angeles, California",
     calculatorDestination: "Los Angeles International Airport",
     reviewedOn: "2026-06-28",

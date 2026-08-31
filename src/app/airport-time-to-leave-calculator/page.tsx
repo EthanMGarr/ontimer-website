@@ -212,9 +212,14 @@ export default function AirportTimeToLeaveCalculator() {
           </h2>
           <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
-              Plan to arrive 2 hours early for domestic flights and 3 hours early for international
-              flights. Then add your actual drive time on top of that. The result is your leave
-              time — not a rough guess.
+              Calculate what time to leave for your flight using your starting point, flight time,
+              expected travel conditions, security planning, bags, parking and terminal access—not
+              just a generic 2-hour or 3-hour arrival rule.
+            </p>
+            <p>
+              A common planning baseline is arriving 2 hours before domestic flights and 3 hours
+              before international flights. The calculator works backward from your actual trip to
+              estimate when you should leave.
             </p>
             <p>
               Those airport arrival windows exist for a reason: security lines, bag drop cutoffs,
