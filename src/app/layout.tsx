@@ -3,6 +3,39 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import HelpSiteFrame from "@/components/HelpSiteFrame";
 
+const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+const gaBootstrapScript = gaMeasurementId ? `
+  (function () {
+    var measurementId = ${JSON.stringify(gaMeasurementId)};
+    var started = false;
+    function cookie(name) {
+      var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+      return match ? decodeURIComponent(match[1]) : null;
+    }
+    function allowed() {
+      return cookie('ontimer_region') !== 'regulated' || cookie('ontimer_consent') === 'granted';
+    }
+    function start() {
+      if (started || !allowed()) return;
+      started = true;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', measurementId);
+      window.__ontimerAnalyticsConfigured = true;
+      var tag = document.createElement('script');
+      tag.async = true;
+      tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(measurementId);
+      document.head.appendChild(tag);
+    }
+    window.__ontimerStartAnalytics = start;
+    window.addEventListener('ontimer-consent', function (event) {
+      if (event && event.detail === 'granted') start();
+    });
+    start();
+  }());
+` : null;
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -74,6 +107,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
+      <head>
+        {gaBootstrapScript ? <script dangerouslySetInnerHTML={{ __html: gaBootstrapScript }} /> : null}
+      </head>
       <body className="bg-zinc-950 text-white min-h-screen flex flex-col">
         <HelpSiteFrame>{children}</HelpSiteFrame>
       </body>

@@ -18,127 +18,6 @@ export const metadata: Metadata = {
   },
 };
 
-const softwareJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "OnTimer",
-  operatingSystem: "iOS",
-  applicationCategory: "ProductivityApplication",
-  applicationSubCategory: "Calendar Alarm App",
-  description:
-    "OnTimer is a calendar alarm app for iPhone. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and turns every event into a persistent alarm — not a notification that disappears.",
-  url: "https://ontimer.app",
-  keywords: "calendar alarm app, turn calendar events into alarms, persistent calendar alarms, Google Calendar alarm, Apple Calendar alarm, Outlook Calendar alarm, Outlook calendar alarm, meeting alarm app, never miss meetings iPhone",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
-  },
-};
-
-const websiteJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "OnTimer",
-  url: "https://www.ontimer.app",
-  description:
-    "OnTimer is a calendar alarm app for iPhone that turns Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events into persistent alarms. Never miss a meeting, flight, or medication dose.",
-};
-
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "OnTimer",
-  url: "https://www.ontimer.app",
-  logo: "https://www.ontimer.app/images/ontimer_1024x1024.png",
-  description:
-    "OnTimer is a calendar alarm app for iPhone. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and turns every event into a persistent alarm — not a notification that disappears.",
-  contactPoint: {
-    "@type": "ContactPoint",
-    email: "support@ontimer.app",
-    contactType: "customer support",
-  },
-};
-
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "What is OnTimer?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "OnTimer is a calendar alarm app for iPhone. It connects to your Google Calendar, Apple Calendar, or Outlook Calendar and triggers loud, persistent alarms before meetings and events so you are less likely to miss them or arrive late.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is a calendar alarm app?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "A calendar alarm app connects to your existing calendar and fires persistent, interruptive alarms before each event — not passive notifications that disappear on their own. Unlike standard calendar reminders from Google Calendar, Apple Calendar, or Outlook Calendar, calendar alarm alerts stay on your screen until you actively dismiss them. OnTimer is a calendar alarm app for iPhone.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Can you turn Google Calendar, Apple Calendar, or Microsoft Outlook Calendar events into alarms?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Not natively — Google Calendar, Apple Calendar, and Outlook Calendar send notifications, which disappear automatically whether or not you act on them. OnTimer connects to Google Calendar, Apple Calendar, or Outlook Calendar and turns every event into a persistent alarm on iPhone that stays on screen until you respond. No manual setup per event.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the difference between a calendar notification and a calendar alarm?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "A notification informs you — it appears and disappears whether or not you act on it. An alarm interrupts you — it stays on screen and requires a response before it stops. Google Calendar, Apple Calendar, and Outlook Calendar send notifications. OnTimer turns those calendar events into alarms.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the Last 5 Minutes Problem?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "The Last 5 Minutes Problem is the gap between knowing about a meeting and actually acting in time. A notification fires, you see it, you plan to act in a moment — and then the window closes before you do. Persistent alarms solve this by staying on screen until you respond, eliminating the passive-to-action gap.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How is OnTimer different from normal calendar notifications?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Normal calendar reminders are passive notifications that are easy to swipe away or ignore. OnTimer is a calendar alarm app — it fires a louder, more persistent alarm that stays on screen until you actively dismiss it.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Can OnTimer remind me when it is time to leave?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. For calendar events with a location, OnTimer offers Time To Leave alerts based on travel time and traffic. Time To Leave is a paid feature.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Does OnTimer work with multiple calendars?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. OnTimer supports multiple calendars, including Google Calendar, Apple Calendar, and Outlook Calendar.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Who is OnTimer best for?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "OnTimer is useful for busy professionals, people with back-to-back meetings, people who miss normal reminders, and people who struggle with time blindness or chronic lateness patterns.",
-      },
-    },
-  ],
-};
-
 const popularGuides = [
   { label: "Why Calendar Notifications Fail (And What Actually Works)", href: "/why-calendar-notifications-fail" },
   { label: "The Last 5 Minutes Problem: Why Notifications Fail", href: "/last-5-minutes-problem" },
@@ -287,6 +166,58 @@ const faqItems = [
   },
 ];
 
+const homepageJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.ontimer.app/#organization",
+      name: "OnTimer",
+      url: "https://www.ontimer.app/",
+      logo: { "@type": "ImageObject", "@id": "https://www.ontimer.app/#logo", url: "https://www.ontimer.app/images/ontimer_1024x1024.png" },
+      description: "OnTimer is a calendar alarm app for iPhone. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and turns every event into a persistent alarm — not a notification that disappears.",
+      sameAs: [APP_STORE_URL],
+      contactPoint: { "@type": "ContactPoint", email: "support@ontimer.app", contactType: "customer support" },
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://www.ontimer.app/#app",
+      name: "OnTimer",
+      url: "https://www.ontimer.app/",
+      installUrl: APP_STORE_URL,
+      sameAs: [APP_STORE_URL],
+      publisher: { "@id": "https://www.ontimer.app/#organization" },
+      brand: { "@id": "https://www.ontimer.app/#organization" },
+      operatingSystem: "iOS",
+      availableOnDevice: "iPhone",
+      applicationCategory: "ProductivityApplication",
+      applicationSubCategory: "Calendar Alarm App",
+      description: "OnTimer is a calendar alarm app for iPhone. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and turns every event into a persistent alarm — not a notification that disappears.",
+      image: { "@id": "https://www.ontimer.app/#logo" },
+      screenshot: ["https://www.ontimer.app/images/CantMissAlerts.png", "https://www.ontimer.app/images/NeverBeLateAgain.png", "https://www.ontimer.app/images/ConnectsToCalendars.png", "https://www.ontimer.app/images/AutomaticAlarms.png"],
+      offers: { "@type": "Offer", "@id": "https://www.ontimer.app/#offer", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock", url: APP_STORE_URL, description: "Free to download. Optional paid features are available." },
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.ontimer.app/#website",
+      name: "OnTimer",
+      url: "https://www.ontimer.app/",
+      description: "OnTimer is a calendar alarm app for iPhone that turns Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events into persistent alarms.",
+      publisher: { "@id": "https://www.ontimer.app/#organization" },
+      about: { "@id": "https://www.ontimer.app/#app" },
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.ontimer.app/#faq",
+      url: "https://www.ontimer.app/#faq",
+      name: "OnTimer Frequently Asked Questions",
+      about: { "@id": "https://www.ontimer.app/#app" },
+      publisher: { "@id": "https://www.ontimer.app/#organization" },
+      mainEntity: faqItems.map(({ question, answer }, index) => ({ "@type": "Question", "@id": `https://www.ontimer.app/#faq-${index + 1}`, name: question, acceptedAnswer: { "@type": "Answer", text: answer } })),
+    },
+  ],
+};
+
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">
@@ -349,19 +280,7 @@ export default function Home() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageJsonLd) }}
       />
 
       <section className="overflow-hidden border-b border-zinc-900 bg-black">
