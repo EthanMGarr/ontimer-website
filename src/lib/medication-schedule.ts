@@ -1,6 +1,19 @@
 export type MedicationFrequency = 1 | 2 | 3 | 4 | "custom";
 export type MedicationTimePeriod = "AM" | "PM";
 
+export interface DoseTimeAnchor {
+  label: string;
+  time: string;
+}
+
+export const DOSE_TIME_ANCHORS: DoseTimeAnchor[] = [
+  { label: "Wake up", time: "07:00" },
+  { label: "Breakfast", time: "08:00" },
+  { label: "Lunch", time: "12:00" },
+  { label: "Dinner", time: "18:00" },
+  { label: "Bedtime", time: "21:00" },
+];
+
 export function medicationTimeParts(time: string): {
   hour: number;
   minute: number;

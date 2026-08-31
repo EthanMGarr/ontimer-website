@@ -4,10 +4,16 @@ export interface ProviderMedicationSchedule {
   medication: string;
   instructions: string;
   startDate: string;
-  days: number;
+  days: number | "ongoing";
   times: Array<{ time: string; dayOffset?: number }>;
   timeZone?: string;
+  takenWithFood?: boolean;
 }
+
+// Marker written to every generated medication event's LOCATION field. Distinguishes
+// OnTimer medication-schedule events from other OnTimer-generated calendar events (e.g.
+// Time-to-Leave alarms), so a future in-app setting could filter/scope alarms to it.
+export const MEDICATION_EVENT_LOCATION_MARKER = "OnTimer Medication Schedule";
 
 function escapeText(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/\r?\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
@@ -26,7 +32,10 @@ function startDateTime(startDate: string, time: string, dayOffset = 0): string {
 
 export function generateProviderMedicationICS(schedule: ProviderMedicationSchedule, now = new Date()): string {
   const title = `Take ${schedule.medication.trim()}`;
-  const description = schedule.instructions.trim() ? `${title} — ${schedule.instructions.trim()}` : title;
+  const descriptionParts = [title];
+  if (schedule.instructions.trim()) descriptionParts.push(schedule.instructions.trim());
+  if (schedule.takenWithFood) descriptionParts.push("Take with food");
+  const description = descriptionParts.join(" — ");
   const events = schedule.times.flatMap(({ time, dayOffset }, index) => [
     "BEGIN:VEVENT",
     `UID:${now.getTime()}-${index}-${Math.random().toString(36).slice(2)}@ontimer.app`,
@@ -35,8 +44,9 @@ export function generateProviderMedicationICS(schedule: ProviderMedicationSchedu
       ? `DTSTART;TZID=${schedule.timeZone}:${startDateTime(schedule.startDate, time, dayOffset)}`
       : `DTSTART:${startDateTime(schedule.startDate, time, dayOffset)}`,
     "DURATION:PT5M",
-    `RRULE:FREQ=DAILY;COUNT=${schedule.days}`,
+    schedule.days === "ongoing" ? "RRULE:FREQ=DAILY" : `RRULE:FREQ=DAILY;COUNT=${schedule.days}`,
     `SUMMARY:${escapeText(title)}`,
+    `LOCATION:${escapeText(MEDICATION_EVENT_LOCATION_MARKER)}`,
     `DESCRIPTION:${escapeText(description)}`,
     "BEGIN:VALARM",
     "TRIGGER:PT0M",

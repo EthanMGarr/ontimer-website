@@ -5,9 +5,10 @@ export interface SharedMedicationSchedule {
   senderRole?: "provider" | "caregiver";
   instructions: string;
   startDate: string;
-  days: number;
+  days: number | "ongoing";
   times: Array<{ time: string; dayOffset?: number }>;
   timeZone?: string;
+  takenWithFood?: boolean;
 }
 
 const TIME_ZONE_LABELS: Record<string, string> = {
@@ -47,15 +48,20 @@ export function decodeMedicationSchedule(value: string): SharedMedicationSchedul
       (parsed.senderRole !== undefined && parsed.senderRole !== "provider" && parsed.senderRole !== "caregiver") ||
       typeof parsed.instructions !== "string" || parsed.instructions.length > 500 ||
       typeof parsed.startDate !== "string" || !DATE_PATTERN.test(parsed.startDate) ||
-      typeof parsed.days !== "number" || !Number.isInteger(parsed.days) || parsed.days < 1 || parsed.days > 365 ||
+      (parsed.days !== "ongoing" && (typeof parsed.days !== "number" || !Number.isInteger(parsed.days) || parsed.days < 1 || parsed.days > 365)) ||
       !Array.isArray(parsed.times) || parsed.times.length < 1 || parsed.times.length > 12 ||
       !parsed.times.every((item) => item && typeof item.time === "string" && TIME_PATTERN.test(item.time) && (item.dayOffset === undefined || (Number.isInteger(item.dayOffset) && item.dayOffset >= 0 && item.dayOffset <= 7))) ||
-      (parsed.timeZone !== undefined && (typeof parsed.timeZone !== "string" || parsed.timeZone.length > 100))
+      (parsed.timeZone !== undefined && (typeof parsed.timeZone !== "string" || parsed.timeZone.length > 100)) ||
+      (parsed.takenWithFood !== undefined && typeof parsed.takenWithFood !== "boolean")
     ) return null;
     return parsed as SharedMedicationSchedule;
   } catch {
     return null;
   }
+}
+
+export function scheduleDurationLabel(days: number | "ongoing"): string {
+  return days === "ongoing" ? "Ongoing (no end date)" : `${days} ${days === 1 ? "day" : "days"}`;
 }
 
 export function scheduleFromHash(hash: string): SharedMedicationSchedule | null {
@@ -105,8 +111,9 @@ export function medicationEmailDraft(schedule: SharedMedicationSchedule, url: st
   const scheduleLines = [
     `Medication: ${schedule.medication}`,
     ...(schedule.instructions ? [`Instructions: ${schedule.instructions}`] : []),
+    ...(schedule.takenWithFood ? ["Take with food: Yes"] : []),
     `Starts: ${readableDate(schedule.startDate)}`,
-    `Duration: ${schedule.days} ${schedule.days === 1 ? "day" : "days"}`,
+    `Duration: ${scheduleDurationLabel(schedule.days)}`,
     `Dose ${schedule.times.length === 1 ? "time" : "times"}: ${schedule.times.map(({ time }) => readableTime(time)).join(", ")}${schedule.timeZone ? ` ${TIME_ZONE_LABELS[schedule.timeZone] || schedule.timeZone}` : ""}`,
   ];
   const review = caregiver

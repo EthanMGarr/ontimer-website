@@ -129,6 +129,7 @@ export default function Footer() {
                 { href: "/how-to-set-medication-reminders-iphone", label: "iPhone Setup Guide"      },
                 { href: "/help-elderly-parent-remember-medication", label: "Elderly Parent Guide"   },
                 { href: "/adhd-medication-timing",                label: "ADHD Medication Timing"   },
+                { href: "/medication-timing",                     label: "Dosage Timing Guides"     },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="text-sm text-zinc-400 transition-colors hover:text-white">

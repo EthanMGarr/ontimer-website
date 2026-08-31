@@ -5,11 +5,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { formatMedicationTime, medicationTimeFromParts, medicationTimeParts, type MedicationTimePeriod } from "@/lib/medication-schedule";
+import { DOSE_TIME_ANCHORS, formatMedicationTime, medicationTimeFromParts, medicationTimeParts, type MedicationTimePeriod } from "@/lib/medication-schedule";
 
 const ROW_HEIGHT = 48;
 const HOURS = Array.from({ length: 12 }, (_, index) => index + 1);
-const MINUTES = Array.from({ length: 60 }, (_, index) => index);
+const MINUTES = Array.from({ length: 12 }, (_, index) => index * 5);
 const PERIODS: MedicationTimePeriod[] = ["AM", "PM"];
 
 interface DoseTimeFieldProps { value: string; onChange: (value: string) => void; label: string; audience?: "patient" | "provider"; }
@@ -42,6 +42,7 @@ export default function DoseTimeField({ value, onChange, label, audience = "pati
     {open && <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 p-3 sm:items-center" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}>
       <div role="dialog" aria-modal="true" aria-label={`Edit ${label}`} className="w-full max-w-md rounded-3xl border border-zinc-700 bg-zinc-900 p-4 shadow-2xl">
         <div className="flex items-center justify-between"><button type="button" onClick={() => setOpen(false)} className="grid size-11 place-items-center rounded-full bg-zinc-800 text-2xl text-zinc-300" aria-label="Close time picker">×</button><p className="font-bold text-white">Set dose time</p><button type="button" onClick={() => setOpen(false)} className="grid size-11 place-items-center rounded-full bg-green-500 text-xl font-black text-black" aria-label="Confirm time">✓</button></div>
+        <div className="mt-3 flex flex-wrap gap-1.5">{DOSE_TIME_ANCHORS.map((anchor) => <button key={anchor.label} type="button" onClick={() => onChange(anchor.time)} className="rounded-full border border-zinc-700 bg-zinc-800 px-3 py-1 text-xs font-medium text-zinc-300 transition-colors hover:border-green-500 hover:text-white">{anchor.label}</button>)}</div>
         <div className="relative mt-4 grid grid-cols-3 overflow-hidden rounded-2xl bg-zinc-950/50"><div className="pointer-events-none absolute inset-x-2 top-12 h-12 rounded-xl bg-zinc-800" /><WheelColumn values={HOURS} value={parts.hour} label="Hour" format={(item) => String(item)} onSelect={updateHour} /><WheelColumn values={MINUTES} value={parts.minute} label="Minute" format={(item) => String(item).padStart(2, "0")} onSelect={(minute) => update(parts.hour, minute, parts.period)} /><WheelColumn values={PERIODS} value={parts.period} label="AM or PM" format={(item) => item} onSelect={(period) => update(parts.hour, parts.minute, period)} /></div>
       </div>
     </div>}

@@ -9,7 +9,7 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 import DoseTimeField from "@/components/DoseTimeField";
 import { formatMedicationTime } from "@/lib/medication-schedule";
-import { changedDoseTimeIndexes, scheduleFromHash, type SharedMedicationSchedule as Schedule } from "@/lib/medication-share-link";
+import { changedDoseTimeIndexes, scheduleDurationLabel, scheduleFromHash, type SharedMedicationSchedule as Schedule } from "@/lib/medication-share-link";
 import { generateProviderMedicationICS, handoffProviderMedicationICS } from "@/lib/provider-medication-calendar";
 
 export default function SharedMedicationSchedule() {
@@ -88,12 +88,13 @@ export default function SharedMedicationSchedule() {
         <h1 className="min-w-0 [overflow-wrap:anywhere] text-2xl font-black tracking-tight text-white sm:text-3xl">Your medication schedule is ready</h1>
         {schedule.practiceName && <p className="mt-2 text-sm font-medium text-green-400">Sent by {schedule.practiceName}</p>}
         <p className="mt-1 text-sm text-zinc-400">
-          {schedule.times.length} {schedule.times.length === 1 ? "dose" : "doses"} per day for {schedule.days} days
+          {schedule.times.length} {schedule.times.length === 1 ? "dose" : "doses"} per day · {scheduleDurationLabel(schedule.days)}
         </p>
         <div className="mt-4 border-t border-zinc-800 pt-4 lg:hidden">
           <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Medication</p>
           <p className="mt-1 text-lg font-black text-white">{schedule.medication}</p>
           {schedule.instructions && <p className="mt-1 text-sm leading-relaxed text-zinc-300">{schedule.instructions}</p>}
+          {schedule.takenWithFood && <p className="mt-1 text-xs font-medium text-zinc-400">Taken with food</p>}
         </div>
       </div>
 
@@ -103,6 +104,7 @@ export default function SharedMedicationSchedule() {
             <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Medication</p>
             <p className="mt-1 text-xl font-black text-white">{schedule.medication}</p>
             {schedule.instructions && <p className="mt-2 text-sm leading-relaxed text-zinc-300">{schedule.instructions}</p>}
+            {schedule.takenWithFood && <p className="mt-2 text-xs font-medium text-zinc-400">Taken with food</p>}
           </div>
 
           <div>
@@ -115,7 +117,7 @@ export default function SharedMedicationSchedule() {
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-xs text-zinc-500">Repeats daily for {schedule.days} days</p>
+            <p className="mt-3 text-xs text-zinc-500">{schedule.days === "ongoing" ? "Repeats daily with no end date" : `Repeats daily for ${schedule.days} days`}</p>
             <p className="mt-1 text-xs text-zinc-500">Times are shown in {timeZoneLabel}, matching the calendar file.</p>
           </div>
 
@@ -129,7 +131,7 @@ export default function SharedMedicationSchedule() {
 
           <dl className="grid gap-4 border-t border-zinc-800 pt-5 sm:grid-cols-2">
             <div><dt className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Starts</dt><dd className="mt-1 text-sm font-medium text-white">{new Date(`${schedule.startDate}T12:00:00`).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</dd></div>
-            <div><dt className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Duration</dt><dd className="mt-1 text-sm font-medium text-white">{schedule.days} days</dd></div>
+            <div><dt className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Duration</dt><dd className="mt-1 text-sm font-medium text-white">{scheduleDurationLabel(schedule.days)}</dd></div>
           </dl>
 
           <p className="text-xs leading-relaxed text-zinc-400">If anything looks wrong, {schedule.senderRole === "caregiver" ? "check with the family member who sent this link and your healthcare provider" : "contact the healthcare provider who sent you this link"} before adding it.</p>
@@ -141,7 +143,7 @@ export default function SharedMedicationSchedule() {
             <p className={`${downloaded ? "mt-1" : ""} text-lg font-bold text-white`}>{downloaded ? "This schedule is on your calendar." : "Add this schedule to your calendar."}</p>
 
             <button type="button" onClick={handleDownload} disabled={hasInvalidTime} className="mt-4 w-full whitespace-nowrap rounded-full bg-green-500 px-5 py-3.5 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:translate-y-px disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400">Add Schedule to Calendar</button>
-            <p className="mt-2 text-xs leading-relaxed text-zinc-500">One calendar file includes every dose time for all {schedule.days} days.</p>
+            <p className="mt-2 text-xs leading-relaxed text-zinc-500">{schedule.days === "ongoing" ? "One calendar file includes every dose time, repeating with no end date." : `One calendar file includes every dose time for all ${schedule.days} days.`}</p>
 
             {downloaded && (
               <div className="mt-4 flex items-start gap-2.5 border-t border-zinc-800 pt-4" aria-live="polite">

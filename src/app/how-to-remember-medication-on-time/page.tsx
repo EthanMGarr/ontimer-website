@@ -359,6 +359,7 @@ export default function Page() {
               { href: "/medication-schedule-calendar-setup", label: "How to Set Up a Medication Schedule Using Your Calendar" },
               { href: "/help-elderly-parent-remember-medication", label: "How to Help an Elderly Parent Remember Their Medication" },
               { href: "/adhd-medication-timing", label: "ADHD and Medication Timing: Why the Last 5 Minutes Matters" },
+              { href: "/medication-timing", label: "Medication Dosage Timing Guides: When to Take Common Medications" },
               { href: "/pet-medication-schedule", label: "How to Remember Your Pet's Medication Schedule" },
               { href: "/how-to-set-medication-reminders-iphone", label: "How to Set Medication Reminders on iPhone" },
               { href: "/turn-calendar-events-into-alarms", label: "Turn Calendar Events Into Persistent Alarms" },

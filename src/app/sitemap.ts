@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getSortedPosts } from "@/lib/blog";
 import { getDestinationSitemapRoutes } from "@/lib/destination-routing";
+import { MEDICATION_TIMING_PROFILES } from "@/lib/medication-timing-profiles";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.ontimer.app";
@@ -290,5 +291,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const locationRoutes = getDestinationSitemapRoutes(baseUrl);
 
-  return [...staticRoutes, ...supportingContentRoutes, ...helpRoutes, ...locationRoutes, ...blogRoutes];
+  const medicationTimingPaths = [
+    "/medication-timing",
+    ...MEDICATION_TIMING_PROFILES.map((profile) => `/medication-timing/${profile.slug}`),
+  ];
+  const medicationTimingRoutes: MetadataRoute.Sitemap = medicationTimingPaths.map((path) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [...staticRoutes, ...supportingContentRoutes, ...helpRoutes, ...locationRoutes, ...medicationTimingRoutes, ...blogRoutes];
 }

@@ -1,4 +1,4 @@
-import { changedDoseTimeIndexes, decodeMedicationSchedule, encodeMedicationSchedule, medicationEmailDraft, medicationShareCopy, scheduleFromHash, type SharedMedicationSchedule } from "../medication-share-link";
+import { changedDoseTimeIndexes, decodeMedicationSchedule, encodeMedicationSchedule, medicationEmailDraft, medicationShareCopy, scheduleDurationLabel, scheduleFromHash, type SharedMedicationSchedule } from "../medication-share-link";
 
 function assert(condition: boolean, message: string) {
   if (!condition) throw new Error(message);
@@ -24,7 +24,18 @@ assert(JSON.stringify(decodeMedicationSchedule(encodeURIComponent(JSON.stringify
 assert(scheduleFromHash(`#schedule=${encoded}`)?.medication === schedule.medication, "original keyed hash should decode locally");
 assert(scheduleFromHash(`#schedule=${encoded}`)?.practiceName === schedule.practiceName, "practice name should stay in the client-side hash payload");
 assert(decodeMedicationSchedule(encodeURIComponent(JSON.stringify({ ...schedule, days: 0 }))) === null, "invalid duration should be rejected");
+assert(decodeMedicationSchedule(encodeURIComponent(JSON.stringify({ ...schedule, days: "forever" }))) === null, "unrecognized duration strings should be rejected");
+assert(JSON.stringify(decodeMedicationSchedule(encodeMedicationSchedule({ ...schedule, days: "ongoing" }))) === JSON.stringify({ ...schedule, days: "ongoing" }), "an ongoing duration should round-trip");
+assert(scheduleDurationLabel("ongoing") === "Ongoing (no end date)", "ongoing schedules should read as no end date");
+assert(scheduleDurationLabel(1) === "1 day", "a single day should use singular wording");
+assert(scheduleDurationLabel(30) === "30 days", "a multi-day duration should use plural wording");
 assert(decodeMedicationSchedule(encodeURIComponent(JSON.stringify({ ...schedule, medication: "" }))) === null, "blank medication should be rejected");
+assert(decodeMedicationSchedule(encodeURIComponent(JSON.stringify({ ...schedule, takenWithFood: "yes" }))) === null, "a non-boolean taken-with-food value should be rejected");
+assert(decodeMedicationSchedule(encodeMedicationSchedule({ ...schedule, takenWithFood: true }))?.takenWithFood === true, "taken-with-food should round-trip through the share link");
+assert(decodeMedicationSchedule(encoded)?.takenWithFood === undefined, "omitting taken-with-food should decode as undefined, not a stored false");
+const foodEmail = medicationEmailDraft({ ...schedule, takenWithFood: true }, "https://example.com/schedule");
+assert(foodEmail.body.includes("Take with food: Yes"), "email drafts should surface the taken-with-food flag when set");
+assert(!medicationEmailDraft(schedule, "https://example.com/schedule").body.includes("Take with food"), "email drafts should omit the taken-with-food line when unset");
 assert(decodeMedicationSchedule(encodeURIComponent(JSON.stringify({ ...schedule, practiceName: "x".repeat(121) }))) === null, "overlong practice names should be rejected");
 assert(scheduleFromHash("#schedule=not-json") === null, "malformed links should fail safely");
 assert(medicationShareCopy("Riverside Family Medicine").title === "Your medication schedule from Riverside Family Medicine", "practice name should frame the share subject");
