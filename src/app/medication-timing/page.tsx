@@ -1,3 +1,4 @@
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MEDICATION_TIMING_PROFILES } from "@/lib/medication-timing-profiles";
@@ -42,6 +43,13 @@ export default function MedicationTimingDirectory() {
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-zinc-400">
             When to take common medications — morning or evening, with or without food, and how spacing between doses typically works. General scheduling conventions only, not medical advice; always follow your own prescription and prescriber&apos;s instructions.
           </p>
+          <div className="mt-7 border-l-2 border-green-500 pl-5">
+            <p className="text-sm font-semibold text-white">Already know the directions and dose times?</p>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">Skip the guides and turn the instructions you already have into one calendar-ready schedule.</p>
+            <Link href="/how-to-remember-medication-on-time" className="mt-4 inline-flex min-h-11 items-center rounded-full bg-green-500 px-5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-green-400">
+              Create my medication schedule
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -1,5 +1,7 @@
 const origin = (process.env.SITE_AUDIT_ORIGIN ?? "https://www.ontimer.app").replace(/\/$/, "");
 const canonicalHostname = new URL(origin).hostname;
+const publicOrigin = "https://www.ontimer.app";
+const publicHostname = new URL(publicOrigin).hostname;
 
 async function fetchPage(url, options = {}) {
   return fetch(url, {
@@ -27,21 +29,50 @@ async function mapLimit(items, limit, worker) {
 }
 
 function extractMetadata(html) {
+  const mainHtml = html.match(/<main(?:\s[^>]*)?>([\s\S]*?)<\/main>/i)?.[1] ?? html;
   return {
     canonical: html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["']/i)?.[1]
       ?? html.match(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["']canonical["']/i)?.[1]
       ?? null,
     robots: html.match(/<meta[^>]+name=["']robots["'][^>]+content=["']([^"']+)["']/i)?.[1] ?? null,
     hrefs: [...html.matchAll(/<a\s[^>]*href=["']([^"']+)["']/gi)].map((match) => match[1]),
+    mainHrefs: [...mainHtml.matchAll(/<a\s[^>]*href=["']([^"']+)["']/gi)].map((match) => match[1]),
   };
+}
+
+const toolPaths = {
+  medication: "/how-to-remember-medication-on-time",
+  airport: "/airport-time-to-leave-calculator",
+  leaveTime: "/what-time-should-i-leave",
+};
+
+function expectedContentAction(pathname) {
+  if (/medication/.test(pathname) && !/^\/(?:how-to-remember-medication-on-time|medication-schedule|provider-medication-schedule|caregiver-medication-schedule|veterinary-medication-schedule)$/.test(pathname)) {
+    return { kind: "medication schedule", paths: [toolPaths.medication] };
+  }
+  if (/airport|flight/.test(pathname) && !/^\/(?:airport-time-to-leave-calculator|airport-time-to-leave\/|airport-time-calculators)/.test(pathname)) {
+    return { kind: "airport calculator", paths: [toolPaths.airport] };
+  }
+  if (/when-should-i-leave|stop-being-late/.test(pathname)) {
+    return { kind: "leave-time calculator", paths: [toolPaths.leaveTime] };
+  }
+  return null;
 }
 
 function normalizeInternalHref(href, base) {
   if (!href || /^(?:#|mailto:|tel:|javascript:)/i.test(href)) return null;
   try {
     const url = new URL(href, base);
-    if (url.hostname !== canonicalHostname && url.hostname !== canonicalHostname.replace(/^www\./, "")) return null;
+    const acceptedHostnames = new Set([
+      canonicalHostname,
+      canonicalHostname.replace(/^www\./, ""),
+      publicHostname,
+      publicHostname.replace(/^www\./, ""),
+    ]);
+    if (!acceptedHostnames.has(url.hostname)) return null;
     url.hostname = canonicalHostname;
+    url.protocol = new URL(origin).protocol;
+    url.port = new URL(origin).port;
     url.hash = "";
     return url.href;
   } catch {
@@ -52,7 +83,8 @@ function normalizeInternalHref(href, base) {
 function canonicalMatches(url, canonical) {
   if (!canonical) return false;
   try {
-    const expected = new URL(url);
+    const crawled = new URL(url);
+    const expected = new URL(crawled.pathname + crawled.search, publicOrigin);
     const actual = new URL(canonical, url);
     expected.search = "";
     expected.hash = "";
@@ -72,7 +104,11 @@ function usesWrongDestinationRoute(url) {
 const sitemapResponse = await fetchPage(`${origin}/sitemap.xml`);
 const sitemapXml = await sitemapResponse.text();
 const sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)]
-  .map((match) => match[1].replaceAll("&amp;", "&"));
+  .map((match) => match[1].replaceAll("&amp;", "&"))
+  .map((url) => {
+    const publishedUrl = new URL(url);
+    return new URL(publishedUrl.pathname + publishedUrl.search, origin).href;
+  });
 
 const sitemapPages = await mapLimit(sitemapUrls, 10, async (url) => {
   const response = await fetchPage(url);
@@ -125,6 +161,18 @@ const findings = {
     .filter((page) => /noindex/i.test(page.robots ?? ""))
     .map(({ url, robots }) => ({ url, robots })),
   wrongDestinationRoutes: internalUrls.filter(usesWrongDestinationRoute),
+  contentFunnelIssues: publishedHtmlPages.flatMap((page) => {
+    const expectedAction = expectedContentAction(new URL(page.url).pathname);
+    if (!expectedAction) return [];
+    const hasRelevantToolLink = (page.mainHrefs ?? []).some((href) => {
+      try {
+        return expectedAction.paths.includes(new URL(href, page.url).pathname);
+      } catch {
+        return false;
+      }
+    });
+    return hasRelevantToolLink ? [] : [{ url: page.url, expectedAction: expectedAction.kind, acceptedPaths: expectedAction.paths }];
+  }),
   pageFetchErrors: sitemapPages.filter((page) => page.error),
   linkFetchErrors: internalChecks.filter((page) => page.error),
 };

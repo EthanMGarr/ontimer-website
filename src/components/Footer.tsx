@@ -106,6 +106,7 @@ export default function Footer() {
                 { href: "/airport-time-to-leave-calculator", label: "When to Leave for Airport" },
                 { href: "/what-time-should-i-leave",         label: "Leave-Time Calculator"     },
                 { href: "/wake-up-time-calculator",          label: "Wake-Up Calculator"        },
+                { href: "/how-to-remember-medication-on-time", label: "Medication Schedule Maker" },
                 { href: "/airport-theory-calculator",        label: "Airport Theory Calculator" },
               ].map(({ href, label }) => (
                 <li key={href}>

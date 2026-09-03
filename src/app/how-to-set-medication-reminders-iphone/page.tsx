@@ -1,3 +1,4 @@
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
@@ -97,10 +98,22 @@ export default function Page() {
             How to Set Medication Reminders on iPhone
           </h1>
 
-          <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6">
-            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
-            <p className="text-zinc-200 leading-relaxed">
-              The quickest option: open Calendar, create a recurring daily event at your dose time, and set an alert. For stronger reminders, use the Health app&apos;s Medications feature (iOS 16+). For doses you keep missing despite reminders, pair your calendar with OnTimer — which fires a persistent alarm rather than a dismissible notification.
+          <div className="mt-8 border-l-2 border-green-500 pl-5 sm:pl-6">
+            <p className="text-sm font-semibold uppercase tracking-widest text-green-500">Fastest setup</p>
+            <h2 className="mt-3 text-2xl font-black tracking-tight text-white">
+              Create the whole medication schedule here.
+            </h2>
+            <p className="mt-3 max-w-2xl leading-relaxed text-zinc-300">
+              Enter the dose times once, review every event, and download one calendar-ready schedule. There is no account and no need to create each recurring event by hand.
+            </p>
+            <Link
+              href="/how-to-remember-medication-on-time"
+              className="mt-5 inline-flex min-h-11 items-center rounded-full bg-green-500 px-5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-green-400"
+            >
+              Create my medication schedule
+            </Link>
+            <p className="mt-3 text-sm leading-relaxed text-zinc-500">
+              Already have a schedule in your calendar? OnTimer can turn those events into persistent alarms on iPhone.
             </p>
           </div>
         </div>
@@ -108,8 +121,8 @@ export default function Page() {
 
       <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Option 1: iPhone Calendar App</h2>
-          <p className="mt-4 text-zinc-400">Best for: most users. Works with all iOS versions.</p>
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Alternative: Set It Up Manually in Calendar</h2>
+          <p className="mt-4 text-zinc-400">Best for: a single simple dose you prefer to enter yourself.</p>
           <div className="mt-6 space-y-3">
             {[
               "Open the Calendar app",
@@ -140,7 +153,7 @@ export default function Page() {
 
       <section className="border-t border-zinc-800 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Option 2: Health App Medications (iOS 16+)</h2>
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Alternative: Health App Medications (iOS 16+)</h2>
           <p className="mt-4 text-zinc-400">Best for: users who want a dedicated medication log.</p>
           <div className="mt-6 space-y-3">
             {[
@@ -164,7 +177,7 @@ export default function Page() {
 
       <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Option 3: Siri</h2>
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Alternative: Siri</h2>
           <p className="mt-4 text-zinc-400">Best for: quick setup. Creates a Reminders notification.</p>
           <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
             <p className="text-sm text-zinc-300 font-mono">

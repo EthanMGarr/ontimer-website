@@ -44,6 +44,8 @@ Use this checklist for every production change involving pages, routes, metadata
 
 ## Calculator-First Search Intent
 
+- [ ] Every indexable advice page provides a prominent in-page bridge to the most relevant OnTimer calculator or scheduling tool; global navigation and footer links do not count.
+- [ ] When a visitor can complete the searched-for task with an OnTimer tool, present that tool before manual alternatives while still answering the underlying search intent accurately.
 - [ ] Lead calculator metadata and H1s with the question or outcome people search for; keep “calculator” as supporting language when the broader intent is answer-seeking.
 - [ ] Apply the same answer-led language to location-page metadata, directory titles, structured-data names, navigation labels, and internal-link anchors so the intent is consistent across the whole cluster.
 - [ ] Keep the calculator and its brief orientation in the first task area. Long-form SEO/GEO guidance belongs after the tool and must not delay the primary action.

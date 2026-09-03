@@ -255,6 +255,23 @@ export default function Header() {
                           </span>
                         </span>
                       </Link>
+                      <Link
+                        href="/how-to-remember-medication-on-time"
+                        className="block rounded-xl px-3 py-3 transition-colors hover:bg-zinc-900"
+                        onClick={closeMenus}
+                      >
+                        <span className="flex gap-2">
+                          <span aria-hidden="true">＋</span>
+                          <span>
+                            <span className="block text-sm font-semibold text-white">
+                              Medication Schedule Maker
+                            </span>
+                            <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
+                              Build one calendar-ready dose schedule
+                            </span>
+                          </span>
+                        </span>
+                      </Link>
                       <div className="my-1 border-t border-zinc-800" />
                       <Link
                         href="/time-calculators"

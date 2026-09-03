@@ -1,3 +1,4 @@
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 */
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -47,6 +48,22 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
+  const tool = slug === "when-should-i-leave-for-the-airport"
+    ? {
+        href: "/airport-time-to-leave-calculator",
+        eyebrow: "Use the calculator",
+        title: "Get a leave time for your actual flight.",
+        description: "Enter your flight, route, bags, parking, and security details instead of relying on a generic rule of thumb.",
+        label: "Calculate when to leave",
+      }
+    : {
+        href: "/what-time-should-i-leave",
+        eyebrow: "Use the calculator",
+        title: "Turn the advice into a departure time.",
+        description: "Work backward from your next meeting or appointment and get a specific time to stop what you are doing and leave.",
+        label: "Calculate when to leave",
+      };
+
   return (
     <>
       {/* Article header */}
@@ -65,6 +82,17 @@ export default async function BlogPostPage({ params }: Props) {
             {post.title}
           </h1>
           <p className="mt-4 text-xl text-zinc-400">{post.description}</p>
+        </div>
+      </section>
+
+      <section className="border-b border-zinc-800 bg-zinc-900/40 py-10">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-500">{tool.eyebrow}</p>
+          <h2 className="mt-3 text-2xl font-black tracking-tight text-white">{tool.title}</h2>
+          <p className="mt-3 max-w-2xl leading-relaxed text-zinc-400">{tool.description}</p>
+          <Link href={tool.href} className="mt-5 inline-flex min-h-11 items-center rounded-full bg-green-500 px-5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-green-400">
+            {tool.label}
+          </Link>
         </div>
       </section>
 
