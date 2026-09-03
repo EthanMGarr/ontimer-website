@@ -42,6 +42,29 @@ const foodNoInstructionsContent = generateProviderMedicationICS({
 
 assert(foodNoInstructionsContent.includes("DESCRIPTION:Take Lisinopril — Take with food"), "the taken-with-food flag should still append when there are no instructions");
 
+const mealContent = generateProviderMedicationICS({
+  medication: "Lisinopril",
+  instructions: "1 tablet",
+  startDate: "2026-08-10",
+  days: 30,
+  times: [{ time: "08:15", mealLabel: "Breakfast" }, { time: "18:30", mealLabel: "Dinner" }],
+  takenWithFood: true,
+}, new Date("2026-08-10T12:00:00Z"));
+
+assert(mealContent.includes("SUMMARY:Breakfast dose: Take Lisinopril"), "meal-based calendar events should identify the breakfast dose");
+assert(mealContent.includes("SUMMARY:Dinner dose: Take Lisinopril"), "meal-based calendar events should identify the dinner dose");
+
+const routineContent = generateProviderMedicationICS({
+  medication: "Lisinopril",
+  instructions: "1 tablet",
+  startDate: "2026-08-10",
+  days: 30,
+  times: [{ time: "07:00", doseLabel: "Wake-up" }, { time: "21:00", doseLabel: "Bedtime" }],
+}, new Date("2026-08-10T12:00:00Z"));
+
+assert(routineContent.includes("SUMMARY:Wake-up dose: Take Lisinopril"), "routine calendar events should identify the wake-up dose");
+assert(routineContent.includes("SUMMARY:Bedtime dose: Take Lisinopril"), "routine calendar events should identify the bedtime dose");
+
 const ongoingContent = generateProviderMedicationICS({
   medication: "Metformin, 500mg",
   instructions: "with food; follow prescribed directions",

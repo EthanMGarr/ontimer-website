@@ -146,7 +146,7 @@ export default function Page() {
             </p>
             <div className="flex flex-wrap gap-4">
               <Link href="/how-to-remember-medication-on-time" className="rounded-full border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-zinc-300 hover:border-zinc-500 hover:text-white transition-colors">
-                Generate your schedule
+                Create a medication schedule
               </Link>
               <AppStoreButton size="md" location="adhd_medication_cta" />
             </div>

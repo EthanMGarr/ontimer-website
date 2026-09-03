@@ -1,32 +1,17 @@
-/// Medication schedule generator with supporting educational content.
-///
-/// ## Purpose
-/// Drives high-intent medication reminder search traffic to OnTimer via content + embedded tool.
-///
-/// ## Include
-/// - Full article copy per spec
-/// - MedicationScheduleGenerator tool
-/// - A contextual App Store CTA after the educational explanation
-/// - FAQ, disclaimer, related guides
-///
-/// ## Don't Include
-/// - Medical advice or dosage logic
-
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppStoreCTA } from "@/components/CTAButton";
 import MedicationScheduleGenerator from "./MedicationScheduleGenerator";
 import ResetScrollOnReload from "./ResetScrollOnReload";
 
 export const metadata: Metadata = {
-  title: "Medication Schedule Generator: Add Doses to Your Calendar",
+  title: "Medication Schedule Maker: Add Doses to Your Calendar",
   description:
-    "Turn a medication schedule into recurring calendar events for Apple Calendar, Google Calendar, or Outlook with OnTimer's free schedule generator.",
+    "Create a medication schedule you can add to Apple Calendar, Google Calendar, or Outlook. Review every dose time, then download one calendar file—free, no account required.",
   alternates: { canonical: "https://www.ontimer.app/how-to-remember-medication-on-time" },
   openGraph: {
-    title: "Medication Schedule Generator: Add Doses to Your Calendar",
+    title: "Medication Schedule Maker: Add Doses to Your Calendar",
     description:
-      "Turn a medication schedule into recurring calendar events for Apple Calendar, Google Calendar, or Outlook.",
+      "Create a calendar-ready medication schedule, review every dose time, then add it to your calendar.",
     url: "https://www.ontimer.app/how-to-remember-medication-on-time",
   },
 };
@@ -34,36 +19,50 @@ export const metadata: Metadata = {
 const softwareJsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "Medication Schedule Generator",
+  name: "Medication Schedule Maker",
   applicationCategory: "HealthApplication",
   operatingSystem: "Web",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   description:
-    "A free tool to generate a personalized medication schedule and download it as a calendar file.",
+    "A free organizational tool for creating a calendar-ready medication schedule from directions supplied by the user.",
   url: "https://www.ontimer.app/how-to-remember-medication-on-time",
   author: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
 };
 
+const howToJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "Create a medication schedule for your calendar",
+  description:
+    "Enter your prescribed schedule, review the generated dose times, and add the calendar file to a compatible calendar.",
+  totalTime: "PT5M",
+  step: [
+    { "@type": "HowToStep", name: "Enter prescribed details", text: "Enter the medication name, instructions, dose times, and schedule duration exactly as prescribed." },
+    { "@type": "HowToStep", name: "Review every event", text: "Review the generated dates and dose times before saving the calendar file." },
+    { "@type": "HowToStep", name: "Add it to your calendar", text: "Download one calendar file and import it into Apple Calendar, Google Calendar, Outlook, or another compatible calendar." },
+  ],
+};
+
 const faqItems = [
   {
-    question: "Why do I forget to take my medication even with reminders?",
+    question: "Can I create a medication schedule without an account?",
     answer:
-      "Most people don't forget entirely — they see the reminder, think 'I'll take it in a minute,' get distracted, and miss the dose. The problem is what happens after the reminder fires, not the reminder itself. A single notification is easy to dismiss and forget seconds later.",
+      "Yes. Enter the schedule details, review the events, and download a calendar file without creating an OnTimer account.",
   },
   {
-    question: "What is the best way to remember medication daily?",
+    question: "Which calendars can I use?",
     answer:
-      "A useful system combines calendar events, so medication timing fits into your day, with a high-salience alert that interrupts you in the moment. Adding medication times to your calendar as recurring events gives the schedule structure. OnTimer pairs with your calendar to make those reminders harder to miss.",
+      "The schedule downloads as a standard calendar file that can be imported into Apple Calendar, Google Calendar, Microsoft Outlook, and other compatible calendar apps.",
   },
   {
-    question: "Are medication reminder apps effective?",
+    question: "Does this tool decide when or how much medication to take?",
     answer:
-      "They can help, but a standard notification can still be easy to swipe away or defer. Stronger reminder systems combine visibility through calendar integration with an alert that requires acknowledgment. The goal is to support follow-through after the reminder appears.",
+      "No. OnTimer does not determine medication, dosage, or timing. Enter only instructions already provided by your prescription label or healthcare professional, and verify every event before adding it to your calendar.",
   },
   {
-    question: "How do I set medication reminders on iPhone?",
+    question: "What is the difference between a printable schedule and a calendar schedule?",
     answer:
-      "The quickest method: add a recurring calendar event for each dose time using the built-in Calendar app or the schedule generator on this page. For more reliable interruption, pair it with OnTimer — which turns calendar events into persistent, hard-to-ignore alarms.",
+      "A printable schedule shows a plan on paper. This tool creates calendar events you can review and add to the calendar you already use.",
   },
 ];
 
@@ -82,298 +81,128 @@ const breadcrumbJsonLd = {
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "How to Remember Your Medication",
-      item: "https://www.ontimer.app/how-to-remember-medication-on-time",
-    },
+    { "@type": "ListItem", position: 2, name: "Medication Schedule Maker", item: "https://www.ontimer.app/how-to-remember-medication-on-time" },
   ],
 };
 
 export default function Page() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <ResetScrollOnReload />
 
       {/* Hallmark · macrostructure: Workbench · tone: utilitarian · theme: existing OnTimer */}
       <section className="border-b border-zinc-800 py-8 sm:py-12 lg:py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <nav className="mb-8 hidden text-sm text-zinc-500 sm:block">
-            <Link href="/" className="hover:text-zinc-300 transition-colors">
-              Home
-            </Link>
+            <Link href="/" className="transition-colors hover:text-zinc-300">Home</Link>
             <span className="mx-2">›</span>
-            <span className="text-zinc-300">Medication Schedule Generator</span>
+            <span className="text-zinc-300">Medication Schedule Maker</span>
           </nav>
-
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.75fr)_minmax(30rem,1.25fr)] lg:gap-12">
             <div className="min-w-0 lg:pt-8">
-              <h1 className="min-w-0 [overflow-wrap:anywhere] text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Put your medication schedule on your calendar
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-zinc-300 sm:text-xl">
-                Create recurring calendar events for every dose, then use OnTimer to make those reminders harder to miss.
-              </p>
-              <p className="mt-4 text-sm leading-relaxed text-zinc-500">
-                For organization only. Always follow your prescribed instructions.
-              </p>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-green-500">Free medication schedule maker · No account required</p>
+              <h1 className="mt-4 min-w-0 [overflow-wrap:anywhere] text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">Create a medication schedule for your calendar.</h1>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-zinc-300 sm:text-xl">Enter your prescribed directions, review every dose time, and add one calendar-ready schedule to the calendar you already use.</p>
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-zinc-500">For organization only. OnTimer does not determine medication, dosage, or timing.</p>
             </div>
-
             <MedicationScheduleGenerator />
           </div>
         </div>
       </section>
 
-      {/* Section 1: Real Reason */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            The Real Reason You Miss Medication
-          </h2>
-          <div className="mt-6 space-y-4 text-lg text-zinc-400 leading-relaxed">
-            <p>You probably don&apos;t miss your medication because you don&apos;t care.</p>
-            <p>You miss it because of what happens right after the reminder.</p>
-            <p>
-              You see a notification. You register it. You fully intend to act on it. But instead of
-              taking it immediately, you think: <em className="text-zinc-200">&ldquo;I&apos;ll do it in a minute.&rdquo;</em>
-            </p>
-            <p>Then something small happens — a message, a task, a conversation. And just like that, the moment is gone.</p>
-            <p>This is where most systems fail. Not because they didn&apos;t remind you — but because they didn&apos;t interrupt you.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 2: Why Reminders Fail */}
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Why Medication Reminders Don&apos;t Work
-          </h2>
-          <div className="mt-6 space-y-4 text-lg text-zinc-400 leading-relaxed">
-            <p>Most reminder systems rely on a single notification. That works if you&apos;re free, you act immediately, and nothing interrupts you.</p>
-            <p>But real life doesn&apos;t work like that.</p>
-            <p>Notifications are easy to swipe away, ignore, or forget seconds later. So even though you &ldquo;remembered,&rdquo; you still miss the dose.</p>
-          </div>
-          <div className="mt-6">
-            <Link
-              href="/why-medication-reminders-fail"
-              className="text-green-500 hover:text-green-400 transition-colors text-sm font-medium"
-            >
-              Read more: Why medication reminders fail →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 3: Calendar System */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            A Better System: Use Your Calendar
-          </h2>
-          <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
-            OnTimer&apos;s free Medication Schedule Generator creates one calendar file containing
-            your complete recurring medication schedule. You can add it to Apple Calendar,
-            Google Calendar, Microsoft Outlook, or another compatible calendar.
-          </p>
-          <p className="mt-4 text-lg text-zinc-400 leading-relaxed">
-            Instead of relying on memory, use your calendar as your system. Your calendar already
-            fits your day, already structures your time, and is something you actually check.
-          </p>
-          <div className="mt-8 space-y-4">
+      <section className="border-b border-zinc-800 bg-zinc-900/50 py-14 sm:py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <div className="grid gap-6 md:grid-cols-3">
             {[
-              { step: "Step 1", text: "Enter the medication, instructions, dose times, and schedule duration." },
-              { step: "Step 2", text: "Review the complete recurring schedule before adding it." },
-              { step: "Step 3", text: "Open one calendar file and confirm the events in your calendar." },
-            ].map(({ step, text }) => (
-              <div key={step} className="flex gap-4 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-                <span className="text-sm font-bold text-green-500 whitespace-nowrap">{step}</span>
-                <p className="text-zinc-300">{text}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-6">
-            <Link
-              href="/medication-schedule-calendar-setup"
-              className="text-green-500 hover:text-green-400 transition-colors text-sm font-medium"
-            >
-              Read more: How to set up a medication calendar →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 4: Last 5 Minutes Problem */}
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            The Last 5 Minutes Problem
-          </h2>
-          <div className="mt-6 space-y-4 text-lg text-zinc-400 leading-relaxed">
-            <p>Your calendar will remind you. But reminders alone are easy to ignore.</p>
-            <p>
-              If you&apos;ve ever seen a reminder, thought &ldquo;I&apos;ll take it in a minute,&rdquo;
-              and then missed it — you&apos;ve experienced the last 5 minutes problem.
-            </p>
-            <p>That&apos;s where most systems break down.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 5: How OnTimer Helps */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            How OnTimer Helps
-          </h2>
-          <div className="mt-6 space-y-4 text-lg text-zinc-400 leading-relaxed">
-            <p>
-              OnTimer works with your calendar — but instead of a single notification, it actively
-              interrupts you until you act.
-            </p>
-            <ul className="mt-4 space-y-2">
-              {[
-                "You don't just see the reminder",
-                "You don't lose the moment",
-                "You're more likely to follow through",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <span className="mt-1 text-green-500 font-bold">✓</span>
-                  <span className="text-zinc-300">{item}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-4 text-zinc-300">
-              If your current reminders aren&apos;t working in the moment, this is what you use instead.
-            </p>
-          </div>
-          <div className="mt-8">
-            <AppStoreCTA location="medication_article_ontimer_cta" />
-          </div>
-        </div>
-      </section>
-
-      {/* Special Situations */}
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Special Situations
-          </h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-3">
-            {[
-              {
-                title: "For ADHD",
-                text: "If you struggle with time blindness, the issue isn't remembering — it's acting in the moment.",
-                href: "/adhd-medication-timing",
-                linkText: "ADHD & medication timing →",
-              },
-              {
-                title: "For Caregivers",
-                text: "You can set up a shared calendar for a parent and create a system they can rely on.",
-                href: "/help-elderly-parent-remember-medication",
-                linkText: "Helping a parent →",
-              },
-              {
-                title: "For Pets",
-                text: "Pets won't remind you. A system ensures you don't forget their care.",
-                href: "/pet-medication-schedule",
-                linkText: "Pet medication reminders →",
-              },
-            ].map(({ title, text, href, linkText }) => (
-              <div key={title} className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-                <h3 className="font-bold text-white">{title}</h3>
-                <p className="mt-2 text-sm text-zinc-400 leading-relaxed">{text}</p>
-                <Link
-                  href={href}
-                  className="mt-3 inline-block text-sm text-green-500 hover:text-green-400 transition-colors"
-                >
-                  {linkText}
-                </Link>
-              </div>
+              ["01", "Enter prescribed details", "Add the medication name, instructions, dose times, and duration exactly as you were told."],
+              ["02", "Review every event", "Check the generated dates and times before you save anything to your calendar."],
+              ["03", "Add one calendar file", "Download a standard calendar file for Apple Calendar, Google Calendar, Outlook, or another compatible app."],
+            ].map(([number, title, copy]) => (
+              <article key={number} className="rounded-xl border border-zinc-800 bg-zinc-950/60 p-6">
+                <p className="text-sm font-bold text-green-500">{number}</p>
+                <h2 className="mt-5 text-xl font-bold text-white">{title}</h2>
+                <p className="mt-3 text-sm leading-relaxed text-zinc-400">{copy}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Disclaimer */}
-      <section className="border-t-2 border-zinc-700 bg-zinc-900/50 py-10">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="text-sm text-zinc-300 leading-relaxed">
-            <strong className="text-white">Disclaimer:</strong> OnTimer is not a medical device and
-            does not guarantee medication adherence or outcomes. This tool is for organizational
-            purposes only and does not replace medical advice or prescribed treatment schedules.
-            Always follow your healthcare provider&apos;s instructions.
-          </p>
+      <section className="border-b border-zinc-800 py-14 sm:py-16">
+        <div className="mx-auto grid max-w-5xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-green-500">Calendar-ready, not clinical advice</p>
+            <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">Turn directions you already have into events you can see.</h2>
+          </div>
+          <div className="space-y-4 text-lg leading-relaxed text-zinc-400">
+            <p>A printable schedule shows a plan. This tool makes a calendar-ready schedule that you can import, inspect, and keep alongside the rest of your day.</p>
+            <p>Before you use it, check your prescription label or healthcare professional&apos;s instructions. Review every generated dose time before adding the calendar file.</p>
+            <Link href="/medication-schedule-calendar-setup" className="inline-block text-sm font-medium text-green-500 transition-colors hover:text-green-400">How to add a medication schedule to your calendar →</Link>
+          </div>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
+      <section className="border-b border-zinc-800 bg-zinc-900/50 py-14 sm:py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-green-500">After import</p>
+          <h2 className="mt-4 max-w-3xl text-3xl font-black tracking-tight text-white sm:text-4xl">Use your calendar as the schedule. Use OnTimer as the alarm layer.</h2>
+          <p className="mt-5 max-w-3xl text-lg leading-relaxed text-zinc-400">Your calendar remains the source of truth for your events. OnTimer can turn calendar events into automatic alarms, so the schedule stays connected to the time system you already use.</p>
+          <Link href="/turn-calendar-events-into-alarms" className="mt-6 inline-block text-sm font-medium text-green-500 transition-colors hover:text-green-400">Learn how calendar events become alarms →</Link>
+        </div>
+      </section>
+
+      <section className="border-b border-zinc-800 py-14 sm:py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <h2 className="text-3xl font-black tracking-tight text-white">Making a schedule for someone else?</h2>
+          <div className="mt-8 grid gap-5 md:grid-cols-2">
+            <Link href="/caregiver-medication-schedule" className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 transition-colors hover:border-zinc-700">
+              <p className="text-sm font-semibold text-green-500">For caregivers</p>
+              <h3 className="mt-2 text-xl font-bold text-white">Create a family medication schedule</h3>
+              <p className="mt-3 text-sm leading-relaxed text-zinc-400">Set up a calendar-ready schedule for a parent, partner, or person you support.</p>
+            </Link>
+            <Link href="/veterinary-medication-schedule" className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 transition-colors hover:border-zinc-700">
+              <p className="text-sm font-semibold text-green-500">For veterinary teams</p>
+              <h3 className="mt-2 text-xl font-bold text-white">Create a pet medication schedule</h3>
+              <p className="mt-3 text-sm leading-relaxed text-zinc-400">Give pet owners a clear schedule they can add to the calendar they use every day.</p>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b-2 border-zinc-700 bg-zinc-900/50 py-10">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <p className="text-sm leading-relaxed text-zinc-300"><strong className="text-white">Important:</strong> OnTimer is an organizational tool, not a medical device. It does not determine medications, dosage, timing, or treatment. Follow your prescription label and healthcare professional&apos;s instructions, and verify the calendar events before relying on them.</p>
+        </div>
+      </section>
+
+      <section className="py-14 sm:py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Frequently Asked Questions
-          </h2>
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Frequently asked questions</h2>
           <div className="mt-8 space-y-4">
             {faqItems.map((item) => (
-              <details
-                key={item.question}
-                className="group rounded-xl border border-zinc-800 bg-zinc-900"
-              >
+              <details key={item.question} className="group rounded-xl border border-zinc-800 bg-zinc-900">
                 <summary className="flex cursor-pointer items-center justify-between p-5 text-sm font-semibold text-white">
-                  {item.question}
-                  <span className="ml-4 shrink-0 text-zinc-500 group-open:rotate-180 transition-transform">
-                    ▾
-                  </span>
+                  {item.question}<span className="ml-4 shrink-0 text-zinc-500 transition-transform group-open:rotate-180">▾</span>
                 </summary>
-                <p className="px-5 pb-5 text-sm text-zinc-400 leading-relaxed">{item.answer}</p>
+                <p className="px-5 pb-5 text-sm leading-relaxed text-zinc-400">{item.answer}</p>
               </details>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Related Guides */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-xl font-black tracking-tight text-white">Related Guides</h2>
-          <ul className="mt-6 space-y-3">
-            {[
-              { href: "/why-calendar-notifications-fail", label: "Why Calendar Notifications Fail (And What Actually Works)" },
-              { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working? Why Reminders Fail — and What Fixes It" },
-              { href: "/why-notifications-fail", label: "Why Notifications Fail (And Persistent Alarms Work Better)" },
-              { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Reminders Fail at Critical Moments" },
-              { href: "/why-medication-reminders-fail", label: "Why Medication Reminders Fail (And What Actually Works)" },
-              { href: "/medication-schedule-calendar-setup", label: "How to Set Up a Medication Schedule Using Your Calendar" },
-              { href: "/help-elderly-parent-remember-medication", label: "How to Help an Elderly Parent Remember Their Medication" },
-              { href: "/adhd-medication-timing", label: "ADHD and Medication Timing: Why the Last 5 Minutes Matters" },
-              { href: "/medication-timing", label: "Medication Dosage Timing Guides: When to Take Common Medications" },
-              { href: "/pet-medication-schedule", label: "How to Remember Your Pet's Medication Schedule" },
-              { href: "/how-to-set-medication-reminders-iphone", label: "How to Set Medication Reminders on iPhone" },
-              { href: "/turn-calendar-events-into-alarms", label: "Turn Calendar Events Into Persistent Alarms" },
-            ].map(({ href, label }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  className="text-green-500 hover:text-green-400 transition-colors text-sm"
-                >
-                  {label} →
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-12 border-t border-zinc-800 pt-8">
+            <h2 className="text-xl font-black tracking-tight text-white">Related guides</h2>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              {[
+                ["/how-to-set-medication-reminders-iphone", "How to set medication reminders on iPhone"],
+                ["/why-medication-reminders-fail", "Why medication reminders fail"],
+                ["/caregiver-medication-schedule", "Medication schedules for caregivers"],
+                ["/veterinary-medication-schedule", "Pet medication schedules for veterinary teams"],
+              ].map(([href, label]) => <Link key={href} href={href} className="text-sm text-green-500 transition-colors hover:text-green-400">{label} →</Link>)}
+            </div>
+          </div>
         </div>
       </section>
     </>

@@ -3,6 +3,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef, Suspense } from "react";
 import { initializeAnalytics } from "@/lib/analytics";
+import { isAnalyticsFreeMedicationPath } from "@/lib/medication-route-privacy";
 
 declare global {
   interface Window {
@@ -19,11 +20,19 @@ function PageViewTracker() {
   const initialPathRef = useRef(true);
 
   useEffect(() => {
+    if (isAnalyticsFreeMedicationPath(pathname)) {
+      if (typeof window.gtag === "function") {
+        window.gtag("consent", "update", { analytics_storage: "denied", ad_storage: "denied" });
+      }
+      return;
+    }
+    window.__ontimerStartAnalytics?.();
     if (initialPathRef.current) {
       initialPathRef.current = false;
       return;
     }
     if (!initializeAnalytics()) return;
+    window.gtag("consent", "update", { analytics_storage: "granted" });
 
     window.gtag("event", "page_view", {
       page_path: pathname + (searchParams.toString() ? `?${searchParams}` : ""),
@@ -36,6 +45,5 @@ function PageViewTracker() {
 }
 
 export default function GoogleAnalytics() {
-  useEffect(() => window.__ontimerStartAnalytics?.(), []);
   return <Suspense fallback={null}><PageViewTracker /></Suspense>;
 }

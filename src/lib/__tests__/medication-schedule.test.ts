@@ -1,6 +1,9 @@
 import {
   formatMedicationTime,
+  generateMealAnchoredMedicationTimes,
   generateMedicationTimes,
+  generateRoutineAnchoredMedicationTimes,
+  hasAsNeededDirections,
   isOvernightTime,
   medicationTimeFromParts,
   medicationTimeParts,
@@ -39,5 +42,24 @@ assert(
   JSON.stringify(generateMedicationTimes("09:30", "custom")) === JSON.stringify(["09:30"]),
   "custom schedules should begin with the selected first dose",
 );
+assert(
+  JSON.stringify(generateMealAnchoredMedicationTimes(3)) === JSON.stringify(["08:15", "12:45", "18:30"]),
+  "three meal-anchored doses should use breakfast, lunch, and dinner starting points",
+);
+assert(
+  JSON.stringify(generateMealAnchoredMedicationTimes(2)) === JSON.stringify(["08:15", "18:30"]),
+  "two meal-anchored doses should use breakfast and dinner starting points",
+);
+assert(
+  JSON.stringify(generateRoutineAnchoredMedicationTimes(2)) === JSON.stringify(["07:00", "21:00"]),
+  "two routine-anchored doses should use wake-up and bedtime starting points",
+);
+assert(
+  JSON.stringify(generateRoutineAnchoredMedicationTimes(4)) === JSON.stringify(["07:00", "12:45", "18:30", "21:00"]),
+  "four routine-anchored doses should remain visible and editable across the day",
+);
+assert(hasAsNeededDirections("Take one tablet PRN"), "PRN directions should be recognized");
+assert(hasAsNeededDirections("Take as needed for symptoms"), "plain-language as-needed directions should be recognized");
+assert(!hasAsNeededDirections("Take one tablet with breakfast"), "scheduled directions should not trigger an as-needed warning");
 
 console.log("Medication schedule tests passed.");

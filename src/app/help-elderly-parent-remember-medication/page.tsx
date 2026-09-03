@@ -94,6 +94,9 @@ export default function Page() {
             <p className="text-zinc-200 leading-relaxed">
               Set up a shared calendar with recurring medication events. Use an alert system that demands acknowledgment — not just a swipe. The goal is a system your parent can follow independently, so you&apos;re not the reminder.
             </p>
+            <Link href="/caregiver-medication-schedule" className="mt-5 inline-flex rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-green-400">
+              Create a caregiver medication schedule
+            </Link>
           </div>
         </div>
       </section>

@@ -80,7 +80,7 @@ export default function Page() {
             <p className="text-zinc-200 leading-relaxed">
               Create a recurring calendar event for each dose time. Label it with the medication name. Set a reminder. Treat it like a real appointment. Use the{" "}
               <Link href="/how-to-remember-medication-on-time" className="text-green-400 hover:text-green-300">
-                free schedule generator
+                medication schedule maker
               </Link>{" "}
               to download a ready-made .ics file in under a minute.
             </p>
@@ -131,7 +131,7 @@ export default function Page() {
           </div>
           <div className="mt-8 flex flex-wrap gap-4 items-center">
             <Link href="/how-to-remember-medication-on-time" className="rounded-full border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-zinc-300 hover:border-zinc-500 hover:text-white transition-colors">
-              Try the schedule generator
+              Create a medication schedule
             </Link>
             <AppStoreButton size="md" location="medication_calendar_setup_cta" />
           </div>

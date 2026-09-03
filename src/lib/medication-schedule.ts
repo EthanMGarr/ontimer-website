@@ -14,6 +14,16 @@ export const DOSE_TIME_ANCHORS: DoseTimeAnchor[] = [
   { label: "Bedtime", time: "21:00" },
 ];
 
+// These are practical, editable starting points for a meal-anchored routine —
+// not medication instructions. They closely follow the mean breakfast, lunch,
+// and dinner times reported for US adults in NHANES data (8:17am, 12:50pm,
+// and 6:27pm). The prescription label and prescriber always take precedence.
+export const COMMON_MEAL_TIMES: DoseTimeAnchor[] = [
+  { label: "Breakfast", time: "08:15" },
+  { label: "Lunch", time: "12:45" },
+  { label: "Dinner", time: "18:30" },
+];
+
 export function medicationTimeParts(time: string): {
   hour: number;
   minute: number;
@@ -56,6 +66,28 @@ export function generateMedicationTimes(
     const minute = String(total % 60).padStart(2, "0");
     return `${hour}:${minute}`;
   });
+}
+
+export function generateMealAnchoredMedicationTimes(frequency: MedicationFrequency): string[] {
+  if (frequency === "custom") return [COMMON_MEAL_TIMES[0].time];
+  if (frequency === 1) return [COMMON_MEAL_TIMES[0].time];
+  if (frequency === 2) return [COMMON_MEAL_TIMES[0].time, COMMON_MEAL_TIMES[2].time];
+  if (frequency === 3) return COMMON_MEAL_TIMES.map(({ time }) => time);
+
+  // A four-times-daily direction needs clinical clarification about its timing.
+  // Keep the final dose visible and editable rather than inventing a fourth meal.
+  return [...COMMON_MEAL_TIMES.map(({ time }) => time), "21:00"];
+}
+
+export function generateRoutineAnchoredMedicationTimes(frequency: MedicationFrequency): string[] {
+  if (frequency === "custom" || frequency === 1) return ["07:00"];
+  if (frequency === 2) return ["07:00", "21:00"];
+  if (frequency === 3) return ["07:00", "13:00", "21:00"];
+  return ["07:00", "12:45", "18:30", "21:00"];
+}
+
+export function hasAsNeededDirections(value: string): boolean {
+  return /\bprn\b|\bas[- ]needed\b|\bwhen needed\b|\bif needed\b/i.test(value);
 }
 
 export function isOvernightTime(time: string): boolean {

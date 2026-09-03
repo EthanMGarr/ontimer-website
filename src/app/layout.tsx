@@ -2,17 +2,21 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import HelpSiteFrame from "@/components/HelpSiteFrame";
+import { ANALYTICS_FREE_MEDICATION_PATHS } from "@/lib/medication-route-privacy";
 
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const gaBootstrapScript = gaMeasurementId ? `
   (function () {
     var measurementId = ${JSON.stringify(gaMeasurementId)};
+    var analyticsFreePaths = ${JSON.stringify(ANALYTICS_FREE_MEDICATION_PATHS)};
     var started = false;
     function cookie(name) {
       var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
       return match ? decodeURIComponent(match[1]) : null;
     }
     function allowed() {
+      var pathname = window.location.pathname;
+      if (analyticsFreePaths.some(function (path) { return pathname === path || pathname.indexOf(path + '/') === 0; })) return false;
       return cookie('ontimer_region') !== 'regulated' || cookie('ontimer_consent') === 'granted';
     }
     function start() {

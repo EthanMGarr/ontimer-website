@@ -1184,6 +1184,14 @@ export default function AirportCalculator({
                     intent_cluster: "airport_when_to_leave",
                     ...(locationCode ? { location_code: locationCode } : {}),
                   }}
+                  androidAffiliateOffer={locationCode === "EWR" ? {
+                    href: "https://tpx.lv/XkyWTwQx",
+                    partner: "welcome_pickups",
+                    heading: "Need a ride to or from Newark Airport?",
+                    body: "Check private airport-transfer options from Welcome Pickups.",
+                    buttonLabel: "Check Newark airport transfers",
+                    location: "airport_ewr_android_result",
+                  } : undefined}
                   eventPreview={{
                     title: calendarEventTitle,
                     startLabel: fmtTime(computedResult.leaveTime),

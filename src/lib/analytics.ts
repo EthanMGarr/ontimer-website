@@ -178,9 +178,55 @@ export function trackCalendarHandoffOpened(
   });
 }
 
+export type MedicationAudience = "patient" | "caregiver" | "veterinary" | "provider";
+
+function medicationParams(audience: MedicationAudience): AnalyticsParams {
+  return { medication_audience: audience };
+}
+
+/**
+ * Medication funnel events deliberately contain only the audience and action.
+ * Never attach medication names, instructions, dose times, dates, or link contents.
+ */
+export function trackMedicationScheduleGenerated(audience: MedicationAudience): void {
+  fireEvent("medication_schedule_generated", medicationParams(audience));
+}
+
+export function trackMedicationShareInitiated(
+  audience: Exclude<MedicationAudience, "patient">,
+  channel: "copy" | "email" | "native_share",
+): void {
+  fireEvent("medication_share_initiated", { ...medicationParams(audience), share_channel: channel });
+}
+
+export function trackMedicationCalendarExportStarted(audience: MedicationAudience): void {
+  fireEvent("medication_calendar_export_started", medicationParams(audience));
+}
+
+export function trackMedicationCalendarExportHandedOff(
+  audience: MedicationAudience,
+  handoff: "native" | "download",
+): void {
+  fireEvent("medication_calendar_export_handed_off", { ...medicationParams(audience), calendar_handoff: handoff });
+}
+
 /** Fire when the Android waitlist CTA is clicked. */
 export function trackAndroidWaitlistClick(location: string): void {
   fireEvent("android_waitlist_click", baseParams(location));
+}
+
+export function trackAffiliateOfferViewed(
+  location: string,
+  context: AnalyticsParams = {},
+): void {
+  fireEvent("affiliate_offer_viewed", { ...baseParams(location), ...context });
+}
+
+export function trackAffiliateOfferClick(
+  location: string,
+  context: AnalyticsParams = {},
+): void {
+  fireEvent("affiliate_offer_click", { ...baseParams(location), ...context });
 }
 
 // ─── QR code impression / interaction events ─────────────────────────────────

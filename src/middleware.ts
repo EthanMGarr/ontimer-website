@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { isAnalyticsFreeMedicationPath, MEDICATION_ROUTE_PRIVACY_HEADERS } from "@/lib/medication-route-privacy";
 
 // EU27 + EEA (IS, LI, NO) + UK (GB) + Switzerland (CH, FADP) — the regions
 // where prior consent is required before loading non-essential analytics
@@ -14,7 +15,6 @@ const CONSENT_REQUIRED_COUNTRIES = new Set([
 ]);
 
 const PRIVATE_MEDICATION_ROUTES = new Set([
-  "/caregiver-medication-schedule",
   "/provider-medication-schedule",
   "/medication-schedule",
 ]);
@@ -42,6 +42,12 @@ export function middleware(request: NextRequest) {
     maxAge: 60 * 60 * 24,
     sameSite: "lax",
   });
+
+  if (isAnalyticsFreeMedicationPath(request.nextUrl.pathname)) {
+    for (const [name, value] of Object.entries(MEDICATION_ROUTE_PRIVACY_HEADERS)) {
+      response.headers.set(name, value);
+    }
+  }
 
   return response;
 }

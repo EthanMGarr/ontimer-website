@@ -18,9 +18,9 @@ export default function ProviderMedicationSchedulePage() {
           <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,.8fr)_minmax(30rem,1.2fr)] lg:gap-12">
             <div className="lg:sticky lg:top-24">
               <p className="text-xs font-semibold uppercase tracking-wider text-green-400 sm:text-sm">For healthcare providers</p>
-              <h1 className="mt-2 min-w-0 text-3xl font-black leading-[1.05] tracking-tight [overflow-wrap:anywhere] sm:mt-3 sm:text-5xl">Medication schedule maker</h1>
-              <p className="mt-3 text-base leading-relaxed text-zinc-300 sm:mt-5 sm:text-lg">Quickly create a dosing schedule your patient can add to their calendar.</p>
-              <p className="mt-4 hidden text-sm leading-relaxed text-zinc-500 sm:block">No patient name or account needed. This simple tool creates a calendar file you can send by email or text.</p>
+              <h1 className="mt-2 min-w-0 text-3xl font-black leading-[1.05] tracking-tight [overflow-wrap:anywhere] sm:mt-3 sm:text-5xl">A medication schedule your patient can actually use.</h1>
+              <p className="mt-3 text-base leading-relaxed text-zinc-300 sm:mt-5 sm:text-lg">Create a clear schedule, review it with your patient, then send one link they can add to their calendar.</p>
+              <p className="mt-4 hidden text-sm leading-relaxed text-zinc-500 sm:block">No account, patient name, or portal workflow required.</p>
             </div>
             <ProviderMedicationSchedule />
           </div>
@@ -30,14 +30,14 @@ export default function ProviderMedicationSchedulePage() {
       <section className="border-t border-zinc-800 bg-zinc-900/40 py-14 sm:py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="min-w-0 [overflow-wrap:anywhere] text-3xl font-black tracking-tight text-white sm:text-4xl">
-            How providers can help patients adhere to their medication schedules
+            A simple calendar handoff, not another system to manage
           </h2>
           <div className="mt-6 space-y-4 text-base leading-relaxed text-zinc-300 sm:text-lg">
             <p>
-              Give patients one clear schedule they can add directly to the calendar they already use. Confirm the medication, instructions, dose times, and duration together before sending the private link.
+              Give patients one clear schedule they can add directly to the calendar they already use. Confirm the medication, prescription directions, dose times, and duration together before sending the link.
             </p>
             <p>
-              Calendar events make each dose visible in the patient&apos;s day. For patients who want a stronger signal, OnTimer can turn those calendar events into persistent alarms on iPhone.
+              Calendar events make each dose visible in the patient&apos;s day. If a patient wants stronger alerts, they can independently use OnTimer to turn their own calendar events into alarms on iPhone.
             </p>
           </div>
         </div>

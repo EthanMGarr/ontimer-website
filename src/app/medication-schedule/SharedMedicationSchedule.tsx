@@ -11,19 +11,26 @@ import DoseTimeField from "@/components/DoseTimeField";
 import { formatMedicationTime } from "@/lib/medication-schedule";
 import { changedDoseTimeIndexes, scheduleDurationLabel, scheduleFromHash, type SharedMedicationSchedule as Schedule } from "@/lib/medication-share-link";
 import { generateProviderMedicationICS, handoffProviderMedicationICS } from "@/lib/provider-medication-calendar";
+import MedicationScheduleGenerator from "@/app/how-to-remember-medication-on-time/MedicationScheduleGenerator";
+import { trackMedicationCalendarExportHandedOff, trackMedicationCalendarExportStarted, type MedicationAudience } from "@/lib/analytics";
 
 export default function SharedMedicationSchedule() {
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [selfServe, setSelfServe] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
   const [calendarHandoff, setCalendarHandoff] = useState<"native" | "download" | null>(null);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
   const [originalTimes, setOriginalTimes] = useState<string[]>([]);
   const onTimerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const hasSharedSchedule = window.location.hash.startsWith("#schedule=");
     const decoded = scheduleFromHash(window.location.hash);
+    setSelfServe(!hasSharedSchedule);
     setSchedule(decoded);
     setOriginalTimes(decoded?.times.map((item) => item.time) ?? []);
+    setIsMobileDevice(/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent));
     setLoaded(true);
     if (decoded) window.history.replaceState(null, "", window.location.pathname);
   }, []);
@@ -50,14 +57,19 @@ export default function SharedMedicationSchedule() {
 
   function handleDownload() {
     if (!schedule || schedule.times.some((item) => !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(item.time))) return;
+    const audience: MedicationAudience = schedule.senderRole || "patient";
+    trackMedicationCalendarExportStarted(audience);
     const handoff = handoffProviderMedicationICS(generateProviderMedicationICS(schedule), navigator.userAgent);
     setCalendarHandoff(handoff);
     setDownloaded(true);
+    trackMedicationCalendarExportHandedOff(audience, handoff);
   }
 
   if (!loaded) {
     return <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-sm text-zinc-400">Loading your schedule…</div>;
   }
+
+  if (selfServe) return <MedicationScheduleGenerator />;
 
   if (!schedule) {
     return (
@@ -112,8 +124,8 @@ export default function SharedMedicationSchedule() {
             <div className="space-y-2">
               {schedule.times.map((item, index) => (
                 <div key={index} className="min-w-0 rounded-xl border border-zinc-800 bg-zinc-950/20 p-3">
-                  <p className="mb-2 text-xs font-semibold text-zinc-400">Dose {index + 1} · {formatMedicationTime(item.time)} {timeZoneLabel}</p>
-                  <DoseTimeField value={item.time} onChange={(value) => updateTime(index, value)} label={`Dose ${index + 1} time`} />
+                  <p className="mb-2 text-xs font-semibold text-zinc-400">{item.doseLabel || item.mealLabel ? `${item.doseLabel || item.mealLabel} dose` : `Dose ${index + 1}`} · {formatMedicationTime(item.time)} {timeZoneLabel}</p>
+                  <DoseTimeField value={item.time} onChange={(value) => updateTime(index, value)} label={`${item.doseLabel || item.mealLabel || `Dose ${index + 1}`} time`} />
                 </div>
               ))}
             </div>
@@ -148,27 +160,27 @@ export default function SharedMedicationSchedule() {
             {downloaded && (
               <div className="mt-4 flex items-start gap-2.5 border-t border-zinc-800 pt-4" aria-live="polite">
                 <span className="mt-0.5 text-green-500" aria-hidden="true">✓</span>
-                <div><p className="text-sm font-semibold text-white">{calendarHandoff === "native" ? "Calendar opened" : "Calendar file downloaded"}</p><p className="mt-0.5 text-xs leading-relaxed text-zinc-400">{calendarHandoff === "native" ? "Confirm the recurring dose times in your calendar." : "Open medication-schedule.ics and confirm the recurring events in your calendar."}</p></div>
+                <div><p className="text-sm font-semibold text-white">{calendarHandoff === "native" ? "Calendar opened" : "Calendar file downloaded"}</p><p className="mt-0.5 text-xs leading-relaxed text-zinc-400">{calendarHandoff === "native" ? "Review the recurring dose times, then confirm them in your calendar." : isMobileDevice ? "Open your browser’s downloads and tap medication-schedule.ics. Then confirm the recurring events in your calendar." : "Go to your Downloads folder and open medication-schedule.ics. Then choose your calendar and confirm the recurring events."}</p></div>
               </div>
             )}
           </div>
 
           <div ref={onTimerRef} tabIndex={-1} className={`rounded-xl border border-green-500/30 bg-green-500/[0.07] p-5 outline-none focus-visible:ring-2 focus-visible:ring-green-400 ${downloaded ? "order-1 lg:order-2" : "order-2"}`}>
             <p className="text-lg font-black text-white">Get an alarm for every dose.</p>
-            <p className="mt-1.5 text-sm leading-relaxed text-zinc-300">OnTimer turns the schedule on your calendar into automatic alarms.</p>
-            <div className="mt-4"><AppStoreButton size="lg" className="w-full justify-center whitespace-nowrap" location={downloaded ? "shared_medication_after_export" : "shared_medication_schedule"} label="Get OnTimer Free" /><p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p></div>
+            <p className="mt-1.5 text-sm leading-relaxed text-zinc-300">OnTimer turns this schedule into automatic alarms.</p>
+            <div className="mt-4"><AppStoreButton size="lg" className="w-full justify-center whitespace-nowrap" location={downloaded ? "shared_medication_after_export" : "shared_medication_schedule"} label="Get OnTimer Free" analyticsContext={{ medication_audience: schedule.senderRole || "patient" }} /><p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p></div>
           </div>
 
           {downloaded && calendarHandoff === "download" && (
             <details className="order-3 rounded-lg border border-zinc-800 bg-zinc-950/30 px-4 py-3 text-xs text-zinc-400">
               <summary className="cursor-pointer font-medium text-zinc-300 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400">Need help adding the calendar file?</summary>
-              <div className="mt-3 space-y-3 border-t border-zinc-800 pt-3 leading-relaxed"><p><strong className="text-zinc-200">Apple Calendar or Outlook:</strong> open medication-schedule.ics from your browser Downloads, choose your calendar, and confirm the recurring events.</p><p><strong className="text-zinc-200">Google Calendar:</strong> open Settings → Import &amp; export, select medication-schedule.ics from Downloads, choose a calendar, then select Import.</p><button type="button" onClick={handleDownload} className="whitespace-nowrap underline underline-offset-2 transition-colors hover:text-white">Download calendar file again</button></div>
+              <div className="mt-3 space-y-3 border-t border-zinc-800 pt-3 leading-relaxed"><p>When prompted, choose the calendar where you want to keep medication reminders. You can create a separate Medication calendar if that’s helpful.</p><p><strong className="text-zinc-200">Apple Calendar or Outlook:</strong> open medication-schedule.ics from your browser Downloads, choose your calendar, and confirm the recurring events.</p><p><strong className="text-zinc-200">Google Calendar:</strong> open Settings → Import &amp; export, select medication-schedule.ics from Downloads, choose a calendar, then select Import.</p><button type="button" onClick={handleDownload} className="whitespace-nowrap underline underline-offset-2 transition-colors hover:text-white">Download calendar file again</button></div>
             </details>
           )}
         </div>
       </div>
 
-      <div className="mt-6 rounded-lg border border-green-500/20 bg-green-500/[0.05] px-4 py-3 text-xs leading-relaxed text-zinc-400"><strong className="text-zinc-200">Private by design.</strong> The schedule was read from the private part of this link in your browser and then removed from the address bar. OnTimer did not receive or store its contents. <Link href="/OnTimer_Privacy_Policy.html" className="underline underline-offset-2 hover:text-zinc-200">Privacy Policy</Link></div>
+      <div className="mt-6 rounded-lg border border-green-500/20 bg-green-500/[0.05] px-4 py-3 text-xs leading-relaxed text-zinc-400"><strong className="text-zinc-200">Processed in this browser.</strong> The schedule was read from the part of the link after the # and then removed from the address bar. That fragment was not included in the page request to OnTimer. Anyone with the complete link can view its contents. <Link href="/OnTimer_Privacy_Policy.html" className="underline underline-offset-2 hover:text-zinc-200">Privacy Policy</Link></div>
       <p className="mt-5 text-xs leading-relaxed text-zinc-500">OnTimer is not a medical device and does not provide medical advice. Verify the medication, dose times, and instructions with your healthcare provider before relying on this schedule. <Link href="/terms" className="underline underline-offset-2 hover:text-zinc-300">Terms of Service</Link></p>
 
     </div>

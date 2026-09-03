@@ -5,7 +5,7 @@ export interface ProviderMedicationSchedule {
   instructions: string;
   startDate: string;
   days: number | "ongoing";
-  times: Array<{ time: string; dayOffset?: number }>;
+  times: Array<{ time: string; dayOffset?: number; mealLabel?: "Breakfast" | "Lunch" | "Dinner" | "Evening"; doseLabel?: "Breakfast" | "Lunch" | "Dinner" | "Evening" | "Wake-up" | "Midday" | "Bedtime" }>;
   timeZone?: string;
   takenWithFood?: boolean;
 }
@@ -31,12 +31,15 @@ function startDateTime(startDate: string, time: string, dayOffset = 0): string {
 }
 
 export function generateProviderMedicationICS(schedule: ProviderMedicationSchedule, now = new Date()): string {
-  const title = `Take ${schedule.medication.trim()}`;
-  const descriptionParts = [title];
+  const baseTitle = `Take ${schedule.medication.trim()}`;
+  const descriptionParts = [baseTitle];
   if (schedule.instructions.trim()) descriptionParts.push(schedule.instructions.trim());
   if (schedule.takenWithFood) descriptionParts.push("Take with food");
   const description = descriptionParts.join(" — ");
-  const events = schedule.times.flatMap(({ time, dayOffset }, index) => [
+  const events = schedule.times.flatMap(({ time, dayOffset, mealLabel, doseLabel }, index) => {
+    const label = doseLabel || mealLabel;
+    const title = label ? `${label} dose: ${baseTitle}` : baseTitle;
+    return [
     "BEGIN:VEVENT",
     `UID:${now.getTime()}-${index}-${Math.random().toString(36).slice(2)}@ontimer.app`,
     `DTSTAMP:${stamp(now)}`,
@@ -54,7 +57,8 @@ export function generateProviderMedicationICS(schedule: ProviderMedicationSchedu
     `DESCRIPTION:${escapeText(description)}`,
     "END:VALARM",
     "END:VEVENT",
-  ]);
+  ];
+  });
   return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//OnTimer//Provider Medication Schedule//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", ...events, "END:VCALENDAR", ""].join("\r\n");
 }
 

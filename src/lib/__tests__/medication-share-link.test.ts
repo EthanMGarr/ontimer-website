@@ -33,6 +33,12 @@ assert(decodeMedicationSchedule(encodeURIComponent(JSON.stringify({ ...schedule,
 assert(decodeMedicationSchedule(encodeURIComponent(JSON.stringify({ ...schedule, takenWithFood: "yes" }))) === null, "a non-boolean taken-with-food value should be rejected");
 assert(decodeMedicationSchedule(encodeMedicationSchedule({ ...schedule, takenWithFood: true }))?.takenWithFood === true, "taken-with-food should round-trip through the share link");
 assert(decodeMedicationSchedule(encoded)?.takenWithFood === undefined, "omitting taken-with-food should decode as undefined, not a stored false");
+const mealSchedule: SharedMedicationSchedule = { ...schedule, takenWithFood: true, times: [{ time: "08:15", mealLabel: "Breakfast" }, { time: "18:30", mealLabel: "Dinner" }] };
+assert(decodeMedicationSchedule(encodeMedicationSchedule(mealSchedule))?.times[0].mealLabel === "Breakfast", "meal labels should round-trip through the private link");
+assert(decodeMedicationSchedule(encodeURIComponent(JSON.stringify({ ...mealSchedule, times: [{ time: "08:15", mealLabel: "Brunch" }] }))) === null, "unrecognized meal labels should be rejected");
+const routineSchedule: SharedMedicationSchedule = { ...schedule, times: [{ time: "07:00", doseLabel: "Wake-up" }, { time: "21:00", doseLabel: "Bedtime" }] };
+assert(decodeMedicationSchedule(encodeMedicationSchedule(routineSchedule))?.times[1].doseLabel === "Bedtime", "routine labels should round-trip through the private link");
+assert(decodeMedicationSchedule(encodeURIComponent(JSON.stringify({ ...routineSchedule, times: [{ time: "07:00", doseLabel: "Morning-ish" }] }))) === null, "unrecognized routine labels should be rejected");
 const foodEmail = medicationEmailDraft({ ...schedule, takenWithFood: true }, "https://example.com/schedule");
 assert(foodEmail.body.includes("Take with food: Yes"), "email drafts should surface the taken-with-food flag when set");
 assert(!medicationEmailDraft(schedule, "https://example.com/schedule").body.includes("Take with food"), "email drafts should omit the taken-with-food line when unset");
@@ -47,6 +53,8 @@ assert(providerEmail.body.includes("REVIEW AND ADD IT TO YOUR CALENDAR\nhttps://
 assert(providerEmail.body.includes("Medication: Metformin 500mg"), "email drafts should include a readable medication summary");
 assert(providerEmail.body.includes("Starts: August 11, 2026"), "email drafts should format the start date for people rather than machines");
 assert(providerEmail.body.includes("Dose times: 8:00 AM, 8:00 PM ET"), "email drafts should summarize every dose time and timezone");
+assert(medicationEmailDraft(mealSchedule, "https://example.com/schedule").body.includes("Dose times: Breakfast — 8:15 AM, Dinner — 6:30 PM ET"), "email drafts should identify meal-based dose times");
+assert(medicationEmailDraft(routineSchedule, "https://example.com/schedule").body.includes("Dose times: Wake-up — 7:00 AM, Bedtime — 9:00 PM ET"), "email drafts should identify routine-based dose times");
 assert(providerEmail.body.includes("does not change or replace the medication label, prescription, or advice from a healthcare professional"), "email drafts should state the organizational limitation clearly");
 const caregiverEmail = medicationEmailDraft({ ...schedule, practiceName: "Ethan", senderRole: "caregiver", times: [{ time: "00:00" }] }, "https://example.com/schedule");
 assert(caregiverEmail.subject === "A medication schedule to help you stay on track", "caregiver subjects should be warm and avoid medication details");

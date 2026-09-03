@@ -1,3 +1,5 @@
+import { isAnalyticsFreeMedicationPath } from "@/lib/medication-route-privacy";
+
 export const REGION_COOKIE = "ontimer_region";
 export const CONSENT_COOKIE = "ontimer_consent";
 export const CONSENT_EVENT = "ontimer-consent";
@@ -19,6 +21,7 @@ export function isConsentRequired(): boolean {
 
 /** True when analytics is currently allowed to load for this visitor. */
 export function isAnalyticsAllowed(): boolean {
+  if (typeof window !== "undefined" && isAnalyticsFreeMedicationPath(window.location.pathname)) return false;
   if (!isConsentRequired()) return true;
   return getCookie(CONSENT_COOKIE) === "granted";
 }

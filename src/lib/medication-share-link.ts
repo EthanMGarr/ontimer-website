@@ -2,14 +2,20 @@ export interface SharedMedicationSchedule {
   version: 1;
   medication: string;
   practiceName?: string;
-  senderRole?: "provider" | "caregiver";
+  senderRole?: "provider" | "caregiver" | "veterinary";
   instructions: string;
   startDate: string;
   days: number | "ongoing";
-  times: Array<{ time: string; dayOffset?: number }>;
+  times: Array<{ time: string; dayOffset?: number; mealLabel?: MealDoseLabel; doseLabel?: DoseAnchorLabel }>;
   timeZone?: string;
   takenWithFood?: boolean;
 }
+
+export type MealDoseLabel = "Breakfast" | "Lunch" | "Dinner" | "Evening";
+export type DoseAnchorLabel = MealDoseLabel | "Wake-up" | "Midday" | "Bedtime";
+
+const MEAL_DOSE_LABELS = new Set<MealDoseLabel>(["Breakfast", "Lunch", "Dinner", "Evening"]);
+const DOSE_ANCHOR_LABELS = new Set<DoseAnchorLabel>(["Breakfast", "Lunch", "Dinner", "Evening", "Wake-up", "Midday", "Bedtime"]);
 
 const TIME_ZONE_LABELS: Record<string, string> = {
   "America/New_York": "ET",
@@ -45,12 +51,12 @@ export function decodeMedicationSchedule(value: string): SharedMedicationSchedul
       parsed.version !== 1 ||
       typeof parsed.medication !== "string" || !parsed.medication.trim() || parsed.medication.length > 120 ||
       (parsed.practiceName !== undefined && (typeof parsed.practiceName !== "string" || parsed.practiceName.length > 120)) ||
-      (parsed.senderRole !== undefined && parsed.senderRole !== "provider" && parsed.senderRole !== "caregiver") ||
+      (parsed.senderRole !== undefined && parsed.senderRole !== "provider" && parsed.senderRole !== "caregiver" && parsed.senderRole !== "veterinary") ||
       typeof parsed.instructions !== "string" || parsed.instructions.length > 500 ||
       typeof parsed.startDate !== "string" || !DATE_PATTERN.test(parsed.startDate) ||
       (parsed.days !== "ongoing" && (typeof parsed.days !== "number" || !Number.isInteger(parsed.days) || parsed.days < 1 || parsed.days > 365)) ||
       !Array.isArray(parsed.times) || parsed.times.length < 1 || parsed.times.length > 12 ||
-      !parsed.times.every((item) => item && typeof item.time === "string" && TIME_PATTERN.test(item.time) && (item.dayOffset === undefined || (Number.isInteger(item.dayOffset) && item.dayOffset >= 0 && item.dayOffset <= 7))) ||
+      !parsed.times.every((item) => item && typeof item.time === "string" && TIME_PATTERN.test(item.time) && (item.dayOffset === undefined || (Number.isInteger(item.dayOffset) && item.dayOffset >= 0 && item.dayOffset <= 7)) && (item.mealLabel === undefined || MEAL_DOSE_LABELS.has(item.mealLabel)) && (item.doseLabel === undefined || DOSE_ANCHOR_LABELS.has(item.doseLabel))) ||
       (parsed.timeZone !== undefined && (typeof parsed.timeZone !== "string" || parsed.timeZone.length > 100)) ||
       (parsed.takenWithFood !== undefined && typeof parsed.takenWithFood !== "boolean")
     ) return null;
@@ -70,14 +76,17 @@ export function scheduleFromHash(hash: string): SharedMedicationSchedule | null 
   return encoded ? decodeMedicationSchedule(encoded) : null;
 }
 
-export function medicationShareCopy(practiceName?: string, senderRole: "provider" | "caregiver" = "provider") {
+export function medicationShareCopy(practiceName?: string, senderRole: "provider" | "caregiver" | "veterinary" = "provider") {
   const sender = practiceName?.trim();
   const caregiver = senderRole === "caregiver";
+  const veterinary = senderRole === "veterinary";
   return {
-    title: sender ? `Your medication schedule from ${sender}` : "Your medication schedule",
-    text: `${sender ? `${sender} sent you a medication schedule. ` : caregiver ? "A family member made a medication schedule for you. " : "Here’s the medication schedule we discussed. "}Open this private link to review it, then add it to your calendar. No account needed.`,
+    title: sender ? `Your medication schedule from ${sender}` : veterinary ? "Your pet's medication schedule" : "Your medication schedule",
+    text: `${sender ? `${sender} sent you a medication schedule. ` : caregiver ? "A family member made a medication schedule for you. " : veterinary ? "Here’s your pet’s medication schedule. " : "Here’s the medication schedule we discussed. "}Open this schedule link to review it, then add it to your calendar. No account needed.`,
     emailBody: caregiver
       ? "I made this medication schedule to help keep the dose times in one place. Open the link below to review it and add it to your calendar. No account needed."
+      : veterinary
+        ? "Here’s your pet’s medication schedule. Open the link below to review it and add it to your calendar. No account needed."
       : "Here’s the medication schedule we discussed. Open the link below to review it and add it to your calendar. No account needed.",
   };
 }
@@ -102,11 +111,16 @@ function readableTime(time: string): string {
 export function medicationEmailDraft(schedule: SharedMedicationSchedule, url: string) {
   const sender = schedule.practiceName?.trim();
   const caregiver = schedule.senderRole === "caregiver";
+  const veterinary = schedule.senderRole === "veterinary";
   const subject = caregiver
     ? "A medication schedule to help you stay on track"
+    : veterinary
+      ? sender ? `Your pet's medication schedule from ${sender}` : "Your pet's medication schedule"
     : sender ? `Your medication schedule from ${sender}` : "Your medication schedule";
   const introduction = caregiver
     ? "I put this medication schedule together to help keep your dose times in one place."
+    : veterinary
+      ? sender ? `${sender} created this medication schedule for your pet.` : "Here’s the medication schedule for your pet."
     : sender ? `${sender} created this medication schedule for you.` : "Here’s the medication schedule we discussed.";
   const scheduleLines = [
     `Medication: ${schedule.medication}`,
@@ -114,12 +128,16 @@ export function medicationEmailDraft(schedule: SharedMedicationSchedule, url: st
     ...(schedule.takenWithFood ? ["Take with food: Yes"] : []),
     `Starts: ${readableDate(schedule.startDate)}`,
     `Duration: ${scheduleDurationLabel(schedule.days)}`,
-    `Dose ${schedule.times.length === 1 ? "time" : "times"}: ${schedule.times.map(({ time }) => readableTime(time)).join(", ")}${schedule.timeZone ? ` ${TIME_ZONE_LABELS[schedule.timeZone] || schedule.timeZone}` : ""}`,
+    `Dose ${schedule.times.length === 1 ? "time" : "times"}: ${schedule.times.map(({ time, mealLabel, doseLabel }) => `${doseLabel || mealLabel ? `${doseLabel || mealLabel} — ` : ""}${readableTime(time)}`).join(", ")}${schedule.timeZone ? ` ${TIME_ZONE_LABELS[schedule.timeZone] || schedule.timeZone}` : ""}`,
   ];
   const review = caregiver
     ? "Please compare these details with the prescription or confirm them with a healthcare provider before adding the schedule. If anything differs or is unclear, contact the prescribing healthcare professional."
+    : veterinary
+      ? `Please review the medication, instructions, and dose times before adding the schedule. If anything looks wrong or is unclear, contact ${sender || "the veterinary practice that sent this schedule"}.`
     : `Please review the medication, instructions, and dose times before adding the schedule. If anything looks wrong or is unclear, contact ${sender || "the healthcare provider who sent this schedule"}.`;
-  const limitation = "This schedule is for organization only. It does not change or replace the medication label, prescription, or advice from a healthcare professional. OnTimer is not a medical device and does not provide medical advice.";
+  const limitation = veterinary
+    ? "This schedule is for organization only. It does not change or replace the medication label, prescription, or advice from a veterinarian. OnTimer does not provide veterinary advice."
+    : "This schedule is for organization only. It does not change or replace the medication label, prescription, or advice from a healthcare professional. OnTimer is not a medical device and does not provide medical advice.";
 
   return {
     subject,

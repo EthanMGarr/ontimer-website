@@ -1,10 +1,25 @@
 "use client";
 
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
 import {
+  trackAffiliateOfferClick,
+  trackAffiliateOfferViewed,
+  trackAndroidWaitlistClick,
   trackCalendarHandoffOpened,
   type AnalyticsParams,
 } from "@/lib/analytics";
+import { isAndroidUserAgent } from "@/lib/device-detection";
+
+interface AndroidAffiliateOffer {
+  href: string;
+  partner: string;
+  heading: string;
+  body: string;
+  buttonLabel: string;
+  location: string;
+}
 
 interface CalendarOnTimerHandoffProps {
   calendarHref: string;
@@ -22,6 +37,7 @@ interface CalendarOnTimerHandoffProps {
   postCalendarBody?: string;
   appLocation: string;
   analyticsContext?: AnalyticsParams;
+  androidAffiliateOffer?: AndroidAffiliateOffer;
   eventPreview?: {
     title: string;
     startLabel: string;
@@ -44,15 +60,44 @@ export default function CalendarOnTimerHandoff({
   postCalendarBody = "OnTimer sets automatic alarms for your calendar events.",
   appLocation,
   analyticsContext = {},
+  androidAffiliateOffer,
   eventPreview,
 }: CalendarOnTimerHandoffProps) {
+  const [isAndroidMobile, setIsAndroidMobile] = useState<boolean | null>(null);
+  const affiliateRef = useRef<HTMLAnchorElement>(null);
+  const affiliateViewTrackedRef = useRef(false);
   const calendarOpened = calendarProvider !== null;
+  const showAndroidAffiliate = isAndroidMobile === true && Boolean(androidAffiliateOffer);
   const openedHeading = calendarProvider === "ics"
     ? "Calendar file downloaded"
     : `Google Calendar ${openedItemLabel} opened`;
   const openedBody = calendarProvider === "ics"
     ? "Open the downloaded file to add this leave time."
     : null;
+
+  useEffect(() => {
+    setIsAndroidMobile(isAndroidUserAgent(navigator.userAgent));
+  }, []);
+
+  useEffect(() => {
+    if (!showAndroidAffiliate || !androidAffiliateOffer || affiliateViewTrackedRef.current) return;
+    const offer = affiliateRef.current;
+    if (!offer) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      affiliateViewTrackedRef.current = true;
+      trackAffiliateOfferViewed(androidAffiliateOffer.location, {
+        calculator_type: calculatorType,
+        affiliate_partner: androidAffiliateOffer.partner,
+        ...analyticsContext,
+      });
+      observer.disconnect();
+    }, { threshold: 0.5 });
+
+    observer.observe(offer);
+    return () => observer.disconnect();
+  }, [showAndroidAffiliate, androidAffiliateOffer, calculatorType, analyticsContext]);
 
   return (
     <>
@@ -141,23 +186,64 @@ export default function CalendarOnTimerHandoff({
           ? "order-1 rounded-xl border border-green-500/30 bg-green-500/[0.06] p-5"
           : "border-t border-zinc-800 pt-5"
       }`}>
-        <p className="text-base font-bold text-white">{calendarOpened ? postCalendarHeading : "Get an alarm when it's time to leave."}</p>
+        <p className="text-base font-bold text-white">
+          {showAndroidAffiliate && androidAffiliateOffer
+            ? androidAffiliateOffer.heading
+            : calendarOpened
+              ? postCalendarHeading
+              : "Get an alarm when it's time to leave."}
+        </p>
         <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
-          {calendarOpened ? postCalendarBody : "OnTimer sets automatic alarms for your calendar events."}
+          {showAndroidAffiliate && androidAffiliateOffer
+            ? androidAffiliateOffer.body
+            : calendarOpened
+              ? postCalendarBody
+              : "OnTimer sets automatic alarms for your calendar events."}
         </p>
         <div className="mt-4">
-          <AppStoreButton
-            size={calendarOpened ? "lg" : "md"}
-            label={calendarOpened ? "Get OnTimer Free" : "Get Automatic Alarms"}
-            className={calendarOpened ? "w-full justify-center whitespace-nowrap" : "justify-center whitespace-nowrap"}
-            location={appLocation}
-            analyticsContext={{
-              calculator_type: calculatorType,
-              cta_variant: calendarOpened ? "post_calendar_automatic_alert" : "result_automatic_alert",
-              ...analyticsContext,
-            }}
-          />
-          <p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p>
+          {showAndroidAffiliate && androidAffiliateOffer ? (
+            <div data-nosnippet>
+              <a
+                ref={affiliateRef}
+                href={androidAffiliateOffer.href}
+                target="_blank"
+                rel="sponsored nofollow noopener noreferrer"
+                onClick={() => trackAffiliateOfferClick(androidAffiliateOffer.location, {
+                  calculator_type: calculatorType,
+                  affiliate_partner: androidAffiliateOffer.partner,
+                  ...analyticsContext,
+                })}
+                className="flex min-h-12 w-full items-center justify-center rounded-full bg-green-500 px-5 py-3 text-center text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"
+              >
+                {androidAffiliateOffer.buttonLabel}
+              </a>
+              <p className="mt-2 text-[11px] leading-relaxed text-zinc-500">
+                Paid link: OnTimer may earn a commission if you book, at no additional cost to you.
+              </p>
+              <Link
+                href="/android"
+                onClick={() => trackAndroidWaitlistClick(`${androidAffiliateOffer.location}_waitlist`)}
+                className="mt-3 inline-flex text-xs font-medium text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+              >
+                OnTimer for Android is coming — join the waitlist
+              </Link>
+            </div>
+          ) : (
+            <>
+              <AppStoreButton
+                size={calendarOpened ? "lg" : "md"}
+                label={calendarOpened ? "Get OnTimer Free" : "Get Automatic Alarms"}
+                className={calendarOpened ? "w-full justify-center whitespace-nowrap" : "justify-center whitespace-nowrap"}
+                location={appLocation}
+                analyticsContext={{
+                  calculator_type: calculatorType,
+                  cta_variant: calendarOpened ? "post_calendar_automatic_alert" : "result_automatic_alert",
+                  ...analyticsContext,
+                }}
+              />
+              <p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p>
+            </>
+          )}
         </div>
       </div>}
       </div>

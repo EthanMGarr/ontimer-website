@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { guardGoogleApiRequest } from "@/lib/api-cost-guard";
+import { buildRoutesWaypoint } from "@/lib/routes-waypoint";
 
 /// Server-side proxy for travel-time estimation with bounded, best-effort caching.
 ///
@@ -118,10 +119,6 @@ function cacheKey(origin: string, dest: string, bucket: number, mode: string): s
  * else), append "airport" so the Routes API geocoder resolves it correctly.
  * "EWR" → "EWR airport", "KEWR" → "KEWR airport", "Newark" → unchanged.
  */
-function expandAirportCode(s: string): string {
-  return /^[a-zA-Z]{2,4}$/.test(s.trim()) ? `${s.trim()} airport` : s;
-}
-
 function trafficBasisFor(bucketedTime: number, travelMode: string): TravelResult["trafficBasis"] {
   if (travelMode === "WALK") return "none";
   if (travelMode === "TRANSIT") return "scheduled";
@@ -151,8 +148,8 @@ async function callRoutesApi(
   const departureTime = new Date(safeDepartureUnix * 1000).toISOString();
 
   const body: Record<string, unknown> = {
-    origin: { address: expandAirportCode(origin) },
-    destination: { address: expandAirportCode(destination) },
+    origin: buildRoutesWaypoint(origin),
+    destination: buildRoutesWaypoint(destination),
     travelMode,
   };
 
