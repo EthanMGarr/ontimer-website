@@ -51,7 +51,7 @@
 </head>
 <body>
     <h1>OnTimer Privacy Policy</h1>
-    <p class="update-date">Last Updated: August 15, 2026</p>
+    <p class="update-date">Last Updated: September 2, 2026</p>
 
     <h2>1. Introduction</h2>
     <p>Breakout Growth ("we," "our," or "us") operates OnTimer, including the ontimer.app website, mobile applications, calculators, planning tools, reminder tools, educational content, subscriptions, and related services (collectively, "OnTimer" or "the Service"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use OnTimer.</p>
@@ -133,17 +133,17 @@
     </ul>
 
     <h3>2.4 App Usage Analytics</h3>
-    <p>We collect anonymous usage data to improve the App:</p>
+    <p>We use Firebase Analytics, a Google service, to collect anonymous usage data to improve the App:</p>
     <ul>
         <li>App opens and feature usage</li>
+        <li>Onboarding progress and which calendar provider you connect (not calendar content)</li>
         <li>Notification interaction (dismissed, tapped, etc.)</li>
         <li>Subscription status (free vs. premium)</li>
-        <li>Error logs and crash reports</li>
     </ul>
-    <p><strong>This data is anonymized and cannot be used to identify you personally.</strong></p>
+    <p><strong>This data is anonymized, is tied to app usage events rather than your identity, and never includes calendar event titles, descriptions, or locations.</strong> We do not currently use a dedicated crash-reporting tool; if we add one, this Privacy Policy will be updated to reflect it.</p>
 
     <h3>2.5 Website Analytics and Usage Information</h3>
-    <p>When you visit ontimer.app or use website tools, calculators, educational content, or support pages, we use Google Analytics to collect analytics used to understand website usage, feature adoption, referral sources, and marketing performance, such as:</p>
+    <p>Except on the medication-tool routes identified below, when you visit ontimer.app or use website tools, calculators, educational content, or support pages, we use Google Analytics to collect analytics used to understand website usage, feature adoption, referral sources, and marketing performance, such as:</p>
     <ul>
         <li>Pages viewed, links clicked, and referring pages</li>
         <li>Browser type, device type, operating system, and approximate region</li>
@@ -167,9 +167,10 @@
     <p>Different website tools handle what you enter in different ways:</p>
     <ul>
         <li><strong>Travel and Time to Leave calculators:</strong> Origin, destination, airport, cruise terminal, and similar location text may be sent to OnTimer's server and then to Google Maps Platform services to return place suggestions or calculate a route and travel-time estimate. We do not use those entries to build a user profile.</li>
-        <li><strong>Medication Schedule Generator:</strong> Medication names, start dates, and dose times are processed in your browser to create a calendar file and are not sent to or stored by OnTimer. If website analytics is enabled, we record a schedule-generated event that may include the selected frequency and duration, but not the medication name, start date, or dose times.</li>
-        <li><strong>Provider medication schedule links:</strong> Schedule details are encoded in the URL fragment, the portion after the <code>#</code>. Browsers do not send that fragment to OnTimer with the page request. The recipient's browser reads the schedule locally and removes the fragment from the address bar after validation. Anyone who receives the complete link can read the schedule, so it should be shared only with the intended recipient.</li>
-        <li><strong>Shared medication schedule page:</strong> Google Analytics is disabled on this route so the schedule fragment and imported schedule values are not captured by our website analytics.</li>
+        <li><strong>Personal Medication Schedule Generator:</strong> Medication names, instructions, start dates, and dose times are processed in your browser to create a calendar file. OnTimer does not provide accounts or server-side storage for these schedules.</li>
+        <li><strong>Provider and caregiver medication schedule links:</strong> Schedule details are encoded in the URL fragment, the portion after the <code>#</code>. Browsers do not include that fragment in the HTTP request sent to OnTimer's web server. The recipient's browser reads the schedule locally and removes the fragment from the address bar after validation. The link is not encrypted or access-controlled. Anyone with the complete link can read its contents, so it should be shared only through a method the sender considers appropriate and only with the intended recipient.</li>
+        <li><strong>Analytics-free medication routes:</strong> Google Analytics and other third-party scripts are disabled on the personal, provider, caregiver, and shared medication-schedule routes. These routes also use a no-referrer policy, no-store response controls, and browser security rules that prevent third-party script and data connections.</li>
+        <li><strong>Technical request logs:</strong> Like other web hosts, our hosting infrastructure may process ordinary request information needed to deliver and secure a webpage, such as an IP address, browser information, requested path, and timestamp. The medication schedule fragment is not part of the HTTP request and therefore is not included in those request logs.</li>
     </ul>
 
     <h3>2.8 Information We Do NOT Collect</h3>
@@ -278,9 +279,9 @@
 
     <h3>5.7 Analytics Services</h3>
     <ul>
-        <li><strong>Purpose:</strong> Anonymous app usage analytics, and Google Analytics for website analytics used to understand feature adoption, referral sources, marketing performance, and crash reporting</li>
-        <li><strong>Data shared:</strong> Anonymized usage patterns, browser/device information, page usage, and error information</li>
-        <li><strong>Note:</strong> No calendar event content is used for advertising. Google Analytics does not load on ontimer.app for UK, EU/EEA, or Swiss visitors until they accept the cookie banner.</li>
+        <li><strong>Purpose:</strong> Firebase Analytics (a Google service) for anonymous app usage analytics, and Google Analytics for website analytics used to understand feature adoption, referral sources, and marketing performance</li>
+        <li><strong>Data shared:</strong> Anonymized usage patterns, browser/device information, page usage, and app usage events (see Section 2.4)</li>
+        <li><strong>Note:</strong> No calendar event content is used for advertising. Google Analytics does not load on the personal, provider, caregiver, or shared medication-schedule routes. On other routes, it does not load for UK, EU/EEA, or Swiss visitors until they accept the cookie banner.</li>
         <li><strong>Privacy policy:</strong> <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a></li>
     </ul>
 
@@ -298,12 +299,23 @@
         <li><strong>Privacy policy:</strong> <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a></li>
     </ul>
 
+    <h3>5.10 Travelpayouts and Travel Affiliate Partners</h3>
+    <ul>
+        <li><strong>Purpose:</strong> Show selected travel offers on certain calculator results and attribute commissions when a visitor chooses an offer and later completes an eligible booking</li>
+        <li><strong>When data is shared:</strong> OnTimer does not load the Travelpayouts Drive script or send calculator inputs to Travelpayouts. Information is sent to Travelpayouts and the named travel provider only after you choose an affiliate link.</li>
+        <li><strong>Data shared after a click:</strong> The referring page, affiliate and campaign identifiers, IP address, browser and device information, and subsequent booking-attribution activity may be processed by Travelpayouts and the travel provider. Origin, destination, flight time, calculated leave time, and calendar-event details are not included in the affiliate link.</li>
+        <li><strong>Cookies:</strong> Travelpayouts or the travel provider may place attribution cookies after you follow an affiliate link. Cookie duration and other practices depend on the selected provider.</li>
+        <li><strong>Compensation:</strong> OnTimer may earn a commission if you book through an affiliate link, at no additional cost to you.</li>
+        <li><strong>Privacy policy:</strong> <a href="https://support.travelpayouts.com/hc/en-us/articles/360004121052-Privacy-Policy">Travelpayouts Privacy Policy</a></li>
+    </ul>
+
     <h2>6. Data Sharing and Disclosure</h2>
     <p><strong>We do not sell, trade, or rent your personal information to third parties.</strong></p>
     <p>We may disclose your information only in the following circumstances:</p>
     <ul>
         <li><strong>With your consent:</strong> When you explicitly authorize us to share information</li>
         <li><strong>Service providers:</strong> Third-party services necessary to operate the Service (as listed above)</li>
+        <li><strong>Affiliate links you choose:</strong> If you choose a clearly labeled travel offer, your browser connects to Travelpayouts and the named travel provider for referral and booking attribution as described above</li>
         <li><strong>Legal requirements:</strong> If required by law, court order, or government request</li>
         <li><strong>Protection of rights:</strong> To protect our legal rights, safety, or property</li>
         <li><strong>Business transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
@@ -401,6 +413,7 @@
 
     <h2>13. Contact Us</h2>
     <p>If you have questions about this Privacy Policy or our data practices, please contact us:</p>
+    <p>Do not send medication schedule links, patient names, medication information, or other sensitive health information in support requests. OnTimer support does not need that information to receive general feedback or troubleshoot the public website.</p>
     <p>
         <strong>Breakout Growth</strong><br>
         Email: <a href="mailto:support@ontimer.app">support@ontimer.app</a><br>
