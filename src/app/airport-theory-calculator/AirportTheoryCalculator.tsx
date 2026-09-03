@@ -22,12 +22,18 @@
 
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
 import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
+import { isAndroidUserAgent } from "@/lib/device-detection";
+import {
+  trackAffiliateOfferClick,
+  trackAffiliateOfferViewed,
+  trackAndroidWaitlistClick,
+} from "@/lib/analytics";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -589,6 +595,21 @@ function ResultPanel({ result, onShare, shareStatus }: {
 }) {
   const level = LEVELS[result.aggression];
   const [showAllChecks, setShowAllChecks] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
+  const affiliateViewTrackedRef = useRef(false);
+
+  useEffect(() => {
+    setIsAndroid(isAndroidUserAgent(navigator.userAgent));
+  }, []);
+
+  useEffect(() => {
+    if (!isAndroid || affiliateViewTrackedRef.current) return;
+    affiliateViewTrackedRef.current = true;
+    trackAffiliateOfferViewed("airport_theory_android_result", {
+      calculator_type: "airport_theory",
+      affiliate_partner: "welcome_pickups",
+    });
+  }, [isAndroid]);
 
   const allChecks = REALITY_CHECKS[result.aggression];
   const PREVIEW_COUNT = 3;
@@ -701,13 +722,46 @@ function ResultPanel({ result, onShare, shareStatus }: {
         </Link>
       </div>
 
-      {/* App CTA */}
+      {/* Android affiliate fallback / iPhone app CTA */}
       <div className="pt-2">
-        <p className="text-sm font-semibold text-zinc-300">After you get the safe recommendation</p>
-        <p className="mb-4 mt-1 text-xs leading-relaxed text-zinc-500">
-          Put that real leave time on your calendar, then use OnTimer to make the moment harder to miss.
-        </p>
-        <AppStoreButton size="sm" label="Get OnTimer Free" location="airport_theory_result" />
+        {isAndroid ? (
+          <div data-nosnippet>
+            <p className="text-sm font-semibold text-zinc-300">Need a ride for your trip?</p>
+            <p className="mb-4 mt-1 text-xs leading-relaxed text-zinc-500">
+              Check private transfer options from Welcome Pickups.
+            </p>
+            <a
+              href="https://tpx.lv/0BXXJ4gE"
+              target="_blank"
+              rel="sponsored nofollow noopener noreferrer"
+              onClick={() => trackAffiliateOfferClick("airport_theory_android_result", {
+                calculator_type: "airport_theory",
+                affiliate_partner: "welcome_pickups",
+              })}
+              className="inline-flex min-h-10 items-center justify-center rounded-full bg-green-500 px-4 py-2 text-xs font-semibold text-black transition-colors hover:bg-green-400"
+            >
+              Check transfer options
+            </a>
+            <p className="mt-2 text-[11px] leading-relaxed text-zinc-500">
+              Paid link: OnTimer may earn a commission if you book, at no additional cost to you.
+            </p>
+            <Link
+              href="/android"
+              onClick={() => trackAndroidWaitlistClick("airport_theory_android_result_waitlist")}
+              className="mt-3 inline-flex text-xs font-medium text-zinc-400 underline underline-offset-2 hover:text-zinc-200"
+            >
+              OnTimer for Android is coming — join the waitlist
+            </Link>
+          </div>
+        ) : (
+          <>
+            <p className="text-sm font-semibold text-zinc-300">After you get the safe recommendation</p>
+            <p className="mb-4 mt-1 text-xs leading-relaxed text-zinc-500">
+              Put that real leave time on your calendar, then use OnTimer to make the moment harder to miss.
+            </p>
+            <AppStoreButton size="sm" label="Get OnTimer Free" location="airport_theory_result" />
+          </>
+        )}
       </div>
 
     </div>

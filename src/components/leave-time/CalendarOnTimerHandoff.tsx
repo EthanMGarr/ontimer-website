@@ -21,6 +21,15 @@ interface AndroidAffiliateOffer {
   location: string;
 }
 
+const DEFAULT_ANDROID_AFFILIATE_OFFER: AndroidAffiliateOffer = {
+  href: "https://tpx.lv/0BXXJ4gE",
+  partner: "welcome_pickups",
+  heading: "Need a ride for your trip?",
+  body: "Check private transfer options from Welcome Pickups.",
+  buttonLabel: "Check transfer options",
+  location: "leave_time_android_result",
+};
+
 interface CalendarOnTimerHandoffProps {
   calendarHref: string;
   alternateCalendarHref: string;
@@ -67,7 +76,8 @@ export default function CalendarOnTimerHandoff({
   const affiliateRef = useRef<HTMLAnchorElement>(null);
   const affiliateViewTrackedRef = useRef(false);
   const calendarOpened = calendarProvider !== null;
-  const showAndroidAffiliate = isAndroidMobile === true && Boolean(androidAffiliateOffer);
+  const effectiveAndroidAffiliateOffer = androidAffiliateOffer ?? DEFAULT_ANDROID_AFFILIATE_OFFER;
+  const showAndroidAffiliate = isAndroidMobile === true;
   const openedHeading = calendarProvider === "ics"
     ? "Calendar file downloaded"
     : `Google Calendar ${openedItemLabel} opened`;
@@ -80,16 +90,16 @@ export default function CalendarOnTimerHandoff({
   }, []);
 
   useEffect(() => {
-    if (!showAndroidAffiliate || !androidAffiliateOffer || affiliateViewTrackedRef.current) return;
+    if (!showAndroidAffiliate || affiliateViewTrackedRef.current) return;
     const offer = affiliateRef.current;
     if (!offer) return;
 
     const observer = new IntersectionObserver((entries) => {
       if (!entries.some((entry) => entry.isIntersecting)) return;
       affiliateViewTrackedRef.current = true;
-      trackAffiliateOfferViewed(androidAffiliateOffer.location, {
+      trackAffiliateOfferViewed(effectiveAndroidAffiliateOffer.location, {
         calculator_type: calculatorType,
-        affiliate_partner: androidAffiliateOffer.partner,
+        affiliate_partner: effectiveAndroidAffiliateOffer.partner,
         ...analyticsContext,
       });
       observer.disconnect();
@@ -97,7 +107,7 @@ export default function CalendarOnTimerHandoff({
 
     observer.observe(offer);
     return () => observer.disconnect();
-  }, [showAndroidAffiliate, androidAffiliateOffer, calculatorType, analyticsContext]);
+  }, [showAndroidAffiliate, effectiveAndroidAffiliateOffer, calculatorType, analyticsContext]);
 
   return (
     <>
@@ -187,42 +197,42 @@ export default function CalendarOnTimerHandoff({
           : "border-t border-zinc-800 pt-5"
       }`}>
         <p className="text-base font-bold text-white">
-          {showAndroidAffiliate && androidAffiliateOffer
-            ? androidAffiliateOffer.heading
+          {showAndroidAffiliate
+            ? effectiveAndroidAffiliateOffer.heading
             : calendarOpened
               ? postCalendarHeading
               : "Get an alarm when it's time to leave."}
         </p>
         <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
-          {showAndroidAffiliate && androidAffiliateOffer
-            ? androidAffiliateOffer.body
+          {showAndroidAffiliate
+            ? effectiveAndroidAffiliateOffer.body
             : calendarOpened
               ? postCalendarBody
               : "OnTimer sets automatic alarms for your calendar events."}
         </p>
         <div className="mt-4">
-          {showAndroidAffiliate && androidAffiliateOffer ? (
+          {showAndroidAffiliate ? (
             <div data-nosnippet>
               <a
                 ref={affiliateRef}
-                href={androidAffiliateOffer.href}
+                href={effectiveAndroidAffiliateOffer.href}
                 target="_blank"
                 rel="sponsored nofollow noopener noreferrer"
-                onClick={() => trackAffiliateOfferClick(androidAffiliateOffer.location, {
+                onClick={() => trackAffiliateOfferClick(effectiveAndroidAffiliateOffer.location, {
                   calculator_type: calculatorType,
-                  affiliate_partner: androidAffiliateOffer.partner,
+                  affiliate_partner: effectiveAndroidAffiliateOffer.partner,
                   ...analyticsContext,
                 })}
                 className="flex min-h-12 w-full items-center justify-center rounded-full bg-green-500 px-5 py-3 text-center text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"
               >
-                {androidAffiliateOffer.buttonLabel}
+                {effectiveAndroidAffiliateOffer.buttonLabel}
               </a>
               <p className="mt-2 text-[11px] leading-relaxed text-zinc-500">
                 Paid link: OnTimer may earn a commission if you book, at no additional cost to you.
               </p>
               <Link
                 href="/android"
-                onClick={() => trackAndroidWaitlistClick(`${androidAffiliateOffer.location}_waitlist`)}
+                onClick={() => trackAndroidWaitlistClick(`${effectiveAndroidAffiliateOffer.location}_waitlist`)}
                 className="mt-3 inline-flex text-xs font-medium text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
               >
                 OnTimer for Android is coming — join the waitlist
