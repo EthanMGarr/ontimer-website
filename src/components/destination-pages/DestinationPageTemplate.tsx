@@ -142,7 +142,7 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
         </div>
       </section>
 
-      <section data-location-section="worked-examples" className="py-14">
+      <section data-location-section="worked-examples" className="py-14" data-nosnippet>
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white">
             {model.workedExamples.heading}

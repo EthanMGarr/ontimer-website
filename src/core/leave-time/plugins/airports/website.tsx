@@ -282,7 +282,7 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
       heading: `${location.shortName} leave-time questions`,
       items: faqItems,
       ctaLocation: `airport_${location.code.toLowerCase()}_final`,
-      noSnippetQuestions: [faqItems[0].question],
+      noSnippetQuestions: [faqItems[0].question, faqItems[1].question],
     },
     calculatorExample: location.calculatorExample,
   };

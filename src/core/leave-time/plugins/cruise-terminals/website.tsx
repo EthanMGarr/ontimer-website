@@ -270,7 +270,7 @@ export function buildCruisePageModel(location: CruiseTerminalLocationProfile): D
       heading: `${location.shortName} leave-time questions`,
       items: faqItems,
       ctaLocation: `cruise_${location.code.toLowerCase()}_final`,
-      noSnippetQuestions: [faqItems[0].question],
+      noSnippetQuestions: [faqItems[0].question, faqItems[1].question],
     },
     calculatorExample: location.calculatorExample,
   };

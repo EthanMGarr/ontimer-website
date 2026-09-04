@@ -688,7 +688,10 @@ export default function CruiseCalculator({
                   </div>
                 ))}
               </div>
-              <div className="mt-5 rounded-lg border border-zinc-700/40 bg-zinc-800/60 px-4 py-3">
+              <div
+                className="mt-5 rounded-lg border border-zinc-700/40 bg-zinc-800/60 px-4 py-3"
+                data-nosnippet
+              >
                 <p className="text-xs font-semibold text-zinc-300">{example.eyebrow}</p>
                 <p className="mt-2 text-xs text-zinc-400">{example.summary}</p>
                 <p className="mt-1 text-lg font-bold text-zinc-200">{example.leaveTime}</p>

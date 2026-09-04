@@ -200,7 +200,7 @@ export default function WakeUpTimeCalculatorPage() {
               Calculate what time to wake up using your arrival time, travel conditions,
               getting-ready time and buffer—not just a generic subtract-and-guess formula.
             </p>
-            <p>
+            <p data-nosnippet>
               A common approach is to work backward from your arrival time: subtract travel
               time, subtract getting-ready time, then add a buffer. This calculator does that
               math for you, using live traffic data instead of a guess.
@@ -280,7 +280,7 @@ export default function WakeUpTimeCalculatorPage() {
             Frequently asked questions
           </h2>
           <div className="divide-y divide-zinc-800">
-            {faqItems.map((item) => (
+            {faqItems.map((item, index) => (
               <details key={item.question} className="group py-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-white">
                   <span className="font-semibold leading-snug">{item.question}</span>
@@ -288,7 +288,12 @@ export default function WakeUpTimeCalculatorPage() {
                     +
                   </span>
                 </summary>
-                <p className="mt-4 text-sm leading-relaxed text-zinc-400">{item.answer}</p>
+                <p
+                  className="mt-4 text-sm leading-relaxed text-zinc-400"
+                  data-nosnippet={index === 0 || undefined}
+                >
+                  {item.answer}
+                </p>
               </details>
             ))}
           </div>

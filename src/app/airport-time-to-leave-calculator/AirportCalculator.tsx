@@ -1305,7 +1305,10 @@ export default function AirportCalculator({
                 </div>
 
                 {/* Example — clearly labeled, not the user's result */}
-                <div className="mt-5 rounded-lg border border-zinc-700/40 bg-zinc-800/60 px-4 py-3">
+                <div
+                  className="mt-5 rounded-lg border border-zinc-700/40 bg-zinc-800/60 px-4 py-3"
+                  data-nosnippet
+                >
                   <p className="text-xs font-semibold text-zinc-300">
                     {genericRedesign ? "Example Time to Leave" : example.eyebrow}
                   </p>

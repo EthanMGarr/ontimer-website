@@ -339,7 +339,7 @@ export default function WhatTimeShouldILeavePage() {
               actually leaving at 8 AM. Your departure time calculation should use your actual
               departure window, not an off-peak estimate.
             </p>
-            <p>
+            <p data-nosnippet>
               The formula: take your required arrival time, subtract your commute time at that hour,
               then subtract 5 to 10 minutes of buffer for minor delays. If you need to be at your
               desk by 9 AM and your rush-hour commute takes 28 minutes, your target departure time
@@ -463,7 +463,7 @@ export default function WhatTimeShouldILeavePage() {
             Frequently asked questions
           </h2>
           <div className="divide-y divide-zinc-800">
-            {faqItems.map((item) => (
+            {faqItems.map((item, index) => (
               <details key={item.question} className="group py-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-white">
                   <span className="font-semibold leading-snug">{item.question}</span>
@@ -471,7 +471,12 @@ export default function WhatTimeShouldILeavePage() {
                     +
                   </span>
                 </summary>
-                <p className="mt-4 text-sm leading-relaxed text-zinc-400">{item.answer}</p>
+                <p
+                  className="mt-4 text-sm leading-relaxed text-zinc-400"
+                  data-nosnippet={index === 4 || undefined}
+                >
+                  {item.answer}
+                </p>
               </details>
             ))}
           </div>
