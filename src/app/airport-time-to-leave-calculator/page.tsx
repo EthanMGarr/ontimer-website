@@ -216,7 +216,7 @@ export default function AirportTimeToLeaveCalculator() {
               expected travel conditions, security planning, bags, parking and terminal access—not
               just a generic 2-hour or 3-hour arrival rule.
             </p>
-            <p>
+            <p data-nosnippet>
               A common planning baseline is arriving 2 hours before domestic flights and 3 hours
               before international flights. The calculator works backward from your actual trip to
               estimate when you should leave.
@@ -272,10 +272,11 @@ export default function AirportTimeToLeaveCalculator() {
           </h2>
           <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
-              The departure time on your ticket tells you when to stop calculating backwards.
-              For a domestic flight at noon, subtract 2 hours to get your required airport arrival
-              (10 AM), then subtract your drive time from that. If the drive is 40 minutes, you
-              need to leave by 9:20 AM — before accounting for parking or traffic.
+              Start with the departure time on your ticket, subtract the appropriate airport-arrival
+              window, then subtract your route time and any parking or terminal buffer. Because each
+              input changes the result, two travelers on the same flight may need to leave at
+              different times. The calculator applies those inputs to your trip instead of presenting
+              one example time as your answer.
             </p>
             <p>
               Flight time affects how much traffic you&apos;ll hit. An early morning flight sounds
