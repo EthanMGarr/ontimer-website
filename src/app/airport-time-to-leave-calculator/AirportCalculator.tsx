@@ -9,7 +9,7 @@ import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNoti
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import AirportAutocomplete from "@/components/AirportAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
-import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
+import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 import { getAirportDepartureStatus } from "@/lib/airport-departure-status";
 import type { SecurityEstimate } from "@/lib/airport-security";
@@ -115,11 +115,11 @@ async function fetchTravelTime(
 
 // ─── Analytics ────────────────────────────────────────────────────────────────
 
+/// Routes through the centralized `fireEvent` so airport-specific events inherit
+/// attribution_token, landing_page, and traffic_source like every other tracked event.
 function track(name: string, params?: Record<string, string | number>) {
   if (typeof window === "undefined") return;
-  const g = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
-  if (typeof g !== "function") return;
-  g("event", name, { page_path: window.location.pathname, ...params });
+  fireEvent(name, { page_path: window.location.pathname, ...params });
 }
 
 // ─── Formatting ───────────────────────────────────────────────────────────────
@@ -584,6 +584,7 @@ export default function AirportCalculator({
       computedResult.confidence,
       new Date(),
     );
+    const intelligence = securityEstimate?.intelligence;
     track("airport_leave_time_answer_generated", {
       intent_cluster: "airport_when_to_leave",
       flight_type: flightType,
@@ -594,10 +595,14 @@ export default function AirportCalculator({
       result_tone: departureStatus.tone,
       minutes_until_leave: Math.round((computedResult.leaveTime.getTime() - Date.now()) / 60_000),
       refinement_count: activeRefinementCount,
+      security_source_path: intelligence?.sourcePath.join("|") ?? "unknown",
+      security_evidence_kind: intelligence?.predictedWaitAtArrival.evidenceKind ?? "unknown",
+      security_freshness: intelligence?.observedWait?.freshness ?? "unknown",
+      security_confidence: intelligence?.recommendedSecurityAllowance.confidence ?? "unknown",
       ...(locationCode ? { location_code: locationCode } : {}),
     });
   }, [computedResult, flightType, arrivalMode, planningMode, hasCheckedBag,
-      showBufferOverride, showSecurityOverride, activeRefinementCount, locationCode]);
+      showBufferOverride, showSecurityOverride, activeRefinementCount, locationCode, securityEstimate]);
 
   const resultHeroMode = genericRedesign && computedResult !== null;
   // Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4
@@ -713,12 +718,6 @@ export default function AirportCalculator({
       setHasTrafficData(false);
       setTrafficBasis("none");
     }
-    track("calculator_used", {
-      flight_type: flightType,
-      arrival_mode: arrivalMode,
-      trigger: "manual",
-      ...(locationCode ? { location_code: locationCode } : {}),
-    });
     trackCalculatorCompleted("airport_leave_time", {
       intent_cluster: "airport_when_to_leave",
       flight_type: flightType,

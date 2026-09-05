@@ -437,6 +437,34 @@ The proprietary value is the interpretation from evidence to arrival-time predic
 | Install/download | App Store Connect / campaign link | Adopt product-page/custom campaign tokens or privacy-safe attribution provider; document limitations. |
 | Trial/paid/MRR | subscription backend | Join an install/referral token where platform rules permit; otherwise use cohort-level incrementality. |
 
+### Measurement-readiness audit and fixes (2026-09-05)
+
+A code-level audit (not a doc-claims review) found that the airport calculator's own funnel events fired through a second, local tracking helper in `AirportCalculator.tsx` that never attached `attribution_token`, `landing_page`, or `traffic_source` — only the shared cross-calculator events (App Store clicks, calendar handoff, etc.) carried those dimensions. This meant the richest funnel-depth signals (`airport_leave_time_answer_generated`, breakdown/adjustments opens, quota fallback) could not be joined to acquisition source, which would have silently undermined any Phase 2 experiment analysis. Fixed: the local helper now delegates to the centralized `fireEvent()` in `src/lib/analytics.ts`, so every airport event inherits the same acquisition dimensions going forward. No saved GA4 Explorations or dashboards depended on the old shape (confirmed with Ethan before changing it).
+
+Also while fixing this:
+- Removed the redundant `calculator_used` event, which fired immediately before `calculator_completed` on the same code path with a strict subset of its properties and a hardcoded `trigger: "manual"` value that carried no information.
+- Added security-intelligence dimensions to `airport_leave_time_answer_generated`: `security_source_path` (`intelligence.sourcePath` joined with `|`), `security_evidence_kind` (from `predictedWaitAtArrival.evidenceKind`), `security_freshness` (from `observedWait.freshness`, `"unknown"` when there is no observed evidence), and `security_confidence` (from `recommendedSecurityAllowance.confidence`). These fields existed on the Phase 1 `AirportSecurityIntelligence` type but were never forwarded to analytics before this change.
+
+Confirmed still missing, to be added only once there is an actual experiment/result-view need to attach them to (no event should be added speculatively):
+- No experiment-assignment event exists anywhere in the codebase. `HomeHeroExperiment.tsx`'s variant constant is a compile-time swap with no randomization, persistence, or analytics dimension — Phase 2's LGA A/B test needs to build this from scratch, not extend it.
+- No result-view/impression event distinct from `airport_leave_time_answer_generated` exists; that event fires at compute time (deduplicated by a result signature), not on confirmed viewport visibility.
+- No repository-visible join from `attribution_token` to App Store install/trial/paid/MRR — this would need to live server-side or in the app project, not this repo.
+
+### Event schemas for Phase 2 (defined now, not yet fired)
+
+These are documented contracts only — do not fire them until Phase 2's LGA experiment actually needs them, to avoid speculative instrumentation with no consumer.
+
+**`experiment_assignment`** — fired once per session/device on first assignment, before any variant-dependent UI renders:
+- `experiment_id` (string, e.g. `"lga_security_explanation_v1"`)
+- `variant` (string, e.g. `"control"` / `"treatment"`)
+- `assignment_method` (`"server"` | `"stable_cookie"`)
+- plus the standard acquisition dimensions via `fireEvent()` (attribution_token, landing_page, traffic_source, search_query)
+
+**`airport_result_viewed`** — fired once per distinct result signature, gated on confirmed viewport visibility (IntersectionObserver, not compute completion):
+- `location_code`, `flight_type`, `arrival_mode` (existing conventions)
+- `security_source_path`, `security_evidence_kind`, `security_freshness`, `security_confidence` (reuse the same fields just added to `airport_leave_time_answer_generated` — do not invent parallel names)
+- `experiment_id` / `variant` when an experiment is active for that session, omitted otherwise
+
 ### North star and supporting metrics
 
 North star: `new MRR / Search Console impressions * 1,000`, reported by airport cohort and 28-day/56-day windows to absorb conversion lag. Supporting: SERP CTR, landing-to-start, start-to-complete, result view, calendar handoff/result, App Store click/result, install/click, trial/install, paid/trial, median leave-time delta, provider coverage/freshness, fallback rate, p75 LCP/INP, error rate, and API cost per completion/download/new-MRR dollar.
