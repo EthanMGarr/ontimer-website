@@ -503,8 +503,8 @@ With roughly 200 clicks and one new payer per day across the entire network, LGA
 
 **Epic C — Provider rights**
 
-- C1. Ask PANYNJ for API/feed access and written B2C display/cache/attribution rights for LGA/JFK/EWR.
-- C2. Ask TSAWaitTimes whether the legacy endpoint is covered; obtain documented API credentials or approve retirement.
+- C1. Ask PANYNJ (LGA/JFK/EWR) and the ATL/LAX/DEN/SEA/DFW/PHX/MIA airport authorities for API/feed access and written B2C display/cache/attribution rights. In progress 2026-09-05.
+- ~~C2. Ask TSAWaitTimes whether the legacy endpoint is covered; obtain documented API credentials or approve retirement.~~ Resolved 2026-09-05: declined the paid subscription (see Decision log and "Ethan decisions" above). The free legacy endpoint continues as-is; retirement is deferred until an official source lands or the endpoint's availability changes.
 - C3. Maintain provider rights register with permitted fields, retention/cache limits, attribution, and termination requirements.
 
 ### Recommended
@@ -539,9 +539,8 @@ With roughly 200 clicks and one new payer per day across the entire network, LGA
 
 ### Ethan decisions and external actions
 
-- **Licensing review:** confirm whether current legacy TSAWaitTimes access is authorized for OnTimer’s commercial funnel and whether its terms allow OnTimer’s display/caching pattern.
-- **Provider account:** if keeping TSAWaitTimes, create/approve the $49.95/month documented API subscription and provide a server-side key; otherwise accept internal-model-only fallback until an official source is licensed.
-- **PANYNJ outreach:** request official LGA/JFK/EWR feed access and written reuse/caching/attribution terms.
+- **Decided 2026-09-05: no TSAWaitTimes subscription.** Ethan declined the $49.95/month documented API. Rationale: the paid tier is the same blended estimate as the free legacy endpoint, not better data — it buys ToS compliance, not accuracy, and OnTimer's internal historical-pattern model already carries most of the recommendation quality when live evidence is weak or absent. The free legacy adapter remains in place as a continuity source ($0, unchanged); the `AIRPORT_SECURITY_TSAWAITTIMES_ENABLED=false` kill switch remains available if its authorization status becomes a concern. Effort is redirected to official-source outreach below, which is the only path to a genuine data-quality upgrade.
+- **PANYNJ and airport-operator outreach (in progress):** requesting official LGA/JFK/EWR feed access and written reuse/caching/attribution terms from the Port Authority, plus the same ask sent broadly to ATL, LAX, DEN, SEA, DFW, PHX, and MIA so Phase 2 can pick whichever authority responds first with usable terms. See the outreach email and contact list Ethan is sending; log responses in Epic C's provider rights register (`docs/AIRPORT_INTELLIGENCE_PROJECT_PLAN.md` section 14, Epic C) as they arrive.
 - **Paid service approval:** approve Google Routes budget/quota thresholds; later choose FlightAware vs Cirium only after a scoped quote and license comparison.
 - **UX decision:** approve Phase 2’s exact three-level terminology and whether the evidence line is always visible or inside the existing calculation disclosure.
 - **Privacy/legal:** review policy updates before flight-number processing or expanded location retention; no update is required for Phase 1 as designed.
@@ -585,3 +584,4 @@ Deliver a modular security-wait engine with honest semantics and a backward-comp
 - Keep the legacy response contract and add normalized fields, enabling later UI work without coupling.
 - Use deterministic rules first. Collect calibration evidence before considering machine learning.
 - Keep the result/calendar/OnTimer hierarchy unchanged through Phase 1.
+- 2026-09-05: Declined the TSAWaitTimes $49.95/month documented API. Its data is the same third-party blended estimate as the free legacy endpoint — paying buys ToS compliance, not accuracy or granularity — and OnTimer's internal historical-pattern model already absorbs most of the recommendation quality when live evidence is weak. Continue the free legacy adapter unchanged; pursue official airport-operator sources (PANYNJ plus ATL/LAX/DEN/SEA/DFW/PHX/MIA) as the actual data-quality upgrade path instead of a paid subscription to the same-tier vendor.

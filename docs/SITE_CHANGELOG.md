@@ -4,6 +4,11 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-09-05
+
+- Airport Intelligence Phase 1 deployed to production (commit `b6c7335`); verified live via the LGA calculator and a direct `security-wait` API call showing correct `airportCode: "LGA"` resolution, the normalized `intelligence` object, and backward-compatible `min/avg/max` fields.
+- Decided against the TSAWaitTimes.com $49.95/month documented API. It returns the same third-party blended estimate as the free legacy endpoint already in use — paying buys terms-of-service compliance, not better data — and OnTimer's internal historical-pattern model already carries most of the recommendation quality when live evidence is weak or absent. The free legacy adapter continues unchanged at $0; see `docs/AIRPORT_INTELLIGENCE_PROJECT_PLAN.md` decision log. Outreach to PANYNJ (LGA/JFK/EWR) and other airport operators for official checkpoint data is the pursued upgrade path instead.
+
 ### 2026-09-04
 
 - Hardened Airport Intelligence Phase 1 after route-level verification: cached evidence now has freshness recalculated at use time; the in-process cache is capped at 250 entries; diagnostics include provider latency, outcome and explicit fallback reason; and airport-specific calculators pass their authoritative IATA code to prevent broad metro-name matching from classifying LaGuardia as JFK. Verification: expanded security tests covered numeric timestamps, cached staleness, bounded eviction, diagnostics, and airport-code precedence; TypeScript validation passed; a clean local LGA browser load showed the correct LGA security label with no JFK mislabel, framework overlay or console errors; and consecutive route requests returned valid normalized fallback data with negative-cache reuse.
