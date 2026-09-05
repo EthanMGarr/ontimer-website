@@ -12,7 +12,7 @@ import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 import { getAirportDepartureStatus } from "@/lib/airport-departure-status";
-import type { SecurityEstimate } from "@/app/api/security-wait/route";
+import type { SecurityEstimate } from "@/lib/airport-security";
 import type { CalculatorExample } from "@/lib/travel-locations";
 import type { AirportAutocompleteOption } from "@/lib/airport-autocomplete";
 import {
@@ -62,7 +62,10 @@ async function fetchSecurityEstimate(
   flightType: FlightType,
   hasPreCheck: boolean,
   hasClear: boolean,
-  jurisdiction: "us" | "international"
+  jurisdiction: "us" | "international",
+  hasCheckedBag: boolean,
+  arrivalMode: ArrivalMode,
+  airportCode?: string
 ): Promise<SecurityEstimate | null> {
   try {
     const params = new URLSearchParams({
@@ -71,7 +74,10 @@ async function fetchSecurityEstimate(
       hasPreCheck: hasPreCheck.toString(),
       hasClear: hasClear.toString(),
       jurisdiction,
+      hasCheckedBag: hasCheckedBag.toString(),
+      arrivalMode,
     });
+    if (airportCode) params.set("airportCode", airportCode);
     if (departureUnix !== null) params.set("departureTime", departureUnix.toString());
     const res = await fetch(`/api/security-wait?${params}`);
     if (!res.ok) return null;
@@ -159,7 +165,8 @@ function planningModeForDate(date: string): PlanningMode {
 // ─── Airport display ──────────────────────────────────────────────────────────
 
 const CITY_CODE_MAP: Record<string, string> = {
-  newark: "EWR", "new york": "JFK", "los angeles": "LAX", chicago: "ORD",
+  laguardia: "LGA", kennedy: "JFK", newark: "EWR", "new york": "JFK",
+  "los angeles": "LAX", chicago: "ORD",
   "san francisco": "SFO", miami: "MIA", atlanta: "ATL", dallas: "DFW",
   denver: "DEN", seattle: "SEA", boston: "BOS", phoenix: "PHX",
   minneapolis: "MSP", detroit: "DTW", "las vegas": "LAS", houston: "IAH",
@@ -170,7 +177,7 @@ const CITY_CODE_MAP: Record<string, string> = {
   raleigh: "RDU", "kansas city": "MCI",
 };
 
-function buildAirportShortDisplay(input: string): string {
+function buildAirportShortDisplay(input: string, codeOverride?: string): string {
   const s = input.trim();
   if (!s) return "";
   if (/^[A-Za-z]{3}$/.test(s)) return s.toUpperCase();
@@ -185,7 +192,10 @@ function buildAirportShortDisplay(input: string): string {
     .trim();
   const lower = `${shortName} ${s}`.toLowerCase();
   const lookupCode = Object.entries(CITY_CODE_MAP).find(([city]) => lower.includes(city))?.[1] ?? null;
-  const code = explicitCode ?? lookupCode;
+  const normalizedOverride = codeOverride?.trim().toUpperCase();
+  const code = normalizedOverride && /^[A-Z]{3}$/.test(normalizedOverride)
+    ? normalizedOverride
+    : explicitCode ?? lookupCode;
   if (!shortName) shortName = placeName.split(" ")[0];
   return code ? `${shortName} (${code})` : shortName;
 }
@@ -398,13 +408,17 @@ export default function AirportCalculator({
         flightType,
         hasPreCheck,
         hasClear,
-        planningJurisdiction
+        planningJurisdiction,
+        hasCheckedBag,
+        arrivalMode,
+        locationCode
       );
       setSecurityEstimate(estimate);
       setIsFetchingSecurityEstimate(false);
     }, 500);
     return () => clearTimeout(securityDebounceRef.current);
-  }, [airport, departureDate, departureTime, flightType, hasPreCheck, hasClear, planningJurisdiction]);
+  }, [airport, departureDate, departureTime, flightType, hasPreCheck, hasClear,
+      planningJurisdiction, hasCheckedBag, arrivalMode, locationCode]);
 
   // Route estimates are intentionally fetched only on explicit calculate.
   // Changing route/time inputs invalidates any prior automatic result.
@@ -436,7 +450,7 @@ export default function AirportCalculator({
   }
   const manualDriveMinutes = parseInt(manualTravelMinutes, 10);
   const hasManualDriveTime = !isNaN(manualDriveMinutes) && manualDriveMinutes >= 0;
-  const airportShortDisplay = buildAirportShortDisplay(airport);
+  const airportShortDisplay = buildAirportShortDisplay(airport, locationCode);
   const calendarEventTitle = airportShortDisplay ? `Leave for ${airportShortDisplay}` : "Leave for airport";
   const hasAirport = airport.trim().length >= 2;
 
@@ -504,7 +518,7 @@ export default function AirportCalculator({
       useAirportBufferOverride: showBufferOverride,
       customAirportBufferMinutesInput: customBuffer,
       securityLabel,
-      securitySourceLabel: planningJurisdiction === "international" ? "airport security estimate" : "TSA estimate",
+      securitySourceLabel: "airport security estimate",
     };
 
     const result = leaveTimePlanner.plan(
@@ -1352,7 +1366,7 @@ export default function AirportCalculator({
             ) : (
               <a
                 href={buildGoogleCalendarLink({
-                  title: airport ? `Leave for ${buildAirportShortDisplay(airport)}` : "Leave for airport",
+                  title: airport ? `Leave for ${buildAirportShortDisplay(airport, locationCode)}` : "Leave for airport",
                   start: computedResult.leaveTime,
                   details: ONTIMER_CALENDAR_DESCRIPTION,
                   location: airport || undefined,
