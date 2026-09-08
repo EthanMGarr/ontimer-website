@@ -6,11 +6,13 @@ import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHando
 import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import {
+  fireEvent,
   trackCalendarHandoffOpened,
   trackCalculatorCompleted,
   trackCalculatorStarted,
 } from "@/lib/analytics";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
+import type { SiteLocale } from "@/lib/i18n";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -38,6 +40,73 @@ interface TravelTimeResponse {
   error?: string;
 }
 
+const calculatorCopy = {
+  en: {
+    none: "None", minutes: "minutes", getHeading: "What you will get",
+    getBody: "Add your destination and arrival time to calculate the latest reasonable time to leave.",
+    getItems: ["Leave-by time", "Travel time", "Personal buffer", "Calendar-ready result"],
+    scheduledRoute: "scheduled route", estimated: "estimated", expectedTraffic: "expected traffic", liveTraffic: "live traffic",
+    locationUnavailable: "Current location is not available in this browser. Enter an address instead.",
+    currentLocation: "Current location", locationAdded: "Current location added.",
+    locationDenied: "We couldn’t access your location. Allow location access or enter an address.",
+    automaticUnavailable: "Automatic travel time is unavailable for this route. Enter travel time below, or try a fuller address.",
+    startingLocationNeeded: "Add a starting location for automatic travel time, or enter minutes manually in timing assumptions.",
+    modes: { DRIVE: "drive", WALK: "walk", TRANSIT: "transit" },
+    leaveFor: "Leave for", destinationFallback: "destination", leaveBy: "Leave by",
+    buffer: "buffer", parkingWalkIn: "parking / walk-in", noExtraBuffer: "No extra buffer selected",
+    adjustAssumptions: "Adjust assumptions", adjustHint: "Drive time, buffer, or walk-in different? Edit →",
+    alarmHeading: "Don’t be late. Turn this into an alarm.", alarmBody: "OnTimer sets an automatic alarm for this calendar event.",
+    adjustInputs: "Adjust inputs", enterTrip: "Enter trip details", destination: "Destination",
+    whereGoing: "Where are you going?", swap: "Swap", swapAria: "Swap origin and destination",
+    startingLocation: "Starting location", optional: "(optional)", startingAddress: "Your starting address",
+    findingLocation: "Finding your location…", useLocation: "Use my current location",
+    routeHint: "Can’t find a route. Enter minutes manually or add a missing address.",
+    arrivalDate: "Arrival date", arriveBy: "Arrive by", travelMode: "Travel mode",
+    driving: "Driving", walking: "Walking", transit: "Transit",
+    estimating: "Estimating travel time…", calculate: "Calculate leave time", calculateArrow: "Calculate leave time →",
+    enableLong: "Add a destination and arrival time to enable.", enableShort: "Add a destination & time to enable.",
+    extraBuffer: "Extra buffer you like to have", parkingTime: "Parking / walk-in time",
+    hideAdjustments: "Hide adjustments", travelTime: "Travel time",
+    automaticEstimate: "Estimated automatically from your locations.", manualInstead: "✏︎ Edit travel time manually",
+    useAutomatic: "Use automatic estimate instead", addStartForAutomatic: "Add a starting location above for an automatic estimate.",
+    exampleMinutes: "e.g. 25", travelMinutesAria: "Travel time in minutes", updating: "Updating leave time…",
+    update: "Update Leave Time", appStore: "Get OnTimer Free", addGoogle: "Add to Google Calendar",
+    calendarDetails: ONTIMER_CALENDAR_DESCRIPTION,
+  },
+  es: {
+    none: "Ninguno", minutes: "minutos", getHeading: "Tu resultado incluirá",
+    getBody: "Añade tu destino y la hora de llegada para calcular la última hora razonable a la que deberías salir.",
+    getItems: ["Hora de salida", "Tiempo de viaje", "Margen personal", "Resultado listo para el calendario"],
+    scheduledRoute: "ruta programada", estimated: "estimado", expectedTraffic: "tráfico previsto", liveTraffic: "tráfico en tiempo real",
+    locationUnavailable: "Tu ubicación actual no está disponible en este navegador. Escribe una dirección.",
+    currentLocation: "Ubicación actual", locationAdded: "Ubicación actual añadida.",
+    locationDenied: "No pudimos acceder a tu ubicación. Permite el acceso o escribe una dirección.",
+    automaticUnavailable: "No se pudo calcular automáticamente el tiempo para esta ruta. Indica el tiempo de viaje o prueba con una dirección más completa.",
+    startingLocationNeeded: "Añade un punto de partida para calcular el viaje automáticamente o indica los minutos en los ajustes.",
+    modes: { DRIVE: "en coche", WALK: "a pie", TRANSIT: "en transporte público" },
+    leaveFor: "Salir hacia", destinationFallback: "el destino", leaveBy: "Sal a más tardar a las",
+    buffer: "de margen", parkingWalkIn: "para aparcar / entrar", noExtraBuffer: "Sin margen adicional",
+    adjustAssumptions: "Ajustar tiempos", adjustHint: "¿Cambian el viaje, el margen o la entrada? Editar →",
+    alarmHeading: "No llegues tarde. Convierte este evento en una alarma.", alarmBody: "OnTimer crea una alarma automática para este evento del calendario.",
+    adjustInputs: "Modificar datos", enterTrip: "Introduce los datos del trayecto", destination: "Destino",
+    whereGoing: "¿Adónde vas?", swap: "Intercambiar", swapAria: "Intercambiar origen y destino",
+    startingLocation: "Punto de partida", optional: "(opcional)", startingAddress: "Tu dirección de partida",
+    findingLocation: "Buscando tu ubicación…", useLocation: "Usar mi ubicación actual",
+    routeHint: "No encontramos una ruta. Indica los minutos o añade la dirección que falta.",
+    arrivalDate: "Fecha de llegada", arriveBy: "Llegar antes de", travelMode: "Medio de transporte",
+    driving: "Coche", walking: "A pie", transit: "Transporte público",
+    estimating: "Calculando el viaje…", calculate: "Calcular hora de salida", calculateArrow: "Calcular hora de salida →",
+    enableLong: "Añade un destino y una hora de llegada para continuar.", enableShort: "Añade un destino y una hora.",
+    extraBuffer: "Margen adicional que prefieres", parkingTime: "Tiempo para aparcar / entrar",
+    hideAdjustments: "Ocultar ajustes", travelTime: "Tiempo de viaje",
+    automaticEstimate: "Calculado automáticamente a partir de tus ubicaciones.", manualInstead: "✏︎ Indicar el tiempo manualmente",
+    useAutomatic: "Usar de nuevo el cálculo automático", addStartForAutomatic: "Añade un punto de partida arriba para calcularlo automáticamente.",
+    exampleMinutes: "p. ej., 25", travelMinutesAria: "Tiempo de viaje en minutos", updating: "Actualizando la hora…",
+    update: "Actualizar hora de salida", appStore: "Descargar OnTimer gratis", addGoogle: "Añadir a Google Calendar",
+    calendarDetails: "Creado con OnTimer. Recibe alarmas automáticas para los eventos de tu calendario: https://www.ontimer.app",
+  },
+} as const;
+
 // ─── API ──────────────────────────────────────────────────────────────────────
 
 async function fetchTravelTime(
@@ -61,20 +130,17 @@ async function fetchTravelTime(
 // ─── Analytics ────────────────────────────────────────────────────────────────
 
 function track(name: string, params?: Record<string, string | number>) {
-  if (typeof window === "undefined") return;
-  const g = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
-  if (typeof g !== "function") return;
-  g("event", name, { page_path: window.location.pathname, ...params });
+  fireEvent(name, { page_path: window.location.pathname, ...params });
 }
 
 // ─── Formatting ───────────────────────────────────────────────────────────────
 
-function fmtTime(d: Date) {
-  return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+function fmtTime(d: Date, locale: SiteLocale) {
+  return d.toLocaleTimeString(locale === "es" ? "es-ES" : "en-US", { hour: "numeric", minute: "2-digit" });
 }
 
-function fmtDate(d: Date) {
-  return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+function fmtDate(d: Date, locale: SiteLocale) {
+  return d.toLocaleDateString(locale === "es" ? "es-ES" : "en-US", { weekday: "short", month: "short", day: "numeric" });
 }
 
 function localDateString(date = new Date()): string {
@@ -85,10 +151,11 @@ function planningModeForDate(date: string): PlanningMode {
   return date === localDateString() ? "today" : "future";
 }
 
-function trafficLabel(basis: TrafficBasis, mode: PlanningMode): string {
-  if (basis === "scheduled") return "scheduled route";
-  if (basis === "none") return "estimated";
-  return mode === "future" || basis === "predicted" ? "expected traffic" : "live traffic";
+function trafficLabel(basis: TrafficBasis, mode: PlanningMode, locale: SiteLocale): string {
+  const copy = calculatorCopy[locale];
+  if (basis === "scheduled") return copy.scheduledRoute;
+  if (basis === "none") return copy.estimated;
+  return mode === "future" || basis === "predicted" ? copy.expectedTraffic : copy.liveTraffic;
 }
 
 // ─── UI Primitives ────────────────────────────────────────────────────────────
@@ -101,11 +168,14 @@ function PillSelector({
   options,
   value,
   onChange,
+  locale,
 }: {
   options: number[];
   value: number;
   onChange: (v: number) => void;
+  locale: SiteLocale;
 }) {
+  const copy = calculatorCopy[locale];
   return (
     <div className="flex flex-wrap gap-2">
       {options.map((opt) => (
@@ -113,14 +183,14 @@ function PillSelector({
           key={opt}
           type="button"
           onClick={() => onChange(opt)}
-          aria-label={opt === 0 ? "None" : `${opt} minutes`}
+          aria-label={opt === 0 ? copy.none : `${opt} ${copy.minutes}`}
           className={`rounded-full px-3.5 py-1 text-sm font-medium transition-colors ${
             value === opt
               ? "bg-green-500 text-black"
               : "border border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white"
           }`}
         >
-          {opt === 0 ? "None" : `${opt} min`}
+          {opt === 0 ? copy.none : `${opt} min`}
         </button>
       ))}
     </div>
@@ -158,15 +228,16 @@ function SegmentedControl<T extends string>({
 
 // ─── Skeleton placeholder ─────────────────────────────────────────────────────
 
-function SkeletonResult() {
+function SkeletonResult({ locale }: { locale: SiteLocale }) {
+  const copy = calculatorCopy[locale];
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-800/40 p-4 sm:p-5">
-      <p className="text-sm font-semibold text-white">What you will get</p>
+      <p className="text-sm font-semibold text-white">{copy.getHeading}</p>
       <p className="mt-1 text-xs leading-relaxed text-zinc-500">
-        Add your destination and arrival time to calculate the latest reasonable time to leave.
+        {copy.getBody}
       </p>
       <div className="mt-4 grid gap-2 text-xs text-zinc-300 sm:grid-cols-2">
-        {["Leave-by time", "Travel time", "Personal buffer", "Calendar-ready result"].map((item) => (
+        {copy.getItems.map((item) => (
           <div key={item} className="flex items-center gap-2">
             <span className="text-green-500">✓</span>
             <span>{item}</span>
@@ -200,19 +271,19 @@ function defaultArrival() {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export default function LeaveTimeCalculator() {
-  const today = localDateString();
-  const { date: defaultDate, time: defaultTime } = defaultArrival();
+export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLocale }) {
+  const copy = calculatorCopy[locale];
 
   // Form state
+  const [today, setToday] = useState("");
   const [destination, setDestination] = useState("");
   const [origin, setOrigin] = useState("");
   const [currentLocation, setCurrentLocation] = useState<string | null>(null);
   const [locationStatus, setLocationStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [locationMessage, setLocationMessage] = useState<string | null>(null);
-  const [arrivalDate, setArrivalDate] = useState(defaultDate);
+  const [arrivalDate, setArrivalDate] = useState("");
   const planningMode = planningModeForDate(arrivalDate);
-  const [arrivalTime, setArrivalTime] = useState(defaultTime);
+  const [arrivalTime, setArrivalTime] = useState("");
   const [travelMode, setTravelMode] = useState<TravelMode>("DRIVE");
   const [buffer, setBuffer] = useState(10);
   const [prepTime, setPrepTime] = useState(0);
@@ -239,6 +310,15 @@ export default function LeaveTimeCalculator() {
   const hasRouteInputs = origin.trim().length >= 2 && destination.trim().length >= 2;
   // Show route hint when one address is filled but the other is empty
   const showRouteHint = destination.trim().length >= 2 && origin.trim().length === 0;
+
+  // Initialize time-sensitive defaults after mount so cached HTML cannot cross
+  // a date or 15-minute boundary before hydration.
+  useEffect(() => {
+    const { date, time } = defaultArrival();
+    setToday(localDateString());
+    setArrivalDate(date);
+    setArrivalTime(time);
+  }, []);
 
   // Restore travel mode from localStorage on mount
   useEffect(() => {
@@ -286,7 +366,7 @@ export default function LeaveTimeCalculator() {
   function handleUseCurrentLocation() {
     if (!("geolocation" in navigator)) {
       setLocationStatus("error");
-      setLocationMessage("Current location is not available in this browser. Enter an address instead.");
+      setLocationMessage(copy.locationUnavailable);
       return;
     }
 
@@ -295,16 +375,16 @@ export default function LeaveTimeCalculator() {
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         setCurrentLocation(`${coords.latitude},${coords.longitude}`);
-        setOrigin("Current location");
+        setOrigin(copy.currentLocation);
         setLocationStatus("success");
-        setLocationMessage("Current location added.");
+        setLocationMessage(copy.locationAdded);
         track("current_location_used", { accuracy_meters: Math.round(coords.accuracy) });
       },
       () => {
         setCurrentLocation(null);
-        if (origin === "Current location") setOrigin("");
+        if (origin === copy.currentLocation) setOrigin("");
         setLocationStatus("error");
-        setLocationMessage("We couldn’t access your location. Allow location access or enter an address.");
+        setLocationMessage(copy.locationDenied);
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
@@ -353,7 +433,7 @@ export default function LeaveTimeCalculator() {
           setShowAssumptions(true);
           setShowManualTravel(true);
           setFallbackNotice(
-            "Automatic travel time is unavailable for this route. Enter travel time below, or try a fuller address."
+            copy.automaticUnavailable
           );
           setIsCalculating(false);
           return;
@@ -365,7 +445,7 @@ export default function LeaveTimeCalculator() {
       const manual = parseInt(manualTravelMinutes, 10);
       if (isNaN(manual) || manual < 0) {
         setError(
-          "Add a starting location for automatic travel time, or enter minutes manually in timing assumptions."
+          copy.startingLocationNeeded
         );
         return;
       }
@@ -397,12 +477,12 @@ export default function LeaveTimeCalculator() {
     });
   }
 
-  const travelModeLabel = { DRIVE: "drive", WALK: "walk", TRANSIT: "transit" }[travelMode];
+  const travelModeLabel = copy.modes[travelMode];
   const leaveCalendarEvent = result
     ? {
-        title: `Leave for ${destination.split(",")[0] || "destination"}`,
+        title: `${copy.leaveFor} ${destination.split(",")[0] || copy.destinationFallback}`,
         start: result.leaveTime,
-        details: ONTIMER_CALENDAR_DESCRIPTION,
+        details: copy.calendarDetails,
         location: destination || undefined,
       }
     : null;
@@ -420,24 +500,24 @@ export default function LeaveTimeCalculator() {
 
                 {/* Hero */}
                 <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                  Leave by
+                  {copy.leaveBy}
                 </p>
                 <p
                   className="mt-0.5 text-6xl font-black leading-none text-green-500"
                   aria-live="polite"
                   aria-atomic="true"
                 >
-                  {fmtTime(result.leaveTime)}
+                  {fmtTime(result.leaveTime, locale)}
                 </p>
-                <p className="mt-1.5 text-sm text-zinc-400">{fmtDate(result.leaveTime)}</p>
+                <p className="mt-1.5 text-sm text-zinc-400">{fmtDate(result.leaveTime, locale)}</p>
 
                 <div className="mt-5 border-t border-zinc-800 pt-4">
                   <p className="text-sm text-zinc-300">
                     {result.travelMinutes} min {travelModeLabel}
-                    {result.travelSource === "google" ? ` · ${trafficLabel(result.trafficBasis, result.planningMode)}` : ""}
+                    {result.travelSource === "google" ? ` · ${trafficLabel(result.trafficBasis, result.planningMode, locale)}` : ""}
                   </p>
                   <p className="mt-0.5 text-sm text-zinc-400">
-                    {[result.bufferMinutes > 0 ? `${result.bufferMinutes} min buffer` : null, result.prepMinutes > 0 ? `${result.prepMinutes} min parking / walk-in` : null].filter(Boolean).join(" · ") || "No extra buffer selected"}
+                    {[result.bufferMinutes > 0 ? `${result.bufferMinutes} min ${copy.buffer}` : null, result.prepMinutes > 0 ? `${result.prepMinutes} min ${copy.parkingWalkIn}` : null].filter(Boolean).join(" · ") || copy.noExtraBuffer}
                   </p>
                 </div>
 
@@ -449,10 +529,10 @@ export default function LeaveTimeCalculator() {
                 >
                   <span className="flex items-center gap-2">
                     <span className="text-zinc-400">⚙</span>
-                    <span>Adjust assumptions</span>
+                    <span>{copy.adjustAssumptions}</span>
                   </span>
                   <span className="text-xs text-zinc-500">
-                    Drive time, buffer, or walk-in different? Edit →
+                    {copy.adjustHint}
                   </span>
                 </button>
 
@@ -465,17 +545,18 @@ export default function LeaveTimeCalculator() {
                   calculatorType="leave_time"
                   exclusivePrimaryAction
                   compactOpenedStatus
-                  postCalendarHeading="Don’t be late. Turn this into an alarm."
-                  postCalendarBody="OnTimer sets an automatic alarm for this calendar event."
+                  postCalendarHeading={copy.alarmHeading}
+                  postCalendarBody={copy.alarmBody}
+                  locale={locale}
                   appLocation="leave_calculator_result"
                   eventPreview={{
-                    title: leaveCalendarEvent?.title ?? "Leave for destination",
-                    startLabel: fmtTime(result.leaveTime),
+                    title: leaveCalendarEvent?.title ?? `${copy.leaveFor} ${copy.destinationFallback}`,
+                    startLabel: fmtTime(result.leaveTime, locale),
                   }}
                 />
               </div>
             ) : (
-              <SkeletonResult />
+              <SkeletonResult locale={locale} />
             )}
           </div>
 
@@ -490,7 +571,7 @@ export default function LeaveTimeCalculator() {
               aria-expanded={formExpanded}
               aria-controls="calculator-form"
             >
-              <span>{result ? "Adjust inputs" : "Enter trip details"}</span>
+              <span>{result ? copy.adjustInputs : copy.enterTrip}</span>
               <span
                 className={`text-xs text-zinc-500 transition-transform duration-200 ${
                   formExpanded ? "rotate-180" : ""
@@ -510,11 +591,11 @@ export default function LeaveTimeCalculator() {
 
               {/* Destination + swap + origin */}
               <div>
-                <FieldLabel>Destination</FieldLabel>
+                <FieldLabel>{copy.destination}</FieldLabel>
                 <PlaceAutocomplete
                   value={destination}
                   onChange={setDestination}
-                  placeholder="Where are you going?"
+                  placeholder={copy.whereGoing}
                   inputClassName={inputClass}
                 />
 
@@ -523,21 +604,21 @@ export default function LeaveTimeCalculator() {
                     type="button"
                     onClick={handleSwap}
                     className="flex items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-800 px-3 py-1 text-xs font-medium text-zinc-400 transition-colors hover:border-zinc-600 hover:text-white"
-                    aria-label="Swap origin and destination"
+                    aria-label={copy.swapAria}
                   >
                     <SwapIcon />
-                    Swap
+                    {copy.swap}
                   </button>
                 </div>
 
                 <FieldLabel>
-                  Starting location{" "}
-                  <span className="font-normal text-zinc-500">(optional)</span>
+                  {copy.startingLocation}{" "}
+                  <span className="font-normal text-zinc-500">{copy.optional}</span>
                 </FieldLabel>
                 <PlaceAutocomplete
                   value={origin}
                   onChange={handleOriginChange}
-                  placeholder="Your starting address"
+                  placeholder={copy.startingAddress}
                   inputClassName={inputClass}
                 />
 
@@ -548,7 +629,7 @@ export default function LeaveTimeCalculator() {
                   className="mt-2 inline-flex min-h-9 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-green-400 transition-colors hover:bg-green-500/10 hover:text-green-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-wait disabled:text-zinc-500"
                 >
                   <LocationIcon />
-                  {locationStatus === "loading" ? "Finding your location…" : "Use my current location"}
+                  {locationStatus === "loading" ? copy.findingLocation : copy.useLocation}
                 </button>
 
                 {locationMessage && (
@@ -564,7 +645,7 @@ export default function LeaveTimeCalculator() {
 
                 {showRouteHint && (
                   <p className="mt-1.5 text-xs text-amber-400/90">
-                    Can&apos;t find a route. Enter minutes manually or add a missing address.
+                    {copy.routeHint}
                   </p>
                 )}
               </div>
@@ -572,14 +653,15 @@ export default function LeaveTimeCalculator() {
               {/* Planning mode + arrival time */}
               <div className="grid gap-3 sm:grid-cols-2">
                 <CalculatorDateField
-                  label="Arrival date"
+                  label={copy.arrivalDate}
                   value={arrivalDate}
                   today={today}
                   inputClassName={inputClass}
                   onChange={setArrivalDate}
+                  locale={locale}
                 />
                 <div className="min-w-0">
-                  <FieldLabel>Arrive by</FieldLabel>
+                  <FieldLabel>{copy.arriveBy}</FieldLabel>
                   <input
                     type="time"
                     value={arrivalTime}
@@ -591,12 +673,12 @@ export default function LeaveTimeCalculator() {
 
               {/* Travel mode */}
               <div>
-                <FieldLabel>Travel mode</FieldLabel>
+                <FieldLabel>{copy.travelMode}</FieldLabel>
                 <SegmentedControl
                   options={[
-                    { value: "DRIVE", label: "Driving" },
-                    { value: "WALK", label: "Walking" },
-                    { value: "TRANSIT", label: "Transit" },
+                    { value: "DRIVE", label: copy.driving },
+                    { value: "WALK", label: copy.walking },
+                    { value: "TRANSIT", label: copy.transit },
                   ]}
                   value={travelMode}
                   onChange={handleTravelModeChange}
@@ -611,11 +693,11 @@ export default function LeaveTimeCalculator() {
                     disabled={!isFormValid || isCalculating}
                     className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {isCalculating ? "Estimating travel time..." : "Calculate leave time"}
+                    {isCalculating ? copy.estimating : copy.calculate}
                   </button>
                   {!isFormValid && (
                     <p className="mt-1.5 text-center text-xs text-zinc-500">
-                      Add a destination and arrival time to enable.
+                      {copy.enableLong}
                     </p>
                   )}
                 </div>
@@ -624,25 +706,27 @@ export default function LeaveTimeCalculator() {
               {/* Buffer */}
               <div>
                 <FieldLabel>
-                  Extra buffer <strong className="text-zinc-300">you</strong> like to have
+                  {copy.extraBuffer}
                 </FieldLabel>
                 <PillSelector
                   options={[0, 5, 10, 15, 20, 30]}
                   value={buffer}
                   onChange={setBuffer}
+                  locale={locale}
                 />
               </div>
 
               {/* Prep / walk-in time */}
               <div>
                 <FieldLabel>
-                  Parking / walk-in time{" "}
-                  <span className="font-normal text-zinc-500">(optional)</span>
+                  {copy.parkingTime}{" "}
+                  <span className="font-normal text-zinc-500">{copy.optional}</span>
                 </FieldLabel>
                 <PillSelector
                   options={[0, 5, 10, 15, 20, 30]}
                   value={prepTime}
                   onChange={setPrepTime}
+                  locale={locale}
                 />
               </div>
 
@@ -658,8 +742,8 @@ export default function LeaveTimeCalculator() {
                     <span className="text-zinc-500">⚙</span>
                     <span>
                       {showAssumptions
-                        ? "Hide adjustments"
-                        : "Adjust assumptions"}
+                        ? copy.hideAdjustments
+                        : copy.adjustAssumptions}
                     </span>
                   </span>
                   <span
@@ -673,19 +757,19 @@ export default function LeaveTimeCalculator() {
 
                 {showAssumptions && (
                   <div className="mt-3 rounded-lg border border-zinc-700/50 bg-zinc-800/40 p-4">
-                    <FieldLabel>Travel time</FieldLabel>
+                    <FieldLabel>{copy.travelTime}</FieldLabel>
                     {hasRouteInputs ? (
                       !showManualTravel ? (
                         <div>
                           <p className="mb-1.5 text-xs text-zinc-400">
-                            Estimated automatically from your locations.
+                            {copy.automaticEstimate}
                           </p>
                           <button
                             type="button"
                             onClick={() => setShowManualTravel(true)}
                             className="text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
                           >
-                            ✏︎ Edit travel time manually
+                            {copy.manualInstead}
                           </button>
                         </div>
                       ) : (
@@ -695,11 +779,11 @@ export default function LeaveTimeCalculator() {
                               type="number"
                               min="0"
                               max="600"
-                              placeholder="e.g. 25"
+                              placeholder={copy.exampleMinutes}
                               value={manualTravelMinutes}
                               onChange={(e) => setManualTravelMinutes(e.target.value)}
                               className={`${inputClass} flex-1`}
-                              aria-label="Travel time in minutes"
+                              aria-label={copy.travelMinutesAria}
                             />
                             <span className="text-sm text-zinc-400">min</span>
                           </div>
@@ -711,7 +795,7 @@ export default function LeaveTimeCalculator() {
                             }}
                             className="text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
                           >
-                            Use automatic estimate instead
+                            {copy.useAutomatic}
                           </button>
                         </div>
                       )
@@ -722,16 +806,16 @@ export default function LeaveTimeCalculator() {
                             type="number"
                             min="0"
                             max="600"
-                            placeholder="e.g. 25"
+                            placeholder={copy.exampleMinutes}
                             value={manualTravelMinutes}
                             onChange={(e) => setManualTravelMinutes(e.target.value)}
                             className={`${inputClass} flex-1`}
-                            aria-label="Travel time in minutes"
+                            aria-label={copy.travelMinutesAria}
                           />
                           <span className="text-sm text-zinc-400">min</span>
                         </div>
                         <p className="text-xs text-zinc-500">
-                          Add a starting location above for an automatic estimate.
+                          {copy.addStartForAutomatic}
                         </p>
                       </div>
                     )}
@@ -760,7 +844,7 @@ export default function LeaveTimeCalculator() {
                     disabled={isCalculating}
                     className="w-full rounded-full border border-zinc-600 bg-zinc-800 px-6 py-3 font-semibold text-zinc-100 transition-colors hover:border-zinc-500 hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {isCalculating ? "Updating leave time…" : "Update Leave Time"}
+                    {isCalculating ? copy.updating : copy.update}
                   </button>
                 ) : (
                   <>
@@ -770,11 +854,11 @@ export default function LeaveTimeCalculator() {
                       disabled={!isFormValid || isCalculating}
                       className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {isCalculating ? "Estimating travel time…" : "Calculate leave time →"}
+                      {isCalculating ? copy.estimating : copy.calculateArrow}
                     </button>
                     {!isFormValid && (
                       <p className="mt-1.5 text-center text-xs text-zinc-500">
-                        Add a destination &amp; time to enable.
+                        {copy.enableShort}
                       </p>
                     )}
                   </>
@@ -794,19 +878,19 @@ export default function LeaveTimeCalculator() {
         <div className="hidden fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-800 bg-zinc-950/95 px-4 py-3 backdrop-blur-sm lg:hidden">
           <div className="mx-auto flex max-w-lg items-center justify-between gap-4">
             <div>
-              <p className="text-[10px] font-medium text-zinc-500">Leave by</p>
+              <p className="text-[10px] font-medium text-zinc-500">{copy.leaveBy}</p>
               <p
                 className="text-2xl font-black leading-tight text-green-500"
                 aria-live="polite"
                 aria-atomic="true"
               >
-                {fmtTime(result.leaveTime)}
+                {fmtTime(result.leaveTime, locale)}
               </p>
             </div>
             {calendarProvider ? (
               <AppStoreButton
                 size="sm"
-                label="Get OnTimer Free"
+                label={copy.appStore}
                 location="leave_calculator_mobile_sticky"
                 placement="above"
                 className="whitespace-nowrap"
@@ -822,7 +906,7 @@ export default function LeaveTimeCalculator() {
                 }}
                 className="flex min-h-11 flex-shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-4 py-2 text-sm font-bold text-black active:bg-green-600"
               >
-                Add to Google Calendar
+                {copy.addGoogle}
               </a>
             )}
           </div>

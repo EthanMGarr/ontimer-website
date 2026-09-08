@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getSortedPosts } from "@/lib/blog";
 import { getDestinationSitemapRoutes } from "@/lib/destination-routing";
 import { MEDICATION_TIMING_PROFILES } from "@/lib/medication-timing-profiles";
+import { localizedAlternates, spanishAirportSlugs } from "@/lib/i18n";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.ontimer.app";
@@ -114,6 +115,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/airport-time-to-leave-calculator`,
+          es: `${baseUrl}/es/calculadora-cuando-salir-al-aeropuerto`,
+          "x-default": `${baseUrl}/airport-time-to-leave-calculator`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/es/calculadora-cuando-salir-al-aeropuerto`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/airport-time-to-leave-calculator`,
+          es: `${baseUrl}/es/calculadora-cuando-salir-al-aeropuerto`,
+          "x-default": `${baseUrl}/airport-time-to-leave-calculator`,
+        },
+      },
     },
     {
       url: `${baseUrl}/time-calculators`,
@@ -138,6 +159,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/what-time-should-i-leave`,
+          es: `${baseUrl}/es/calculadora-a-que-hora-salir`,
+          "x-default": `${baseUrl}/what-time-should-i-leave`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/es/calculadora-a-que-hora-salir`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/what-time-should-i-leave`,
+          es: `${baseUrl}/es/calculadora-a-que-hora-salir`,
+          "x-default": `${baseUrl}/what-time-should-i-leave`,
+        },
+      },
     },
     {
       url: `${baseUrl}/wake-up-time-calculator`,
@@ -292,6 +333,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const locationRoutes = getDestinationSitemapRoutes(baseUrl);
+  const spanishAirportRoutes: MetadataRoute.Sitemap = spanishAirportSlugs.map((slug) => {
+    const englishPath = `/airport-time-to-leave/${slug}`;
+    const spanishPath = `/es/aeropuerto/${slug}`;
+    return {
+      url: `${baseUrl}${spanishPath}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+      alternates: localizedAlternates(englishPath, spanishPath),
+    };
+  });
 
   const medicationTimingPaths = [
     "/medication-timing",
@@ -304,5 +356,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...supportingContentRoutes, ...helpRoutes, ...locationRoutes, ...medicationTimingRoutes, ...blogRoutes];
+  return [...staticRoutes, ...supportingContentRoutes, ...helpRoutes, ...locationRoutes, ...spanishAirportRoutes, ...medicationTimingRoutes, ...blogRoutes];
 }

@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 import LeaveTimeCalculator from "./LeaveTimeCalculator";
+import { localizedAlternates } from "@/lib/i18n";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "https://www.ontimer.app/what-time-should-i-leave" },
+  alternates: {
+    canonical: "https://www.ontimer.app/what-time-should-i-leave",
+    ...localizedAlternates("/what-time-should-i-leave", "/es/calculadora-a-que-hora-salir"),
+  },
   title: "What Time Should I Leave? Free Departure Time Calculator",
   description:
     "Calculate exactly when you should leave based on arrival time, traffic, commute length, and real-world delays. Free departure time calculator.",

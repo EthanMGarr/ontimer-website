@@ -4,6 +4,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef, Suspense } from "react";
 import { initializeAnalytics } from "@/lib/analytics";
 import { isAnalyticsFreeMedicationPath } from "@/lib/medication-route-privacy";
+import { localeForPathname } from "@/lib/i18n";
 
 declare global {
   interface Window {
@@ -38,6 +39,8 @@ function PageViewTracker() {
       page_path: pathname + (searchParams.toString() ? `?${searchParams}` : ""),
       page_location: window.location.href,
       page_title: document.title,
+      content_language: localeForPathname(pathname),
+      locale: localeForPathname(pathname),
     });
   }, [pathname, searchParams]);
 

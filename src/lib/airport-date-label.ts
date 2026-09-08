@@ -6,15 +6,21 @@ function parseLocalDate(date: string): Date | null {
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
-export function formatAirportDateLabel(selectedDate: string, todayDate: string): string {
+export function formatAirportDateLabel(
+  selectedDate: string,
+  todayDate: string,
+  locale: "en" | "es" = "en",
+): string {
   const parsed = parseLocalDate(selectedDate);
-  if (!parsed) return "Select a date";
+  if (!parsed) return locale === "es" ? "Selecciona una fecha" : "Select a date";
 
-  const formatted = new Intl.DateTimeFormat("en-US", {
+  const formatted = new Intl.DateTimeFormat(locale === "es" ? "es-ES" : "en-US", {
     weekday: "long",
     month: "long",
     day: "numeric",
   }).format(parsed);
 
-  return selectedDate === todayDate ? `Today, ${formatted}` : formatted;
+  return selectedDate === todayDate
+    ? `${locale === "es" ? "Hoy" : "Today"}, ${formatted}`
+    : formatted;
 }

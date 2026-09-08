@@ -16,7 +16,6 @@ const CONSENT_REQUIRED_COUNTRIES = new Set([
 
 const PRIVATE_MEDICATION_ROUTES = new Set([
   "/provider-medication-schedule",
-  "/medication-schedule",
 ]);
 
 function isAuthorizedMedicationPreview(request: NextRequest): boolean {

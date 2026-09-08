@@ -19,4 +19,16 @@ assert.equal(
   "an empty date should keep the control understandable"
 );
 
+assert.equal(
+  formatAirportDateLabel("2026-08-24", "2026-08-24", "es"),
+  "Hoy, lunes, 24 de agosto",
+  "Spanish calculator dates should use Spanish labels and date order"
+);
+
+assert.equal(
+  formatAirportDateLabel("", "2026-08-24", "es"),
+  "Selecciona una fecha",
+  "Spanish empty dates should not fall back to English"
+);
+
 console.log("airport date label tests passed");

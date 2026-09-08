@@ -11,8 +11,11 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Every indexable destination has a review date and at least two authoritative sources; do not weaken the profile validator to ship an incomplete page.
 - [ ] Non-U.S. airport pages use airport-security language and hide TSA PreCheck/CLEAR controls unless the program actually applies.
 - [ ] For catalog expansions, spot-check different airport patterns (split terminals, rail-first, single-terminal and road-dependent) at 320, 375, 414 and 768 px.
+- [ ] Large autocomplete or destination lookup catalogs load on demand and are not serialized into the initial HTML/RSC payload; compare the changed route's response size before and after.
 - [ ] Every intended indexable HTML page has a unique title and description.
 - [ ] Every intended indexable HTML page has a self-referencing canonical URL on `https://www.ontimer.app`.
+- [ ] Every localized page has an explicit locale URL, reciprocal `hreflang` links for each published language plus `x-default`, a locale-correct canonical, and matching entries in the sitemap. Do not use automatic country or browser-language redirects.
+- [ ] Localized pages render complete translated UI, metadata, structured data, validation, result and calendar-handoff copy; do not index pages with silent English fallback content.
 - [ ] Every intended indexable content page appears in `src/app/sitemap.ts`.
 - [ ] Utility, spam, test, preview, and private tool pages are excluded from the sitemap unless explicitly intended for search.
 - [ ] Sitemap pages do not use `noindex`.

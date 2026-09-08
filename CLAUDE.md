@@ -106,6 +106,8 @@ Every calculator must preserve one repeatable action sequence, especially on mob
 
 Keep the visible evidence compact—normally one or two lines using the user’s actual result—and keep the complete calculation progressively disclosed. “Adjust assumptions” belongs beside the answer rather than at the bottom of an explanation. Labels must say what changing them does, never use generic labels such as “Advanced options.” Do not use redundant “Your next step” eyebrows, repeated checkmarks, placeholder examples, or large explanation cards between a calculated answer and its primary action. Preserve search-answer copy, metadata, FAQ, and substantive guidance below the tool rather than turning the calculator viewport into an SEO article.
 
+The generic airport calculator's autocomplete uses the generated scheduled-service IATA directory in `src/lib/airport-directory.generated.ts`; refresh it with `npm run update:airport-directory`. Keep this lookup dataset separate from `indexableTravelLocations`: broader calculator coverage must not automatically create airport landing pages, sitemap entries, or thin SEO content. Curated travel-location records may override directory display details for airports with intentional destination pages.
+
 ---
 
 ## App Store CTA Behavior (permanent rule)

@@ -11,6 +11,7 @@ import {
   type AnalyticsParams,
 } from "@/lib/analytics";
 import { isAndroidUserAgent } from "@/lib/device-detection";
+import type { SiteLocale } from "@/lib/i18n";
 
 interface AndroidAffiliateOffer {
   href: string;
@@ -51,7 +52,35 @@ interface CalendarOnTimerHandoffProps {
     title: string;
     startLabel: string;
   };
+  locale?: SiteLocale;
 }
+
+const handoffCopy = {
+  en: {
+    alternate: "Or tap here for Outlook, Apple or other calendars", ready: "Put this leave time on your calendar.", item: "event",
+    fileDownloaded: "Calendar file downloaded", googleOpened: "Google Calendar {item} opened",
+    openDownloaded: "Open the downloaded file to add this leave time.", addAnother: "Add to another calendar",
+    reopenGoogle: "Re-open Google Calendar", otherCalendars: "Other calendars", adds: "Adds", at: "to your calendar at",
+    addGoogle: "Add to Google Calendar", alarmHeading: "Get an alarm when it's time to leave.",
+    alarmBody: "OnTimer sets automatic alarms for your calendar events.", getFree: "Get OnTimer Free",
+    getAlarms: "Get Automatic Alarms", appStore: "Download on the App Store", paid: "Paid link: OnTimer may earn a commission if you book, at no additional cost to you.",
+    android: "OnTimer for Android is coming — join the waitlist", help: "Need help adding the calendar file?",
+    helpBody: "Open the downloaded .ics file, choose your calendar, then confirm the event.", again: "Download the file again",
+    googleInstead: "Use Google Calendar instead",
+  },
+  es: {
+    alternate: "O usa Outlook, Apple Calendar u otro calendario", ready: "Guarda esta hora de salida en tu calendario.", item: "evento",
+    fileDownloaded: "Archivo de calendario descargado", googleOpened: "Evento abierto en Google Calendar",
+    openDownloaded: "Abre el archivo descargado para añadir esta hora de salida.", addAnother: "Añadir a otro calendario",
+    reopenGoogle: "Volver a abrir Google Calendar", otherCalendars: "Otros calendarios", adds: "Añade", at: "a tu calendario a las",
+    addGoogle: "Añadir a Google Calendar", alarmHeading: "Recibe una alarma cuando sea hora de salir.",
+    alarmBody: "OnTimer crea alarmas automáticas para los eventos de tu calendario.", getFree: "Descargar OnTimer gratis",
+    getAlarms: "Recibir alarmas automáticas", appStore: "Descargar en App Store", paid: "Enlace remunerado: OnTimer puede recibir una comisión si reservas, sin coste adicional para ti.",
+    android: "OnTimer para Android está en camino — únete a la lista", help: "¿Necesitas ayuda para añadir el archivo?",
+    helpBody: "Abre el archivo .ics descargado, elige tu calendario y confirma el evento.", again: "Descargar el archivo otra vez",
+    googleInstead: "Usar Google Calendar",
+  },
+} as const;
 
 export default function CalendarOnTimerHandoff({
   calendarHref,
@@ -71,7 +100,12 @@ export default function CalendarOnTimerHandoff({
   analyticsContext = {},
   androidAffiliateOffer,
   eventPreview,
+  locale = "en",
 }: CalendarOnTimerHandoffProps) {
+  const copy = handoffCopy[locale];
+  alternateCalendarLabel = locale === "es" ? copy.alternate : alternateCalendarLabel;
+  readyHeading = locale === "es" ? copy.ready : readyHeading;
+  openedItemLabel = locale === "es" ? copy.item : openedItemLabel;
   const [isAndroidMobile, setIsAndroidMobile] = useState<boolean | null>(null);
   const affiliateRef = useRef<HTMLAnchorElement>(null);
   const affiliateViewTrackedRef = useRef(false);
@@ -79,10 +113,10 @@ export default function CalendarOnTimerHandoff({
   const effectiveAndroidAffiliateOffer = androidAffiliateOffer ?? DEFAULT_ANDROID_AFFILIATE_OFFER;
   const showAndroidAffiliate = isAndroidMobile === true;
   const openedHeading = calendarProvider === "ics"
-    ? "Calendar file downloaded"
-    : `Google Calendar ${openedItemLabel} opened`;
+    ? copy.fileDownloaded
+    : locale === "es" ? copy.googleOpened : copy.googleOpened.replace("{item}", openedItemLabel);
   const openedBody = calendarProvider === "ics"
-    ? "Open the downloaded file to add this leave time."
+    ? copy.openDownloaded
     : null;
 
   useEffect(() => {
@@ -127,14 +161,14 @@ export default function CalendarOnTimerHandoff({
       }`}>
         {calendarProvider === "google" ? (
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs">
-            <p className="font-medium text-zinc-400">Add to another calendar</p>
+            <p className="font-medium text-zinc-400">{copy.addAnother}</p>
             <a
               href={calendarHref}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex whitespace-nowrap text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
             >
-              Re-open Google Calendar
+              {copy.reopenGoogle}
             </a>
             <a
               href={alternateCalendarHref}
@@ -145,7 +179,7 @@ export default function CalendarOnTimerHandoff({
               }}
               className="inline-flex whitespace-nowrap text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
             >
-              Other calendars
+              {copy.otherCalendars}
             </a>
           </div>
         ) : calendarOpened ? (
@@ -161,7 +195,7 @@ export default function CalendarOnTimerHandoff({
             <p className="text-lg font-bold text-white">{readyHeading}</p>
             {eventPreview && (
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
-                Adds “{eventPreview.title}” to your calendar at {eventPreview.startLabel}.
+                {copy.adds} “{eventPreview.title}” {copy.at} {eventPreview.startLabel}.
               </p>
             )}
             <a
@@ -174,7 +208,7 @@ export default function CalendarOnTimerHandoff({
               }}
               className={`${eventPreview ? "mt-2" : "mt-4"} flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600`}
             >
-              Add to Google Calendar
+              {copy.addGoogle}
             </a>
             <a
               href={alternateCalendarHref}
@@ -201,14 +235,14 @@ export default function CalendarOnTimerHandoff({
             ? effectiveAndroidAffiliateOffer.heading
             : calendarOpened
               ? postCalendarHeading
-              : "Get an alarm when it's time to leave."}
+              : copy.alarmHeading}
         </p>
         <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
           {showAndroidAffiliate
             ? effectiveAndroidAffiliateOffer.body
             : calendarOpened
               ? postCalendarBody
-              : "OnTimer sets automatic alarms for your calendar events."}
+              : copy.alarmBody}
         </p>
         <div className="mt-4">
           {showAndroidAffiliate ? (
@@ -228,21 +262,21 @@ export default function CalendarOnTimerHandoff({
                 {effectiveAndroidAffiliateOffer.buttonLabel}
               </a>
               <p className="mt-2 text-[11px] leading-relaxed text-zinc-500">
-                Paid link: OnTimer may earn a commission if you book, at no additional cost to you.
+                {copy.paid}
               </p>
               <Link
                 href="/android"
                 onClick={() => trackAndroidWaitlistClick(`${effectiveAndroidAffiliateOffer.location}_waitlist`)}
                 className="mt-3 inline-flex text-xs font-medium text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
               >
-                OnTimer for Android is coming — join the waitlist
+                {copy.android}
               </Link>
             </div>
           ) : (
             <>
               <AppStoreButton
                 size={calendarOpened ? "lg" : "md"}
-                label={calendarOpened ? "Get OnTimer Free" : "Get Automatic Alarms"}
+                label={calendarOpened ? copy.getFree : copy.getAlarms}
                 className={calendarOpened ? "w-full justify-center whitespace-nowrap" : "justify-center whitespace-nowrap"}
                 location={appLocation}
                 analyticsContext={{
@@ -251,7 +285,7 @@ export default function CalendarOnTimerHandoff({
                   ...analyticsContext,
                 }}
               />
-              <p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p>
+              <p className="mt-2 text-[11px] text-zinc-500">{copy.appStore}</p>
             </>
           )}
         </div>
@@ -261,10 +295,10 @@ export default function CalendarOnTimerHandoff({
       {calendarProvider === "ics" && (
         <details className="mt-3 rounded-lg border border-zinc-800 bg-zinc-950/30 px-4 py-3 text-xs text-zinc-400">
           <summary className="cursor-pointer font-medium text-zinc-300 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400">
-            Need help adding the calendar file?
+            {copy.help}
           </summary>
           <div className="mt-3 border-t border-zinc-800 pt-3 leading-relaxed">
-            <p>Open the downloaded .ics file, choose your calendar, then confirm the event.</p>
+            <p>{copy.helpBody}</p>
             <div className="mt-2 flex flex-wrap gap-x-3 gap-y-2">
               <a
                 href={alternateCalendarHref}
@@ -272,7 +306,7 @@ export default function CalendarOnTimerHandoff({
                 onClick={() => trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext)}
                 className="whitespace-nowrap underline underline-offset-2 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
               >
-                Download the file again
+                {copy.again}
               </a>
               <a
                 href={calendarHref}
@@ -284,7 +318,7 @@ export default function CalendarOnTimerHandoff({
                 }}
                 className="whitespace-nowrap underline underline-offset-2 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
               >
-                Use Google Calendar instead
+                {copy.googleInstead}
               </a>
             </div>
           </div>

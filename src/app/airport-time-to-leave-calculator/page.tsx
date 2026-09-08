@@ -2,33 +2,30 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 import { indexableTravelLocations } from "@/lib/travel-locations";
-import {
-  buildAirportCalendarLocation,
-  type AirportAutocompleteOption,
-} from "@/lib/airport-autocomplete";
+import type { AirportAutocompleteOption } from "@/lib/airport-autocomplete";
+import { localizedAlternates } from "@/lib/i18n";
 
 const indexableAirportLocations = indexableTravelLocations.filter(
   (location) => location.kind === "airport"
 );
-const airportAutocompleteOptions: AirportAutocompleteOption[] = indexableAirportLocations
+const curatedAirportOptions: AirportAutocompleteOption[] = indexableAirportLocations
   .map((location) => ({
     code: location.code,
     name: location.name,
     city: location.city,
-    location: buildAirportCalendarLocation(location),
-    searchText: [
-      location.code,
-      location.name,
-      location.shortName,
-      location.city,
-      ...(location.aliases ?? []),
-    ].join(" ").toLowerCase(),
-  }))
-  .toSorted((left, right) => left.name.localeCompare(right.name));
+    aliases: [location.shortName, ...(location.aliases ?? [])],
+    planningJurisdiction: location.airport.planningJurisdiction ?? "us",
+  }));
 import AirportCalculator from "./AirportCalculator";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "https://www.ontimer.app/airport-time-to-leave-calculator" },
+  alternates: {
+    canonical: "https://www.ontimer.app/airport-time-to-leave-calculator",
+    ...localizedAlternates(
+      "/airport-time-to-leave-calculator",
+      "/es/calculadora-cuando-salir-al-aeropuerto",
+    ),
+  },
   title: "When Should I Leave for the Airport?",
   description:
     "Find out what time to leave for your flight using your route, flight time, security planning, bags, parking and terminal access.",
@@ -189,7 +186,7 @@ export default function AirportTimeToLeaveCalculator() {
       {/* ── CALCULATOR ── */}
       <section id="calculator" className="border-t border-zinc-800 pb-6 pt-3 md:pb-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <AirportCalculator genericRedesign airportOptions={airportAutocompleteOptions} />
+          <AirportCalculator genericRedesign airportOptions={curatedAirportOptions} />
           <p className="mt-5 text-center text-sm text-zinc-400">
             This calculator is for realistic departure planning. For a fun take on risky airport
             timing, see the{" "}

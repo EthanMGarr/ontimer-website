@@ -1,37 +1,88 @@
 "use client";
 
-import { useDeferredValue, useId, useMemo, useState } from "react";
+import { useDeferredValue, useId, useMemo, useRef, useState } from "react";
 import {
+  airportPlanningJurisdictionForCountry,
+  buildAirportCalendarLocation,
   filterAirportOptions,
   type AirportAutocompleteOption,
 } from "@/lib/airport-autocomplete";
+import type { SiteLocale } from "@/lib/i18n";
 
 interface AirportAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
   options: AirportAutocompleteOption[];
+  onOptionSelected?: (option: AirportAutocompleteOption | null) => void;
   placeholder?: string;
   inputClassName?: string;
+  locale?: SiteLocale;
+}
+
+let airportDirectoryOptionsPromise: Promise<AirportAutocompleteOption[]> | null = null;
+
+function loadAirportDirectoryOptions(): Promise<AirportAutocompleteOption[]> {
+  if (!airportDirectoryOptionsPromise) {
+    airportDirectoryOptionsPromise = import("@/lib/airport-directory.generated").then(
+      ({ airportDirectoryRecords }) => airportDirectoryRecords.map(
+        ([code, name, municipality, country, keywords]) => ({
+          code,
+          name,
+          city: [municipality, country].filter(Boolean).join(", "),
+          aliases: keywords ? [keywords] : undefined,
+          planningJurisdiction: airportPlanningJurisdictionForCountry(country),
+        })
+      )
+    );
+  }
+  return airportDirectoryOptionsPromise;
 }
 
 export default function AirportAutocomplete({
   value,
   onChange,
   options,
+  onOptionSelected,
   placeholder = "Airport name or IATA code",
   inputClassName = "",
+  locale = "en",
 }: AirportAutocompleteProps) {
   const listboxId = useId();
   const deferredValue = useDeferredValue(value);
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [directoryOptions, setDirectoryOptions] = useState<AirportAutocompleteOption[]>([]);
+  const [isDirectoryLoading, setIsDirectoryLoading] = useState(false);
+  const directoryLoadStartedRef = useRef(false);
+  const allOptions = useMemo(() => {
+    const curatedCodes = new Set(options.map((option) => option.code));
+    return [
+      ...options,
+      ...directoryOptions.filter((option) => !curatedCodes.has(option.code)),
+    ];
+  }, [directoryOptions, options]);
   const matches = useMemo(
-    () => filterAirportOptions(options, deferredValue),
-    [deferredValue, options]
+    () => filterAirportOptions(allOptions, deferredValue),
+    [allOptions, deferredValue]
   );
 
+  function ensureDirectoryLoaded(query: string, loadOnFocus = false) {
+    if ((!loadOnFocus && query.trim().length < 2) || directoryLoadStartedRef.current) return;
+    directoryLoadStartedRef.current = true;
+    setIsDirectoryLoading(true);
+    void loadAirportDirectoryOptions()
+      .then(setDirectoryOptions)
+      .catch(() => {
+        airportDirectoryOptionsPromise = null;
+        directoryLoadStartedRef.current = false;
+        setDirectoryOptions([]);
+      })
+      .finally(() => setIsDirectoryLoading(false));
+  }
+
   function selectOption(option: AirportAutocompleteOption) {
-    onChange(option.location);
+    onChange(buildAirportCalendarLocation(option));
+    onOptionSelected?.(option);
     setIsOpen(false);
     setActiveIndex(0);
   }
@@ -53,10 +104,18 @@ export default function AirportAutocomplete({
         value={value}
         placeholder={placeholder}
         className={inputClassName}
-        onFocus={() => setIsOpen(true)}
+        onFocus={() => {
+          setIsOpen(true);
+          // Start fetching before the first keystroke so the complete catalog is
+          // usually ready by the time a traveler enters a non-curated airport.
+          ensureDirectoryLoaded(value, true);
+        }}
         onBlur={() => setIsOpen(false)}
         onChange={(event) => {
-          onChange(event.target.value);
+          const nextValue = event.target.value;
+          onChange(nextValue);
+          onOptionSelected?.(null);
+          ensureDirectoryLoaded(nextValue);
           setIsOpen(true);
           setActiveIndex(0);
         }}
@@ -85,7 +144,7 @@ export default function AirportAutocomplete({
         >
           {matches.length > 0 ? matches.map((option, index) => (
             <button
-              key={`${option.code}-${option.location}`}
+              key={option.code}
               id={`${listboxId}-${option.code}`}
               type="button"
               role="option"
@@ -104,9 +163,15 @@ export default function AirportAutocomplete({
                 <span className="block text-xs text-zinc-400">{option.city}</span>
               </span>
             </button>
-          )) : (
+          )) : isDirectoryLoading ? (
             <p className="px-3 py-3 text-xs leading-relaxed text-zinc-400">
-              No matching airport found. You can still use the airport text you entered.
+              {locale === "es" ? "Buscando aeropuertos…" : "Searching airports…"}
+            </p>
+          ) : (
+            <p className="px-3 py-3 text-xs leading-relaxed text-zinc-400">
+              {locale === "es"
+                ? "No encontramos un aeropuerto coincidente. Puedes usar el texto que has escrito."
+                : "No matching airport found. You can still use the airport text you entered."}
             </p>
           )}
         </div>

@@ -1,4 +1,5 @@
 import { isAnalyticsAllowed } from "@/lib/consent";
+import { localeForPathname, type SiteLocale } from "@/lib/i18n";
 
 /// Centralized GA4 event tracking for OnTimer marketing site.
 ///
@@ -105,6 +106,8 @@ function acquisitionParams(): AnalyticsParams {
     landing_page: window.location.pathname,
     traffic_source: source,
     search_query: search.get("utm_term") || "unavailable",
+    content_language: localeForPathname(window.location.pathname),
+    locale: localeForPathname(window.location.pathname),
   };
 }
 
@@ -152,6 +155,18 @@ export function trackCalculatorCompleted(
   context: AnalyticsParams = {}
 ): void {
   fireEvent("calculator_completed", { calculator_type: calculatorType, ...context });
+}
+
+export function trackLanguageSwitch(
+  fromLocale: SiteLocale,
+  toLocale: SiteLocale,
+  pathname: string,
+): void {
+  fireEvent("language_switcher_used", {
+    from_locale: fromLocale,
+    to_locale: toLocale,
+    source_path: pathname,
+  });
 }
 
 export function trackAutomaticAlertCTAViewed(

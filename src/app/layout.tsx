@@ -25,7 +25,8 @@ const gaBootstrapScript = gaMeasurementId ? `
       window.dataLayer = window.dataLayer || [];
       window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
       window.gtag('js', new Date());
-      window.gtag('config', measurementId);
+      var contentLanguage = window.location.pathname === '/es' || window.location.pathname.indexOf('/es/') === 0 ? 'es' : 'en';
+      window.gtag('config', measurementId, { content_language: contentLanguage, locale: contentLanguage });
       window.__ontimerAnalyticsConfigured = true;
       var tag = document.createElement('script');
       tag.async = true;
@@ -67,6 +68,16 @@ const travelpayoutsVerificationScript = `
       if (event && event.detail === 'granted') start();
     });
     start();
+  }());
+`;
+
+// Set the document language before hydration for explicit localized routes.
+// English remains the default and there are deliberately no automatic redirects.
+const documentLanguageScript = `
+  (function () {
+    if (window.location.pathname === '/es' || window.location.pathname.indexOf('/es/') === 0) {
+      document.documentElement.lang = 'es';
+    }
   }());
 `;
 
@@ -142,6 +153,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: documentLanguageScript }} />
         {gaBootstrapScript ? <script dangerouslySetInnerHTML={{ __html: gaBootstrapScript }} /> : null}
         <script dangerouslySetInnerHTML={{ __html: travelpayoutsVerificationScript }} />
       </head>
