@@ -51,7 +51,7 @@
 </head>
 <body>
     <h1>OnTimer Privacy Policy</h1>
-    <p class="update-date">Last Updated: September 2, 2026</p>
+    <p class="update-date">Last Updated: September 9, 2026</p>
 
     <h2>1. Introduction</h2>
     <p>Breakout Growth ("we," "our," or "us") operates OnTimer, including the ontimer.app website, mobile applications, calculators, planning tools, reminder tools, educational content, subscriptions, and related services (collectively, "OnTimer" or "the Service"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use OnTimer.</p>
@@ -140,7 +140,13 @@
         <li>Notification interaction (dismissed, tapped, etc.)</li>
         <li>Subscription status (free vs. premium)</li>
     </ul>
-    <p><strong>This data is anonymized, is tied to app usage events rather than your identity, and never includes calendar event titles, descriptions, or locations.</strong> We do not currently use a dedicated crash-reporting tool; if we add one, this Privacy Policy will be updated to reflect it.</p>
+    <p>We also use Firebase Crashlytics, a Google service, to collect crash and error reports so we can diagnose and fix problems:</p>
+    <ul>
+        <li>Crash logs and stack traces (which part of the app failed, not your data)</li>
+        <li>Device and OS information at the time of the crash (device model, OS version)</li>
+        <li>App configuration state relevant to the crash (e.g. which alarm delivery method and alert style were active)</li>
+    </ul>
+    <p><strong>This data is anonymized, is tied to app usage/crash events rather than your identity, and never includes calendar event titles, descriptions, or locations.</strong></p>
 
     <h3>2.5 Website Analytics and Usage Information</h3>
     <p>Except on the medication-tool routes identified below, when you visit ontimer.app or use website tools, calculators, educational content, or support pages, we use Google Analytics to collect analytics used to understand website usage, feature adoption, referral sources, and marketing performance, such as:</p>
@@ -279,8 +285,8 @@
 
     <h3>5.7 Analytics Services</h3>
     <ul>
-        <li><strong>Purpose:</strong> Firebase Analytics (a Google service) for anonymous app usage analytics, and Google Analytics for website analytics used to understand feature adoption, referral sources, and marketing performance</li>
-        <li><strong>Data shared:</strong> Anonymized usage patterns, browser/device information, page usage, and app usage events (see Section 2.4)</li>
+        <li><strong>Purpose:</strong> Firebase Analytics (a Google service) for anonymous app usage analytics, Firebase Crashlytics (a Google service) for crash and error reporting, and Google Analytics for website analytics used to understand feature adoption, referral sources, and marketing performance</li>
+        <li><strong>Data shared:</strong> Anonymized usage patterns, browser/device information, page usage, app usage events (see Section 2.4), and crash/error diagnostic reports (see Section 2.4)</li>
         <li><strong>Note:</strong> No calendar event content is used for advertising. Google Analytics does not load on the personal, provider, caregiver, or shared medication-schedule routes. On other routes, it does not load for UK, EU/EEA, or Swiss visitors until they accept the cookie banner.</li>
         <li><strong>Privacy policy:</strong> <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a></li>
     </ul>
