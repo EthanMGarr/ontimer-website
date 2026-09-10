@@ -18,6 +18,16 @@ interface GoogleAutocompleteResponse {
   }>;
 }
 
+interface GoogleApiErrorResponse {
+  error?: {
+    code?: number;
+    status?: string;
+    details?: Array<{
+      reason?: string;
+    }>;
+  };
+}
+
 export const AUTOCOMPLETE_FIELD_MASK = [
   "suggestions.placePrediction.placeId",
   "suggestions.placePrediction.text.text",
@@ -99,11 +109,38 @@ export async function requestAutocomplete(
       }
     );
 
-    if (!response.ok) return [];
+    if (!response.ok) {
+      let providerStatus: string | undefined;
+      let providerReason: string | undefined;
+
+      try {
+        const data = (await response.json()) as GoogleApiErrorResponse;
+        providerStatus = data.error?.status;
+        providerReason = data.error?.details?.find(({ reason }) => reason)?.reason;
+      } catch {
+        // The HTTP status is still enough to diagnose an upstream failure.
+      }
+
+      console.error(JSON.stringify({
+        level: "error",
+        message: "Places autocomplete upstream request failed",
+        provider: "google-places",
+        statusCode: response.status,
+        providerStatus,
+        providerReason,
+      }));
+      return [];
+    }
     return normalizeAutocompleteResponse(
       (await response.json()) as GoogleAutocompleteResponse
     );
-  } catch {
+  } catch (error) {
+    console.error(JSON.stringify({
+      level: "error",
+      message: "Places autocomplete upstream request failed",
+      provider: "google-places",
+      failureType: error instanceof Error ? error.name : "unknown",
+    }));
     return [];
   }
 }

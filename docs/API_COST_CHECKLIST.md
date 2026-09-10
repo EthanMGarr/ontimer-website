@@ -14,6 +14,7 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] Public autocomplete endpoints have a generous hourly per-IP ceiling that preserves normal use while bounding automated typing loops.
 - [ ] In-memory serverless caches are described as best-effort only, never as cross-instance cost controls.
 - [ ] Failure paths degrade to manual entry rather than multiplying paid requests.
+- [ ] Upstream failures are logged with sanitized provider status/reason fields; never log API keys or user-entered locations.
 - [ ] Rate-limit and provenance behavior has automated regression coverage.
 
 ## Google Cloud Controls
@@ -25,6 +26,7 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] Remember that a standard budget alert does not stop Google Maps Platform spending.
 - [ ] Keep alert thresholds below the true maximum because billing data is delayed.
 - [ ] Review quota and billing graphs after every paid-API deployment.
+- [ ] Confirm the project that owns the deployed credential by project number; do not assume the active CLI or billing-console project owns the key.
 
 ## Incident Response
 

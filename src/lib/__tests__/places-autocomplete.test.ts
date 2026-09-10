@@ -67,19 +67,40 @@ async function main() {
   assert.equal(body.sessionToken, undefined);
   assert.equal(capturedUrl.includes("session"), false);
 
-  assert.deepEqual(
-    await requestAutocomplete("Newark", ["geocode"], "key", async () =>
-      new Response("upstream error", { status: 500 })
-    ),
-    []
-  );
+  const originalConsoleError = console.error;
+  const errorLogs: string[] = [];
+  console.error = (message?: unknown) => errorLogs.push(String(message));
+  try {
+    assert.deepEqual(
+      await requestAutocomplete("Newark", ["geocode"], "key", async () =>
+        new Response(JSON.stringify({
+          error: {
+            code: 429,
+            status: "RESOURCE_EXHAUSTED",
+            details: [{ reason: "RATE_LIMIT_EXCEEDED" }],
+          },
+        }), { status: 429 })
+      ),
+      []
+    );
 
-  assert.deepEqual(
-    await requestAutocomplete("Newark", ["geocode"], "key", async () => {
-      throw new Error("network failure");
-    }),
-    []
-  );
+    assert.deepEqual(
+      await requestAutocomplete("Newark", ["geocode"], "key", async () => {
+        throw new TypeError("network failure");
+      }),
+      []
+    );
+  } finally {
+    console.error = originalConsoleError;
+  }
+
+  assert.equal(errorLogs.length, 2);
+  assert.match(errorLogs[0], /"statusCode":429/);
+  assert.match(errorLogs[0], /"providerStatus":"RESOURCE_EXHAUSTED"/);
+  assert.match(errorLogs[0], /"providerReason":"RATE_LIMIT_EXCEEDED"/);
+  assert.match(errorLogs[1], /"failureType":"TypeError"/);
+  assert.equal(errorLogs.some((entry) => entry.includes("Newark")), false);
+  assert.equal(errorLogs.some((entry) => entry.includes("key")), false);
 
   console.log("places-autocomplete tests passed");
 }
