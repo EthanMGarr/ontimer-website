@@ -10,9 +10,10 @@ Tailwind CSS
 Deploy on Vercel
 
 Permanent deployment workflow:
-- Use `npm run deploy:prod` from the repository root. It uses the pinned local Vercel CLI and the existing `.vercel/project.json` link.
-- Do not deploy with `npx vercel@latest` or install a global Vercel CLI.
-- Run `vercel login` only when the CLI explicitly reports expired authorization.
+- Run `npm run vercel:check` before a release and use `npm run deploy:prod` from the repository root. The repository runner invokes the exact Vercel CLI pinned in `package.json`, verifies `.vercel/project.json` matches the OnTimer production target, and checks the saved login before any upload.
+- Never deploy with `npx vercel@latest`, `npx -y vercel@latest`, a global `vercel`, or any newly downloaded CLI. Do not fall back to one if a release command fails.
+- If dependencies are missing or the pinned version does not match, run `npm ci`. If the project link is missing, run `npm run vercel:link`. Run `npm run vercel:login` only when the pinned CLI reports invalid or expired authorization.
+- `.vercel/project.json` contains project-link metadata, not credentials. Authentication is confirmed by the runner's local-CLI `whoami` preflight.
 - Treat production publishing as part of completing user-facing website changes after the relevant tests and production build pass. Do not stop at a local implementation unless the user explicitly says `local only`, `do not publish`, or `preview only`.
 - After publishing, wait for Vercel to report `Ready` and verify the changed behavior on the canonical production URL before reporting completion.
 

@@ -135,11 +135,14 @@ Your site will be live in ~60 seconds. Future pushes to `main` deploy automatica
 ### Option 2: Deploy with Vercel CLI
 
 ```bash
-# Uses the repository-pinned Vercel CLI and linked production project
+# Verifies the pinned CLI, project link, and saved login without uploading
+npm run vercel:check
+
+# Repeats the preflight, then publishes with that same local CLI
 npm run deploy:prod
 ```
 
-Run `vercel login` only if Vercel explicitly reports that the saved authorization has expired. Do not use `npx vercel@latest`; it downloads a new CLI during clean deployment environments and makes releases slower and less reproducible.
+The repository runner invokes `node_modules/vercel/dist/vc.js` directly, so PATH resolution cannot silently select a global or newly downloaded CLI. Run `npm ci` if the pinned dependency is missing or mismatched, `npm run vercel:link` if `.vercel/project.json` is absent, and `npm run vercel:login` only if the pinned CLI reports invalid or expired authorization. Never use `npx vercel@latest` for this repository.
 
 ### Environment Variables
 

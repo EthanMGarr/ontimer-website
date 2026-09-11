@@ -21,6 +21,15 @@ If you believe BrandOS should change based on new evidence, explain why and reco
 
 For implementation-only tasks (bug fixes, refactoring, infrastructure), BrandOS usually does not need to be consulted.
 
+## Permanent Deployment Workflow
+
+- From the repository root, run `npm run vercel:check` before a release and `npm run deploy:prod` to publish production.
+- These scripts invoke the exact Vercel CLI pinned in `package.json` by repository path, verify `.vercel/project.json` matches the OnTimer production target, and verify the saved login before any upload.
+- Never use `npx vercel@latest`, `npx -y vercel@latest`, a global `vercel`, or a newly downloaded CLI for this repository. Do not fall back to one if a release command fails.
+- If dependencies are missing or the pinned version does not match, run `npm ci`. If the project link is missing, run `npm run vercel:link`. If the saved login is actually invalid, run `npm run vercel:login`.
+- Treat `.vercel/project.json` as project-link metadata, not authentication. A successful local `whoami` check is the authentication test.
+- After publishing, wait for Vercel to report `Ready` and verify the changed behavior on the canonical production URL before reporting completion.
+
 ## Change Tracking
 
 Treat documentation and regression prevention as part of every completed change.
