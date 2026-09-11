@@ -51,7 +51,7 @@ export function Homepage2Header() {
     <header className="hp2-header">
       <div className="hp2-header__bar">
         <Link href="/" className="hp2-brand" aria-label="OnTimer home">
-          <Image src="/images/homepage2/ontimer-icon-blue.png" alt="" width={40} height={40} priority />
+          <Image src="/images/ontimer_1024x1024.png" alt="" width={40} height={40} priority />
           <span>OnTimer</span>
         </Link>
         <nav className="hp2-nav" aria-label="Main navigation">
