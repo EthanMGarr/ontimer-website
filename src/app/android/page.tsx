@@ -2,8 +2,7 @@
 
 import { AppStoreCTA } from "@/components/CTAButton";
 import { trackAndroidWaitlistClick } from "@/lib/analytics";
-
-const WAITLIST_URL = "https://forms.gle/96FxjQbUokqZcjKE8";
+import { ANDROID_WAITLIST_URL } from "@/lib/constants";
 
 export default function AndroidPage() {
   return (
@@ -27,7 +26,7 @@ export default function AndroidPage() {
 
           <div className="mt-10">
             <a
-              href={WAITLIST_URL}
+              href={ANDROID_WAITLIST_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-green-500 px-8 py-4 text-base font-semibold text-black transition-colors hover:bg-green-400"

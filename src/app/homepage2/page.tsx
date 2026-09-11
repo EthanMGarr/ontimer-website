@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Bricolage_Grotesque, IBM_Plex_Sans } from "next/font/google";
 import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
-import { APP_STORE_URL } from "@/lib/constants";
+import { ANDROID_WAITLIST_URL, APP_STORE_URL } from "@/lib/constants";
 import "./homepage2.css";
 
 const display = Bricolage_Grotesque({
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title: "Never Be Late Again | OnTimer Calendar Alarm App",
   description:
     "OnTimer turns your iPhone calendar events into persistent alarms and time-to-leave alerts, so you know when to join, leave, or act.",
-  alternates: { canonical: "https://www.ontimer.app/homepage2" },
+  alternates: { canonical: "https://www.ontimer.app/" },
   robots: { index: false, follow: true },
 };
 
@@ -39,6 +39,11 @@ const faqs = [
       "Calendar notifications can appear once and disappear. OnTimer creates persistent, customizable alarms designed to get your attention when it is time to act.",
   },
   {
+    question: "What is a calendar alarm app?",
+    answer:
+      "A calendar alarm app uses events from your existing calendar to create alarms that demand a response. OnTimer adds that alarm layer without asking you to rebuild your schedule.",
+  },
+  {
     question: "Which calendars work with OnTimer?",
     answer:
       "OnTimer connects with Apple Calendar, Google Calendar, and Outlook calendars through Microsoft 365. It works with your existing schedule, so there is nothing new to rebuild.",
@@ -49,6 +54,16 @@ const faqs = [
       "Yes. Time-to-leave alerts can account for an event location, your travel method, and changing traffic conditions.",
   },
   {
+    question: "What is the Last 5 Minutes Problem?",
+    answer:
+      "The Last 5 Minutes Problem is the gap between knowing about an event and acting before it starts. OnTimer helps close that gap with alarms that remain in front of you until you respond.",
+  },
+  {
+    question: "Does OnTimer work with multiple calendars?",
+    answer:
+      "Yes. OnTimer can bring events from multiple Apple, Google, and Microsoft calendar connections into one automatic alarm system.",
+  },
+  {
     question: "Is OnTimer free?",
     answer:
       "Yes. OnTimer is free to download and includes automatic calendar alarms for one calendar. An optional upgrade adds Time To Leave alerts, Early Warning alarms, multiple calendar connections, and more.",
@@ -57,7 +72,7 @@ const faqs = [
     question: "Is OnTimer available for Android?",
     answer:
       "OnTimer is currently available for iPhone. Android users can join the waitlist and be notified when an Android version is ready.",
-    link: { href: "/android", label: "Join the Android waitlist" },
+    link: { href: ANDROID_WAITLIST_URL, label: "Join the Android waitlist" },
   },
 ];
 
@@ -68,8 +83,18 @@ const jsonLd = {
       "@type": "Organization",
       "@id": "https://www.ontimer.app/#organization",
       name: "OnTimer",
-      url: "https://www.ontimer.app",
-      logo: "https://www.ontimer.app/images/homepage2/ontimer-icon-blue.png",
+      url: "https://www.ontimer.app/",
+      logo: {
+        "@type": "ImageObject",
+        "@id": "https://www.ontimer.app/#logo",
+        url: "https://www.ontimer.app/images/homepage2/ontimer-icon-blue.png",
+      },
+      sameAs: [APP_STORE_URL],
+      contactPoint: {
+        "@type": "ContactPoint",
+        email: "support@ontimer.app",
+        contactType: "customer support",
+      },
     },
     {
       "@type": "SoftwareApplication",
@@ -80,8 +105,19 @@ const jsonLd = {
       applicationSubCategory: "Calendar Alarm App",
       description:
         "OnTimer turns iPhone calendar events into persistent alarms and time-to-leave alerts.",
-      url: "https://www.ontimer.app/homepage2",
+      url: "https://www.ontimer.app/",
       installUrl: APP_STORE_URL,
+      sameAs: [APP_STORE_URL],
+      publisher: { "@id": "https://www.ontimer.app/#organization" },
+      brand: { "@id": "https://www.ontimer.app/#organization" },
+      availableOnDevice: "iPhone",
+      image: { "@id": "https://www.ontimer.app/#logo" },
+      screenshot: [
+        "https://www.ontimer.app/images/homepage2/persistent-alarm.png",
+        "https://www.ontimer.app/images/homepage2/time-to-leave-alarm.png",
+        "https://www.ontimer.app/images/homepage2/calendar-connections.png",
+        "https://www.ontimer.app/images/homepage2/early-warning.png",
+      ],
       offers: {
         "@type": "Offer",
         price: "0",
@@ -90,7 +126,20 @@ const jsonLd = {
       },
     },
     {
+      "@type": "WebSite",
+      "@id": "https://www.ontimer.app/#website",
+      name: "OnTimer",
+      url: "https://www.ontimer.app/",
+      description:
+        "OnTimer is an iPhone calendar alarm app that turns existing calendar events into persistent alarms and Time To Leave alerts.",
+      publisher: { "@id": "https://www.ontimer.app/#organization" },
+      about: { "@id": "https://www.ontimer.app/#app" },
+    },
+    {
       "@type": "FAQPage",
+      "@id": "https://www.ontimer.app/#faq",
+      url: "https://www.ontimer.app/#faq",
+      about: { "@id": "https://www.ontimer.app/#app" },
       mainEntity: faqs.map((faq) => ({
         "@type": "Question",
         name: faq.question,
@@ -137,14 +186,14 @@ export default function Homepage2() {
               to join, when to leave, and when it is time to act.
             </p>
             <div className="hp2-hero-actions">
-              <Homepage2DownloadCTA location="homepage2_hero" />
+              <Homepage2DownloadCTA location="homepage_hero" />
               <Link className="hp2-text-link" href="#how-it-works">
                 See how it works <ArrowIcon />
               </Link>
             </div>
             <p className="hp2-platform-note">
               Available now for iPhone. Android users can{" "}
-              <Link href="/android">join the waitlist</Link>.
+              <a href={ANDROID_WAITLIST_URL} target="_blank" rel="noopener noreferrer">join the waitlist</a>.
             </p>
           </div>
 
@@ -259,7 +308,7 @@ export default function Homepage2() {
               Choose recurring meetings, set business hours, pause alerts, and
               decide how much warning each kind of event deserves.
             </p>
-            <Homepage2DownloadCTA compact location="homepage2_controls" />
+            <Homepage2DownloadCTA compact location="homepage_controls" />
           </div>
           <Image
             src="/images/homepage2/control-settings.png"
@@ -330,7 +379,7 @@ export default function Homepage2() {
               <details key={faq.question} open={index === 0}>
                 <summary>{faq.question}</summary>
                 <p>
-                  {faq.answer}{faq.link ? <> <Link href={faq.link.href}>{faq.link.label}</Link>.</> : null}
+                  {faq.answer}{faq.link ? <> <a href={faq.link.href} target="_blank" rel="noopener noreferrer">{faq.link.label}</a>.</> : null}
                 </p>
               </details>
             ))}
@@ -351,7 +400,7 @@ export default function Homepage2() {
             <h2 id="final-title">Relax. You are on time.</h2>
             <p>Turn the calendar you already trust into alarms you will not miss.</p>
           </div>
-          <Homepage2DownloadCTA location="homepage2_final" />
+          <Homepage2DownloadCTA location="homepage_final" />
         </div>
       </section>
     </div>

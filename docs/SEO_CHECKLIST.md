@@ -19,6 +19,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Every intended indexable content page appears in `src/app/sitemap.ts`.
 - [ ] Utility, spam, test, preview, and private tool pages are excluded from the sitemap unless explicitly intended for search.
 - [ ] Temporary public preview routes use `noindex, follow`, remain out of the sitemap, use direct canonical internal links, and receive an explicit metadata, canonical, schema, and sitemap decision before replacing an indexed route.
+- [ ] When preserving a replaced public page for reference, give the archive a distinct URL, `noindex, nofollow`, and a self-canonical; exclude it from navigation and the sitemap so it cannot compete with the live page.
 - [ ] Sitemap pages do not use `noindex`.
 - [ ] Internal links point directly to canonical routes and do not depend on redirects.
 - [ ] URLs emitted only in structured data (including breadcrumb `item` URLs) also resolve to canonical, indexable pages rather than 404s or avoidable redirects.

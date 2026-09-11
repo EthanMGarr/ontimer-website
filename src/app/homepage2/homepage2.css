@@ -1,4 +1,4 @@
-/* Hallmark · pre-emit critique: P5 H5 E4 S5 R4 V5
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R4 V5
  * genre: modern-minimal · tone: calm precision · anchor: OnTimer blue
  * macrostructure: Narrative Workflow · nav: N11 · footer: Ft3
  * contrast: pass (40–41) · slop: pass (42–49) · mobile: pass (34, 49, 50–57)
@@ -482,6 +482,10 @@ body {
 
 .hp2-final-card h2 {
   margin-block: var(--space-sm);
+}
+
+.hp2-final-card .hp2-kicker {
+  color: var(--blue-100);
 }
 
 .hp2-final-card > div > p:last-child {

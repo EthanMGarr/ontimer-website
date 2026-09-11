@@ -181,7 +181,7 @@ export default function SharedMedicationSchedule() {
       </div>
 
       <div className="mt-6 rounded-lg border border-green-500/20 bg-green-500/[0.05] px-4 py-3 text-xs leading-relaxed text-zinc-400"><strong className="text-zinc-200">Processed in this browser.</strong> The schedule was read from the part of the link after the # and then removed from the address bar. That fragment was not included in the page request to OnTimer. Anyone with the complete link can view its contents. <Link href="/OnTimer_Privacy_Policy.html" className="underline underline-offset-2 hover:text-zinc-200">Privacy Policy</Link></div>
-      <p className="mt-5 text-xs leading-relaxed text-zinc-500">OnTimer is not a medical device and does not provide medical advice. Verify the medication, dose times, and instructions with your healthcare provider before relying on this schedule. <Link href="/terms" className="underline underline-offset-2 hover:text-zinc-300">Terms of Service</Link></p>
+      <p className="mt-5 text-xs leading-relaxed text-zinc-500">OnTimer is not a medical device and does not provide medical advice. Verify the medication, dose times, and instructions with your healthcare provider before relying on this schedule. <Link href="/OnTimer_Terms_of_Service.html" className="underline underline-offset-2 hover:text-zinc-300">Terms of Service</Link></p>
 
     </div>
   );

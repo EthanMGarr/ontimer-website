@@ -16,7 +16,7 @@ export default function HelpSiteFrame({ children }: { children: React.ReactNode 
   const isHelpPage = pathname.startsWith("/help");
   const isAnalyticsFreeMedicationPage = isAnalyticsFreeMedicationPath(pathname);
   const isSpanishPage = localeForPathname(pathname) === "es";
-  const isHomepage2 = pathname === "/homepage2";
+  const isAcquisitionHomepage = pathname === "/" || pathname === "/homepage2";
 
   if (isHelpPage) {
     return <main className="flex-1">{children}</main>;
@@ -25,9 +25,9 @@ export default function HelpSiteFrame({ children }: { children: React.ReactNode 
   return (
     <>
       <GoogleAnalytics />
-      {isHomepage2 ? <Homepage2Header /> : isSpanishPage ? <SpanishHeader /> : <Header />}
+      {isAcquisitionHomepage ? <Homepage2Header /> : isSpanishPage ? <SpanishHeader /> : <Header />}
       <main className="flex-1">{children}</main>
-      {isHomepage2 ? <Homepage2Footer /> : isSpanishPage ? <SpanishFooter /> : <Footer />}
+      {isAcquisitionHomepage ? <Homepage2Footer /> : isSpanishPage ? <SpanishFooter /> : <Footer />}
       {!isAnalyticsFreeMedicationPage && <CookieConsentBanner />}
     </>
   );

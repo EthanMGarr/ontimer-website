@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { APP_STORE_URL } from "@/lib/constants";
+import { ANDROID_WAITLIST_URL, APP_STORE_URL } from "@/lib/constants";
 import { trackAndroidWaitlistClick, trackAppStoreClick, trackQRCodeClick, trackQRCodeVisible } from "@/lib/analytics";
 
 type DeviceMode = "unknown" | "desktop" | "android" | "ios";
@@ -43,7 +42,7 @@ export function Homepage2DownloadCTA({ location, compact = false }: { location: 
   }, [location, open]);
 
   if (mode === "android") {
-    return <Link href="/android" className={`hp2-cta ${compact ? "hp2-cta--compact" : ""}`} onClick={() => trackAndroidWaitlistClick(location)}>Join the Android waitlist</Link>;
+    return <a href={ANDROID_WAITLIST_URL} target="_blank" rel="noopener noreferrer" className={`hp2-cta ${compact ? "hp2-cta--compact" : ""}`} onClick={() => trackAndroidWaitlistClick(location)}>Join the Android waitlist</a>;
   }
 
   if (mode !== "desktop") {

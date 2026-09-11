@@ -50,18 +50,18 @@ export function Homepage2Header() {
   return (
     <header className="hp2-header">
       <div className="hp2-header__bar">
-        <Link href="/homepage2" className="hp2-brand" aria-label="OnTimer home">
+        <Link href="/" className="hp2-brand" aria-label="OnTimer home">
           <Image src="/images/homepage2/ontimer-icon-blue.png" alt="" width={40} height={40} priority />
           <span>OnTimer</span>
         </Link>
         <nav className="hp2-nav" aria-label="Main navigation">
-          <Link href="/homepage2#how-it-works">How it works</Link>
+          <Link href="/#how-it-works">How it works</Link>
           <button ref={toolsButtonRef} type="button" aria-expanded={toolsOpen} aria-controls={toolsId} onClick={() => setToolsOpen((current) => !current)}>
             Tools <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>
           </button>
           <Link href="/why-calendar-notifications-fail">Learn</Link>
         </nav>
-        <div className="hp2-header__action"><Homepage2DownloadCTA location="homepage2_header" compact /></div>
+        <div className="hp2-header__action"><Homepage2DownloadCTA location="homepage_header" compact /></div>
         <button type="button" className="hp2-mobile-toggle" aria-expanded={mobileOpen} aria-label={mobileOpen ? "Close navigation" : "Open navigation"} onClick={() => setMobileOpen((current) => !current)}><span /><span /></button>
       </div>
       {toolsOpen ? (
@@ -79,7 +79,7 @@ export function Homepage2Header() {
       ) : null}
       {mobileOpen ? (
         <nav className="hp2-mobile-nav" aria-label="Mobile navigation">
-          <Link href="/homepage2#how-it-works">How it works</Link><Link href="/homepage2#tools">Tools</Link><Link href="/why-calendar-notifications-fail">Learn</Link><Homepage2DownloadCTA location="homepage2_mobile_menu" />
+          <Link href="/#how-it-works">How it works</Link><Link href="/#tools">Tools</Link><Link href="/why-calendar-notifications-fail">Learn</Link><Homepage2DownloadCTA location="homepage_mobile_menu" />
         </nav>
       ) : null}
     </header>

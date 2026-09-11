@@ -4,6 +4,7 @@ import SharedMedicationSchedule from "./SharedMedicationSchedule";
 export const metadata: Metadata = {
   title: "Medication Schedule Maker | OnTimer",
   description: "Review a medication schedule and add every dose to your calendar. No account required.",
+  alternates: { canonical: "https://www.ontimer.app/medication-schedule" },
   openGraph: {
     title: "Medication Schedule Maker | OnTimer",
     description: "Review a medication schedule and add every dose to your calendar. No account required.",
