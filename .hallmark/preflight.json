@@ -1,9 +1,9 @@
 {
-  "scannedAt": "2026-08-16",
+  "scannedAt": "2026-09-11",
   "framework": "Next.js 15 App Router",
   "fontStack": "existing site sans-serif stack",
-  "palette": "Tailwind zinc surfaces with #22c55e accent",
+  "palette": "Tailwind zinc surfaces with #22c55e accent; homepage2 introduces a route-scoped light blue token system",
   "motion": "motion-cut; no dedicated motion library",
   "spacing": "Tailwind default spacing scale",
-  "preserve": ["font stack", "palette", "spacing scale", "task-first medication workbench"]
+  "preserve": ["framework", "existing production palette", "spacing scale", "task-first medication workbench"]
 }

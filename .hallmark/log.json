@@ -1,0 +1,25 @@
+[
+  {
+    "date": "2026-09-11",
+    "macrostructure": "Narrative Workflow",
+    "theme": "custom",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "calm precision, reassuring blue, quiet momentum",
+    "enrichment": "real product screenshots",
+    "brief": "OnTimer acquisition homepage and consumer tool router"
+  },
+  {
+    "date": "2026-08-31",
+    "macrostructure": "Split Studio",
+    "theme": "existing OnTimer",
+    "enrichment": "none",
+    "brief": "Provider and caregiver medication schedule workflow redesign"
+  },
+  {
+    "date": "2026-09-01",
+    "macrostructure": "Workbench",
+    "theme": "existing OnTimer",
+    "enrichment": "live medication schedule generator",
+    "brief": "Public patient medication schedule page rebuild"
+  }
+]

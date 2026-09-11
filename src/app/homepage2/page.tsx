@@ -1,560 +1,359 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import type { ReactNode } from "react";
-import { HeroAnimationV2 } from "@/components/HeroAnimationV2";
-import { HomepagePreviewCTA } from "@/components/HomepagePreviewCTA";
+import { Bricolage_Grotesque, IBM_Plex_Sans } from "next/font/google";
+import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
 import { APP_STORE_URL } from "@/lib/constants";
+import "./homepage2.css";
+
+const display = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-hp-display",
+  display: "swap",
+});
+
+const body = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-hp-body",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "OnTimer Homepage Preview",
+  title: "Never Be Late Again | OnTimer Calendar Alarm App",
   description:
-    "Preview the redesigned OnTimer homepage: automatic calendar alarms for iPhone that help you stay on time from Google Calendar, Apple Calendar, and Outlook Calendar.",
+    "OnTimer turns your iPhone calendar events into persistent alarms and time-to-leave alerts, so you know when to join, leave, or act.",
   alternates: { canonical: "https://www.ontimer.app/homepage2" },
-  openGraph: {
-    title: "OnTimer Homepage Preview",
-    description:
-      "Automatic calendar alarms for iPhone that help you stay on time from Google Calendar, Apple Calendar, and Outlook Calendar.",
-    url: "https://www.ontimer.app/homepage2",
-    images: [
-      {
-        url: "/images/CantMissAlerts.png",
-        width: 946,
-        height: 2048,
-        alt: "OnTimer iPhone calendar alarm proof showing an upcoming meeting and priority notification",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "OnTimer Homepage Preview",
-    description:
-      "Automatic calendar alarms for iPhone that help you stay on time from Google Calendar, Apple Calendar, and Outlook Calendar.",
-    images: ["/images/CantMissAlerts.png"],
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
+  robots: { index: false, follow: true },
 };
 
-const softwareJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "OnTimer",
-  operatingSystem: "iOS",
-  applicationCategory: "ProductivityApplication",
-  applicationSubCategory: "Calendar Alarm App",
-  description:
-    "OnTimer is an iPhone calendar alarm app. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and turns events into persistent alarms.",
-  url: "https://www.ontimer.app/homepage2",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
+const faqs = [
+  {
+    question: "What does OnTimer do?",
+    answer:
+      "OnTimer turns events from the calendars you already use into alarms on your iPhone. It helps you know when to join, leave, or act before the moment passes.",
   },
-};
+  {
+    question: "How is an OnTimer alarm different from a calendar notification?",
+    answer:
+      "Calendar notifications can appear once and disappear. OnTimer creates persistent, customizable alarms designed to get your attention when it is time to act.",
+  },
+  {
+    question: "Which calendars work with OnTimer?",
+    answer:
+      "OnTimer connects with Apple Calendar, Google Calendar, and Microsoft 365 calendars. It works with your existing schedule, so there is nothing new to rebuild.",
+  },
+  {
+    question: "Does OnTimer know when I should leave?",
+    answer:
+      "Yes. Time-to-leave alerts can account for an event location, your travel method, and changing traffic conditions.",
+  },
+  {
+    question: "Is OnTimer free?",
+    answer:
+      "OnTimer is free to download and includes automatic calendar alarms. Optional paid features provide additional controls and capabilities. Current subscription details are shown in the app.",
+  },
+  {
+    question: "Is OnTimer available for Android?",
+    answer:
+      "OnTimer is currently available for iPhone. Android users can join the waitlist and be notified when an Android version is ready.",
+  },
+];
 
-const faqJsonLd = {
+const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
+  "@graph": [
     {
-      "@type": "Question",
-      name: "What is OnTimer?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "OnTimer is an iPhone calendar alarm app that turns calendar events into persistent alarms so you know when to join, leave, or act before the moment passes.",
+      "@type": "Organization",
+      "@id": "https://www.ontimer.app/#organization",
+      name: "OnTimer",
+      url: "https://www.ontimer.app",
+      logo: "https://www.ontimer.app/images/homepage2/ontimer-icon-blue.png",
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://www.ontimer.app/#app",
+      name: "OnTimer",
+      operatingSystem: "iOS",
+      applicationCategory: "ProductivityApplication",
+      applicationSubCategory: "Calendar Alarm App",
+      description:
+        "OnTimer turns iPhone calendar events into persistent alarms and time-to-leave alerts.",
+      url: "https://www.ontimer.app/homepage2",
+      installUrl: APP_STORE_URL,
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+        description: "Free to download with optional paid features.",
       },
     },
     {
-      "@type": "Question",
-      name: "Which calendars does OnTimer work with?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "OnTimer works with Google Calendar, Apple Calendar, and Outlook Calendar, including multiple calendars.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How is OnTimer different from a calendar notification?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Calendar notifications appear and disappear. OnTimer alarms stay visible and require acknowledgement, making them harder to miss when it is time to act.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Does OnTimer replace my calendar?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "No. OnTimer works with the calendars you already use and creates alarms from those events.",
-      },
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
     },
   ],
 };
 
-const calendarLogos = [
-  {
-    label: "Google Calendar",
-    src: "/images/google-calendar-logo-google-calendar.jpg",
-  },
-  {
-    label: "Apple Calendar",
-    text: "Apple Calendar",
-  },
-  {
-    label: "Outlook Calendar",
-    src: "/images/outlook-calendar.jpg",
-  },
-];
-
-const steps = [
-  {
-    number: "01",
-    title: "Connect your calendars",
-    body: "Use the calendars you already rely on: Google Calendar, Apple Calendar, and Outlook Calendar.",
-  },
-  {
-    number: "02",
-    title: "OnTimer creates alarms",
-    body: "Upcoming events get alarms automatically, without rebuilding your schedule.",
-  },
-  {
-    number: "03",
-    title: "Move before it is too late",
-    body: "When it is time to join, leave, or wrap up, OnTimer keeps the alert in front of you.",
-  },
-];
-
-const automaticDetails = [
-  "No manual alarm setup for every meeting",
-  "Work and personal calendars in one place",
-  "Alarms stay aligned when your schedule changes",
-  "Read-only calendar access",
-];
-
-const useCases = [
-  { icon: "💼", label: "Back-to-back meetings" },
-  { icon: "🏥", label: "Doctor appointments" },
-  { icon: "✈", label: "Flights" },
-  { icon: "🎒", label: "School pickups" },
-  { icon: "💊", label: "Medication timing" },
-  { icon: "📍", label: "Events with locations" },
-];
-
-const calculators = [
-  {
-    title: "Airport Time To Leave",
-    body: "Know when to leave for a flight.",
-    href: "/airport-time-to-leave-calculator",
-  },
-  {
-    title: "What Time Should I Leave",
-    body: "Plan the moment to head out.",
-    href: "/what-time-should-i-leave",
-  },
-  {
-    title: "Wake-Up Time",
-    body: "Work backward from when you need to move.",
-    href: "/wake-up-time-calculator",
-  },
-  {
-    title: "Airport Theory",
-    body: "See how risky a last-minute airport plan is.",
-    href: "/airport-theory-calculator",
-  },
-  {
-    title: "Cruise Terminal Time Calculator",
-    body: "Plan around boarding windows, ports, luggage, and parking.",
-    href: "/cruise-terminal-time-calculators",
-  },
-];
-
-const faqItems = [
-  {
-    question: "What does OnTimer do?",
-    answer:
-      "OnTimer turns events from your existing calendar into persistent alarms on iPhone, so you know when to act before the window closes.",
-  },
-  {
-    question: "Does it work with all my calendars?",
-    answer:
-      "OnTimer works with Google Calendar, Apple Calendar, and Outlook Calendar, including multiple calendars across work and personal life.",
-  },
-  {
-    question: "Is this just another notification?",
-    answer:
-      "No. Notifications appear once and disappear. OnTimer alarms are designed to stay in front of you until you respond.",
-  },
-  {
-    question: "Does it replace my calendar?",
-    answer:
-      "No. OnTimer works from the calendars you already use, so you do not have to rebuild your schedule in another app.",
-  },
-];
-
-function SectionLabel({ children }: { children: ReactNode }) {
+function ArrowIcon() {
   return (
-    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">
-      {children}
-    </p>
-  );
-}
-
-function SectionHeading({
-  eyebrow,
-  title,
-  body,
-  align = "center",
-}: {
-  eyebrow: string;
-  title: string;
-  body?: string;
-  align?: "center" | "left";
-}) {
-  return (
-    <div
-      className={
-        align === "center"
-          ? "mx-auto max-w-3xl text-center"
-          : "max-w-3xl text-left"
-      }
-    >
-      <SectionLabel>{eyebrow}</SectionLabel>
-      <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
-        {title}
-      </h2>
-      {body ? (
-        <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg">
-          {body}
-        </p>
-      ) : null}
-    </div>
-  );
-}
-
-function ArrowRight() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      className="h-4 w-4"
-    >
-      <path
-        fillRule="evenodd"
-        d="M3 10a.75.75 0 0 1 .75-.75h10.69l-4.22-4.22a.75.75 0 1 1 1.06-1.06l5.5 5.5a.75.75 0 0 1 0 1.06l-5.5 5.5a.75.75 0 1 1-1.06-1.06l4.22-4.22H3.75A.75.75 0 0 1 3 10Z"
-        clipRule="evenodd"
-      />
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M5 12h14M13 6l6 6-6 6" />
     </svg>
   );
 }
 
+function ToolIcon({ kind }: { kind: "leave" | "travel" | "medication" | "all" }) {
+  const paths = {
+    leave: <><circle cx="12" cy="12" r="8" /><path d="M12 7v5l3 2" /></>,
+    travel: <><path d="m3 13 8-2 5-6 2 1-3 6 5 3-1 2-6-2-5 6-2-1 3-6-6 1Z" /></>,
+    medication: <><path d="M8 4h8v16H8zM5 9h3m8 6h3" /><path d="M12 8v8m-4-4h8" /></>,
+    all: <><circle cx="5" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /></>,
+  };
+
+  return <span className="hp2-tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24">{paths[kind]}</svg></span>;
+}
+
 export default function Homepage2() {
   return (
-    <>
+    <div className={`${display.variable} ${body.variable} homepage2`}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <section className="overflow-hidden border-b border-zinc-900 bg-black">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-14 sm:px-6 sm:py-[4.5rem] lg:grid-cols-[0.98fr_1.02fr] lg:gap-16 lg:py-20">
-          <div className="text-center lg:text-left">
-            <SectionLabel>Automatic calendar alarms for iPhone</SectionLabel>
-            <h1 className="mt-5 text-5xl font-black leading-[0.96] tracking-tight text-white sm:text-6xl lg:text-7xl">
-              Never be late again.
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-zinc-300 sm:text-xl lg:mx-0">
-              Connect Google Calendar, Apple Calendar, or Outlook Calendar once. OnTimer
-              automatically turns upcoming events into alarms that stay visible
-              until you respond, without rebuilding your schedule.
+      <section className="hp2-hero" aria-labelledby="hp2-title">
+        <div className="hp2-shell hp2-hero-grid">
+          <div className="hp2-hero-copy">
+            <p className="hp2-kicker">Automatic calendar alarms</p>
+            <h1 id="hp2-title">Never be late again.</h1>
+            <p className="hp2-lede">
+              OnTimer turns your calendar events into alarms, so you know when
+              to join, when to leave, and when it is time to act.
             </p>
-
-            <div className="mt-8 flex justify-center lg:justify-start">
-              <HomepagePreviewCTA location="homepage2_hero" />
-            </div>
-
-            <div className="mt-5 flex flex-col items-center gap-2 text-sm text-zinc-500 sm:flex-row sm:justify-center lg:justify-start">
-              <span>iPhone today.</span>
-              <Link
-                href="/android"
-                className="font-semibold text-zinc-400 underline-offset-4 transition-colors hover:text-white hover:underline"
-              >
-                Android? Join the waitlist.
+            <div className="hp2-hero-actions">
+              <Homepage2DownloadCTA location="homepage2_hero" />
+              <Link className="hp2-text-link" href="#how-it-works">
+                See how it works <ArrowIcon />
               </Link>
             </div>
+            <p className="hp2-platform-note">
+              Available now for iPhone. Android users can join the waitlist.
+            </p>
           </div>
 
-          <HeroAnimationV2 />
+          <div className="hp2-hero-visual" aria-label="OnTimer alarm examples">
+            <Image
+              className="hp2-shot hp2-shot-main"
+              src="/images/homepage2/persistent-alarm.png"
+              alt="OnTimer persistent meeting alarm on an iPhone"
+              width={1242}
+              height={2688}
+              priority
+            />
+            <Image
+              className="hp2-shot hp2-shot-float"
+              src="/images/homepage2/time-to-leave-alarm.png"
+              alt="OnTimer time-to-leave alarm for a doctor's appointment"
+              width={1242}
+              height={2688}
+              priority
+            />
+            <p className="hp2-visual-note">A real alarm, not another banner.</p>
+          </div>
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-black py-14 sm:py-[4.5rem]">
-        <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+      <section className="hp2-problem" aria-labelledby="problem-title">
+        <div className="hp2-shell hp2-problem-grid">
+          <p className="hp2-moment">“Are you joining?”</p>
           <div>
-            <SectionHeading
-              eyebrow="The Last 5 Minutes"
-              title="You did not forget. The reminder disappeared."
-              align="left"
-              body="Most people are not late because they never knew what was coming. They saw the reminder, planned to move in a minute, got pulled back into something, and missed the final window."
-            />
-            <div className="mt-8 grid gap-6 sm:grid-cols-2">
-              <div className="border-t border-zinc-800 pt-5">
-                <h3 className="text-lg font-black text-white">
-                  Calendar notifications inform you.
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-zinc-400">
-                  They appear with every other alert, then leave you alone to
-                  remember what to do next.
-                </p>
-              </div>
-              <div className="border-t border-emerald-500/50 pt-5">
-                <h3 className="text-lg font-black text-white">
-                  OnTimer alarms make you act.
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-zinc-400">
-                  They stay visible until you respond, so the moment to move is
-                  harder to miss.
-                </p>
-              </div>
+            <p className="hp2-kicker">The problem is not your calendar</p>
+            <h2 id="problem-title">You knew about the meeting. The reminder disappeared.</h2>
+            <p>
+              Schedules change. Traffic builds. A notification appears while
+              you are doing something else. OnTimer closes the gap between
+              knowing what is next and acting on time.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="hp2-workflow" id="how-it-works" aria-labelledby="workflow-title">
+        <div className="hp2-shell">
+          <div className="hp2-section-intro">
+            <p className="hp2-kicker">Your schedule becomes actionable</p>
+            <h2 id="workflow-title">Calendar in. On-time out.</h2>
+            <p>Set it up once. OnTimer keeps watch as your day moves.</p>
+          </div>
+
+          <article className="hp2-stage hp2-stage-calendar">
+            <div className="hp2-stage-copy">
+              <span className="hp2-stage-number">01</span>
+              <h3>Connect the calendars you already use</h3>
+              <p>
+                Bring Apple Calendar, Google Calendar, and Microsoft 365
+                together. Your existing events stay where they are.
+              </p>
             </div>
-            <Link
-              href="/why-calendar-notifications-fail"
-              className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-emerald-300 transition-colors hover:text-emerald-200"
-            >
-              Read why calendar notifications fail
-              <ArrowRight />
+            <Image
+              src="/images/homepage2/calendar-connections.png"
+              alt="OnTimer options for connecting Google, Microsoft 365, and Apple calendars"
+              width={1242}
+              height={2688}
+            />
+          </article>
+
+          <article className="hp2-stage hp2-stage-alarm">
+            <div className="hp2-stage-copy">
+              <span className="hp2-stage-number">02</span>
+              <h3>Turn important events into alarms</h3>
+              <p>
+                Get an alarm that demands a response, plus an optional early
+                warning when you need time to wrap up.
+              </p>
+            </div>
+            <div className="hp2-pair">
+              <Image
+                src="/images/homepage2/persistent-alarm.png"
+                alt="A persistent OnTimer meeting alarm"
+                width={1242}
+                height={2688}
+              />
+              <Image
+                src="/images/homepage2/early-warning.png"
+                alt="OnTimer early warning alarm settings"
+                width={1242}
+                height={2688}
+              />
+            </div>
+          </article>
+
+          <article className="hp2-stage hp2-stage-leave">
+            <div className="hp2-stage-copy">
+              <span className="hp2-stage-number">03</span>
+              <h3>Know when it is really time to leave</h3>
+              <p>
+                For events with a location, OnTimer can account for traffic and
+                how you travel. If the road changes, your timing changes too.
+              </p>
+            </div>
+            <Image
+              src="/images/homepage2/traffic-adjustments.png"
+              alt="OnTimer time-to-leave alerts based on traffic"
+              width={1242}
+              height={2688}
+            />
+          </article>
+        </div>
+      </section>
+
+      <section className="hp2-control" aria-labelledby="control-title">
+        <div className="hp2-shell hp2-control-grid">
+          <div>
+            <p className="hp2-kicker">Automatic does not mean rigid</p>
+            <h2 id="control-title">Your schedule. Your rules.</h2>
+            <p>
+              Choose recurring meetings, set business hours, pause alerts, and
+              decide how much warning each kind of event deserves.
+            </p>
+            <Homepage2DownloadCTA compact location="homepage2_controls" />
+          </div>
+          <Image
+            src="/images/homepage2/control-settings.png"
+            alt="OnTimer controls for travel alerts, recurring meetings, business hours, and pausing"
+            width={1242}
+            height={2688}
+          />
+        </div>
+      </section>
+
+      <section className="hp2-tools" id="tools" aria-labelledby="tools-title">
+        <div className="hp2-shell">
+          <div className="hp2-section-intro hp2-section-intro-left">
+            <p className="hp2-kicker">Need an answer right now?</p>
+            <h2 id="tools-title">Start with the moment you are planning.</h2>
+            <p>
+              Use a free planning tool now. When the moment matters every day,
+              let OnTimer keep watch automatically.
+            </p>
+          </div>
+
+          <div className="hp2-tool-grid">
+            <Link className="hp2-tool-card hp2-tool-card-featured" href="/what-time-should-i-leave">
+              <ToolIcon kind="leave" />
+              <span>
+                <strong>I need to leave on time</strong>
+                <small>Work backward from your arrival time.</small>
+              </span>
+              <ArrowIcon />
+            </Link>
+            <Link className="hp2-tool-card" href="/airport-time-to-leave-calculator">
+              <ToolIcon kind="travel" />
+              <span>
+                <strong>I am planning travel</strong>
+                <small>Airports, flights, cruises, and time zones.</small>
+              </span>
+              <ArrowIcon />
+            </Link>
+            <Link className="hp2-tool-card" href="/medication-schedule">
+              <ToolIcon kind="medication" />
+              <span>
+                <strong>I need a medication schedule</strong>
+                <small>Personal, caregiver, and veterinary planners.</small>
+              </span>
+              <ArrowIcon />
+            </Link>
+            <Link className="hp2-tool-card hp2-tool-card-all" href="/time-calculators">
+              <ToolIcon kind="all" />
+              <span>
+                <strong>Show me every free tool</strong>
+                <small>Browse the complete OnTimer tool library.</small>
+              </span>
+              <ArrowIcon />
             </Link>
           </div>
+        </div>
+      </section>
 
-          <div className="mx-auto w-full max-w-[21rem] overflow-hidden rounded-[2rem] border border-zinc-800 bg-zinc-950 lg:justify-self-center">
-            <Image
-              src="/images/NeverBeLateAgain.png"
-              alt="OnTimer current homepage screenshot about never being late again"
-              width={946}
-              height={2048}
-              className="h-auto w-full"
-            />
+      <section className="hp2-faq" id="faq" aria-labelledby="faq-title">
+        <div className="hp2-shell hp2-faq-grid">
+          <div className="hp2-faq-intro">
+            <p className="hp2-kicker">The useful details</p>
+            <h2 id="faq-title">A few things worth knowing.</h2>
+            <p>OnTimer works with your calendar. It does not ask you to replace it.</p>
+          </div>
+          <div className="hp2-faq-list">
+            {faqs.map((faq, index) => (
+              <details key={faq.question} open={index === 0}>
+                <summary>{faq.question}</summary>
+                <p>{faq.answer}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="border-b border-zinc-900 bg-zinc-950 py-14 sm:py-[4.5rem]">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="mx-auto grid w-full max-w-md grid-cols-[0.82fr_1fr] items-end gap-3 lg:max-w-[23rem] lg:justify-self-center">
-            <div className="overflow-hidden rounded-[1.5rem] border border-zinc-800 bg-black">
-              <Image
-                src="/images/ConnectsToCalendars.png"
-                alt="OnTimer calendar connection screen explaining calendar access"
-                width={946}
-                height={2048}
-                className="h-auto w-full"
-              />
-            </div>
-            <div className="overflow-hidden rounded-[1.75rem] border border-zinc-800 bg-black shadow-2xl shadow-black/50">
-              <Image
-                src="/images/AutomaticAlarms.png"
-                alt="OnTimer full-screen alarm for an upcoming calendar event"
-                width={946}
-                height={2048}
-                className="h-auto w-full"
-              />
-            </div>
-          </div>
-
+      <section className="hp2-final" aria-labelledby="final-title">
+        <div className="hp2-shell hp2-final-card">
+          <Image
+            src="/images/homepage2/ontimer-icon-blue.png"
+            alt=""
+            width={200}
+            height={200}
+          />
           <div>
-            <SectionHeading
-              eyebrow="Automatic by design"
-              title="This is not another place to manage reminders."
-              align="left"
-              body="OnTimer works from your existing calendars and creates alarms automatically, so staying on time does not become another system to manage."
-            />
-            <div className="mt-7 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-              {automaticDetails.map((item) => (
-                <div key={item} className="border-t border-zinc-800 pt-4">
-                  <p className="text-sm font-semibold leading-6 text-zinc-200">
-                    {item}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <p className="hp2-kicker">One less thing to remember</p>
+            <h2 id="final-title">Relax. You are on time.</h2>
+            <p>Turn the calendar you already trust into alarms you will not miss.</p>
           </div>
+          <Homepage2DownloadCTA location="homepage2_final" />
         </div>
       </section>
-
-      <section className="border-b border-zinc-900 bg-black py-14 sm:py-[4.5rem]">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <SectionHeading
-            eyebrow="Where it helps"
-            title="Built for moments where being late has a cost."
-            body="Meetings are the everyday case, but the same alarm behavior helps whenever the calendar event matters."
-          />
-
-          <div className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {useCases.map((item) => (
-              <div
-                key={item.label}
-                className="flex items-center gap-3 rounded-lg border border-zinc-800 bg-black px-5 py-4 text-base font-semibold text-white"
-              >
-                <span className="text-lg" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-zinc-900 bg-zinc-950 py-14 sm:py-[4.5rem]">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <SectionHeading
-            eyebrow="How it works"
-            title="Connect once. Stay on time automatically."
-            body="Your calendar remains the source of truth. OnTimer handles the timing layer before the moment to join, leave, or wrap up."
-          />
-
-          <div className="mt-10 grid gap-8 md:grid-cols-3">
-            {steps.map((item) => (
-              <div key={item.number} className="border-t border-zinc-800 pt-6">
-                <p className="text-sm font-black text-sky-300">
-                  {item.number}
-                </p>
-                <h3 className="mt-5 text-xl font-black text-white">
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-zinc-400">
-                  {item.body}
-                </p>
-                {item.number === "01" ? (
-                  <div className="mt-5 grid gap-2">
-                    {calendarLogos.map((calendar) => (
-                      <div
-                        key={calendar.label}
-                        className="flex min-h-11 items-center gap-2 rounded-lg border border-zinc-800 bg-black px-3"
-                      >
-                        {calendar.src ? (
-                          <Image
-                            src={calendar.src}
-                            alt=""
-                            width={22}
-                            height={22}
-                            className="h-6 w-6 rounded-md object-cover"
-                          />
-                        ) : (
-                          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-white text-[0.65rem] font-black text-black">
-                            31
-                          </span>
-                        )}
-                        <span className="text-xs font-semibold text-zinc-200">
-                          {calendar.label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-zinc-900 bg-black py-14 sm:py-[4.5rem]">
-        <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          <div>
-            <SectionLabel>Time To Leave / Planning tools</SectionLabel>
-            <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
-              Plan ahead with free time calculators.
-            </h2>
-            <p className="mt-5 text-lg leading-8 text-zinc-400">
-              Work backward from flights, appointments, wake-up times, cruises,
-              and travel so you know exactly when to leave.
-            </p>
-          </div>
-
-          <div className="divide-y divide-zinc-800 border-y border-zinc-800">
-            {calculators.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="group flex items-center justify-between gap-5 py-5"
-              >
-                <span>
-                  <span className="block font-black text-white">
-                    {item.title}
-                  </span>
-                  <span className="mt-1 block text-sm leading-6 text-zinc-500">
-                    {item.body}
-                  </span>
-                </span>
-                <span className="text-zinc-600 transition-colors group-hover:text-emerald-300">
-                  <ArrowRight />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-zinc-900 bg-zinc-950 py-14 sm:py-[4.5rem]">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <SectionHeading
-            eyebrow="FAQ"
-            title="Frequently Asked Questions"
-            body="Short answers for the questions people usually have before trying OnTimer."
-          />
-
-          <div className="mt-10 divide-y divide-zinc-800 border-y border-zinc-800">
-            {faqItems.map((item) => (
-              <div
-                key={item.question}
-                className="grid gap-3 py-6 md:grid-cols-[0.48fr_0.52fr] md:gap-8"
-              >
-                <h3 className="font-black text-white">{item.question}</h3>
-                <p className="text-sm leading-6 text-zinc-400">
-                  {item.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-black py-14 sm:py-[4.5rem]">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
-          <SectionLabel>Download OnTimer</SectionLabel>
-          <h2 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
-            Let your calendar keep you moving.
-          </h2>
-          <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-zinc-400">
-            Download OnTimer for iPhone and turn your calendar into automatic
-            alarms for the moments you need to act.
-          </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <HomepagePreviewCTA location="homepage2_final" />
-            <a
-              href={APP_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden min-h-12 items-center justify-center rounded-full border border-zinc-700 px-7 py-3 text-base font-semibold text-white transition-colors hover:border-white hover:bg-white hover:text-black md:inline-flex"
-            >
-              Download from the App Store
-            </a>
-          </div>
-          <Link
-            href="/android"
-            className="mt-5 inline-block text-sm font-semibold text-zinc-500 underline-offset-4 transition-colors hover:text-white hover:underline"
-          >
-            Android? Join the waitlist.
-          </Link>
-        </div>
-      </section>
-    </>
+    </div>
   );
 }

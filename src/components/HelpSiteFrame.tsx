@@ -8,12 +8,15 @@ import CookieConsentBanner from "@/components/CookieConsentBanner";
 import { isAnalyticsFreeMedicationPath } from "@/lib/medication-route-privacy";
 import { localeForPathname } from "@/lib/i18n";
 import { SpanishFooter, SpanishHeader } from "@/components/SpanishSiteChrome";
+import { Homepage2Header } from "@/components/Homepage2Header";
+import { Homepage2Footer } from "@/components/Homepage2Footer";
 
 export default function HelpSiteFrame({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isHelpPage = pathname.startsWith("/help");
   const isAnalyticsFreeMedicationPage = isAnalyticsFreeMedicationPath(pathname);
   const isSpanishPage = localeForPathname(pathname) === "es";
+  const isHomepage2 = pathname === "/homepage2";
 
   if (isHelpPage) {
     return <main className="flex-1">{children}</main>;
@@ -22,9 +25,9 @@ export default function HelpSiteFrame({ children }: { children: React.ReactNode 
   return (
     <>
       <GoogleAnalytics />
-      {isSpanishPage ? <SpanishHeader /> : <Header />}
+      {isHomepage2 ? <Homepage2Header /> : isSpanishPage ? <SpanishHeader /> : <Header />}
       <main className="flex-1">{children}</main>
-      {isSpanishPage ? <SpanishFooter /> : <Footer />}
+      {isHomepage2 ? <Homepage2Footer /> : isSpanishPage ? <SpanishFooter /> : <Footer />}
       {!isAnalyticsFreeMedicationPage && <CookieConsentBanner />}
     </>
   );
