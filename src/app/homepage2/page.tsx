@@ -41,7 +41,7 @@ const faqs = [
   {
     question: "Which calendars work with OnTimer?",
     answer:
-      "OnTimer connects with Apple Calendar, Google Calendar, and Microsoft 365 calendars. It works with your existing schedule, so there is nothing new to rebuild.",
+      "OnTimer connects with Apple Calendar, Google Calendar, and Outlook calendars through Microsoft 365. It works with your existing schedule, so there is nothing new to rebuild.",
   },
   {
     question: "Does OnTimer know when I should leave?",
@@ -51,12 +51,13 @@ const faqs = [
   {
     question: "Is OnTimer free?",
     answer:
-      "OnTimer is free to download and includes automatic calendar alarms. Optional paid features provide additional controls and capabilities. Current subscription details are shown in the app.",
+      "Yes. OnTimer is free to download and includes automatic calendar alarms for one calendar. An optional upgrade adds Time To Leave alerts, Early Warning alarms, multiple calendar connections, and more.",
   },
   {
     question: "Is OnTimer available for Android?",
     answer:
       "OnTimer is currently available for iPhone. Android users can join the waitlist and be notified when an Android version is ready.",
+    link: { href: "/android", label: "Join the Android waitlist" },
   },
 ];
 
@@ -142,7 +143,8 @@ export default function Homepage2() {
               </Link>
             </div>
             <p className="hp2-platform-note">
-              Available now for iPhone. Android users can join the waitlist.
+              Available now for iPhone. Android users can{" "}
+              <Link href="/android">join the waitlist</Link>.
             </p>
           </div>
 
@@ -163,7 +165,6 @@ export default function Homepage2() {
               height={2688}
               priority
             />
-            <p className="hp2-visual-note">A real alarm, not another banner.</p>
           </div>
         </div>
       </section>
@@ -186,18 +187,17 @@ export default function Homepage2() {
       <section className="hp2-workflow" id="how-it-works" aria-labelledby="workflow-title">
         <div className="hp2-shell">
           <div className="hp2-section-intro">
-            <p className="hp2-kicker">Your schedule becomes actionable</p>
-            <h2 id="workflow-title">Calendar in. On-time out.</h2>
-            <p>Set it up once. OnTimer keeps watch as your day moves.</p>
+            <p className="hp2-kicker">How OnTimer works</p>
+            <h2 id="workflow-title">Your calendar becomes your alarm system.</h2>
+            <p>Connect once. OnTimer automatically keeps your alarms aligned with your day.</p>
           </div>
 
           <article className="hp2-stage hp2-stage-calendar">
             <div className="hp2-stage-copy">
-              <span className="hp2-stage-number">01</span>
               <h3>Connect the calendars you already use</h3>
               <p>
-                Bring Apple Calendar, Google Calendar, and Microsoft 365
-                together. Your existing events stay where they are.
+                Bring Apple Calendar, Google Calendar, and Outlook calendars
+                together. Microsoft work and school accounts connect through Microsoft 365.
               </p>
             </div>
             <Image
@@ -210,7 +210,6 @@ export default function Homepage2() {
 
           <article className="hp2-stage hp2-stage-alarm">
             <div className="hp2-stage-copy">
-              <span className="hp2-stage-number">02</span>
               <h3>Turn important events into alarms</h3>
               <p>
                 Get an alarm that demands a response, plus an optional early
@@ -235,7 +234,6 @@ export default function Homepage2() {
 
           <article className="hp2-stage hp2-stage-leave">
             <div className="hp2-stage-copy">
-              <span className="hp2-stage-number">03</span>
               <h3>Know when it is really time to leave</h3>
               <p>
                 For events with a location, OnTimer can account for traffic and
@@ -284,11 +282,11 @@ export default function Homepage2() {
           </div>
 
           <div className="hp2-tool-grid">
-            <Link className="hp2-tool-card hp2-tool-card-featured" href="/what-time-should-i-leave">
+            <Link className="hp2-tool-card" href="/what-time-should-i-leave">
               <ToolIcon kind="leave" />
               <span>
-                <strong>I need to leave on time</strong>
-                <small>Work backward from your arrival time.</small>
+                <strong>Calculate when to leave</strong>
+                <small>Plan any meeting, appointment, or arrival.</small>
               </span>
               <ArrowIcon />
             </Link>
@@ -296,7 +294,7 @@ export default function Homepage2() {
               <ToolIcon kind="travel" />
               <span>
                 <strong>I am planning travel</strong>
-                <small>Airports, flights, cruises, and time zones.</small>
+                <small>Choose an airport or cruise port and plan your timing.</small>
               </span>
               <ArrowIcon />
             </Link>
@@ -308,7 +306,7 @@ export default function Homepage2() {
               </span>
               <ArrowIcon />
             </Link>
-            <Link className="hp2-tool-card hp2-tool-card-all" href="/time-calculators">
+            <Link className="hp2-tool-card" href="/time-calculators">
               <ToolIcon kind="all" />
               <span>
                 <strong>Show me every free tool</strong>
@@ -331,7 +329,9 @@ export default function Homepage2() {
             {faqs.map((faq, index) => (
               <details key={faq.question} open={index === 0}>
                 <summary>{faq.question}</summary>
-                <p>{faq.answer}</p>
+                <p>
+                  {faq.answer}{faq.link ? <> <Link href={faq.link.href}>{faq.link.label}</Link>.</> : null}
+                </p>
               </details>
             ))}
           </div>

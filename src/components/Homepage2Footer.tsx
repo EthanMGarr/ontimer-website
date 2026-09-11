@@ -3,8 +3,8 @@ import Link from "next/link";
 
 const columns = [
   { title: "OnTimer", links: [["How it works", "/homepage2#how-it-works"], ["Features", "/features"], ["Frequently asked questions", "/faq"], ["Android waitlist", "/android"]] },
-  { title: "Plan your time", links: [["Leave-time calculator", "/what-time-should-i-leave"], ["Airport time to leave", "/airport-time-to-leave-calculator"], ["Cruise terminal calculators", "/cruise-terminal-time-calculators"], ["Wake-up calculator", "/wake-up-time-calculator"], ["Browse all calculators", "/time-calculators"]] },
-  { title: "Medication schedules", links: [["Personal medication schedule", "/medication-schedule"], ["Caregiver schedule", "/caregiver-medication-schedule"], ["Provider schedule", "/provider-medication-schedule"], ["Veterinary schedule", "/veterinary-medication-schedule"]] },
+  { title: "Plan your time", links: [["Time-to-Leave Calculator", "/what-time-should-i-leave"], ["Airport Time-to-Leave Calculator", "/airport-time-to-leave-calculator"], ["Cruise Time-to-Leave Calculator", "/cruise-terminal-time-calculators"], ["Wake-Up Time Calculator", "/wake-up-time-calculator"], ["Browse all calculators", "/time-calculators"]] },
+  { title: "Medication schedules", links: [["Personal Medication Schedule", "/medication-schedule"], ["Caregiver Medication Schedule", "/caregiver-medication-schedule"], ["Provider Medication Schedule", "/provider-medication-schedule"], ["Pet Medication Schedule", "/veterinary-medication-schedule"]] },
   { title: "Learn and support", links: [["Why notifications fail", "/why-calendar-notifications-fail"], ["Notifications vs alarms", "/calendar-notifications-vs-alarms"], ["The Last 5 Minutes Problem", "/last-5-minutes-problem"], ["Help center", "/help"], ["Privacy", "/privacy"], ["Terms", "/terms"]] },
 ] as const;
 

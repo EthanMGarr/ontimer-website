@@ -8,17 +8,17 @@ import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
 
 const toolGroups = [
   { title: "Know when to leave", links: [
-    { href: "/what-time-should-i-leave", label: "Leave-time calculator", note: "Plan any appointment or arrival" },
-    { href: "/wake-up-time-calculator", label: "Wake-up calculator", note: "Work backward from when you must leave" },
+    { href: "/what-time-should-i-leave", label: "Time-to-Leave Calculator", note: "Plan any appointment or arrival" },
+    { href: "/wake-up-time-calculator", label: "Wake-Up Time Calculator", note: "Work backward from when you must leave" },
   ] },
   { title: "Prepare for travel", links: [
-    { href: "/airport-time-to-leave-calculator", label: "Airport calculator", note: "Get a personalized airport leave time" },
-    { href: "/cruise-terminal-time-calculators", label: "Cruise calculator", note: "Plan around boarding and the port" },
+    { href: "/airport-time-to-leave-calculator", label: "Airport Time-to-Leave Calculator", note: "Choose your airport and get a personalized leave time" },
+    { href: "/cruise-terminal-time-calculators", label: "Cruise Time-to-Leave Calculator", note: "Choose your port and plan around boarding" },
   ] },
   { title: "Build a medication schedule", links: [
-    { href: "/medication-schedule", label: "Personal schedule", note: "Create a clear calendar-ready plan" },
-    { href: "/caregiver-medication-schedule", label: "Caregiver schedule", note: "Prepare and share a private schedule" },
-    { href: "/veterinary-medication-schedule", label: "Pet schedule", note: "Keep recurring pet doses organized" },
+    { href: "/medication-schedule", label: "Personal Medication Schedule", note: "Create a clear calendar-ready plan" },
+    { href: "/caregiver-medication-schedule", label: "Caregiver Medication Schedule", note: "Prepare and share a private schedule" },
+    { href: "/veterinary-medication-schedule", label: "Pet Medication Schedule", note: "Keep recurring pet doses organized" },
   ] },
 ];
 
