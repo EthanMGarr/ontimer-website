@@ -16,6 +16,7 @@ export function SpanishHeader() {
         <nav aria-label="Navegación principal" className="flex items-center gap-3 sm:gap-5">
           <Link href="/es/calculadora-a-que-hora-salir" className="hidden text-sm font-medium text-zinc-400 hover:text-white sm:inline">Hora de salida</Link>
           <Link href="/es/calculadora-cuando-salir-al-aeropuerto" className="hidden text-sm font-medium text-zinc-400 hover:text-white md:inline">Aeropuerto</Link>
+          <Link href="/es/calculadora-hora-de-despertar" className="hidden text-sm font-medium text-zinc-400 hover:text-white lg:inline">Despertar</Link>
           <LanguageSwitcher />
         </nav>
       </div>
@@ -35,6 +36,7 @@ export function SpanishFooter() {
         <div className="space-y-3 text-sm">
           <Link href="/es/calculadora-a-que-hora-salir" className="block text-zinc-400 hover:text-white">Calculadora de hora de salida</Link>
           <Link href="/es/calculadora-cuando-salir-al-aeropuerto" className="block text-zinc-400 hover:text-white">Calculadora para el aeropuerto</Link>
+          <Link href="/es/calculadora-hora-de-despertar" className="block text-zinc-400 hover:text-white">Calculadora de hora de despertar</Link>
           <LanguageSwitcher compact />
         </div>
       </div>

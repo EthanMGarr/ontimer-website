@@ -19,6 +19,14 @@ assert.equal(
   alternateLocalePath("/es/calculadora-cuando-salir-al-aeropuerto"),
   "/airport-time-to-leave-calculator"
 );
+assert.equal(
+  alternateLocalePath("/wake-up-time-calculator"),
+  "/es/calculadora-hora-de-despertar"
+);
+assert.equal(
+  alternateLocalePath("/es/calculadora-hora-de-despertar"),
+  "/wake-up-time-calculator"
+);
 assert.equal(alternateLocalePath("/features"), null);
 assert.equal(
   alternateLocalePath("/airport-time-to-leave/madrid-barajas-mad"),

@@ -21,8 +21,9 @@ import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHando
 import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
-import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
+import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
+import type { SiteLocale } from "@/lib/i18n";
 
 type TravelMode = "DRIVE" | "WALK" | "TRANSIT";
 type PlanningMode = "today" | "future";
@@ -67,18 +68,11 @@ async function fetchTravelTime(
   return body;
 }
 
-function track(name: string, params?: Record<string, string | number>) {
-  if (typeof window === "undefined") return;
-  const g = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
-  if (typeof g !== "function") return;
-  g("event", name, { page_path: window.location.pathname, ...params });
+function fmtTime(d: Date, locale: SiteLocale) {
+  return d.toLocaleTimeString(locale === "es" ? "es-ES" : undefined, { hour: "numeric", minute: "2-digit" });
 }
-
-function fmtTime(d: Date) {
-  return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-}
-function fmtDate(d: Date) {
-  return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+function fmtDate(d: Date, locale: SiteLocale) {
+  return d.toLocaleDateString(locale === "es" ? "es-ES" : undefined, { weekday: "short", month: "short", day: "numeric" });
 }
 
 function localDateString(date = new Date()): string {
@@ -89,7 +83,12 @@ function planningModeForDate(date: string): PlanningMode {
   return date === localDateString() ? "today" : "future";
 }
 
-function trafficLabel(basis: TrafficBasis, mode: PlanningMode): string {
+function trafficLabel(basis: TrafficBasis, mode: PlanningMode, locale: SiteLocale): string {
+  if (locale === "es") {
+    if (basis === "scheduled") return "horario programado";
+    if (basis === "none") return "estimado";
+    return mode === "future" || basis === "predicted" ? "tráfico previsto" : "tráfico actual";
+  }
   if (basis === "scheduled") return "scheduled route";
   if (basis === "none") return "estimated";
   return mode === "future" || basis === "predicted" ? "expected traffic" : "live traffic";
@@ -103,10 +102,12 @@ function PillSelector({
   options,
   value,
   onChange,
+  locale,
 }: {
   options: number[];
   value: number;
   onChange: (v: number) => void;
+  locale: SiteLocale;
 }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -121,7 +122,7 @@ function PillSelector({
               : "border border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white"
           }`}
         >
-          {opt === 0 ? "None" : `${opt} min`}
+          {opt === 0 ? (locale === "es" ? "Ninguno" : "None") : `${opt} min`}
         </button>
       ))}
     </div>
@@ -172,16 +173,81 @@ function defaultArrival() {
   };
 }
 
-export default function WakeUpCalculator() {
-  const today = localDateString();
-  const { date: defaultDate, time: defaultTime } = defaultArrival();
+export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocale }) {
+  const isSpanish = locale === "es";
+  const copy = isSpanish ? {
+    destination: "Destino",
+    destinationPlaceholder: "Escribe una dirección o lugar de destino",
+    origin: "Punto de partida",
+    originPlaceholder: "Escribe tu dirección de salida",
+    currentLocation: "Ubicación actual",
+    arrivalDate: "Fecha de llegada",
+    arriveBy: "Llegar a las",
+    travelMode: "Medio de transporte",
+    driving: "En coche",
+    walking: "A pie",
+    transit: "Transporte público",
+    readyTime: "¿Cuánto tiempo necesitas para prepararte?",
+    buffer: "Margen adicional",
+    extraTime: "Tiempo para desayunar, preparar cosas o salir de casa",
+    optional: "(opcional)",
+    estimatedTravel: "Tiempo de viaje estimado",
+    estimatedTravelHelp: "Se estima automáticamente a partir de tus ubicaciones. Puedes sustituirlo si es necesario.",
+    manualTravelPlaceholder: "O introduce los minutos manualmente (opcional)",
+    travelMinutes: "Tiempo de viaje (minutos)",
+    manualPlaceholder: "p. ej., 25",
+    manualHelp: "Indica arriba el punto de partida y el destino para obtener una estimación automática.",
+    calculating: "Calculando el tiempo de viaje…",
+    calculate: "Calcular la hora de despertar →",
+    wakeAt: "Despiértate a las",
+    travelTime: "Tiempo de viaje",
+    getReady: "Prepararte",
+    breakfast: "Desayuno / preparativos",
+    adjust: "Ajustar tiempos",
+    emptyHeading: "Tu hora de despertar aparecerá aquí",
+    emptyBody: "Indica el destino, la hora de llegada y tu rutina; después pulsa Calcular.",
+    emptyItems: ["Tiempo de viaje según el tráfico", "Incluye tu rutina de la mañana", "Una hora concreta para levantarte sin prisas"],
+  } : {
+    destination: "Destination",
+    destinationPlaceholder: "Enter destination address or place",
+    origin: "Starting location",
+    originPlaceholder: "Enter your starting address",
+    currentLocation: "Current location",
+    arrivalDate: "Arrival date",
+    arriveBy: "Arrive by",
+    travelMode: "Travel mode",
+    driving: "Driving",
+    walking: "Walking",
+    transit: "Transit",
+    readyTime: "How long do you need to get ready?",
+    buffer: "Extra buffer",
+    extraTime: "Extra time for breakfast, packing, or getting out the door",
+    optional: "(optional)",
+    estimatedTravel: "Estimated travel time",
+    estimatedTravelHelp: "Estimated automatically from your locations. Override if needed.",
+    manualTravelPlaceholder: "Or enter minutes manually (optional)",
+    travelMinutes: "Travel time (minutes)",
+    manualPlaceholder: "e.g. 25",
+    manualHelp: "Enter a starting location and destination above for an automatic estimate.",
+    calculating: "Estimating travel time…",
+    calculate: "Calculate wake-up time →",
+    wakeAt: "Wake up at",
+    travelTime: "Travel time",
+    getReady: "Get ready",
+    breakfast: "Breakfast / packing",
+    adjust: "Adjust assumptions",
+    emptyHeading: "Your wake-up time will appear here",
+    emptyBody: "Fill in your destination, arrival time, and routine, then click Calculate.",
+    emptyItems: ["Real travel time based on traffic", "Accounts for your morning routine", "Exact wake-up time so you are not rushed"],
+  };
 
   const [destination, setDestination] = useState("");
   const [origin, setOrigin] = useState("");
   const [currentLocation, setCurrentLocation] = useState<string | null>(null);
-  const [arrivalDate, setArrivalDate] = useState(defaultDate);
+  const [today, setToday] = useState("");
+  const [arrivalDate, setArrivalDate] = useState("");
   const planningMode = planningModeForDate(arrivalDate);
-  const [arrivalTime, setArrivalTime] = useState(defaultTime);
+  const [arrivalTime, setArrivalTime] = useState("");
   const [travelMode, setTravelMode] = useState<TravelMode>("DRIVE");
   const [getReadyTime, setGetReadyTime] = useState(45);
   const [buffer, setBuffer] = useState(10);
@@ -201,6 +267,13 @@ export default function WakeUpCalculator() {
     setCalendarProvider(null);
   }, [destination, arrivalDate, arrivalTime, travelMode, getReadyTime, buffer, extraTime]);
 
+  useEffect(() => {
+    const { date, time } = defaultArrival();
+    setToday(localDateString());
+    setArrivalDate(date);
+    setArrivalTime(time);
+  }, []);
+
   function handleOriginChange(value: string) {
     setOrigin(value);
     setCurrentLocation(null);
@@ -208,8 +281,8 @@ export default function WakeUpCalculator() {
 
   function handleCurrentLocationChange(coordinates: string | null) {
     setCurrentLocation(coordinates);
-    if (coordinates) setOrigin("Current location");
-    else if (origin === "Current location") setOrigin("");
+    if (coordinates) setOrigin(copy.currentLocation);
+    else if (origin === copy.currentLocation) setOrigin("");
   }
 
   async function handleCalculate() {
@@ -218,7 +291,7 @@ export default function WakeUpCalculator() {
     setFallbackNotice(null);
 
     if (!arrivalDate || !arrivalTime) {
-      setError("Enter the date and time you need to arrive.");
+      setError(isSpanish ? "Indica la fecha y la hora a la que necesitas llegar." : "Enter the date and time you need to arrive.");
       return;
     }
 
@@ -239,16 +312,19 @@ export default function WakeUpCalculator() {
         travelSource = "google";
         hasTrafficData = res.hasTrafficData;
         trafficBasis = res.trafficBasis;
-        track(res.cacheHit ? "travel_time_cache_hit" : "routes_api_called", {
+        fireEvent(res.cacheHit ? "travel_time_cache_hit" : "routes_api_called", {
+          page_path: window.location.pathname,
           duration_minutes: travelMinutes,
         });
       } catch {
         const manual = parseInt(manualTravelMinutes, 10);
         if (!isNaN(manual) && manual >= 0) {
           travelMinutes = manual;
-          track("quota_fallback_used");
+          fireEvent("quota_fallback_used", { page_path: window.location.pathname });
         } else {
-          setFallbackNotice("Automatic travel time is unavailable for this route. Enter travel time manually below, or try a fuller address.");
+          setFallbackNotice(isSpanish
+            ? "La estimación automática no está disponible para este trayecto. Introduce el tiempo manualmente o prueba con una dirección más completa."
+            : "Automatic travel time is unavailable for this route. Enter travel time manually below, or try a fuller address.");
           setIsCalculating(false);
           return;
         }
@@ -259,7 +335,9 @@ export default function WakeUpCalculator() {
       const manual = parseInt(manualTravelMinutes, 10);
       if (isNaN(manual) || manual < 0) {
         setError(
-          "Enter your starting location and destination, or enter travel time manually below."
+          isSpanish
+            ? "Indica el punto de partida y el destino, o introduce manualmente el tiempo de viaje."
+            : "Enter your starting location and destination, or enter travel time manually below."
         );
         return;
       }
@@ -281,7 +359,8 @@ export default function WakeUpCalculator() {
       trafficBasis,
       planningMode,
     });
-    track("wakeup_calculator_used", {
+    fireEvent("wakeup_calculator_used", {
+      page_path: window.location.pathname,
       travel_mode: travelMode,
       travel_source: travelSource,
     });
@@ -293,10 +372,14 @@ export default function WakeUpCalculator() {
 
   const arrivalCalendarEvent = result
     ? {
-        title: `Arrive at ${destination.split(",")[0] || "destination"}`,
+        title: isSpanish
+          ? `Llegar a ${destination.split(",")[0] || "destino"}`
+          : `Arrive at ${destination.split(",")[0] || "destination"}`,
         start: result.arrivalTime,
         end: new Date(result.arrivalTime.getTime() + 30 * 60 * 1000),
-        details: `Wake-up time: ${fmtTime(result.wakeUpTime)}\n${ONTIMER_CALENDAR_DESCRIPTION}`,
+        details: isSpanish
+          ? `Hora de despertar: ${fmtTime(result.wakeUpTime, locale)}\nCalculado por OnTimer\nDescarga gratis la app para iPhone: https://apps.apple.com/us/app/ontimer-never-be-late/id6755317601`
+          : `Wake-up time: ${fmtTime(result.wakeUpTime, locale)}\n${ONTIMER_CALENDAR_DESCRIPTION}`,
         location: destination || undefined,
       }
     : null;
@@ -311,25 +394,26 @@ export default function WakeUpCalculator() {
           {/* Locations */}
           <div className="space-y-4">
             <div className="min-w-0">
-              <FieldLabel>Destination</FieldLabel>
+              <FieldLabel>{copy.destination}</FieldLabel>
               <PlaceAutocomplete
                 value={destination}
                 onChange={setDestination}
-                placeholder="Enter destination address or place"
+                placeholder={copy.destinationPlaceholder}
                 inputClassName={inputClass}
               />
             </div>
             <div className="min-w-0">
-              <FieldLabel>Starting location</FieldLabel>
+              <FieldLabel>{copy.origin}</FieldLabel>
               <PlaceAutocomplete
                 value={origin}
                 onChange={handleOriginChange}
-                placeholder="Enter your starting address"
+                placeholder={copy.originPlaceholder}
                 inputClassName={inputClass}
               />
               <CurrentLocationControl
                 active={currentLocation !== null}
                 onLocationChange={handleCurrentLocationChange}
+                locale={locale}
               />
             </div>
           </div>
@@ -337,14 +421,15 @@ export default function WakeUpCalculator() {
           {/* Planning mode + arrival time */}
           <div className="grid gap-4 sm:grid-cols-2">
             <CalculatorDateField
-              label="Arrival date"
+              label={copy.arrivalDate}
               value={arrivalDate}
               today={today}
               inputClassName={inputClass}
               onChange={setArrivalDate}
+              locale={locale}
             />
             <div className="min-w-0">
-              <FieldLabel>Arrive by</FieldLabel>
+              <FieldLabel>{copy.arriveBy}</FieldLabel>
               <input
                 type="time"
                 value={arrivalTime}
@@ -356,12 +441,12 @@ export default function WakeUpCalculator() {
 
           {/* Travel mode */}
           <div>
-            <FieldLabel>Travel mode</FieldLabel>
+            <FieldLabel>{copy.travelMode}</FieldLabel>
             <SegmentedControl
               options={[
-                { value: "DRIVE", label: "Driving" },
-                { value: "WALK", label: "Walking" },
-                { value: "TRANSIT", label: "Transit" },
+                { value: "DRIVE", label: copy.driving },
+                { value: "WALK", label: copy.walking },
+                { value: "TRANSIT", label: copy.transit },
               ]}
               value={travelMode}
               onChange={setTravelMode}
@@ -370,34 +455,37 @@ export default function WakeUpCalculator() {
 
           {/* Get-ready time */}
           <div>
-            <FieldLabel>How long do you need to get ready?</FieldLabel>
+            <FieldLabel>{copy.readyTime}</FieldLabel>
             <PillSelector
               options={[15, 30, 45, 60, 75, 90]}
               value={getReadyTime}
               onChange={setGetReadyTime}
+              locale={locale}
             />
           </div>
 
           {/* Buffer */}
           <div>
-            <FieldLabel>Extra buffer</FieldLabel>
+            <FieldLabel>{copy.buffer}</FieldLabel>
             <PillSelector
               options={[0, 5, 10, 15, 20, 30]}
               value={buffer}
               onChange={setBuffer}
+              locale={locale}
             />
           </div>
 
           {/* Extra morning time */}
           <div>
             <FieldLabel>
-              Extra time for breakfast, packing, or getting out the door{" "}
-              <span className="font-normal text-zinc-400">(optional)</span>
+              {copy.extraTime}{" "}
+              <span className="font-normal text-zinc-400">{copy.optional}</span>
             </FieldLabel>
             <PillSelector
               options={[0, 5, 10, 15, 20, 30]}
               value={extraTime}
               onChange={setExtraTime}
+              locale={locale}
             />
           </div>
 
@@ -405,15 +493,15 @@ export default function WakeUpCalculator() {
           <div>
             {hasRouteInputs ? (
               <>
-                <FieldLabel>Estimated travel time</FieldLabel>
+                <FieldLabel>{copy.estimatedTravel}</FieldLabel>
                 <p className="mb-2 text-xs text-zinc-400">
-                  Estimated automatically from your locations. Override if needed.
+                  {copy.estimatedTravelHelp}
                 </p>
                 <input
                   type="number"
                   min="0"
                   max="600"
-                  placeholder="Or enter minutes manually (optional)"
+                  placeholder={copy.manualTravelPlaceholder}
                   value={manualTravelMinutes}
                   onChange={(e) => setManualTravelMinutes(e.target.value)}
                   className={inputClass}
@@ -421,18 +509,18 @@ export default function WakeUpCalculator() {
               </>
             ) : (
               <>
-                <FieldLabel>Travel time (minutes)</FieldLabel>
+                <FieldLabel>{copy.travelMinutes}</FieldLabel>
                 <input
                   type="number"
                   min="0"
                   max="600"
-                  placeholder="e.g. 25"
+                  placeholder={copy.manualPlaceholder}
                   value={manualTravelMinutes}
                   onChange={(e) => setManualTravelMinutes(e.target.value)}
                   className={inputClass}
                 />
                 <p className="mt-1.5 text-xs text-zinc-400">
-                  Enter a starting location and destination above for an automatic estimate.
+                  {copy.manualHelp}
                 </p>
               </>
             )}
@@ -455,7 +543,7 @@ export default function WakeUpCalculator() {
             disabled={isCalculating}
             className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isCalculating ? "Estimating travel time…" : "Calculate wake-up time →"}
+            {isCalculating ? copy.calculating : copy.calculate}
           </button>
         </div>
 
@@ -465,43 +553,43 @@ export default function WakeUpCalculator() {
             <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-6">
               <div className="border-b border-zinc-700 pb-5">
                 <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                  Wake up at
+                  {copy.wakeAt}
                 </p>
                 <p className="text-5xl font-black text-green-500">
-                  {fmtTime(result.wakeUpTime)}
+                  {fmtTime(result.wakeUpTime, locale)}
                 </p>
-                <p className="mt-1 text-sm text-zinc-400">{fmtDate(result.wakeUpTime)}</p>
+                <p className="mt-1 text-sm text-zinc-400">{fmtDate(result.wakeUpTime, locale)}</p>
               </div>
 
               <div className="space-y-3 pt-4">
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-400">Arrive by</p>
+                  <p className="text-xs text-zinc-400">{copy.arriveBy}</p>
                   <p className="text-sm font-semibold text-white">
-                    {fmtTime(result.arrivalTime)}
+                    {fmtTime(result.arrivalTime, locale)}
                   </p>
                 </div>
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-400">Travel time</p>
+                  <p className="text-xs text-zinc-400">{copy.travelTime}</p>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-white">
                       {result.travelMinutes} min
                     </p>
                     {result.travelSource === "google" && (
                       <p className="text-xs text-green-500">
-                        {trafficLabel(result.trafficBasis, result.planningMode)}
+                        {trafficLabel(result.trafficBasis, result.planningMode, locale)}
                       </p>
                     )}
                   </div>
                 </div>
                 <div className="flex items-baseline justify-between">
-                  <p className="text-xs text-zinc-400">Get ready</p>
+                  <p className="text-xs text-zinc-400">{copy.getReady}</p>
                   <p className="text-sm font-semibold text-white">
                     {result.getReadyMinutes} min
                   </p>
                 </div>
                 {result.bufferMinutes > 0 && (
                   <div className="flex items-baseline justify-between">
-                    <p className="text-xs text-zinc-400">Buffer</p>
+                    <p className="text-xs text-zinc-400">{copy.buffer}</p>
                     <p className="text-sm font-semibold text-white">
                       {result.bufferMinutes} min
                     </p>
@@ -509,7 +597,7 @@ export default function WakeUpCalculator() {
                 )}
                 {result.extraMinutes > 0 && (
                   <div className="flex items-baseline justify-between">
-                    <p className="text-xs text-zinc-400">Breakfast / packing</p>
+                    <p className="text-xs text-zinc-400">{copy.breakfast}</p>
                     <p className="text-sm font-semibold text-white">
                       {result.extraMinutes} min
                     </p>
@@ -518,22 +606,18 @@ export default function WakeUpCalculator() {
               </div>
 
               <p className="mt-4 border-t border-zinc-700 pt-4 text-xs leading-relaxed text-zinc-400">
-                To arrive by {fmtTime(result.arrivalTime)} with {result.travelMinutes}{" "}
-                min of travel and {result.getReadyMinutes} min to get ready
-                {result.bufferMinutes > 0
-                  ? `, a ${result.bufferMinutes}-min buffer`
-                  : ""}
-                {result.extraMinutes > 0
-                  ? `, and ${result.extraMinutes} min of extra morning time`
-                  : ""}
-                , wake up at {fmtTime(result.wakeUpTime)}.
+                {isSpanish ? (
+                  <>Para llegar a las {fmtTime(result.arrivalTime, locale)}, con {result.travelMinutes} min de viaje y {result.getReadyMinutes} min para prepararte{result.bufferMinutes > 0 ? `, ${result.bufferMinutes} min de margen` : ""}{result.extraMinutes > 0 ? ` y ${result.extraMinutes} min adicionales` : ""}, despiértate a las {fmtTime(result.wakeUpTime, locale)}.</>
+                ) : (
+                  <>To arrive by {fmtTime(result.arrivalTime, locale)} with {result.travelMinutes} min of travel and {result.getReadyMinutes} min to get ready{result.bufferMinutes > 0 ? `, a ${result.bufferMinutes}-min buffer` : ""}{result.extraMinutes > 0 ? `, and ${result.extraMinutes} min of extra morning time` : ""}, wake up at {fmtTime(result.wakeUpTime, locale)}.</>
+                )}
               </p>
               <button
                 type="button"
                 onClick={() => document.getElementById("wake-up-calculator-form")?.scrollIntoView({ behavior: "smooth", block: "start" })}
                 className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-green-400 underline underline-offset-4 hover:text-green-300"
               >
-                Adjust assumptions
+                {copy.adjust}
               </button>
 
               <CalendarOnTimerHandoff
@@ -543,16 +627,17 @@ export default function WakeUpCalculator() {
                 calendarProvider={calendarProvider}
                 setCalendarProvider={setCalendarProvider}
                 calculatorType="wake_up"
-                readyHeading="Put your arrival appointment on your calendar."
-                openedItemLabel="arrival event"
+                readyHeading={isSpanish ? "Guarda la hora de llegada en tu calendario." : "Put your arrival appointment on your calendar."}
+                openedItemLabel={isSpanish ? "evento de llegada" : "arrival event"}
                 exclusivePrimaryAction
                 compactOpenedStatus
-                postCalendarHeading="Don’t be late. Turn this into an alarm."
-                postCalendarBody="OnTimer sets an automatic alarm for this calendar event."
+                postCalendarHeading={isSpanish ? "No llegues tarde. Convierte el evento en una alarma." : "Don’t be late. Turn this into an alarm."}
+                postCalendarBody={isSpanish ? "OnTimer configura una alarma automática para este evento del calendario." : "OnTimer sets an automatic alarm for this calendar event."}
                 appLocation="wakeup_calculator_result"
+                locale={locale}
                 eventPreview={{
-                  title: arrivalCalendarEvent?.title ?? "Arrive at destination",
-                  startLabel: fmtTime(result.arrivalTime),
+                  title: arrivalCalendarEvent?.title ?? (isSpanish ? "Llegar al destino" : "Arrive at destination"),
+                  startLabel: fmtTime(result.arrivalTime, locale),
                 }}
               />
             </div>
@@ -560,17 +645,13 @@ export default function WakeUpCalculator() {
             <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-zinc-700 p-10 text-center">
               <div className="mb-4 text-4xl">⏰</div>
               <p className="text-base font-semibold text-zinc-300">
-                Your wake-up time will appear here
+                {copy.emptyHeading}
               </p>
               <p className="mt-1.5 text-sm text-zinc-400">
-                Fill in your destination, arrival time, and routine, then click Calculate.
+                {copy.emptyBody}
               </p>
               <ul className="mt-6 w-full max-w-xs space-y-2.5 text-left">
-                {[
-                  "Real travel time based on traffic",
-                  "Accounts for your morning routine",
-                  "Exact wake-up time so you are not rushed",
-                ].map((item) => (
+                {copy.emptyItems.map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-xs text-zinc-400">
                     <span className="mt-0.5 flex-shrink-0 text-zinc-400">•</span>
                     {item}

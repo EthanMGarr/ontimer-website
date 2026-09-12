@@ -4,6 +4,10 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+### 2026-09-12
+
+- Completed the evidence-backed Spanish calculator cohort by localizing the high-impression wake-up calculator at `/es/calculadora-hora-de-despertar`. The page now includes a fully translated calculator flow, metadata and structured data, reciprocal language links, sitemap coverage, localized calendar handoff copy, hydration-safe defaults, and locale-aware acquisition analytics. Other lower-evidence calculators remain in English pending search-demand validation. Verification: localization regressions and TypeScript validation passed; an isolated optimized build generated all 233 routes; and a 390px browser check completed a manual-time calculation, verified Spanish result and post-calendar copy, exact reciprocal metadata and language switching, no English UI leakage or horizontal overflow, and no browser errors.
+
 ### 2026-09-11
 
 - Restored the current App Store app icon in the redesigned homepage header so the website, existing site pages, and store listing present the same recognizable icon until the coordinated brand-icon rollout. The new logo artwork remains available for that later launch. Verification: optimized production build passed and the header image source was confirmed in the generated homepage output.

@@ -185,6 +185,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
+      alternates: localizedAlternates(
+        "/wake-up-time-calculator",
+        "/es/calculadora-hora-de-despertar"
+      ),
+    },
+    {
+      url: `${baseUrl}/es/calculadora-hora-de-despertar`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+      alternates: localizedAlternates(
+        "/wake-up-time-calculator",
+        "/es/calculadora-hora-de-despertar"
+      ),
     },
     {
       url: `${baseUrl}/calendar-notifications-not-working`,

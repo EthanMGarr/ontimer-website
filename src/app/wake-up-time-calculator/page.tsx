@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
+import { localizedAlternates } from "@/lib/i18n";
 import WakeUpCalculator from "./WakeUpCalculator";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "https://www.ontimer.app/wake-up-time-calculator" },
+  alternates: {
+    canonical: "https://www.ontimer.app/wake-up-time-calculator",
+    ...localizedAlternates("/wake-up-time-calculator", "/es/calculadora-hora-de-despertar"),
+  },
   title: "Wake-Up Time Calculator — What Time Should I Set My Alarm?",
   description:
     "Calculate what time to wake up based on your arrival time, travel time, and how long you need to get ready. Free wake-up time calculator.",
@@ -12,6 +16,8 @@ export const metadata: Metadata = {
     title: "Wake-Up Time Calculator — What Time Should I Set My Alarm?",
     description:
       "Calculate what time to wake up based on your arrival time, travel time, and how long you need to get ready.",
+    locale: "en_US",
+    alternateLocale: ["es_ES"],
   },
 };
 

@@ -7,6 +7,7 @@ export const defaultLocale: SiteLocale = "en";
 const localizedRoutePairs = [
   ["/what-time-should-i-leave", "/es/calculadora-a-que-hora-salir"],
   ["/airport-time-to-leave-calculator", "/es/calculadora-cuando-salir-al-aeropuerto"],
+  ["/wake-up-time-calculator", "/es/calculadora-hora-de-despertar"],
 ] as const;
 
 export const spanishAirportSlugs = [

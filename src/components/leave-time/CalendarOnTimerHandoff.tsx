@@ -86,16 +86,16 @@ export default function CalendarOnTimerHandoff({
   calendarHref,
   alternateCalendarHref,
   alternateCalendarFilename,
-  alternateCalendarLabel = "Or tap here for Outlook, Apple or other calendars",
+  alternateCalendarLabel,
   calendarProvider,
   setCalendarProvider,
   calculatorType,
-  readyHeading = "Put this leave time on your calendar.",
-  openedItemLabel = "event",
+  readyHeading,
+  openedItemLabel,
   exclusivePrimaryAction = false,
   compactOpenedStatus = false,
-  postCalendarHeading = "Get an alarm when it's time to leave.",
-  postCalendarBody = "OnTimer sets automatic alarms for your calendar events.",
+  postCalendarHeading,
+  postCalendarBody,
   appLocation,
   analyticsContext = {},
   androidAffiliateOffer,
@@ -103,9 +103,11 @@ export default function CalendarOnTimerHandoff({
   locale = "en",
 }: CalendarOnTimerHandoffProps) {
   const copy = handoffCopy[locale];
-  alternateCalendarLabel = locale === "es" ? copy.alternate : alternateCalendarLabel;
-  readyHeading = locale === "es" ? copy.ready : readyHeading;
-  openedItemLabel = locale === "es" ? copy.item : openedItemLabel;
+  const effectiveAlternateCalendarLabel = alternateCalendarLabel ?? copy.alternate;
+  const effectiveReadyHeading = readyHeading ?? copy.ready;
+  const effectiveOpenedItemLabel = openedItemLabel ?? copy.item;
+  const effectivePostCalendarHeading = postCalendarHeading ?? copy.alarmHeading;
+  const effectivePostCalendarBody = postCalendarBody ?? copy.alarmBody;
   const [isAndroidMobile, setIsAndroidMobile] = useState<boolean | null>(null);
   const affiliateRef = useRef<HTMLAnchorElement>(null);
   const affiliateViewTrackedRef = useRef(false);
@@ -114,7 +116,7 @@ export default function CalendarOnTimerHandoff({
   const showAndroidAffiliate = isAndroidMobile === true;
   const openedHeading = calendarProvider === "ics"
     ? copy.fileDownloaded
-    : locale === "es" ? copy.googleOpened : copy.googleOpened.replace("{item}", openedItemLabel);
+    : locale === "es" ? copy.googleOpened : copy.googleOpened.replace("{item}", effectiveOpenedItemLabel);
   const openedBody = calendarProvider === "ics"
     ? copy.openDownloaded
     : null;
@@ -192,7 +194,7 @@ export default function CalendarOnTimerHandoff({
           </div>
         ) : (
           <>
-            <p className="text-lg font-bold text-white">{readyHeading}</p>
+            <p className="text-lg font-bold text-white">{effectiveReadyHeading}</p>
             {eventPreview && (
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
                 {copy.adds} “{eventPreview.title}” {copy.at} {eventPreview.startLabel}.
@@ -219,7 +221,7 @@ export default function CalendarOnTimerHandoff({
               }}
               className="mt-3 inline-flex whitespace-nowrap text-[11px] font-medium text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:text-xs"
             >
-              {alternateCalendarLabel}
+              {effectiveAlternateCalendarLabel}
             </a>
           </>
         )}
@@ -234,14 +236,14 @@ export default function CalendarOnTimerHandoff({
           {showAndroidAffiliate
             ? effectiveAndroidAffiliateOffer.heading
             : calendarOpened
-              ? postCalendarHeading
+              ? effectivePostCalendarHeading
               : copy.alarmHeading}
         </p>
         <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
           {showAndroidAffiliate
             ? effectiveAndroidAffiliateOffer.body
             : calendarOpened
-              ? postCalendarBody
+              ? effectivePostCalendarBody
               : copy.alarmBody}
         </p>
         <div className="mt-4">
