@@ -17,6 +17,17 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // Spanish routes also update the DOM language before hydration. This
+        // header gives crawlers and assistive technology the same signal.
+        source: "/es/:path*",
+        headers: [
+          {
+            key: "Content-Language",
+            value: "es",
+          },
+        ],
+      },
+      {
         // Serve api-catalog with the correct linkset media type (RFC 9727)
         source: "/.well-known/api-catalog",
         headers: [
