@@ -149,7 +149,7 @@ export default function SpanishWakeUpCalculatorPage() {
             {faqItems.map(({ question, answer }, index) => (
               <details key={question} className="group py-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-white"><span>{question}</span><span className="text-green-500 transition-transform group-open:rotate-45">+</span></summary>
-                <p className="mt-4 text-sm leading-relaxed text-zinc-400" data-nosnippet={index === 0 || undefined}>{answer}</p>
+                <div className="mt-4 text-sm leading-relaxed text-zinc-400" data-nosnippet={index === 0 || undefined}>{answer}</div>
               </details>
             ))}
           </div>

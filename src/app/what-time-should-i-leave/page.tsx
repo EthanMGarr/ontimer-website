@@ -343,12 +343,12 @@ export default function WhatTimeShouldILeavePage() {
               actually leaving at 8 AM. Your departure time calculation should use your actual
               departure window, not an off-peak estimate.
             </p>
-            <p data-nosnippet>
+            <div data-nosnippet>
               The formula: take your required arrival time, subtract your commute time at that hour,
               then subtract 5 to 10 minutes of buffer for minor delays. If you need to be at your
               desk by 9 AM and your rush-hour commute takes 28 minutes, your target departure time
               is 8:22 AM at the latest. Add time for parking or a longer building walk if needed.
-            </p>
+            </div>
             <p>
               Most commuters underestimate their departure time by 10 to 15 minutes because they
               plan based on best-case traffic. Rush hour adds time in both directions: the drive
@@ -475,12 +475,12 @@ export default function WhatTimeShouldILeavePage() {
                     +
                   </span>
                 </summary>
-                <p
+                <div
                   className="mt-4 text-sm leading-relaxed text-zinc-400"
                   data-nosnippet={index === 4 || undefined}
                 >
                   {item.answer}
-                </p>
+                </div>
               </details>
             ))}
           </div>

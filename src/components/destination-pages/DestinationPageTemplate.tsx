@@ -253,12 +253,12 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
             {model.faq.items.map(({ question, answer }) => (
               <div key={question} className="py-6">
                 <h3 className="text-lg font-bold text-white">{question}</h3>
-                <p
+                <div
                   className="mt-2 leading-relaxed text-zinc-400"
                   data-nosnippet={model.faq.noSnippetQuestions?.includes(question) || undefined}
                 >
                   {answer}
-                </p>
+                </div>
               </div>
             ))}
           </div>

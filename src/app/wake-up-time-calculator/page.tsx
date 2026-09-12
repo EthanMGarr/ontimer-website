@@ -206,11 +206,11 @@ export default function WakeUpTimeCalculatorPage() {
               Calculate what time to wake up using your arrival time, travel conditions,
               getting-ready time and buffer—not just a generic subtract-and-guess formula.
             </p>
-            <p data-nosnippet>
+            <div data-nosnippet>
               A common approach is to work backward from your arrival time: subtract travel
               time, subtract getting-ready time, then add a buffer. This calculator does that
               math for you, using live traffic data instead of a guess.
-            </p>
+            </div>
             <p>
               Most people underestimate at least one variable. Getting ready almost
               always takes longer than expected. Traffic during morning commute hours is
@@ -294,12 +294,12 @@ export default function WakeUpTimeCalculatorPage() {
                     +
                   </span>
                 </summary>
-                <p
+                <div
                   className="mt-4 text-sm leading-relaxed text-zinc-400"
                   data-nosnippet={index === 0 || undefined}
                 >
                   {item.answer}
-                </p>
+                </div>
               </details>
             ))}
           </div>

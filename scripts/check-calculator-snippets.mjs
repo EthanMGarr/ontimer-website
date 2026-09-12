@@ -19,15 +19,23 @@ const source = Object.fromEntries(
 );
 
 assert.doesNotMatch(source.airportPage, /need to leave by 9:20 AM/i);
-assert.match(source.airportPage, /<p data-nosnippet>\s*A common planning baseline/);
+assert.match(source.airportPage, /<div data-nosnippet>\s*A common planning baseline/);
 assert.match(source.airportCalculator, /Example — clearly labeled, not the user's result[\s\S]*?data-nosnippet/);
 assert.match(source.cruiseCalculator, /Your leave time includes[\s\S]*?data-nosnippet/);
 assert.match(source.destinationTemplate, /data-location-section="worked-examples"[^>]*data-nosnippet/);
+assert.match(source.destinationTemplate, /<div[\s\S]*?data-nosnippet=\{model\.faq\.noSnippetQuestions/);
+assert.match(source.airportWebsite, /const snippetEligibleFaqItems = faqItems\.slice\(2\)/);
 assert.match(source.airportWebsite, /noSnippetQuestions: \[faqItems\[0\]\.question, faqItems\[1\]\.question\]/);
+assert.match(source.cruiseWebsite, /const snippetEligibleFaqItems = faqItems\.slice\(2\)/);
 assert.match(source.cruiseWebsite, /noSnippetQuestions: \[faqItems\[0\]\.question, faqItems\[1\]\.question\]/);
-assert.match(source.leavePage, /<p data-nosnippet>\s*The formula:/);
+assert.match(source.leavePage, /<div data-nosnippet>\s*The formula:/);
 assert.match(source.leavePage, /data-nosnippet=\{index === 4 \|\| undefined\}/);
-assert.match(source.wakePage, /<p data-nosnippet>\s*A common approach/);
+assert.match(source.wakePage, /<div data-nosnippet>\s*A common approach/);
 assert.match(source.wakePage, /data-nosnippet=\{index === 0 \|\| undefined\}/);
+assert.doesNotMatch(
+  Object.values(source).join("\n"),
+  /<p(?:\s[^>]*)?\sdata-nosnippet(?:=|\s|>)/,
+  "Google only supports data-nosnippet on div, span, and section elements"
+);
 
 console.log("Calculator snippet safeguards passed.");

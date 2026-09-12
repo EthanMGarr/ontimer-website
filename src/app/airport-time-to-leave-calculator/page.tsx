@@ -213,11 +213,11 @@ export default function AirportTimeToLeaveCalculator() {
               expected travel conditions, security planning, bags, parking and terminal access—not
               just a generic 2-hour or 3-hour arrival rule.
             </p>
-            <p data-nosnippet>
+            <div data-nosnippet>
               A common planning baseline is arriving 2 hours before domestic flights and 3 hours
               before international flights. The calculator works backward from your actual trip to
               estimate when you should leave.
-            </p>
+            </div>
             <p>
               Those airport arrival windows exist for a reason: security lines, bag drop cutoffs,
               and terminal walking time all absorb the margin most people assume they have. The
@@ -394,12 +394,12 @@ export default function AirportTimeToLeaveCalculator() {
                     +
                   </span>
                 </summary>
-                <p
+                <div
                   className="mt-4 text-sm leading-relaxed text-zinc-400"
                   data-nosnippet={index === 0 || undefined}
                 >
                   {item.answer}
-                </p>
+                </div>
               </details>
             ))}
           </div>

@@ -157,6 +157,7 @@ export const airportDestinationType: DestinationTypeDefinition<AirportLocationPr
   buildStructuredData(profile) {
     const url = getAirportUrl(profile);
     const faqItems = buildAirportFaqItems(profile);
+    const snippetEligibleFaqItems = faqItems.slice(2);
 
     return [
       {
@@ -174,7 +175,7 @@ export const airportDestinationType: DestinationTypeDefinition<AirportLocationPr
       {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        mainEntity: faqItems.map(({ question, answer }) => ({
+        mainEntity: snippetEligibleFaqItems.map(({ question, answer }) => ({
           "@type": "Question",
           name: question,
           acceptedAnswer: { "@type": "Answer", text: answer },

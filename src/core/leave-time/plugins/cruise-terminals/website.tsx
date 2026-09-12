@@ -150,6 +150,7 @@ export const cruiseDestinationType: DestinationTypeDefinition<CruiseTerminalLoca
   buildStructuredData(profile) {
     const url = getCruiseUrl(profile);
     const faqItems = buildCruiseFaqItems(profile);
+    const snippetEligibleFaqItems = faqItems.slice(2);
 
     return [
       {
@@ -167,7 +168,7 @@ export const cruiseDestinationType: DestinationTypeDefinition<CruiseTerminalLoca
       {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        mainEntity: faqItems.map(({ question, answer }) => ({
+        mainEntity: snippetEligibleFaqItems.map(({ question, answer }) => ({
           "@type": "Question",
           name: question,
           acceptedAnswer: { "@type": "Answer", text: answer },

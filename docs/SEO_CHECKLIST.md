@@ -62,4 +62,4 @@ Use this checklist for every production change involving pages, routes, metadata
 ## Search Snippet Candidates
 
 - Keep the first visible passage after a calculator H1 focused on the personalized result, user inputs, and factors the calculator actually uses.
-- Preserve useful rule-of-thumb guidance below the calculator. Use `data-nosnippet` only on a narrowly identified passage that is likely to replace the calculator value proposition in search results; do not suppress whole guidance or FAQ sections.
+- Preserve useful rule-of-thumb guidance below the calculator. Use `data-nosnippet` only on a narrowly identified passage that is likely to replace the calculator value proposition in search results; do not suppress whole guidance or FAQ sections. Google supports this attribute only on `div`, `span`, and `section`, so never place it on a paragraph or another unsupported element. Exclude the same suppressed answer from FAQ structured data so JSON-LD does not recreate the unwanted snippet candidate.
