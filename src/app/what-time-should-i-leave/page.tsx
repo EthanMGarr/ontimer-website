@@ -136,7 +136,7 @@ export default function WhatTimeShouldILeavePage() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden pb-5 pt-9 md:pt-12">
+      <section className="relative overflow-hidden pb-5 pt-7 md:pt-10">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-green-500 sm:text-sm">
@@ -146,68 +146,34 @@ export default function WhatTimeShouldILeavePage() {
             What Time Should{" "}
             <span className="text-green-500">I Leave?</span>
           </h1>
-          <p className="mt-2.5 max-w-xl text-base leading-relaxed text-zinc-400">
-            Know exactly when to leave so you&apos;re not late.
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-zinc-400">
+            Enter where you&apos;re leaving from, where you&apos;re going, and when you need to arrive.
+            We&apos;ll use traffic to calculate when to leave.
           </p>
-          <p className="mt-3 max-w-xl text-sm text-zinc-400">
-            Enter your destination, arrival time, and buffer. This departure time calculator uses
-            real travel time and traffic to determine the exact moment to walk out the door.
-          </p>
-          <div className="mt-4">
-            <p className="text-xs text-zinc-500">Popular uses:</p>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {[
-                "Work commute",
-                "Meetings",
-                "Appointments",
-                "Airport runs",
-                "School pickup",
-                "Events",
-              ].map((use) => (
-                <span
-                  key={use}
-                  className="rounded-full border border-zinc-700/60 px-2.5 py-0.5 text-xs text-zinc-400"
-                >
-                  {use}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            <a
-              href="#calculator"
-              className="inline-flex items-center gap-2 rounded-full bg-green-500 px-5 py-2 text-sm font-semibold text-black transition-colors hover:bg-green-400"
-            >
-              Calculate leave time
-            </a>
-            <Link
-              href="/time-to-leave-reminders"
-              className="text-sm text-zinc-400 transition-colors hover:text-zinc-300"
-            >
-              Never calculate this again → Get automatic leave-time alerts
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── DIRECT ANSWER ── */}
-      <section className="border-t border-zinc-800/50 py-4">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <div className="rounded-xl border border-green-500/25 bg-green-500/5 p-3.5">
-            <p className="text-sm font-semibold text-zinc-200">What time should I leave?</p>
-            <p className="mt-1 text-sm leading-relaxed text-zinc-400">
-              Start with your required arrival time, subtract travel time, then subtract a buffer
-              for traffic or delays. The departure time calculator below does this automatically
-              using real traffic data for your specific route and departure window.
-            </p>
-          </div>
         </div>
       </section>
 
       {/* ── CALCULATOR ── */}
-      <section id="calculator" className="border-t border-zinc-800 py-6 md:py-8">
+      <section id="calculator" className="border-t border-zinc-800 pb-8 pt-4 md:pb-10 md:pt-6">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <LeaveTimeCalculator />
+        </div>
+      </section>
+
+      {/* ── DIRECT ANSWER ── */}
+      <section className="border-t border-zinc-800/50 py-8">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <div className="rounded-xl border border-green-500/25 bg-green-500/5 p-4 sm:p-5">
+            <h2 className="text-lg font-bold text-zinc-100">How to calculate when to leave</h2>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+              Start with your required arrival time, subtract travel time, then subtract a buffer
+              for traffic or delays. This calculator does that automatically using traffic data
+              for your route and planned arrival time.
+            </p>
+            <p className="mt-3 text-xs leading-relaxed text-zinc-500">
+              Useful for commutes, meetings, appointments, school pickup, events, and airport runs.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -217,12 +183,15 @@ export default function WhatTimeShouldILeavePage() {
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             Stop doing this math every time
           </h2>
-          <p className="mt-5 text-lg leading-relaxed text-zinc-400">
+          <p className="mt-4 text-base leading-relaxed text-zinc-400 sm:text-lg">
             OnTimer connects to your calendar and automatically figures out your departure time
             for meetings, appointments, and any event with a location. It alerts you at the right
             moment based on traffic, not a guess.
           </p>
-          <ul className="mt-8 space-y-3">
+          <div className="mt-6">
+            <AppStoreCTA location="leave_calculator_conversion" />
+          </div>
+          <ul className="mt-6 space-y-3">
             {[
               "Time-to-Leave alerts based on real travel time and live traffic",
               "Connects to Google Calendar, Apple Calendar, and Outlook Calendar",
@@ -235,9 +204,6 @@ export default function WhatTimeShouldILeavePage() {
               </li>
             ))}
           </ul>
-          <div className="mt-8">
-            <AppStoreCTA location="leave_calculator_conversion" />
-          </div>
         </div>
       </section>
 

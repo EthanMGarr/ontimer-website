@@ -227,7 +227,7 @@ export default function CalendarOnTimerHandoff({
         )}
       </div>
 
-      {(!exclusivePrimaryAction || calendarOpened) && <div className={`mt-5 ${
+      {(!exclusivePrimaryAction || calendarOpened || showAndroidAffiliate) && <div className={`mt-5 ${
         calendarOpened
           ? "order-1 rounded-xl border border-green-500/30 bg-green-500/[0.06] p-5"
           : "border-t border-zinc-800 pt-5"
