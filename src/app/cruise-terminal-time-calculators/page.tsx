@@ -39,7 +39,7 @@ const collectionJsonLd = {
 
 export default function CruiseTerminalTimeCalculatorsDirectory() {
   return (
-    <>
+    <div className="site-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
@@ -49,35 +49,29 @@ export default function CruiseTerminalTimeCalculatorsDirectory() {
         title="Cruise-terminal calculators for when to leave."
         description="Cruise timing is not just drive time. These calculators help plan around boarding windows, port traffic, parking, luggage, document checks and terminal movement."
       >
-        <section className="border-b border-zinc-900 bg-black py-12">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <div className="grid gap-8 lg:grid-cols-[0.35fr_0.65fr]">
-              <div>
-                <p className="text-sm font-semibold text-white">
+        <section className="site-directory-section site-directory-section--tint">
+          <div className="site-shell site-directory-grid">
+              <div className="site-directory-intro">
+                <p>
                   Popular cruise terminals
                 </p>
-                <p className="mt-3 text-sm leading-6 text-zinc-500">
+                <p>
                   Start with major cruise departure points, or scan the full
                   directory below.
                 </p>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="site-featured-grid">
                 {featuredCruiseTerminals.map((terminal) => (
                   <Link
                     key={terminal.slug}
                     href={`/cruise-time-to-leave/${terminal.slug}`}
-                    className="group border-t border-zinc-800 pt-4"
+                    className="site-location-link"
                   >
-                    <span className="block text-lg font-black text-white transition-colors group-hover:text-emerald-300">
-                      {terminal.shortName}
-                    </span>
-                    <span className="mt-1 block text-sm text-zinc-500">
-                      {terminal.city}
-                    </span>
+                    <strong>{terminal.shortName}</strong>
+                    <span>{terminal.city}</span>
                   </Link>
                 ))}
               </div>
-            </div>
           </div>
         </section>
         <LocationDirectory
@@ -85,6 +79,6 @@ export default function CruiseTerminalTimeCalculatorsDirectory() {
           intro="Every cruise-terminal calculator is linked here, organized alphabetically so the system can grow without making the top navigation heavy."
         />
       </DirectoryShell>
-    </>
+    </div>
   );
 }

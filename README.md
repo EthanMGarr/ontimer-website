@@ -6,7 +6,7 @@ Marketing website for the [OnTimer iOS app](https://apps.apple.com/us/app/ontime
 
 - **Framework:** Next.js 15 (App Router)
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS plus the shared `design.md` / `tokens.css` system
 - **Blog:** Markdown files with gray-matter + marked
 - **Deployment:** Vercel
 
@@ -47,6 +47,8 @@ npm start
 
 ```
 ontimer-website/
+├── design.md              # Locked cross-page visual and interaction rules
+├── tokens.css             # Canonical design tokens
 ├── content/
 │   └── blog/               # Markdown blog posts
 │       ├── stop-being-late-to-meetings.md
@@ -67,20 +69,25 @@ ontimer-website/
 │   │   ├── sitemap.ts      # Auto-generated sitemap.xml
 │   │   └── feed.xml/       # RSS feed at /feed.xml
 │   ├── components/
-│   │   ├── Header.tsx              # Sticky nav header
-│   │   ├── Footer.tsx              # Footer with links
+│   │   ├── Homepage2Header.tsx     # Shared English public-site header
+│   │   ├── Homepage2Footer.tsx     # Shared English public-site footer
 │   │   ├── CTAButton.tsx           # App Store + Android buttons
 │   │   ├── GoogleAnalytics.tsx     # GA4, gated by cookie consent (see below)
 │   │   └── CookieConsentBanner.tsx # EU/UK/EEA/CH consent banner
 │   ├── middleware.ts       # Geo-classifies visitors for the consent gate
 │   └── lib/
 │       ├── blog.ts         # Blog post utilities
-│       └── consent.ts      # Cookie consent state helpers
+│       ├── consent.ts      # Browser cookie state helpers
+│       └── consent-policy.ts # Testable regional consent rules
 ```
 
 **Privacy policy / terms of service:** the actual documents served to visitors are static files, `public/OnTimer_Privacy_Policy.html` and `public/OnTimer_Terms_of_Service.html` — `next.config.js` redirects `/privacy` and `/terms` to them, and the Footer links there directly. The Next.js pages under `src/app/privacy/` and `src/app/terms/` are unused legacy duplicates; edit the static HTML files for any policy change.
 
-**Cookie consent:** Google Analytics only loads immediately for visitors outside the EU/EEA/UK/Switzerland. Regulated visitors see a consent banner first (`src/middleware.ts` classifies by IP country, `src/components/CookieConsentBanner.tsx` renders the banner, `src/lib/consent.ts` holds the shared state helpers).
+**Design system:** `design.md` defines the shared page families and accessibility/SEO invariants; `tokens.css` is the canonical source for color, type, spacing, shape, motion, and focus tokens. New public UI should consume those tokens instead of introducing route-specific values.
+
+**Cookie consent:** Google Analytics only loads immediately for visitors outside the EU/EEA/UK/Switzerland. Regulated visitors see a consent banner first (`src/middleware.ts` classifies by IP country, `src/components/CookieConsentBanner.tsx` renders the banner, `src/lib/consent.ts` reads browser state, and `src/lib/consent-policy.ts` contains the testable policy rules). Run `npm run test:consent` when this flow changes.
+
+To inspect the banner locally without changing region headers, add `?consent-preview=regulated` to any non-medication route while running the development server. This preview switch is disabled in production builds.
 
 ## Adding Blog Posts
 

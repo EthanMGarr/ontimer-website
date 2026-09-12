@@ -43,17 +43,11 @@ export function DirectoryShell({
 }) {
   return (
     <>
-      <section className="border-b border-zinc-900 bg-black py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">
-            {eyebrow}
-          </p>
-          <h1 className="mt-5 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
-            {title}
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-400">
-            {description}
-          </p>
+      <section className="site-hero site-hero--compact">
+        <div className="site-shell site-hero__content">
+          <p className="site-kicker">{eyebrow}</p>
+          <h1 className="site-title">{title}</h1>
+          <p className="site-lede">{description}</p>
         </div>
       </section>
       {children}
@@ -74,43 +68,39 @@ export function LocationDirectory({
   const letters = Object.keys(groups).sort();
 
   return (
-    <section className="bg-zinc-950 py-14 sm:py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="grid gap-10 lg:grid-cols-[0.35fr_0.65fr]">
-          <div>
-            <p className="text-sm font-semibold text-white">{locations.length} calculators</p>
-            <p className="mt-3 text-sm leading-6 text-zinc-500">{intro}</p>
+    <section className="site-directory-section">
+      <div className="site-shell site-directory-grid">
+          <div className="site-directory-intro">
+            <p>{locations.length} calculators</p>
+            <p>{intro}</p>
           </div>
 
-          <div className="space-y-8">
+          <div className="site-directory-groups">
             {letters.map((letter) => (
               <div
                 key={letter}
                 id={idPrefix ? `${idPrefix}-${letter}` : undefined}
-                className="scroll-mt-24 grid gap-4 border-t border-zinc-800 pt-5 sm:grid-cols-[4rem_1fr]"
+                className="site-letter-group"
               >
-                <h2 className="text-2xl font-black text-white">{letter}</h2>
-                <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                <h2>{letter}</h2>
+                <div className="site-location-grid">
                   {groups[letter].map((location) => (
                     <Link
                       key={location.slug}
                       href={getTravelLocationPath(location)}
-                      className="group"
+                      className="site-location-link"
                     >
-                      <span className="block font-semibold text-zinc-100 transition-colors group-hover:text-emerald-300">
+                      <strong>
                         {location.shortName}
                         {location.kind === "airport" ? ` (${location.code})` : ""}
-                      </span>
-                      <span className="mt-1 block text-sm text-zinc-500">
-                        {location.city}
-                      </span>
+                      </strong>
+                      <span>{location.city}</span>
                     </Link>
                   ))}
                 </div>
               </div>
             ))}
           </div>
-        </div>
       </div>
     </section>
   );
@@ -130,19 +120,15 @@ export function CategoryLink({
   return (
     <Link
       href={href}
-      className="group block border-t border-zinc-800 py-6 transition-colors"
+      className="site-category-link"
     >
-      <span className="flex items-center justify-between gap-4">
-        <span className="text-xl font-black text-white">{label}</span>
-        <span className="text-sm text-zinc-600 transition-colors group-hover:text-emerald-300">
-          View
-        </span>
+      <span className="site-category-link__top">
+        <strong>{label}</strong>
+        <span>View</span>
       </span>
-      <span className="mt-2 block max-w-xl text-sm leading-6 text-zinc-500">
-        {description}
-      </span>
+      <span>{description}</span>
       {typeof count === "number" ? (
-        <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.16em] text-zinc-600">
+        <span className="site-category-link__count">
           {count} calculators
         </span>
       ) : null}

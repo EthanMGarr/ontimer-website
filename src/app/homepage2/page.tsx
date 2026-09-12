@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Bricolage_Grotesque, IBM_Plex_Sans } from "next/font/google";
 import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
 import { ANDROID_WAITLIST_URL, APP_STORE_URL } from "@/lib/constants";
-import "./homepage2.css";
 
 const display = Bricolage_Grotesque({
   subsets: ["latin"],

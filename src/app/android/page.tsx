@@ -1,102 +1,84 @@
 "use client";
 
-import { AppStoreCTA } from "@/components/CTAButton";
+import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
 import { trackAndroidWaitlistClick } from "@/lib/analytics";
 import { ANDROID_WAITLIST_URL } from "@/lib/constants";
 
 export default function AndroidPage() {
   return (
-    <>
-      {/* Hero */}
-      <section className="relative overflow-hidden py-24 text-center">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,rgba(34,197,94,0.12),transparent)]" />
-        <div className="relative mx-auto max-w-2xl px-4 sm:px-6">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-3 py-1 text-sm text-green-400">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
-            Android — Coming Soon
-          </div>
-          <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl">
-            OnTimer for{" "}
-            <span className="text-green-500">Android</span> is on its way.
-          </h1>
-          <p className="mt-5 text-lg text-zinc-400">
+    <div className="site-page">
+      <section className="site-hero">
+        <div className="site-shell site-hero__content site-hero__content--center">
+          <p className="site-kicker">Android waitlist</p>
+          <h1 className="site-title">OnTimer for Android is on its way.</h1>
+          <p className="site-lede">
             We&apos;re working hard to bring OnTimer to Android. Join the
             waitlist and you&apos;ll be the first to know when it launches.
           </p>
 
-          <div className="mt-10">
+          <div className="site-actions site-actions--center">
             <a
               href={ANDROID_WAITLIST_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-green-500 px-8 py-4 text-base font-semibold text-black transition-colors hover:bg-green-400"
+              className="hp2-cta"
               onClick={() => trackAndroidWaitlistClick("hero")}
             >
               Join the Android Waitlist
             </a>
-            <p className="mt-3 text-xs text-zinc-400">
-              No spam. One email when Android launches.
-            </p>
           </div>
+          <p className="site-note">No spam. One email when Android launches.</p>
         </div>
       </section>
 
-      {/* Features preview */}
-      <section className="border-t border-zinc-800 bg-zinc-900/40 py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="mb-10 text-center text-3xl font-black text-white">
-            Everything coming to Android
-          </h2>
-          <div className="grid gap-6 sm:grid-cols-2">
+      <section className="site-flow">
+        <div className="site-shell site-shell--reading">
+          <div className="site-hero__content site-hero__content--center">
+            <p className="site-kicker">What to expect</p>
+            <h2 className="site-title">Everything coming to Android</h2>
+          </div>
+          <div className="site-feature-grid">
             {[
               {
-                icon: "📅",
                 title: "Calendar Sync",
                 desc: "Full integration with Google Calendar, Samsung Calendar, and more.",
               },
               {
-                icon: "⏰",
                 title: "Automatic Alarms",
                 desc: "Same zero-setup experience — OnTimer creates alarms from your events.",
               },
               {
-                icon: "🔔",
                 title: "Smart Alerts",
                 desc: "Persistent, escalating notifications that cut through Do Not Disturb.",
               },
               {
-                icon: "🎛️",
                 title: "Full Customization",
                 desc: "Choose your lead times, which calendars to track, and snooze behavior.",
               },
-            ].map((f) => (
-              <div
-                key={f.title}
-                className="rounded-xl border border-zinc-800 bg-zinc-900 p-6"
-              >
-                <div className="mb-3 text-2xl">{f.icon}</div>
-                <h3 className="font-bold text-white">{f.title}</h3>
-                <p className="mt-1 text-sm text-zinc-400">{f.desc}</p>
+            ].map((feature, index) => (
+              <div key={feature.title} className="site-feature-card">
+                <span className="site-feature-card__index" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3>{feature.title}</h3>
+                <p>{feature.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* iOS CTA */}
-      <section className="border-t border-zinc-800 py-20 text-center">
-        <div className="mx-auto max-w-xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black text-white">
-            Have an iPhone?
-          </h2>
-          <p className="mt-3 text-zinc-400">
+      <section className="site-final">
+        <div className="site-shell site-shell--reading">
+          <h2>Have an iPhone?</h2>
+          <p>
             OnTimer is available right now on iOS. Start being on time today.
           </p>
-          <div className="mt-6">
-            <AppStoreCTA />
+          <div className="site-actions site-actions--center">
+            <Homepage2DownloadCTA location="android_ios_cta" />
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

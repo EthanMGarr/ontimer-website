@@ -21,5 +21,15 @@
     "theme": "existing OnTimer",
     "enrichment": "live medication schedule generator",
     "brief": "Public patient medication schedule page rebuild"
+  },
+  {
+    "date": "2026-09-11",
+    "scope": "app",
+    "macrostructure": "Narrative Workflow / Workbench / Long Document",
+    "theme": "custom",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "calm precision, reassuring blue, quiet momentum",
+    "enrichment": "page-family dependent",
+    "brief": "OnTimer public-site design system and shared chrome migration"
   }
 ]

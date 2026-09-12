@@ -24,7 +24,7 @@ const collectionJsonLd = {
 
 export default function TimeCalculatorsDirectory() {
   return (
-    <>
+    <div className="site-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
@@ -34,18 +34,18 @@ export default function TimeCalculatorsDirectory() {
         title="Find the right calculator for the moment you need to move."
         description="OnTimer calculators help you work backward from the event, trip, flight, boarding window or wake-up time that matters."
       >
-        <section className="bg-zinc-950 py-14 sm:py-20">
-          <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.35fr_0.65fr]">
-            <div>
-              <p className="text-sm font-semibold text-white">
+        <section className="site-directory-section">
+          <div className="site-shell site-directory-grid">
+            <div className="site-directory-intro">
+              <p>
                 Calculator ecosystem
               </p>
-              <p className="mt-3 text-sm leading-6 text-zinc-500">
+              <p>
                 Start with a category. Each hub links to the detailed calculators
                 inside that system without making the navigation do too much.
               </p>
             </div>
-            <div>
+            <div className="site-directory-list">
               <CategoryLink
                 href="/airport-time-calculators"
                 label="Airport Guides & Calculators"
@@ -72,6 +72,6 @@ export default function TimeCalculatorsDirectory() {
           </div>
         </section>
       </DirectoryShell>
-    </>
+    </div>
   );
 }

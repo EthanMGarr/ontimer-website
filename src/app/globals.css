@@ -1,3 +1,5 @@
+@import "../../tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -85,4 +87,235 @@ body {
   color: #a1a1aa;
   font-style: italic;
   margin: 1.5rem 0;
+}
+
+/*
+ * Site-wide light-system bridge
+ *
+ * The guide library predates the current OnTimer system and is composed from
+ * shared Tailwind color utilities. Scoping this bridge to the English site
+ * frame lets those pages adopt the new accessible palette without changing
+ * their copy, structured data, internal links, or individual templates.
+ */
+.site-modern {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+.site-modern h1,
+.site-modern h2,
+.site-modern h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+}
+
+.site-modern .font-black,
+.site-modern .font-bold {
+  font-weight: 650;
+}
+
+.site-modern .text-white,
+.site-modern .text-zinc-100,
+.site-modern .text-zinc-200,
+.site-modern .text-zinc-300,
+.site-modern .text-black {
+  color: var(--navy-950);
+}
+
+.site-modern .text-zinc-400 {
+  color: var(--ink-muted);
+}
+
+.site-modern .text-zinc-500,
+.site-modern .text-zinc-600 {
+  color: var(--ink-soft);
+}
+
+.site-modern .text-green-300,
+.site-modern .text-green-400,
+.site-modern .text-green-500,
+.site-modern .text-green-600 {
+  color: var(--blue-700);
+}
+
+.site-modern .bg-zinc-950,
+.site-modern .bg-zinc-900,
+.site-modern [class*="bg-zinc-900/"] {
+  background-color: var(--sky-50);
+}
+
+.site-modern [class*="bg-zinc-950/"] {
+  background-color: var(--paper);
+}
+
+.site-modern .bg-zinc-800,
+.site-modern [class*="bg-zinc-800/"],
+.site-modern [class*="bg-zinc-700/"] {
+  background-color: var(--sky-100);
+}
+
+.site-modern .bg-green-500 {
+  background-color: var(--blue-700);
+}
+
+.site-modern [class~="bg-green-500/5"],
+.site-modern [class~="bg-green-500/10"],
+.site-modern [class~="bg-green-500/20"] {
+  background-color: var(--blue-100);
+}
+
+.site-modern .bg-green-500.text-black {
+  color: var(--paper);
+}
+
+.site-modern .border-zinc-700,
+.site-modern .border-zinc-800,
+.site-modern .border-zinc-900 {
+  border-color: var(--line-strong);
+}
+
+.site-modern .border-green-400,
+.site-modern .border-green-500,
+.site-modern [class*="border-green-500/"] {
+  border-color: var(--blue-700);
+}
+
+.site-modern [class~="border-green-500/20"],
+.site-modern [class~="border-green-500/30"] {
+  border-color: var(--blue-300);
+}
+
+.site-modern [class*="bg-[radial-gradient"] {
+  background: radial-gradient(
+    circle at 50% 0,
+    color-mix(in oklch, var(--blue-300) 18%, transparent),
+    transparent 34rem
+  );
+}
+
+.site-modern input,
+.site-modern select {
+  color-scheme: light;
+}
+
+.site-modern .hover\:text-white:hover,
+.site-modern .hover\:text-zinc-300:hover,
+.site-modern .hover\:text-green-300:hover,
+.site-modern .hover\:text-green-400:hover {
+  color: var(--blue-800);
+}
+
+.site-modern .hover\:bg-green-400:hover,
+.site-modern .hover\:bg-green-500:hover {
+  background-color: var(--blue-800);
+}
+
+.site-modern .hover\:text-black:hover {
+  color: var(--paper);
+}
+
+.site-modern a:focus-visible,
+.site-modern button:focus-visible,
+.site-modern input:focus-visible,
+.site-modern select:focus-visible,
+.site-modern textarea:focus-visible,
+.site-modern summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.site-modern .prose h1,
+.site-modern .prose h2,
+.site-modern .prose h3,
+.site-modern .prose strong {
+  color: var(--navy-950);
+}
+
+.site-modern .prose p,
+.site-modern .prose ul,
+.site-modern .prose ol,
+.site-modern .prose blockquote {
+  color: var(--ink-muted);
+}
+
+.site-modern .prose a {
+  color: var(--blue-700);
+}
+
+.site-modern .prose blockquote {
+  border-left-color: var(--blue-700);
+}
+
+.site-spanish-header {
+  background: color-mix(in oklch, var(--paper) 94%, transparent);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.site-spanish-header .text-white {
+  color: var(--navy-950);
+}
+
+.site-spanish-header .text-zinc-300,
+.site-spanish-header .text-zinc-400 {
+  color: var(--ink-muted);
+}
+
+.site-spanish-header .border-zinc-700 {
+  border-color: var(--line-strong);
+}
+
+.site-spanish-header .hover\:text-white:hover {
+  color: var(--blue-700);
+}
+
+.site-spanish-footer {
+  background: var(--sky-50);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.site-spanish-footer .text-white,
+.site-spanish-footer .text-black {
+  color: var(--navy-950);
+}
+
+.site-spanish-footer .text-zinc-300,
+.site-spanish-footer .text-zinc-400 {
+  color: var(--ink-muted);
+}
+
+.site-spanish-footer .text-green-500 {
+  color: var(--blue-700);
+}
+
+.site-spanish-footer .bg-green-500 {
+  background: var(--blue-700);
+}
+
+.site-spanish-footer .bg-green-500.text-black {
+  color: var(--paper);
+}
+
+.site-spanish-footer .border-green-500,
+.site-spanish-footer .border-zinc-700 {
+  border-color: var(--blue-700);
+}
+
+.site-spanish-footer .hover\:text-white:hover,
+.site-spanish-footer .hover\:text-green-400:hover {
+  color: var(--blue-800);
+}
+
+.site-spanish-footer .hover\:bg-green-400:hover,
+.site-spanish-footer .hover\:bg-green-500:hover {
+  background: var(--blue-800);
+}
+
+.site-spanish-header a:focus-visible,
+.site-spanish-footer a:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
 }

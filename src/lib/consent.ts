@@ -1,4 +1,4 @@
-import { isAnalyticsFreeMedicationPath } from "@/lib/medication-route-privacy";
+import { analyticsAllowedForState } from "@/lib/consent-policy";
 
 export const REGION_COOKIE = "ontimer_region";
 export const CONSENT_COOKIE = "ontimer_consent";
@@ -21,9 +21,13 @@ export function isConsentRequired(): boolean {
 
 /** True when analytics is currently allowed to load for this visitor. */
 export function isAnalyticsAllowed(): boolean {
-  if (typeof window !== "undefined" && isAnalyticsFreeMedicationPath(window.location.pathname)) return false;
-  if (!isConsentRequired()) return true;
-  return getCookie(CONSENT_COOKIE) === "granted";
+  if (typeof window === "undefined") return false;
+  const storedConsent = getCookie(CONSENT_COOKIE);
+  return analyticsAllowedForState({
+    pathname: window.location.pathname,
+    region: isConsentRequired() ? "regulated" : "other",
+    consent: storedConsent === "granted" || storedConsent === "denied" ? storedConsent : null,
+  });
 }
 
 export function recordConsent(value: "granted" | "denied") {

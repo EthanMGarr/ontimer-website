@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { AppStoreCTA } from "@/components/CTAButton";
+import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
 
 export const metadata: Metadata = {
   title: "Features | OnTimer Calendar Alarm App for iPhone",
@@ -95,42 +95,35 @@ const features = [
 
 export default function FeaturesPage() {
   return (
-    <>
-      {/* Hero */}
-      <section className="border-b border-zinc-800 py-20 text-center">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl">
-            Features built to help you{" "}
-            <span className="text-green-500">show up on time</span>
-          </h1>
-          <p className="mt-5 text-lg text-zinc-400">
+    <div className="site-page">
+      <section className="site-hero">
+        <div className="site-shell site-hero__content site-hero__content--center">
+          <p className="site-kicker">OnTimer features</p>
+          <h1 className="site-title">Features built to help you show up on time</h1>
+          <p className="site-lede">
             OnTimer is built around one job: making calendar events harder to
             miss.
           </p>
-          <div className="mt-8">
-            <AppStoreCTA />
+          <div className="site-actions site-actions--center">
+            <Homepage2DownloadCTA location="features_hero" />
           </div>
         </div>
       </section>
 
-      {/* Why this exists */}
-      <section className="border-b border-zinc-800 bg-zinc-900/50 py-12">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            Why this exists
-          </p>
-          <p className="text-lg text-zinc-400 leading-relaxed">
+      <section className="site-context">
+        <div className="site-shell site-shell--reading">
+          <p className="site-kicker">Why this exists</p>
+          <p>
             Calendar notifications are passive. They appear, you acknowledge
             them, and then they disappear. Most people see the reminder — and
             still show up late.
           </p>
-          <p className="mt-3 text-lg text-zinc-400 leading-relaxed">
+          <p>
             The problem isn&apos;t forgetting the meeting. It&apos;s the gap
             between knowing you have a meeting and actually stopping what
             you&apos;re doing to leave. OnTimer is built around that gap —{" "}
             <Link
               href="/never-be-late-to-meetings"
-              className="text-green-500 hover:text-green-400"
             >
               learn why calendar reminders fail and how alarms fix it
             </Link>
@@ -139,46 +132,34 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* Feature sections */}
-      <section className="py-12">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="space-y-24">
+      <section className="site-flow" aria-label="OnTimer features">
+        <div className="site-shell">
+          <div className="site-flow__list">
             {features.map((feature) => (
               <div
                 key={feature.number}
-                className={`flex flex-col items-center gap-12 lg:flex-row ${feature.flip ? "lg:flex-row-reverse" : ""}`}
+                className={`site-feature ${feature.flip ? "site-feature--reverse" : ""}`}
               >
-                {/* Screenshot */}
-                <div className="relative flex-shrink-0">
-                  <div className="relative h-[520px] w-[240px] overflow-hidden rounded-[2rem] border border-zinc-700 shadow-2xl shadow-green-500/5">
-                    <Image
-                      src={feature.image}
-                      alt={feature.imageAlt}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="pointer-events-none absolute -inset-6 rounded-full bg-green-500/5 blur-3xl" />
+                <div className="site-feature__visual">
+                  <Image
+                    src={feature.image}
+                    alt={feature.imageAlt}
+                    width={1242}
+                    height={2688}
+                    sizes="(max-width: 959px) 72vw, 272px"
+                    className="site-feature__screen"
+                  />
                 </div>
 
-                {/* Text */}
-                <div className="flex-1">
-                  <div className="mb-2 text-sm font-semibold uppercase tracking-widest text-green-500">
-                    {feature.eyebrow}
-                  </div>
-                  <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-                    {feature.headline}
-                  </h2>
-                  <p className="mt-4 text-lg text-zinc-400">
-                    {feature.description}
-                  </p>
-                  <ul className="mt-6 space-y-3">
+                <div className="site-feature__copy">
+                  <span className="site-feature__number">{feature.eyebrow}</span>
+                  <h2>{feature.headline}</h2>
+                  <p>{feature.description}</p>
+                  <ul className="site-checks">
                     {feature.bullets.map((bullet) => (
-                      <li key={bullet} className="flex items-start gap-3">
-                        <span className="mt-0.5 flex-shrink-0 text-green-500">
-                          ✓
-                        </span>
-                        <span className="text-zinc-300">{bullet}</span>
+                      <li key={bullet}>
+                        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10 4 4 8-9" fill="none" /></svg>
+                        <span>{bullet}</span>
                       </li>
                     ))}
                   </ul>
@@ -189,51 +170,36 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* Free Tools */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="mb-6 text-sm font-semibold uppercase tracking-widest text-green-500">
-            Free Tools
-          </p>
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-8">
-            <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-              <div className="text-5xl">✈️</div>
-              <div className="flex-1">
-                <h2 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
-                  Airport Time-to-Leave Calculator
-                </h2>
-                <p className="mt-3 text-zinc-400 leading-relaxed">
-                  Estimate exactly when to leave for the airport based on traffic,
-                  security time, bags, and how you&apos;re getting there. Free, no
-                  account required.
-                </p>
-                <Link
-                  href="/airport-time-to-leave-calculator"
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-green-500 hover:text-green-400 transition-colors"
-                >
-                  Try the calculator →
-                </Link>
-              </div>
-            </div>
+      <section className="site-callout">
+        <div className="site-shell site-callout__inner">
+          <span className="site-callout__index" aria-hidden="true">Free</span>
+          <div>
+            <p className="site-kicker">Planning tool</p>
+            <h2>Airport Time-to-Leave Calculator</h2>
+            <p>
+              Estimate exactly when to leave for the airport based on traffic,
+              security time, bags, and how you&apos;re getting there. Free, no
+              account required.
+            </p>
+            <Link href="/airport-time-to-leave-calculator" className="site-text-action">
+              Try the calculator <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="border-t border-zinc-800 py-24 text-center">
-        <div className="mx-auto max-w-xl px-4 sm:px-6">
-          <h2 className="text-4xl font-black tracking-tight text-white">
-            Ready to stop missing meetings?
-          </h2>
-          <p className="mt-4 text-zinc-400">
+      <section className="site-final">
+        <div className="site-shell site-shell--reading">
+          <h2>Ready to stop missing meetings?</h2>
+          <p>
             Download OnTimer for free and get more reliable alerts from your
             calendar.
           </p>
-          <div className="mt-8">
-            <AppStoreCTA />
+          <div className="site-actions site-actions--center">
+            <Homepage2DownloadCTA location="features_final" />
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

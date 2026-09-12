@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { AppStoreButton } from "@/components/CTAButton";
+import Link from "next/link";
+import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
 
 export const metadata: Metadata = {
   title: "How It Works",
@@ -54,35 +55,29 @@ const steps = [
 
 export default function HowItWorksPage() {
   return (
-    <>
-      {/* Hero */}
-      <section className="border-b border-zinc-800 py-20 text-center">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl">
-            Simple by design.{" "}
-            <span className="text-green-500">Powerful by default.</span>
-          </h1>
-          <p className="mt-5 text-lg text-zinc-400">
+    <div className="site-page">
+      <section className="site-hero">
+        <div className="site-shell site-hero__content site-hero__content--center">
+          <p className="site-kicker">How OnTimer works</p>
+          <h1 className="site-title">Simple by design. Powerful by default.</h1>
+          <p className="site-lede">
             OnTimer does the work so you don't have to. Here's exactly how it
             turns your calendar into a punctuality machine.
           </p>
         </div>
       </section>
 
-      {/* What this fixes */}
-      <section className="border-b border-zinc-800 bg-zinc-900/50 py-12">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            What this fixes
-          </p>
-          <p className="text-lg text-zinc-400 leading-relaxed">
+      <section className="site-context">
+        <div className="site-shell site-shell--reading">
+          <p className="site-kicker">What this fixes</p>
+          <p>
             The problem with most reminder systems is not that people forget
             about meetings. It&apos;s that they fail to{" "}
             <em>switch modes at the right time</em> — to stop what they&apos;re
             doing, wrap up, and leave. A quiet notification that fires and
             disappears doesn&apos;t create that switch.
           </p>
-          <p className="mt-3 text-lg text-zinc-400 leading-relaxed">
+          <p>
             OnTimer replaces passive notifications with real alarms — timed to
             when you need to leave, not when the meeting starts. Here&apos;s
             exactly how it works:
@@ -90,43 +85,29 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* Steps */}
-      <section className="py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <div className="space-y-20">
+      <section className="site-flow" aria-label="How OnTimer works">
+        <div className="site-shell">
+          <div className="site-flow__list">
             {steps.map((step, i) => (
               <div
                 key={step.number}
-                className={`flex flex-col items-center gap-12 lg:flex-row ${i % 2 !== 0 ? "lg:flex-row-reverse" : ""}`}
+                className={`site-feature ${i % 2 !== 0 ? "site-feature--reverse" : ""}`}
               >
-                {/* Screenshot */}
-                <div className="relative flex-shrink-0">
-                  <div className="relative h-[500px] w-[230px] overflow-hidden rounded-[2rem] border border-zinc-700 shadow-2xl shadow-green-500/5">
-                    <Image
-                      src={step.image}
-                      alt={step.imageAlt}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+                <div className="site-feature__visual">
+                  <Image
+                    src={step.image}
+                    alt={step.imageAlt}
+                    width={1242}
+                    height={2688}
+                    sizes="(max-width: 959px) 72vw, 272px"
+                    className="site-feature__screen"
+                  />
                 </div>
 
-                {/* Text */}
-                <div className="flex-1">
-                  <div className="mb-2 flex items-center gap-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-sm font-black text-black">
-                      {parseInt(step.number)}
-                    </span>
-                    <span className="text-sm font-semibold uppercase tracking-widest text-green-500">
-                      Step {step.number}
-                    </span>
-                  </div>
-                  <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-                    {step.title}
-                  </h2>
-                  <p className="mt-4 text-lg leading-relaxed text-zinc-400">
-                    {step.description}
-                  </p>
+                <div className="site-feature__copy">
+                  <span className="site-feature__number">Step {step.number}</span>
+                  <h2>{step.title}</h2>
+                  <p>{step.description}</p>
                 </div>
               </div>
             ))}
@@ -134,27 +115,21 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* FAQ teaser */}
-      <section className="border-t border-zinc-800 bg-zinc-900/40 py-20">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white">
-            Still have questions?
-          </h2>
-          <p className="mt-3 text-zinc-400">
+      <section className="site-final">
+        <div className="site-shell site-shell--reading">
+          <h2>Still have questions?</h2>
+          <p>
             Check out our FAQ for answers to the most common questions about
             OnTimer.
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-4">
-            <a
-              href="/faq"
-              className="rounded-full border border-zinc-700 px-6 py-3 text-sm font-semibold text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white"
-            >
+          <div className="site-actions site-actions--center">
+            <Link href="/faq" className="site-secondary-action">
               Read the FAQ
-            </a>
-            <AppStoreButton size="md" />
+            </Link>
+            <Homepage2DownloadCTA location="how_it_works_final" />
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

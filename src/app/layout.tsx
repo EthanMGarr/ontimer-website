@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./homepage2/homepage2.css";
+import "./site-system.css";
 import HelpSiteFrame from "@/components/HelpSiteFrame";
 import { ANALYTICS_FREE_MEDICATION_PATHS } from "@/lib/medication-route-privacy";
 

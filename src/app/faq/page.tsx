@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { AppStoreCTA } from "@/components/CTAButton";
+import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
 
 const faqJsonLd = {
   "@context": "https://schema.org",
@@ -363,54 +363,41 @@ function FAQItem({
   question: string;
   answer: React.ReactNode;
 }) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <div className="border-b border-zinc-800">
-      <button
-        className="flex w-full items-start justify-between gap-4 py-5 text-left"
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-      >
-        <span className="font-semibold text-white">{question}</span>
-        <span
-          className={`mt-0.5 flex-shrink-0 text-green-500 transition-transform ${open ? "rotate-45" : ""}`}
-        >
+    <details className="site-faq">
+      <summary className="site-faq__question">
+        <span>{question}</span>
+        <span className="site-faq__mark" aria-hidden="true">
           +
         </span>
-      </button>
-      {open && (
-        <div className="pb-5 pr-8 text-zinc-400 leading-relaxed">{answer}</div>
-      )}
-    </div>
+      </summary>
+      <div className="site-faq__answer">{answer}</div>
+    </details>
   );
 }
 
 export default function FAQPage() {
   return (
-    <>
+    <div className="site-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      {/* Hero */}
-      <section className="border-b border-zinc-800 py-20 text-center">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl">
-            OnTimer <span className="text-green-500">FAQ</span>
-          </h1>
-          <p className="mt-5 text-lg text-zinc-400">
+      <section className="site-hero site-hero--compact">
+        <div className="site-shell site-hero__content site-hero__content--center">
+          <p className="site-kicker">Questions and answers</p>
+          <h1 className="site-title">OnTimer FAQ</h1>
+          <p className="site-lede">
             Answers to common questions about OnTimer, calendar alarms, and
             meeting reminders.
           </p>
         </div>
       </section>
 
-      {/* FAQ items */}
-      <section className="py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <div>
+      <section className="site-flow">
+        <div className="site-shell site-shell--reading">
+          <div className="site-faq-list">
             {faqs.map((faq) => (
               <FAQItem
                 key={faq.question}
@@ -422,21 +409,18 @@ export default function FAQPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="border-t border-zinc-800 py-20 text-center">
-        <div className="mx-auto max-w-xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white">
-            Ready to stop missing meetings?
-          </h2>
-          <p className="mt-3 text-zinc-400">
+      <section className="site-final">
+        <div className="site-shell site-shell--reading">
+          <h2>Ready to stop missing meetings?</h2>
+          <p>
             Download OnTimer free and get more reliable alerts from your
             calendar.
           </p>
-          <div className="mt-6">
-            <AppStoreCTA />
+          <div className="site-actions site-actions--center">
+            <Homepage2DownloadCTA location="faq_final" />
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

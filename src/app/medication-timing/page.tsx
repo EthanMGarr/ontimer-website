@@ -25,48 +25,46 @@ export default function MedicationTimingDirectory() {
   const categories = Array.from(new Set(MEDICATION_TIMING_PROFILES.map((profile) => profile.category)));
 
   return (
-    <>
+    <div className="site-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }} />
 
-      <section className="py-16 sm:py-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <nav className="mb-6 text-sm text-zinc-500">
-            <Link href="/" className="transition-colors hover:text-zinc-300">Home</Link>
+      <section className="site-hero site-hero--compact">
+        <div className="site-shell site-hero__content">
+          <nav className="site-note" aria-label="Breadcrumb">
+            <Link href="/" className="site-inline-link">Home</Link>
             <span className="mx-2">›</span>
-            <span className="text-zinc-300">Medication Timing</span>
+            <span>Medication Timing</span>
           </nav>
 
-          <h1 className="text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl">
-            Medication Dosage Timing
-            <span className="text-zinc-400"> Guides</span>
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-zinc-400">
+          <p className="site-kicker site-kicker--spaced">Medication timing guides</p>
+          <h1 className="site-title">Medication Dosage Timing Guides</h1>
+          <p className="site-lede">
             When to take common medications — morning or evening, with or without food, and how spacing between doses typically works. General scheduling conventions only, not medical advice; always follow your own prescription and prescriber&apos;s instructions.
           </p>
-          <div className="mt-7 border-l-2 border-green-500 pl-5">
-            <p className="text-sm font-semibold text-white">Already know the directions and dose times?</p>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">Skip the guides and turn the instructions you already have into one calendar-ready schedule.</p>
-            <Link href="/how-to-remember-medication-on-time" className="mt-4 inline-flex min-h-11 items-center rounded-full bg-green-500 px-5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-green-400">
+          <div className="site-alpha-nav">
+            <p>Already know the directions and dose times?</p>
+            <p className="site-note">Skip the guides and turn the instructions you already have into one calendar-ready schedule.</p>
+            <Link href="/how-to-remember-medication-on-time" className="site-text-action">
               Create my medication schedule
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-14 sm:py-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+      <section className="site-directory-section site-directory-section--tint">
+        <div className="site-shell site-shell--reading site-directory-groups">
           {categories.map((category) => (
-            <div key={category} className="mb-10 last:mb-0">
-              <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-500">{category}</h2>
-              <div className="grid gap-3 sm:grid-cols-2">
+            <div key={category} className="site-letter-group site-letter-group--named">
+              <h2>{category}</h2>
+              <div className="site-location-grid">
                 {MEDICATION_TIMING_PROFILES.filter((profile) => profile.category === category).map((profile) => (
                   <Link
                     key={profile.slug}
                     href={`/medication-timing/${profile.slug}`}
-                    className="rounded-xl border border-zinc-800 bg-zinc-900 p-4 transition-colors hover:border-zinc-600"
+                    className="site-location-link"
                   >
-                    <p className="font-semibold text-white">{profile.name}</p>
-                    <p className="mt-1 text-sm text-zinc-500">{profile.frequency}</p>
+                    <strong>{profile.name}</strong>
+                    <span>{profile.frequency}</span>
                   </Link>
                 ))}
               </div>
@@ -75,13 +73,13 @@ export default function MedicationTimingDirectory() {
         </div>
       </section>
 
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <p className="text-sm leading-relaxed text-zinc-400">
-            Don&apos;t see your medication? <Link href="/how-to-remember-medication-on-time" className="text-green-500 hover:text-green-400">Build a dose schedule</Link> for any medication directly — the scheduler works for anything, not just the medications listed here.
+      <section className="site-directory-section">
+        <div className="site-shell site-shell--reading">
+          <p className="site-lede">
+            Don&apos;t see your medication? <Link href="/how-to-remember-medication-on-time" className="site-inline-link">Build a dose schedule</Link> for any medication directly — the scheduler works for anything, not just the medications listed here.
           </p>
         </div>
       </section>
-    </>
+    </div>
   );
 }

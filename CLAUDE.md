@@ -144,6 +144,14 @@ Google Analytics (`src/components/GoogleAnalytics.tsx`) is geo-gated by `src/mid
 - `other` visitors (including the US) see no banner; GA loads immediately, unchanged from pre-consent behavior.
 - `regulated` visitors see `src/components/CookieConsentBanner.tsx` and GA does not load until they accept. Consent state lives in `src/lib/consent.ts`.
 - Never remove or weaken this gate to "simplify" GA loading — it exists to satisfy GDPR/UK GDPR/ePrivacy/FADP prior-consent requirements for those regions specifically.
+- Regional classification and analytics decisions are centralized in `src/lib/consent-policy.ts`. Run `npm run test:consent` whenever region coverage, banner decisions, analytics gating, or analytics-free routes change.
+
+## Website design system (permanent rules)
+
+- `design.md` is the source of truth for cross-page visual, interaction, accessibility, and SEO invariants.
+- `tokens.css` is the canonical token source. Public UI should consume semantic tokens rather than adding one-off colors, spacing, radii, motion, or focus treatments.
+- Keep one system but preserve distinct page families: marketing, tools, content, directories, and help/legal. Do not force calculator or reading pages into the homepage's narrative layout.
+- WCAG 2.2 AA, mobile behavior at 320/375/414/768 px, keyboard access, zoom, and regulated-region cookie states are release gates for each migrated route family.
 
 **The live privacy policy and terms of service are `public/OnTimer_Privacy_Policy.html` and `public/OnTimer_Terms_of_Service.html` — not `src/app/privacy/page.tsx` or `src/app/terms/page.tsx`.** `next.config.js` redirects `/privacy` and `/terms` to those static files, and the Footer links to them directly. The Next.js pages at those routes are unreachable, stale duplicates kept around by explicit decision — do not edit them expecting the change to reach real visitors, and do not treat their content as authoritative. Any privacy-policy or terms change (new data collection, new third-party service, new legal disclosure) must be made in the static HTML files.
 
