@@ -12,7 +12,14 @@ const columns = [
 export function Homepage2Footer() {
   return (
     <footer className="hp2-footer">
-      <div className="hp2-footer__lead"><Image src="/images/homepage2/ontimer-wordmark.png" alt="OnTimer" width={238} height={158} /><p>Calendars organize time. OnTimer protects it.</p></div>
+      <div className="hp2-footer__lead">
+        <Image src="/images/homepage2/ontimer-wordmark.png" alt="OnTimer" width={238} height={158} />
+        <p>
+          OnTimer is an iPhone calendar alarm app that turns events from Google Calendar,
+          Apple Calendar, and Microsoft 365 into automatic, persistent alarms, so you know
+          when to join, leave, or act.
+        </p>
+      </div>
       <div className="hp2-footer__index">
         {columns.map((column) => <section key={column.title}><h2>{column.title}</h2><ul>{column.links.map(([label, href]) => <li key={href}><Link href={href}>{label}</Link></li>)}</ul></section>)}
       </div>
