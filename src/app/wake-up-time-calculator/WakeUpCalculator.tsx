@@ -400,6 +400,7 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
                 onChange={setDestination}
                 placeholder={copy.destinationPlaceholder}
                 inputClassName={inputClass}
+                includeAirports
               />
             </div>
             <div className="min-w-0">
@@ -409,6 +410,7 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
                 onChange={handleOriginChange}
                 placeholder={copy.originPlaceholder}
                 inputClassName={inputClass}
+                includeAirports
               />
               <CurrentLocationControl
                 active={currentLocation !== null}
