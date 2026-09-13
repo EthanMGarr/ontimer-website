@@ -8,7 +8,8 @@ import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const toolGroups = [
-  { title: "Know when to leave", links: [
+  { title: "Plan your time", links: [
+    { href: "/days-until", label: "Days Until Calculator", note: "Count down and add the date to your calendar" },
     { href: "/what-time-should-i-leave", label: "Time-to-Leave Calculator", note: "Plan any appointment or arrival" },
     { href: "/wake-up-time-calculator", label: "Wake-Up Time Calculator", note: "Work backward from when you must leave" },
   ] },
