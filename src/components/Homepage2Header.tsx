@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const toolGroups = [
   { title: "Know when to leave", links: [
@@ -78,7 +79,10 @@ export function Homepage2Header() {
           </button>
           <Link href="/why-calendar-notifications-fail">Learn</Link>
         </nav>
-        <div className="hp2-header__action"><Homepage2DownloadCTA location="homepage_header" compact /></div>
+        <div className="hp2-header__action">
+          <LanguageSwitcher compact />
+          <div className="hp2-header__download"><Homepage2DownloadCTA location="homepage_header" compact /></div>
+        </div>
         <button
           type="button"
           className={`hp2-mobile-toggle ${mobileOpen ? "hp2-mobile-toggle--open" : ""}`}

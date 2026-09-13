@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ANDROID_WAITLIST_URL } from "@/lib/constants";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const columns = [
   { title: "OnTimer", links: [["How it works", "/#how-it-works"], ["Features", "/features"], ["Frequently asked questions", "/faq"], ["Android waitlist", ANDROID_WAITLIST_URL]] },
@@ -23,7 +24,7 @@ export function Homepage2Footer() {
       <div className="hp2-footer__index">
         {columns.map((column) => <section key={column.title}><h2>{column.title}</h2><ul>{column.links.map(([label, href]) => <li key={href}><Link href={href}>{label}</Link></li>)}</ul></section>)}
       </div>
-      <div className="hp2-footer__meta"><span>© {new Date().getFullYear()} OnTimer</span><a href="mailto:support@ontimer.app">support@ontimer.app</a></div>
+      <div className="hp2-footer__meta"><span>© {new Date().getFullYear()} OnTimer</span><LanguageSwitcher compact /><a href="mailto:support@ontimer.app">support@ontimer.app</a></div>
     </footer>
   );
 }

@@ -611,7 +611,19 @@ body {
 }
 
 .hp2-header__action {
+  align-items: center;
+  display: flex;
+  gap: var(--space-md);
+}
+
+.hp2-header__download {
   display: none;
+}
+
+@media (max-width: 22rem) {
+  .hp2-header__action .locale-switcher--compact svg {
+    display: none;
+  }
 }
 
 .hp2-brand {
@@ -1126,7 +1138,7 @@ body {
     width: auto;
   }
 
-  .hp2-header__action {
+  .hp2-header__download {
     display: block;
   }
 

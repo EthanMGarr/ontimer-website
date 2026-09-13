@@ -13,20 +13,29 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
   if (!alternatePath) return null;
 
   const targetLocale = locale === "es" ? "en" : "es";
-  const label = targetLocale === "es" ? "Español" : "English";
+  const currentLabel = locale === "es" ? "Español" : "English";
+  const selectorLabel = locale === "es" ? "Selector de idioma" : "Language selector";
 
   return (
-    <Link
-      href={alternatePath}
-      hrefLang={targetLocale}
-      lang={targetLocale}
-      onClick={() => trackLanguageSwitch(locale, targetLocale, pathname)}
-      className={compact
-        ? "text-xs font-semibold text-zinc-400 transition-colors hover:text-white"
-        : "inline-flex min-h-10 items-center rounded-full border border-zinc-700 px-3 py-2 text-sm font-semibold text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white"}
-      aria-label={targetLocale === "es" ? "Ver esta página en español" : "View this page in English"}
-    >
-      {label}
-    </Link>
+    <div className={`locale-switcher${compact ? " locale-switcher--compact" : ""}`} role="group" aria-label={selectorLabel}>
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <circle cx="10" cy="10" r="7.5" />
+        <path d="M2.8 10h14.4M10 2.5c2 2.1 3 4.6 3 7.5s-1 5.4-3 7.5c-2-2.1-3-4.6-3-7.5s1-5.4 3-7.5Z" />
+      </svg>
+      <span className="locale-switcher__current" lang={locale} aria-current="true" aria-label={`${currentLabel}, ${locale === "es" ? "idioma actual" : "current language"}`}>
+        {locale.toUpperCase()}
+      </span>
+      <span className="locale-switcher__separator" aria-hidden="true">/</span>
+      <Link
+        href={alternatePath}
+        hrefLang={targetLocale}
+        lang={targetLocale}
+        onClick={() => trackLanguageSwitch(locale, targetLocale, pathname)}
+        className="locale-switcher__link"
+        aria-label={targetLocale === "es" ? "Ver esta página en español" : "View this page in English"}
+      >
+        {targetLocale.toUpperCase()}
+      </Link>
+    </div>
   );
 }

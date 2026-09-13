@@ -337,3 +337,56 @@ body {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
+
+.locale-switcher {
+  align-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--ink-muted);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+  gap: 0.35rem;
+  letter-spacing: 0.04em;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.65rem;
+}
+
+.locale-switcher--compact {
+  font-size: 0.6875rem;
+  gap: 0.3rem;
+  padding-inline: 0.55rem;
+}
+
+.locale-switcher svg {
+  fill: none;
+  height: 1rem;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.35;
+  width: 1rem;
+}
+
+.locale-switcher__current {
+  color: var(--navy-950);
+}
+
+.locale-switcher__separator {
+  color: var(--line-strong);
+}
+
+.locale-switcher .locale-switcher__link {
+  color: var(--blue-700);
+  margin: -0.45rem -0.45rem -0.45rem -0.15rem;
+  min-height: 2.75rem;
+  padding: 0.8rem 0.45rem;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.locale-switcher .locale-switcher__link:hover {
+  color: var(--blue-800);
+}

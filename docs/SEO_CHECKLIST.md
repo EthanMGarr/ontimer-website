@@ -16,6 +16,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Every intended indexable HTML page has a self-referencing canonical URL on `https://www.ontimer.app`.
 - [ ] Every localized page has an explicit locale URL, reciprocal `hreflang` links for each published language plus `x-default`, a locale-correct canonical, and matching entries in the sitemap. Do not use automatic country or browser-language redirects.
 - [ ] Localized pages render complete translated UI, metadata, structured data, validation, result and calendar-handoff copy; do not index pages with silent English fallback content.
+- [ ] Every localized route pair has an always-visible reciprocal language selector in the same header position on mobile and desktop. Show both the current language and the available language; use language names or codes rather than country flags.
 - [ ] Every intended indexable content page appears in `src/app/sitemap.ts`.
 - [ ] Utility, spam, test, preview, and private tool pages are excluded from the sitemap unless explicitly intended for search.
 - [ ] Temporary public preview routes use `noindex, follow`, remain out of the sitemap, use direct canonical internal links, and receive an explicit metadata, canonical, schema, and sitemap decision before replacing an indexed route.
