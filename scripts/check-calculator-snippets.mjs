@@ -30,7 +30,7 @@ assert.match(source.cruiseWebsite, /const snippetEligibleFaqItems = faqItems\.sl
 assert.match(source.cruiseWebsite, /noSnippetQuestions: \[faqItems\[0\]\.question, faqItems\[1\]\.question\]/);
 assert.match(
   source.leavePage,
-  /Going somewhere\? Enter your route and arrival time\. This free calculator uses traffic-aware routing, travel mode, and your buffer to tell you when to leave—no sign-up required\./
+  /Going somewhere\? This free calculator uses traffic-aware routing, travel mode, arrival time, and your buffer to tell you when to leave—no sign-up required\./
 );
 assert.match(source.leavePage, /<div data-nosnippet>\s*The formula:/);
 assert.match(source.leavePage, /const snippetEligibleFaqItems = faqItems\.filter\(\(_, index\) => index !== 0 && index !== 4\)/);

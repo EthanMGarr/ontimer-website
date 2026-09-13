@@ -11,16 +11,16 @@ export const metadata: Metadata = {
   },
   title: "What Time Should I Leave? Free Departure Time Calculator",
   description:
-    "Going somewhere? Enter your route and arrival time. This free calculator uses traffic-aware routing, travel mode, and your buffer to tell you when to leave—no sign-up required.",
+    "Going somewhere? This free calculator uses traffic-aware routing, travel mode, arrival time, and your buffer to tell you when to leave—no sign-up required.",
   openGraph: {
     title: "What Time Should I Leave? Free Departure Time Calculator",
     description:
-      "Going somewhere? Enter your route and arrival time. This free calculator uses traffic-aware routing, travel mode, and your buffer to tell you when to leave—no sign-up required.",
+      "Going somewhere? This free calculator uses traffic-aware routing, travel mode, arrival time, and your buffer to tell you when to leave—no sign-up required.",
   },
   twitter: {
     title: "What Time Should I Leave? Free Departure Time Calculator",
     description:
-      "Going somewhere? Enter your route and arrival time. This free calculator uses traffic-aware routing, travel mode, and your buffer to tell you when to leave—no sign-up required.",
+      "Going somewhere? This free calculator uses traffic-aware routing, travel mode, arrival time, and your buffer to tell you when to leave—no sign-up required.",
   },
 };
 
@@ -32,7 +32,7 @@ const softwareJsonLd = {
   operatingSystem: "Web",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   description:
-    "Going somewhere? Enter your route and arrival time. This free calculator uses traffic-aware routing, travel mode, and your buffer to tell you when to leave—no sign-up required.",
+    "Going somewhere? This free calculator uses traffic-aware routing, travel mode, arrival time, and your buffer to tell you when to leave—no sign-up required.",
   url: "https://www.ontimer.app/what-time-should-i-leave",
   author: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
 };
@@ -149,9 +149,8 @@ export default function WhatTimeShouldILeavePage() {
             <span className="text-green-500">I Leave?</span>
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-zinc-400">
-            Going somewhere? Enter your route and arrival time. This free calculator uses
-            traffic-aware routing, travel mode, and your buffer to tell you when to leave—no
-            sign-up required.
+            Going somewhere? This free calculator uses traffic-aware routing, travel mode, arrival
+            time, and your buffer to tell you when to leave—no sign-up required.
           </p>
         </div>
       </section>
