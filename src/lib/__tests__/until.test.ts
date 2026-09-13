@@ -1,0 +1,20 @@
+import { strict as assert } from "node:assert";
+import { calculateUntil, COUNTDOWN_OPTIONS, getCountdownOption, getUntilEvent, getUntilSearchSummary } from "../until";
+
+const christmas = getUntilEvent("christmas");
+assert.ok(christmas);
+assert.equal(christmas.nextDate(new Date(2026, 8, 13)).getFullYear(), 2026);
+assert.equal(christmas.nextDate(new Date(2026, 11, 26)).getFullYear(), 2027);
+const christmasSearch = getUntilSearchSummary(christmas, new Date(2026, 8, 13, 12));
+assert.equal(christmasSearch.days, 103);
+assert.equal(christmasSearch.description, "There are 103 days until Christmas Day on Friday, December 25, 2026. Add Christmas plus 30-day, 10-day, and 1-day reminders to your calendar free.");
+const thanksgiving = getUntilEvent("thanksgiving")?.nextDate(new Date(2026, 0, 1));
+assert.equal(thanksgiving?.toLocaleDateString("en-CA"), "2026-11-26");
+const result = calculateUntil(new Date(2026, 0, 11), new Date(2026, 0, 1));
+assert.equal(result.days, 10);
+assert.equal(result.weeks.toFixed(2), "1.43");
+assert.equal(calculateUntil(new Date(2026, 0, 1), new Date(2026, 0, 2)).days, 0);
+assert.equal(COUNTDOWN_OPTIONS.length, 50);
+assert.equal(getCountdownOption("fourth-of-july")?.nextDate?.(new Date(2026, 6, 5)).toLocaleDateString("en-CA"), "2027-07-04");
+assert.equal(getCountdownOption("easter")?.nextDate?.(new Date(2026, 0, 1)).toLocaleDateString("en-CA"), "2026-04-05");
+console.log("until tests passed");

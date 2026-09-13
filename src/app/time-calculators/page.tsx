@@ -7,9 +7,9 @@ import {
 } from "@/components/CalculatorDirectory";
 
 export const metadata: Metadata = {
-  title: "Time Calculators | OnTimer",
+  title: "Time Calculators",
   description:
-    "Browse OnTimer time calculators for airport trips, cruise terminals, wake-up planning, and leave-time planning.",
+    "Browse OnTimer time calculators for countdowns, airport trips, cruise terminals, wake-up planning, and leave-time planning.",
   alternates: { canonical: "https://www.ontimer.app/time-calculators" },
 };
 
@@ -18,7 +18,7 @@ const collectionJsonLd = {
   "@type": "CollectionPage",
   name: "OnTimer Time Calculators",
   description:
-    "A directory of OnTimer time-planning calculators for airport trips, cruise terminals, wake-up planning and leave-time planning.",
+    "A directory of OnTimer countdown and time-planning calculators for dates, airport trips, cruise terminals, wake-up planning and leave-time planning.",
   url: "https://www.ontimer.app/time-calculators",
 };
 
@@ -57,6 +57,12 @@ export default function TimeCalculatorsDirectory() {
                 label="Cruise Terminal Time Calculators"
                 description="Cruise-terminal leave-time calculators built around boarding windows, port access, luggage and terminal logistics."
                 count={cruiseLocations.length}
+              />
+              <CategoryLink
+                href="/days-until"
+                label="Days Until Calculator"
+                description="Count down to any date, then add the event and optional planning milestones to your calendar."
+                count={5}
               />
               <CategoryLink
                 href="/wake-up-time-calculator"

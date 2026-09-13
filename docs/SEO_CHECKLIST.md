@@ -13,6 +13,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] For catalog expansions, spot-check different airport patterns (split terminals, rail-first, single-terminal and road-dependent) at 320, 375, 414 and 768 px.
 - [ ] Large autocomplete or destination lookup catalogs load on demand and are not serialized into the initial HTML/RSC payload; compare the changed route's response size before and after.
 - [ ] Every intended indexable HTML page has a unique title and description.
+- [ ] Page-level Open Graph URLs use the page canonical, and Open Graph/Twitter descriptions match the page-specific intent instead of inheriting generic site copy.
 - [ ] Every intended indexable HTML page has a self-referencing canonical URL on `https://www.ontimer.app`.
 - [ ] Every localized page has an explicit locale URL, reciprocal `hreflang` links for each published language plus `x-default`, a locale-correct canonical, and matching entries in the sitemap. Do not use automatic country or browser-language redirects.
 - [ ] Localized pages render complete translated UI, metadata, structured data, validation, result and calendar-handoff copy; do not index pages with silent English fallback content.
@@ -23,6 +24,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] When preserving a replaced public page for reference, give the archive a distinct URL, `noindex, nofollow`, and a self-canonical; exclude it from navigation and the sitemap so it cannot compete with the live page.
 - [ ] Sitemap pages do not use `noindex`.
 - [ ] Internal links point directly to canonical routes and do not depend on redirects.
+- [ ] Every published page in a programmatic or recurring-answer cluster is reachable through a normal crawlable link from its hub; do not create or link placeholder pages merely to fill a catalog.
 - [ ] URLs emitted only in structured data (including breadcrumb `item` URLs) also resolve to canonical, indexable pages rather than 404s or avoidable redirects.
 - [ ] Redirects are permanent only when the destination is genuinely canonical.
 - [ ] Redirect destinations use the canonical `www.ontimer.app` hostname and avoid redirect chains.
@@ -63,4 +65,6 @@ Use this checklist for every production change involving pages, routes, metadata
 ## Search Snippet Candidates
 
 - Keep the first visible passage after a calculator H1 focused on the personalized result, user inputs, and factors the calculator actually uses.
+- For recurring date-answer pages, server-render the current answer and refresh it often enough that metadata, visible copy, and structured data cannot retain an obsolete count. Pair the direct answer with a concise, page-specific action or benefit that earns the click even when the search results page already shows the answer.
+- Verify recurring-answer build artifacts directly: the initial HTML must contain the numeric answer, target date, supporting units, canonical/social metadata, and structured data before client-side JavaScript runs.
 - Preserve useful rule-of-thumb guidance below the calculator. Use `data-nosnippet` only on a narrowly identified passage that is likely to replace the calculator value proposition in search results; do not suppress whole guidance or FAQ sections. Google supports this attribute only on `div`, `span`, and `section`, so never place it on a paragraph or another unsupported element. Exclude the same suppressed answer from FAQ structured data so JSON-LD does not recreate the unwanted snippet candidate.

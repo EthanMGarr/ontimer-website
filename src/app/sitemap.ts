@@ -3,6 +3,7 @@ import { getSortedPosts } from "@/lib/blog";
 import { getDestinationSitemapRoutes } from "@/lib/destination-routing";
 import { MEDICATION_TIMING_PROFILES } from "@/lib/medication-timing-profiles";
 import { localizedAlternates, spanishAirportSlugs } from "@/lib/i18n";
+import { UNTIL_EVENTS } from "@/lib/until";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.ontimer.app";
@@ -142,6 +143,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/days-until`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    ...UNTIL_EVENTS.map(({ slug }) => ({
+      url: `${baseUrl}/days-until/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.7,
+    })),
     {
       url: `${baseUrl}/airport-time-calculators`,
       lastModified: new Date(),

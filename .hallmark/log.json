@@ -31,5 +31,15 @@
     "vibe": "calm precision, reassuring blue, quiet momentum",
     "enrichment": "page-family dependent",
     "brief": "OnTimer public-site design system and shared chrome migration"
+  },
+  {
+    "date": "2026-09-13",
+    "scope": "page-family",
+    "macrostructure": "Answer-first Workbench",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "direct, useful, lightly festive",
+    "enrichment": "compact event illustration",
+    "brief": "Days Until answer-to-calendar conversion fold"
   }
 ]
