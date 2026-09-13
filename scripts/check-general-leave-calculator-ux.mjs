@@ -24,6 +24,7 @@ assert.match(currentLocationControl, /!active && \(/, "shared calculator locatio
 assert.match(currentLocationControl, /className="sr-only" role="status"/, "shared location success must remain available to assistive technology");
 assert.match(globalStyles, /html \{[\s\S]*?overflow-x: clip;/, "the document root must prevent horizontal page drift");
 assert.match(globalStyles, /body \{[\s\S]*?overflow-x: clip;/, "the page body must prevent horizontal page drift");
+assert.match(globalStyles, /@media \(max-width: 639px\)[\s\S]*?input:not\(\[type="range"\]\)[\s\S]*?font-size: 1rem !important;/, "mobile form controls must remain at 16px to prevent iOS Safari focus zoom");
 assert.doesNotMatch(handoff, /inline-flex whitespace-nowrap text-zinc-500/, "result handoff links must wrap on narrow screens");
 
 assert.ok(page.indexOf("<LeaveTimeCalculator") < page.indexOf("How to calculate when to leave"), "the task must precede supporting SEO copy");

@@ -22,6 +22,20 @@ body {
   overflow-x: clip;
 }
 
+/*
+ * iOS Safari zooms the visual viewport when a focused form control renders
+ * below 16px. That zoom can look like horizontal page overflow after typing,
+ * even when the document itself fits the layout viewport. Keep mobile entry
+ * controls at 16px without disabling user zoom or changing desktop density.
+ */
+@media (max-width: 639px) {
+  input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]),
+  select,
+  textarea {
+    font-size: 1rem !important;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
