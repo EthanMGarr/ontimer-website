@@ -28,8 +28,13 @@ assert.match(source.airportWebsite, /const snippetEligibleFaqItems = faqItems\.s
 assert.match(source.airportWebsite, /noSnippetQuestions: \[faqItems\[0\]\.question, faqItems\[1\]\.question\]/);
 assert.match(source.cruiseWebsite, /const snippetEligibleFaqItems = faqItems\.slice\(2\)/);
 assert.match(source.cruiseWebsite, /noSnippetQuestions: \[faqItems\[0\]\.question, faqItems\[1\]\.question\]/);
+assert.match(
+  source.leavePage,
+  /Going somewhere\? Enter your route and arrival time\. This free calculator uses traffic-aware routing, travel mode, and your buffer to tell you when to leave—no sign-up required\./
+);
 assert.match(source.leavePage, /<div data-nosnippet>\s*The formula:/);
-assert.match(source.leavePage, /data-nosnippet=\{index === 4 \|\| undefined\}/);
+assert.match(source.leavePage, /const snippetEligibleFaqItems = faqItems\.filter\(\(_, index\) => index !== 0 && index !== 4\)/);
+assert.match(source.leavePage, /data-nosnippet=\{index === 0 \|\| index === 4 \|\| undefined\}/);
 assert.match(source.wakePage, /<div data-nosnippet>\s*A common approach/);
 assert.match(source.wakePage, /data-nosnippet=\{index === 0 \|\| undefined\}/);
 assert.doesNotMatch(

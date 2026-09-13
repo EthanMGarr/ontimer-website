@@ -11,16 +11,16 @@ export const metadata: Metadata = {
   },
   title: "What Time Should I Leave? Free Departure Time Calculator",
   description:
-    "Calculate exactly when you should leave based on arrival time, traffic, commute length, and real-world delays. Free departure time calculator.",
+    "Going somewhere? Enter your route and arrival time. This free calculator uses traffic-aware routing, travel mode, and your buffer to tell you when to leave—no sign-up required.",
   openGraph: {
     title: "What Time Should I Leave? Free Departure Time Calculator",
     description:
-      "Calculate exactly when you should leave based on arrival time, traffic, commute length, and real-world delays. Free departure time calculator.",
+      "Going somewhere? Enter your route and arrival time. This free calculator uses traffic-aware routing, travel mode, and your buffer to tell you when to leave—no sign-up required.",
   },
   twitter: {
     title: "What Time Should I Leave? Free Departure Time Calculator",
     description:
-      "Calculate exactly when you should leave based on arrival time, traffic, commute length, and real-world delays. Free departure time calculator.",
+      "Going somewhere? Enter your route and arrival time. This free calculator uses traffic-aware routing, travel mode, and your buffer to tell you when to leave—no sign-up required.",
   },
 };
 
@@ -32,7 +32,7 @@ const softwareJsonLd = {
   operatingSystem: "Web",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   description:
-    "A free departure time calculator that tells you exactly when to leave based on your destination, required arrival time, real-world traffic, and buffer.",
+    "Going somewhere? Enter your route and arrival time. This free calculator uses traffic-aware routing, travel mode, and your buffer to tell you when to leave—no sign-up required.",
   url: "https://www.ontimer.app/what-time-should-i-leave",
   author: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
 };
@@ -75,10 +75,12 @@ const faqItems = [
   },
 ];
 
+const snippetEligibleFaqItems = faqItems.filter((_, index) => index !== 0 && index !== 4);
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: faqItems.map((item) => ({
+  mainEntity: snippetEligibleFaqItems.map((item) => ({
     "@type": "Question",
     name: item.question,
     acceptedAnswer: { "@type": "Answer", text: item.answer },
@@ -147,8 +149,9 @@ export default function WhatTimeShouldILeavePage() {
             <span className="text-green-500">I Leave?</span>
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-zinc-400">
-            Enter where you&apos;re leaving from, where you&apos;re going, and when you need to arrive.
-            We&apos;ll use traffic to calculate when to leave.
+            Going somewhere? Enter your route and arrival time. This free calculator uses
+            traffic-aware routing, travel mode, and your buffer to tell you when to leave—no
+            sign-up required.
           </p>
         </div>
       </section>
@@ -166,9 +169,9 @@ export default function WhatTimeShouldILeavePage() {
           <div className="rounded-xl border border-green-500/25 bg-green-500/5 p-4 sm:p-5">
             <h2 className="text-lg font-bold text-zinc-100">How to calculate when to leave</h2>
             <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-              Start with your required arrival time, subtract travel time, then subtract a buffer
-              for traffic or delays. This calculator does that automatically using traffic data
-              for your route and planned arrival time.
+              Enter your starting point, destination, travel mode, and required arrival time. The
+              calculator estimates the route for that travel window and subtracts your chosen
+              buffer to give you a personalized leave time.
             </p>
             <p className="mt-3 text-xs leading-relaxed text-zinc-500">
               Useful for commutes, meetings, appointments, school pickup, events, and airport runs.
@@ -443,7 +446,7 @@ export default function WhatTimeShouldILeavePage() {
                 </summary>
                 <div
                   className="mt-4 text-sm leading-relaxed text-zinc-400"
-                  data-nosnippet={index === 4 || undefined}
+                  data-nosnippet={index === 0 || index === 4 || undefined}
                 >
                   {item.answer}
                 </div>
