@@ -18,6 +18,7 @@ assert.match(
   /\["Days Until Calculator", "\/days-until"\]/,
   "the site-wide footer must link to the published Days Until hub"
 );
+assert.match(footer, /\["Airport Pickup Time Calculator", "\/airport-pickup-time-calculator"\]/, "the footer must link to the airport pickup calculator");
 
 const header = readFileSync("src/components/Homepage2Header.tsx", "utf8");
 assert.match(
@@ -25,5 +26,6 @@ assert.match(
   /href: "\/days-until", label: "Days Until Calculator"/,
   "the shared Tools menu must link to the published Days Until hub"
 );
+assert.match(header, /href: "\/airport-pickup-time-calculator", label: "Airport Pickup Time Calculator"/, "the Tools menu must link to the airport pickup calculator");
 
 console.log("site footer copy checks passed");

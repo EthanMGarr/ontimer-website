@@ -245,12 +245,18 @@ URLs and 214 internal URLs.
 
 ### 2C. Airport pickup MVP
 
-- Review Search Console modifiers and current airport-page signals first.
-- Build a generic “when should I leave to pick someone up?” calculator without paid
-  flight data.
+- Reviewed the existing airport-page signal strategy and preserved the evidence gate for
+  destination expansion rather than manufacturing ten thin pickup variants.
+- Built the generic “when should I leave to pick someone up?” calculator without paid
+  flight data. It models scheduled arrival, airport-exit time, driving, and parking or
+  meeting time, then hands the leave time to the proven calendar-to-OnTimer funnel.
 - Test approximately ten deliberately selected global airports only after the generic UX
   is proven.
 - Require API economics and usage evidence before adding live flight lookup.
+
+Current next step: establish baseline calculator-completion, calendar-action, and App
+Store-outbound behavior on the generic page before selecting airport-specific pickup
+pages from Search Console evidence.
 
 ## Phase 3 — Continuous two-week shipping cycles
 

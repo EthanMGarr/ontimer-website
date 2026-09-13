@@ -65,6 +65,11 @@ export default function TimeCalculatorsDirectory() {
                 count={5}
               />
               <CategoryLink
+                href="/airport-pickup-time-calculator"
+                label="Airport Pickup Time Calculator"
+                description="Estimate when an arriving passenger will be ready and when you should leave for pickup."
+              />
+              <CategoryLink
                 href="/wake-up-time-calculator"
                 label="Wake-Up Time Calculator"
                 description="Work backward from when you need to leave, arrive or start moving."

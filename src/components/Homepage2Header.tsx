@@ -14,6 +14,7 @@ const toolGroups = [
     { href: "/wake-up-time-calculator", label: "Wake-Up Time Calculator", note: "Work backward from when you must leave" },
   ] },
   { title: "Prepare for travel", links: [
+    { href: "/airport-pickup-time-calculator", label: "Airport Pickup Time Calculator", note: "Estimate when a passenger will be ready and when to leave" },
     { href: "/airport-time-to-leave-calculator", label: "Airport Time-to-Leave Calculator", note: "Choose your airport and get a personalized leave time" },
     { href: "/cruise-terminal-time-calculators", label: "Cruise Time-to-Leave Calculator", note: "Choose your port and plan around boarding" },
   ] },

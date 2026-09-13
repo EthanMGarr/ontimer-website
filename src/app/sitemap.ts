@@ -220,6 +220,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/airport-pickup-time-calculator`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/how-to-never-miss-a-meeting`,
       lastModified: new Date(),
       changeFrequency: 'monthly',

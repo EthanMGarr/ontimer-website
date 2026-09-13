@@ -20,6 +20,7 @@ interface AirportAutocompleteProps {
   placeholder?: string;
   inputClassName?: string;
   locale?: SiteLocale;
+  inputId?: string;
 }
 
 export default function AirportAutocomplete({
@@ -30,6 +31,7 @@ export default function AirportAutocomplete({
   placeholder = "Airport name or IATA code",
   inputClassName = "",
   locale = "en",
+  inputId,
 }: AirportAutocompleteProps) {
   const listboxId = useId();
   const deferredValue = useDeferredValue(value);
@@ -74,6 +76,7 @@ export default function AirportAutocomplete({
   return (
     <div className="relative">
       <input
+        id={inputId}
         type="text"
         role="combobox"
         aria-autocomplete="list"
