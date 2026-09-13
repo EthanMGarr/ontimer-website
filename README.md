@@ -23,13 +23,15 @@ Marketing website for the [OnTimer iOS app](https://apps.apple.com/us/app/ontime
 npm install
 ```
 
-### Run the development server
+### Run the local review server
 
 ```bash
-npm run dev
+npm run preview:start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://127.0.0.1:3010](http://127.0.0.1:3010) in your browser. The command starts one managed background server and verifies the primary calculator route before reporting success. Use `npm run preview:status` to check it and `npm run preview:stop` to stop it.
+
+Development output is written to `.next-dev`; production builds use `.next`. This separation is intentional so running `npm run build` cannot replace files underneath a local review server and cause recurring 500 errors. Use `npm run dev` only when you need an attached development process on the default port.
 
 ### Build for production
 

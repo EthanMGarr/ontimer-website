@@ -13,6 +13,8 @@ assert.match(component, /lastCalculatedFingerprint/);
 assert.match(component, /submitAttempted && !hasOrigin/);
 assert.equal((component.match(/onClick=\{handleCalculate\}/g) ?? []).length, 1, "render exactly one calculate/update action");
 assert.equal(component.includes("exclusivePrimaryAction"), false, "result acquisition must be available without a calendar detour");
+assert.match(component, /id="leave-origin"[\s\S]*?includeAirports/, "the starting location must match airports by name or IATA code");
+assert.match(component, /id="leave-destination"[\s\S]*?includeAirports/, "the destination must match airports by name or IATA code");
 
 assert.ok(page.indexOf("<LeaveTimeCalculator") < page.indexOf("How to calculate when to leave"), "the task must precede supporting SEO copy");
 assert.equal(page.includes("Popular uses:"), false, "non-interactive use-case chips should not return");

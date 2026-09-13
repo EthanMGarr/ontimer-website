@@ -17,6 +17,11 @@ Permanent deployment workflow:
 - Treat production publishing as part of completing user-facing website changes after the relevant tests and production build pass. Do not stop at a local implementation unless the user explicitly says `local only`, `do not publish`, or `preview only`.
 - After publishing, wait for Vercel to report `Ready` and verify the changed behavior on the canonical production URL before reporting completion.
 
+Permanent local preview workflow:
+- Use `npm run preview:start` for the managed user-review server on port 3010, `npm run preview:status` to verify it, and `npm run preview:stop` to stop it.
+- Do not run an unmanaged `next dev -p 3010`. The managed command records the process and verifies `/what-time-should-i-leave` before reporting success.
+- Keep development output in `.next-dev` and production build output in `.next`; this prevents `next build` from corrupting a running preview.
+
 Design:
 Dark theme
 Green accent color

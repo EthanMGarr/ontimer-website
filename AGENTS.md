@@ -21,6 +21,13 @@ If you believe BrandOS should change based on new evidence, explain why and reco
 
 For implementation-only tasks (bug fixes, refactoring, infrastructure), BrandOS usually does not need to be consulted.
 
+## Permanent Local Preview Workflow
+
+- Use `npm run preview:start` for user-review previews. It owns port 3010, records the exact process, and does not report success until `/what-time-should-i-leave` returns healthy rendered HTML.
+- Use `npm run preview:status` to diagnose the review server and `npm run preview:stop` before intentionally replacing it. Do not leave an ad hoc `next dev -p 3010` process running.
+- Development output belongs in `.next-dev`; production builds belong in `.next`. Never remove this isolation or configure development and `next build` to write to the same directory.
+- A local preview is not ready for handoff until its route-level health check passes. A listening port alone is insufficient.
+
 ## Permanent Deployment Workflow
 
 - From the repository root, run `npm run vercel:check` before a release and `npm run deploy:prod` to publish production.

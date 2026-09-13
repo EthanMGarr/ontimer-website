@@ -2,11 +2,14 @@
 
 import { useDeferredValue, useId, useMemo, useRef, useState } from "react";
 import {
-  airportPlanningJurisdictionForCountry,
   buildAirportCalendarLocation,
   filterAirportOptions,
   type AirportAutocompleteOption,
 } from "@/lib/airport-autocomplete";
+import {
+  loadAirportDirectoryOptions,
+  resetAirportDirectoryOptionsForRetry,
+} from "@/lib/airport-directory-options";
 import type { SiteLocale } from "@/lib/i18n";
 
 interface AirportAutocompleteProps {
@@ -17,25 +20,6 @@ interface AirportAutocompleteProps {
   placeholder?: string;
   inputClassName?: string;
   locale?: SiteLocale;
-}
-
-let airportDirectoryOptionsPromise: Promise<AirportAutocompleteOption[]> | null = null;
-
-function loadAirportDirectoryOptions(): Promise<AirportAutocompleteOption[]> {
-  if (!airportDirectoryOptionsPromise) {
-    airportDirectoryOptionsPromise = import("@/lib/airport-directory.generated").then(
-      ({ airportDirectoryRecords }) => airportDirectoryRecords.map(
-        ([code, name, municipality, country, keywords]) => ({
-          code,
-          name,
-          city: [municipality, country].filter(Boolean).join(", "),
-          aliases: keywords ? [keywords] : undefined,
-          planningJurisdiction: airportPlanningJurisdictionForCountry(country),
-        })
-      )
-    );
-  }
-  return airportDirectoryOptionsPromise;
 }
 
 export default function AirportAutocomplete({
@@ -73,7 +57,7 @@ export default function AirportAutocomplete({
     void loadAirportDirectoryOptions()
       .then(setDirectoryOptions)
       .catch(() => {
-        airportDirectoryOptionsPromise = null;
+        resetAirportDirectoryOptionsForRetry();
         directoryLoadStartedRef.current = false;
         setDirectoryOptions([]);
       })

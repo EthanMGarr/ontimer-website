@@ -501,6 +501,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
               onChange={handleOriginChange}
               placeholder={copy.startingAddress}
               inputClassName={inputClass}
+              includeAirports
             />
             {submitAttempted && !hasOrigin && (
               <p className="mt-1.5 text-xs text-red-400" role="alert">{copy.startingRequired}</p>
@@ -542,6 +543,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
               onChange={handleDestinationChange}
               placeholder={copy.whereGoing}
               inputClassName={inputClass}
+              includeAirports
             />
             {submitAttempted && !hasDestination && (
               <p className="mt-1.5 text-xs text-red-400" role="alert">{copy.destinationRequired}</p>

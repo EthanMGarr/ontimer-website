@@ -5,7 +5,8 @@
 /// All API calls are proxied through /api/places-autocomplete (key stays server-side).
 ///
 /// ## Include
-/// - Debounced autocomplete (900ms, min 4 chars; local destination-code matches at 2)
+/// - Debounced Google autocomplete (900ms, min 4 chars)
+/// - Optional immediate airport matching by IATA code or name from the local directory
 /// - Requests only while the field is focused and actively edited
 /// - Longer pause after pasted text so complete addresses can be used as-is
 /// - Dedup guard (skip fetch if input unchanged since last request)
@@ -23,7 +24,16 @@
 
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import {
+  buildAirportCalendarLocation,
+  filterAirportOptions,
+  type AirportAutocompleteOption,
+} from "@/lib/airport-autocomplete";
+import {
+  loadAirportDirectoryOptions,
+  resetAirportDirectoryOptionsForRetry,
+} from "@/lib/airport-directory-options";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -32,6 +42,7 @@ interface Prediction {
   description: string;
   mainText: string;
   secondaryText: string;
+  kind?: "airport" | "place";
 }
 
 interface PlaceAutocompleteProps {
@@ -41,6 +52,7 @@ interface PlaceAutocompleteProps {
   inputClassName?: string;
   id?: string;
   types?: string;
+  includeAirports?: boolean;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -52,11 +64,38 @@ export default function PlaceAutocomplete({
   inputClassName = "",
   id,
   types = "geocode",
+  includeAirports = false,
 }: PlaceAutocompleteProps) {
-  const [suggestions, setSuggestions] = useState<Prediction[]>([]);
+  const [placeSuggestions, setPlaceSuggestions] = useState<Prediction[]>([]);
+  const [airportOptions, setAirportOptions] = useState<AirportAutocompleteOption[]>([]);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isOpen, setIsOpen] = useState(false);
   const minimumCharacters = types === "airport" ? 2 : 4;
+  const deferredValue = useDeferredValue(value);
+  const airportSuggestions = useMemo<Prediction[]>(() => {
+    if (!includeAirports || deferredValue.trim().length < 2) return [];
+
+    return filterAirportOptions(airportOptions, deferredValue)
+      .slice(0, 6)
+      .map((option) => ({
+        placeId: `airport-directory-${option.code}`,
+        description: buildAirportCalendarLocation(option),
+        mainText: `${option.code} · ${option.name}`,
+        secondaryText: option.city,
+        kind: "airport",
+      }));
+  }, [airportOptions, deferredValue, includeAirports]);
+  const suggestions = useMemo(() => {
+    const airportDescriptions = new Set(
+      airportSuggestions.map(({ description }) => description.toLocaleLowerCase())
+    );
+    return [
+      ...airportSuggestions,
+      ...placeSuggestions
+        .filter(({ description }) => !airportDescriptions.has(description.toLocaleLowerCase()))
+        .map((prediction) => ({ ...prediction, kind: "place" as const })),
+    ].slice(0, 8);
+  }, [airportSuggestions, placeSuggestions]);
 
   // Dedup: avoid re-fetching identical input
   const lastFetchedRef = useRef<string>("");
@@ -64,6 +103,33 @@ export default function PlaceAutocomplete({
   const requestRef = useRef<AbortController | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const focusedRef = useRef(false);
+  const valueRef = useRef(value);
+  const directoryLoadStartedRef = useRef(false);
+  valueRef.current = value;
+
+  const hasAirportMatches = useCallback(
+    (input: string, options = airportOptions) =>
+      includeAirports && input.trim().length >= 2 && filterAirportOptions(options, input).length > 0,
+    [airportOptions, includeAirports]
+  );
+
+  const ensureAirportDirectoryLoaded = useCallback(() => {
+    if (!includeAirports || directoryLoadStartedRef.current) return;
+    directoryLoadStartedRef.current = true;
+    void loadAirportDirectoryOptions()
+      .then((options) => {
+        setAirportOptions(options);
+        if (focusedRef.current && hasAirportMatches(valueRef.current, options)) {
+          setIsOpen(true);
+          setActiveIndex(-1);
+        }
+      })
+      .catch(() => {
+        resetAirportDirectoryOptionsForRetry();
+        directoryLoadStartedRef.current = false;
+        setAirportOptions([]);
+      });
+  }, [hasAirportMatches, includeAirports]);
 
   // ── Close on click outside ──────────────────────────────────────────────────
   useEffect(() => {
@@ -72,7 +138,7 @@ export default function PlaceAutocomplete({
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
-        setSuggestions([]);
+        setPlaceSuggestions([]);
         setIsOpen(false);
         setActiveIndex(-1);
       }
@@ -84,8 +150,8 @@ export default function PlaceAutocomplete({
   // ── Fetch suggestions ───────────────────────────────────────────────────────
   const fetchSuggestions = useCallback(async (input: string) => {
     if (!focusedRef.current || input.trim().length < minimumCharacters) {
-      setSuggestions([]);
-      setIsOpen(false);
+      setPlaceSuggestions([]);
+      setIsOpen(hasAirportMatches(input));
       return;
     }
 
@@ -107,21 +173,22 @@ export default function PlaceAutocomplete({
       if (!res.ok) return;
       const data: { predictions: Prediction[] } = await res.json();
       const preds = data.predictions ?? [];
-      setSuggestions(preds);
-      setIsOpen(preds.length > 0);
+      setPlaceSuggestions(preds);
+      setIsOpen(preds.length > 0 || hasAirportMatches(input));
       setActiveIndex(-1);
     } catch {
       // Fail silently — manual text entry still works
-      setSuggestions([]);
-      setIsOpen(false);
+      setPlaceSuggestions([]);
+      setIsOpen(hasAirportMatches(input));
     }
-  }, [minimumCharacters, types]);
+  }, [hasAirportMatches, minimumCharacters, types]);
 
   // ── Input change handler ────────────────────────────────────────────────────
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const val = e.target.value;
       onChange(val);
+      if (includeAirports) ensureAirportDirectoryLoaded();
 
       // Reset dedup when user keeps typing
       if (val !== lastFetchedRef.current) {
@@ -132,26 +199,27 @@ export default function PlaceAutocomplete({
       if (debounceRef.current) clearTimeout(debounceRef.current);
 
       if (val.trim().length < minimumCharacters) {
-        setSuggestions([]);
-        setIsOpen(false);
+        setPlaceSuggestions([]);
+        setIsOpen(hasAirportMatches(val));
         return;
       }
 
       if (!focusedRef.current) return;
+      setIsOpen(hasAirportMatches(val));
 
       const isPaste = (e.nativeEvent as InputEvent).inputType === "insertFromPaste";
       debounceRef.current = setTimeout(() => {
         fetchSuggestions(val);
       }, isPaste ? 1_400 : 900);
     },
-    [onChange, fetchSuggestions, minimumCharacters]
+    [ensureAirportDirectoryLoaded, fetchSuggestions, hasAirportMatches, includeAirports, minimumCharacters, onChange]
   );
 
   // ── Selection ───────────────────────────────────────────────────────────────
   const handleSelect = useCallback(
     (prediction: Prediction) => {
       onChange(prediction.description);
-      setSuggestions([]);
+      setPlaceSuggestions([]);
       setIsOpen(false);
       setActiveIndex(-1);
       lastFetchedRef.current = prediction.description;
@@ -174,7 +242,7 @@ export default function PlaceAutocomplete({
         e.preventDefault();
         handleSelect(suggestions[activeIndex]);
       } else if (e.key === "Escape") {
-        setSuggestions([]);
+        setPlaceSuggestions([]);
         setIsOpen(false);
         setActiveIndex(-1);
       }
@@ -192,6 +260,8 @@ export default function PlaceAutocomplete({
         onChange={handleChange}
         onFocus={() => {
           focusedRef.current = true;
+          ensureAirportDirectoryLoaded();
+          if (suggestions.length > 0) setIsOpen(true);
         }}
         onBlur={() => {
           focusedRef.current = false;

@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
+import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
-const nextConfig: NextConfig = {
+const createNextConfig = (phase: string): NextConfig => ({
+  // Keep the long-running development server isolated from `next build`.
+  // Sharing `.next` lets a production build replace files underneath dev,
+  // which eventually leaves local review routes returning a 500 response.
+  distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next-dev" : ".next",
   images: {
     formats: ["image/avif", "image/webp"],
   },
@@ -74,6 +79,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-};
+});
 
-export default nextConfig;
+export default createNextConfig;

@@ -1,5 +1,7 @@
 node_modules
 .next
+.next-dev
+.local-preview
 .env*
 # Duplicate dist files (macOS copies)
 dist/* 2.*
