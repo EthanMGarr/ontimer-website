@@ -61,22 +61,24 @@ export default function CurrentLocationControl({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={handleUseCurrentLocation}
-        disabled={status === "loading"}
-        className="mt-2 inline-flex min-h-9 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-green-400 transition-colors hover:bg-green-500/10 hover:text-green-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-wait disabled:text-zinc-500"
-      >
-        <LocationIcon />
-        {status === "loading" ? copy.finding : copy.use}
-      </button>
+      {!active && (
+        <button
+          type="button"
+          onClick={handleUseCurrentLocation}
+          disabled={status === "loading"}
+          className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-green-400 transition-colors hover:bg-green-500/10 hover:text-green-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-wait disabled:text-zinc-500"
+        >
+          <LocationIcon />
+          {status === "loading" ? copy.finding : copy.use}
+        </button>
+      )}
       {error && (
         <p className="mt-1 text-xs text-amber-400" role="alert">
           {error}
         </p>
       )}
-      {active && !error && status !== "loading" && (
-        <p className="mt-1 text-xs text-zinc-500" role="status">
+      {active && !error && (
+        <p className="sr-only" role="status">
           {copy.added}
         </p>
       )}

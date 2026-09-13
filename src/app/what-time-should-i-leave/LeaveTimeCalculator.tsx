@@ -493,61 +493,68 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
             </p>
           </div>
 
-          <div>
-            <FieldLabel htmlFor="leave-origin">{copy.startingLocation}</FieldLabel>
-            <PlaceAutocomplete
-              id="leave-origin"
-              value={origin}
-              onChange={handleOriginChange}
-              placeholder={copy.startingAddress}
-              inputClassName={inputClass}
-              includeAirports
-            />
-            {submitAttempted && !hasOrigin && (
-              <p className="mt-1.5 text-xs text-red-400" role="alert">{copy.startingRequired}</p>
-            )}
-            <button
-              type="button"
-              onClick={handleUseCurrentLocation}
-              disabled={locationStatus === "loading"}
-              className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-green-400 transition-colors hover:bg-green-500/10 hover:text-green-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-wait disabled:text-zinc-500"
-            >
-              <LocationIcon />
-              {locationStatus === "loading" ? copy.findingLocation : copy.useLocation}
-            </button>
-            {locationMessage && (
-              <p className={`mt-1 text-xs ${locationStatus === "error" ? "text-amber-400" : "text-zinc-500"}`} role={locationStatus === "error" ? "alert" : "status"}>
-                {locationMessage}
-              </p>
-            )}
-          </div>
+          <div className="space-y-2">
+            <div>
+              <FieldLabel htmlFor="leave-origin">{copy.startingLocation}</FieldLabel>
+              <PlaceAutocomplete
+                id="leave-origin"
+                value={origin}
+                onChange={handleOriginChange}
+                placeholder={copy.startingAddress}
+                inputClassName={inputClass}
+                includeAirports
+              />
+              {submitAttempted && !hasOrigin && (
+                <p className="mt-1.5 text-xs text-red-400" role="alert">{copy.startingRequired}</p>
+              )}
+              {locationStatus !== "success" && (
+                <button
+                  type="button"
+                  onClick={handleUseCurrentLocation}
+                  disabled={locationStatus === "loading"}
+                  className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-green-400 transition-colors hover:bg-green-500/10 hover:text-green-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-wait disabled:text-zinc-500"
+                >
+                  <LocationIcon />
+                  {locationStatus === "loading" ? copy.findingLocation : copy.useLocation}
+                </button>
+              )}
+              {locationMessage && locationStatus === "error" && (
+                <p className="mt-1 text-xs text-amber-400" role="alert">
+                  {locationMessage}
+                </p>
+              )}
+              {locationStatus === "success" && (
+                <p className="sr-only" role="status">{copy.locationAdded}</p>
+              )}
+            </div>
 
-          <div className="flex items-center gap-3">
-            <span className="h-px flex-1 bg-zinc-800" />
-            <button
-              type="button"
-              onClick={handleSwap}
-              className="flex min-h-11 items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-800 px-3 text-xs font-medium text-zinc-400 transition-colors hover:border-zinc-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
-              aria-label={copy.swapAria}
-            >
-              <SwapIcon /> {copy.swap}
-            </button>
-            <span className="h-px flex-1 bg-zinc-800" />
-          </div>
+            <div className="relative h-7" data-swap-control>
+              <span className="absolute inset-x-0 top-1/2 h-px bg-zinc-800" aria-hidden="true" />
+              <button
+                type="button"
+                onClick={handleSwap}
+                className="absolute left-1/2 top-1/2 flex min-h-11 min-w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-700 bg-zinc-800 text-zinc-400 transition-colors hover:border-zinc-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+                aria-label={copy.swapAria}
+                title={copy.swap}
+              >
+                <SwapIcon />
+              </button>
+            </div>
 
-          <div>
-            <FieldLabel htmlFor="leave-destination">{copy.destination}</FieldLabel>
-            <PlaceAutocomplete
-              id="leave-destination"
-              value={destination}
-              onChange={handleDestinationChange}
-              placeholder={copy.whereGoing}
-              inputClassName={inputClass}
-              includeAirports
-            />
-            {submitAttempted && !hasDestination && (
-              <p className="mt-1.5 text-xs text-red-400" role="alert">{copy.destinationRequired}</p>
-            )}
+            <div>
+              <FieldLabel htmlFor="leave-destination">{copy.destination}</FieldLabel>
+              <PlaceAutocomplete
+                id="leave-destination"
+                value={destination}
+                onChange={handleDestinationChange}
+                placeholder={copy.whereGoing}
+                inputClassName={inputClass}
+                includeAirports
+              />
+              {submitAttempted && !hasDestination && (
+                <p className="mt-1.5 text-xs text-red-400" role="alert">{copy.destinationRequired}</p>
+              )}
+            </div>
           </div>
 
           <div className="grid min-w-0 gap-3 sm:grid-cols-2">

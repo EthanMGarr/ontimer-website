@@ -168,7 +168,7 @@ export default function CalendarOnTimerHandoff({
               href={calendarHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex whitespace-nowrap text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+              className="inline-flex max-w-full whitespace-normal text-zinc-500 underline underline-offset-2 transition-colors [overflow-wrap:anywhere] hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
             >
               {copy.reopenGoogle}
             </a>
@@ -179,7 +179,7 @@ export default function CalendarOnTimerHandoff({
                 trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext);
                 setCalendarProvider("ics");
               }}
-              className="inline-flex whitespace-nowrap text-zinc-500 underline underline-offset-2 transition-colors hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+              className="inline-flex max-w-full whitespace-normal text-zinc-500 underline underline-offset-2 transition-colors [overflow-wrap:anywhere] hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
             >
               {copy.otherCalendars}
             </a>
@@ -219,7 +219,7 @@ export default function CalendarOnTimerHandoff({
                 trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext);
                 setCalendarProvider("ics");
               }}
-              className="mt-3 inline-flex whitespace-nowrap text-[11px] font-medium text-zinc-400 underline underline-offset-2 transition-colors hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:text-xs"
+              className="mt-3 inline-flex max-w-full whitespace-normal text-left text-[11px] font-medium leading-relaxed text-zinc-400 underline underline-offset-2 transition-colors [overflow-wrap:anywhere] hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:text-xs"
             >
               {effectiveAlternateCalendarLabel}
             </a>
