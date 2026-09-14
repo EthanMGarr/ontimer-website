@@ -158,6 +158,41 @@ body {
   color: var(--blue-700);
 }
 
+.site-modern [class~="text-green-500/70"] {
+  color: var(--blue-800);
+}
+
+/*
+ * Legacy calculators were authored on near-black surfaces, so their pale
+ * semantic text utilities do not remain legible when the modern light-system
+ * bridge changes those surfaces to paper. Keep semantic meaning while using
+ * foregrounds that meet WCAG AA on the lightest site surfaces.
+ */
+.site-modern .text-sky-200,
+.site-modern .text-sky-300,
+.site-modern .text-cyan-200,
+.site-modern .text-cyan-300 {
+  color: var(--color-status-info-ink);
+}
+
+.site-modern .text-amber-100,
+.site-modern .text-amber-200,
+.site-modern .text-amber-300,
+.site-modern .text-amber-400,
+.site-modern [class~="text-amber-200/80"],
+.site-modern .text-yellow-500,
+.site-modern .text-orange-400 {
+  color: var(--color-status-warning-ink);
+}
+
+.site-modern .text-red-100,
+.site-modern .text-red-200,
+.site-modern .text-red-300,
+.site-modern .text-red-400,
+.site-modern .text-red-500 {
+  color: var(--color-status-danger-ink);
+}
+
 .site-modern .bg-zinc-950,
 .site-modern .bg-zinc-900,
 .site-modern [class*="bg-zinc-900/"] {
@@ -184,7 +219,15 @@ body {
   background-color: var(--blue-100);
 }
 
+.site-modern [class~="bg-green-950/60"] {
+  background-color: var(--blue-100);
+}
+
 .site-modern .bg-green-500.text-black {
+  color: var(--paper);
+}
+
+.site-modern .bg-green-500.text-zinc-950 {
   color: var(--paper);
 }
 
@@ -260,6 +303,14 @@ body {
 
 .site-modern .prose a {
   color: var(--blue-700);
+}
+
+/* Inline legacy links previously relied on green-vs-body color alone. */
+.site-modern p a.text-green-400,
+.site-modern p a.text-green-500 {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 
 .site-modern .prose blockquote {

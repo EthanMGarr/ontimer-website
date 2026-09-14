@@ -17,6 +17,9 @@
   --color-accent-ink: oklch(98% 0.008 244);
   --color-focus: oklch(58% 0.2 250);
   --color-success: oklch(49% 0.12 155);
+  --color-status-info-ink: oklch(40% 0.13 250);
+  --color-status-warning-ink: oklch(37% 0.1 70);
+  --color-status-danger-ink: oklch(42% 0.17 25);
   --color-scrim: oklch(20% 0.036 244 / 0.26);
   --color-shadow: oklch(20% 0.036 244 / 0.12);
   --font-display: var(--font-hp-display, var(--font-inter)), ui-sans-serif, sans-serif;

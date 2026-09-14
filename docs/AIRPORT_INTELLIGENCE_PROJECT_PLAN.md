@@ -380,13 +380,13 @@ The current result hierarchy is directionally correct and should be preserved:
 5. After handoff, OnTimer alarm CTA.
 6. Optional detailed calculation.
 
-Phase 2’s least-complicated enhancement is a compact, collapsed-by-default explanation attached to the result, not a new panel above it. Suggested semantic order:
+Phase 2’s least-complicated enhancement is a compact, collapsed-by-default explanation attached to the result, not a new panel above it. The calendar handoff remains directly after the primary answer and short calculation summary; live intelligence follows the handoff so it cannot displace the funnel action. Suggested semantic order within that compact intelligence row:
 
-- `Security reported now: 18 min` — only for true airport/provider current evidence, with source and timestamp.
+- `Security reported now: 18 min` — only for true current airport evidence. Show a timestamp when it materially helps the traveler; show the provider name only when the license requires attribution or the name itself helps the traveler judge the estimate.
 - `Expected when you arrive: about 23 min` — OnTimer deterministic prediction.
 - `Security time included: 30 min` — conservative allowance used in the answer.
 
-Do not use all three lines when evidence is weak; show prediction and recommendation only. “Why this time?” should reuse the existing calculation disclosure if possible rather than creating a competing control. Traffic impact should appear only when the traffic-aware minus static duration is material. Flight status should appear only after a successful optional lookup. The calendar CTA and post-calendar OnTimer CTA retain their current location and primary-action exclusivity.
+Do not use all three lines when evidence is weak; show prediction and recommendation only. Prefer one compact line plus a separate alert line when an alert exists. “Why this time?” should reuse the existing calculation disclosure if possible rather than creating a competing control. Traffic impact should appear only when the traffic-aware minus static duration is material. Flight status should appear only after a successful optional lookup. The calendar CTA and post-calendar OnTimer CTA retain their current location and primary-action exclusivity.
 
 Hallmark audit note: this project is intentionally not a redesign. The current page has substantial supporting content below the calculator, but the calculator remains first and the result dominates. The main risk is future nested-card/dashboard accretion inside the already card-heavy calculator. Phase 2 should reduce semantic ambiguity without adding a grid of status tiles.
 

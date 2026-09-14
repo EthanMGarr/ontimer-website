@@ -296,6 +296,7 @@ export default function MedicationScheduleGenerator() {
           <FieldLabel>Start date</FieldLabel>
           <input
             type="date"
+            aria-label="Start date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm text-white focus:border-green-500 focus:outline-none"

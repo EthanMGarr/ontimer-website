@@ -402,6 +402,7 @@ export default function CruiseCalculator({
                 <FieldLabel>Boarding time</FieldLabel>
                 <input
                   type="time"
+                  aria-label="Boarding time"
                   value={boardingTime}
                   onChange={(e) => setBoardingTime(e.target.value)}
                   className={timeInputClass}

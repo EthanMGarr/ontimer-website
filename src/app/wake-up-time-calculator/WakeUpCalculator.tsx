@@ -434,6 +434,7 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
               <FieldLabel>{copy.arriveBy}</FieldLabel>
               <input
                 type="time"
+                aria-label={copy.arriveBy}
                 value={arrivalTime}
                 onChange={(e) => setArrivalTime(e.target.value)}
                 className={timeInputClass}

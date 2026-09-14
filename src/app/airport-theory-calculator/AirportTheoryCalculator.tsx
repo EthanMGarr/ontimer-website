@@ -453,7 +453,7 @@ export default function AirportTheoryCalculator() {
             />
             <div className="min-w-0">
               <FieldLabel>Flight departs at</FieldLabel>
-              <input type="time" value={departureTime}
+              <input type="time" aria-label="Flight departs at" value={departureTime}
                 onChange={(e) => setDepartureTime(e.target.value)}
                 className={timeInputClass} />
             </div>

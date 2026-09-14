@@ -48,9 +48,18 @@ percent of a viewport. Dark sections are allowed only when they improve hierarch
 - Secondary: dark ink text or a one-pixel outline on paper.
 - App acquisition pages may use the App Store badge treatment.
 
+On calculator results, the calendar handoff follows the primary answer and at
+most one compact calculation-summary row. Live data, provider details, alerts,
+and optional explanations must not push that handoff below the first practical
+mobile result viewport. After the handoff, the OnTimer CTA keeps the same focal
+position.
+
 ## Accessibility and privacy
 
 - WCAG 2.2 AA is a release requirement for every migrated route family.
+- Semantic information, warning, danger, and success colors use paired theme
+  foregrounds and surfaces; never reuse pale text colors from a dark surface on
+  paper. Verify rendered contrast after any global theme bridge change.
 - Preserve semantic headings, landmarks, labels, errors, keyboard behavior, zoom,
   touch targets, and high-contrast focus states.
 - Cookie consent must work in forced regulated and unregulated states. Analytics and

@@ -77,10 +77,10 @@ export default function Page() {
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <nav className="mb-6 text-sm text-zinc-500">
-            <Link href="/" className="hover:text-zinc-300 transition-colors">Home</Link>
+          <nav className="mb-6 text-sm text-zinc-400">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span className="mx-2">›</span>
-            <Link href="/how-to-remember-medication-on-time" className="hover:text-zinc-300 transition-colors">Medication Reminders</Link>
+            <Link href="/how-to-remember-medication-on-time" className="hover:text-white transition-colors">Medication Reminders</Link>
             <span className="mx-2">›</span>
             <span className="text-zinc-300">Helping a Parent</span>
           </nav>

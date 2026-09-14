@@ -385,7 +385,7 @@ export default function NeverBeLateToMeetingsPage() {
           <h2 className="mb-10 text-center text-2xl font-black tracking-tight text-white sm:text-3xl">
             See OnTimer in action
           </h2>
-          <div className="flex justify-center gap-4 overflow-x-auto pb-2">
+          <div className="flex justify-center gap-4 overflow-x-auto pb-2" role="region" aria-label="OnTimer app screenshots" tabIndex={0}>
             {[
               { src: "/images/NeverBeLateAgain.png", alt: "Never be late again" },
               { src: "/images/AutomaticAlarms.png", alt: "Automatic alarms from your calendar" },

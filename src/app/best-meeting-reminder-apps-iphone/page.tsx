@@ -125,7 +125,7 @@ export default function BestMeetingReminderAppsIphone() {
           <h2 className="mb-8 text-3xl font-black tracking-tight text-white sm:text-4xl">
             Simple comparison
           </h2>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" role="region" aria-label="Meeting reminder app comparison" tabIndex={0}>
             <table className="w-full min-w-[560px] overflow-hidden rounded-2xl border border-zinc-800 text-sm">
               <thead>
                 <tr className="border-b border-zinc-800 bg-zinc-900">

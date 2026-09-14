@@ -906,6 +906,7 @@ export default function AirportCalculator({
                   <FieldLabel>{copy.flightDeparts}</FieldLabel>
                   <input
                     type="time"
+                    aria-label={copy.flightDeparts}
                     value={departureTime}
                     onChange={(e) => setDepartureTime(e.target.value)}
                     className={timeInputClass}
@@ -1260,42 +1261,6 @@ export default function AirportCalculator({
                   />
                 </div>
 
-                {licensedSecurityEvidence && (
-                  <section
-                    className="mt-5 rounded-xl border border-sky-400/25 bg-sky-400/10 p-4"
-                    aria-label={locale === "es" ? "Estimación de seguridad actual" : "Current security estimate"}
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-sky-300">
-                          {locale === "es" ? "Espera de seguridad estimada ahora" : "Estimated security wait now"}
-                        </p>
-                        <p className="mt-1 text-3xl font-bold text-white">
-                          {Math.round(licensedSecurityEvidence.minutes)} <span className="text-base font-medium text-zinc-300">min</span>
-                        </p>
-                      </div>
-                      <p className="max-w-32 text-right text-[11px] leading-relaxed text-zinc-400">
-                        {locale === "es" ? "Estimación de TSAWaitTimes.com" : "TSAWaitTimes.com estimate"}
-                      </p>
-                    </div>
-                    <p className="mt-3 text-sm leading-relaxed text-zinc-200">
-                      {locale === "es"
-                        ? `Para cuando llegues a seguridad, OnTimer calcula unos ${securityIntelligence?.predictedWaitAtArrival.minutes ?? computedResult.securityMinutes} min y reserva ${computedResult.securityMinutes} min en tu hora de salida.`
-                        : `By the time you reach security, OnTimer expects about ${securityIntelligence?.predictedWaitAtArrival.minutes ?? computedResult.securityMinutes} min and reserves ${computedResult.securityMinutes} min in your leave time.`}
-                    </p>
-                    {(hasPreCheck && openPrecheckCount > 0) && (
-                      <p className="mt-2 text-xs text-sky-200">
-                        {openPrecheckCount} {locale === "es" ? "punto(s) PreCheck reportado(s) abierto(s)" : `PreCheck checkpoint${openPrecheckCount === 1 ? "" : "s"} reported open`}
-                      </p>
-                    )}
-                    {licensedSecurityEvidence.faaAlerts?.[0] && (
-                      <p className="mt-2 border-t border-sky-300/15 pt-2 text-xs leading-relaxed text-amber-200">
-                        {locale === "es" ? "Aviso del aeropuerto" : "Airport alert"}: {licensedSecurityEvidence.faaAlerts[0].summary}
-                      </p>
-                    )}
-                  </section>
-                )}
-
                 {ewrResultExperiment && (
                   <div className="mt-5 border-t border-zinc-800 pt-4">
                     <p className="text-sm leading-relaxed text-zinc-300">
@@ -1366,6 +1331,33 @@ export default function AirportCalculator({
                     startLabel: fmtTime(computedResult.leaveTime, locale),
                   }}
                 />
+
+                {licensedSecurityEvidence && (
+                  <section
+                    className="mt-3 border-t border-zinc-800 pt-3"
+                    aria-label={locale === "es" ? "Estimación de seguridad actual" : "Current security estimate"}
+                  >
+                    <div className="flex items-baseline justify-between gap-3 text-sm">
+                      <p className="font-semibold text-zinc-300">
+                        {locale === "es" ? "Seguridad ahora" : "Security now"}
+                      </p>
+                      <p className="shrink-0 font-bold text-zinc-100">
+                        {Math.round(licensedSecurityEvidence.minutes)} min
+                      </p>
+                    </div>
+                    <p className="mt-1 text-xs leading-relaxed text-zinc-400">
+                      {locale === "es"
+                        ? `A tu llegada: ~${securityIntelligence?.predictedWaitAtArrival.minutes ?? computedResult.securityMinutes} min · ${computedResult.securityMinutes} min incluidos${hasPreCheck && openPrecheckCount > 0 ? ` · ${openPrecheckCount} PreCheck abierto${openPrecheckCount === 1 ? "" : "s"}` : ""}`
+                        : `At arrival: ~${securityIntelligence?.predictedWaitAtArrival.minutes ?? computedResult.securityMinutes} min · ${computedResult.securityMinutes} min included${hasPreCheck && openPrecheckCount > 0 ? ` · ${openPrecheckCount} PreCheck checkpoint${openPrecheckCount === 1 ? "" : "s"} open` : ""}`}
+                    </p>
+                    {licensedSecurityEvidence.faaAlerts?.[0] && (
+                      <p className="mt-1 text-xs leading-relaxed text-amber-800">
+                        <span className="font-semibold">{locale === "es" ? "Aviso del aeropuerto" : "Airport alert"}:</span>{" "}
+                        {licensedSecurityEvidence.faaAlerts[0].summary}
+                      </p>
+                    )}
+                  </section>
+                )}
 
                 {/* Timing details stay available without interrupting the conversion flow. */}
                 <div className="mt-5 border-t border-zinc-800 pt-4">

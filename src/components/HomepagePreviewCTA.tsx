@@ -72,6 +72,7 @@ export function HomepagePreviewCTA({ location }: { location: string }) {
         onClick={() => trackQRCodeClick(location)}
       >
         <QRCodeSVG
+          title="Scan to download OnTimer from the App Store"
           value={APP_STORE_URL}
           size={132}
           bgColor="#ffffff"

@@ -72,6 +72,7 @@ export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
               aria-label="Scan QR code to download OnTimer"
             >
               <QRCodeSVG
+                title="Scan to download OnTimer from the App Store"
                 value={APP_STORE_URL}
                 size={128}
                 bgColor="#ffffff"
