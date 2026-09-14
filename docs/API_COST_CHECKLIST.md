@@ -1,4 +1,4 @@
-# Google API Cost-Safety Checklist
+# Paid API Cost-Safety Checklist
 
 Use this checklist whenever adding or changing a paid API integration.
 
@@ -16,6 +16,16 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] Failure paths degrade to manual entry rather than multiplying paid requests.
 - [ ] Upstream failures are logged with sanitized provider status/reason fields; never log API keys or user-entered locations.
 - [ ] Rate-limit and provenance behavior has automated regression coverage.
+- [ ] Provider credentials use documented authenticated endpoints; undocumented free endpoints are not retained as fallback paths.
+- [ ] Provider attribution and evidence labels distinguish third-party estimates from official government or operator data.
+- [ ] A provider kill switch and a useful providerless fallback are verified.
+
+## Provider Account Controls
+
+- [ ] Confirm the purchased plan, renewal date, request allowance, overage behavior, and cancellation path in the provider account.
+- [ ] Enable provider-side request limits or alerts when offered.
+- [ ] Review provider usage after deployment and again before the first renewal.
+- [ ] Record the service and environment owning each production credential without storing the credential in documentation.
 
 ## Google Cloud Controls
 

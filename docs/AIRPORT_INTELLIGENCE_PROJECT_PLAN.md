@@ -567,7 +567,7 @@ With roughly 200 clicks and one new payer per day across the entire network, LGA
 
 ### Ethan decisions and external actions
 
-- **Decided 2026-09-05: no TSAWaitTimes subscription.** Ethan declined the $49.95/month documented API. Rationale: the paid tier is the same blended estimate as the free legacy endpoint, not better data — it buys ToS compliance, not accuracy, and OnTimer's internal historical-pattern model already carries most of the recommendation quality when live evidence is weak or absent. The free legacy adapter remains in place as a continuity source ($0, unchanged); the `AIRPORT_SECURITY_TSAWAITTIMES_ENABLED=false` kill switch remains available if its authorization status becomes a concern. Effort is redirected to official-source outreach below, which is the only path to a genuine data-quality upgrade.
+- **Superseded 2026-09-13: purchased three months of TSAWaitTimes.com API access.** The earlier decision to retain the free legacy endpoint is retired. The licensed feed will be used only in the free website calculators and presented as a third-party estimate, not an official TSA measurement. Its current estimate, hourly estimates, reported PreCheck status, and FAA alerts should improve explanation and trust when available; OnTimer's conservative arrival-time model remains the decision layer and automatic fallback. The `AIRPORT_SECURITY_TSAWAITTIMES_ENABLED=false` kill switch remains available.
 - **PANYNJ and airport-operator outreach (in progress):** requesting official LGA/JFK/EWR feed access and written reuse/caching/attribution terms from the Port Authority, plus the same ask sent broadly to ATL, LAX, DEN, SEA, DFW, PHX, and MIA so Phase 2 can pick whichever authority responds first with usable terms. See the outreach email and contact list Ethan is sending; log responses in Epic C's provider rights register (`docs/AIRPORT_INTELLIGENCE_PROJECT_PLAN.md` section 14, Epic C) as they arrive.
 - **Paid service approval:** approve Google Routes budget/quota thresholds; later choose FlightAware vs Cirium only after a scoped quote and license comparison.
 - **UX decision:** approve Phase 2’s exact three-level terminology and whether the evidence line is always visible or inside the existing calculation disclosure.
@@ -602,7 +602,7 @@ Deliver a modular security-wait engine with honest semantics and a backward-comp
 - PreCheck/CLEAR values are inferred unless lane-specific provider evidence exists.
 - Invalid/stale/failing providers cannot break the route or masquerade as current.
 - Upstream calls are cached/deduplicated by airport only.
-- No new credential, paid service, user-data transmission, or ongoing cost is introduced. The optional `AIRPORT_SECURITY_TSAWAITTIMES_ENABLED=false` kill switch disables the continuity provider and falls back to OnTimer's model.
+- The licensed credential remains server-side. The optional `AIRPORT_SECURITY_TSAWAITTIMES_ENABLED=false` kill switch disables the provider and falls back to OnTimer's model.
 - Tests and build pass; changelog records implementation and verification.
 
 ## Decision log for this initiative
@@ -612,4 +612,4 @@ Deliver a modular security-wait engine with honest semantics and a backward-comp
 - Keep the legacy response contract and add normalized fields, enabling later UI work without coupling.
 - Use deterministic rules first. Collect calibration evidence before considering machine learning.
 - Keep the result/calendar/OnTimer hierarchy unchanged through Phase 1.
-- 2026-09-05: Declined the TSAWaitTimes $49.95/month documented API. Its data is the same third-party blended estimate as the free legacy endpoint — paying buys ToS compliance, not accuracy or granularity — and OnTimer's internal historical-pattern model already absorbs most of the recommendation quality when live evidence is weak. Continue the free legacy adapter unchanged; pursue official airport-operator sources (PANYNJ plus ATL/LAX/DEN/SEA/DFW/PHX/MIA) as the actual data-quality upgrade path instead of a paid subscription to the same-tier vendor.
+- 2026-09-13: Superseded the 2026-09-05 decision and purchased a three-month TSAWaitTimes.com subscription. Replace the legacy endpoint with the documented authenticated API; expose its useful context without presenting it as official TSA data; measure calculator and calendar-handoff impact; retain provider-neutral fallback and the kill switch.

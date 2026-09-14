@@ -172,7 +172,7 @@
     <h3>2.7 Website Calculator and Medication Tool Inputs</h3>
     <p>Different website tools handle what you enter in different ways:</p>
     <ul>
-        <li><strong>Travel and Time to Leave calculators:</strong> Origin, destination, airport, cruise terminal, and similar location text may be sent to OnTimer's server and then to Google Maps Platform services to return place suggestions or calculate a route and travel-time estimate. We do not use those entries to build a user profile.</li>
+        <li><strong>Travel and Time to Leave calculators:</strong> Origin, destination, airport, cruise terminal, and similar location text may be sent to OnTimer's server and then to Google Maps Platform services to return place suggestions or calculate a route and travel-time estimate. For U.S. airport departure calculations, OnTimer may also send the selected airport code—not your origin, address, route, calendar information, or precise location—to TSAWaitTimes.com to retrieve an airport security estimate. We do not use those entries to build a user profile.</li>
         <li><strong>Personal Medication Schedule Generator:</strong> Medication names, instructions, start dates, and dose times are processed in your browser to create a calendar file. OnTimer does not provide accounts or server-side storage for these schedules.</li>
         <li><strong>Provider and caregiver medication schedule links:</strong> Schedule details are encoded in the URL fragment, the portion after the <code>#</code>. Browsers do not include that fragment in the HTTP request sent to OnTimer's web server. The recipient's browser reads the schedule locally and removes the fragment from the address bar after validation. The link is not encrypted or access-controlled. Anyone with the complete link can read its contents, so it should be shared only through a method the sender considers appropriate and only with the intended recipient.</li>
         <li><strong>Analytics-free medication routes:</strong> Google Analytics and other third-party scripts are disabled on the personal, provider, caregiver, and shared medication-schedule routes. These routes also use a no-referrer policy, no-store response controls, and browser security rules that prevent third-party script and data connections.</li>
@@ -314,6 +314,13 @@
         <li><strong>Cookies:</strong> Travelpayouts or the travel provider may place attribution cookies after you follow an affiliate link. Cookie duration and other practices depend on the selected provider.</li>
         <li><strong>Compensation:</strong> OnTimer may earn a commission if you book through an affiliate link, at no additional cost to you.</li>
         <li><strong>Privacy policy:</strong> <a href="https://support.travelpayouts.com/hc/en-us/articles/360004121052-Privacy-Policy">Travelpayouts Privacy Policy</a></li>
+    </ul>
+
+    <h3>5.11 TSAWaitTimes.com</h3>
+    <ul>
+        <li><strong>Purpose:</strong> Provide estimated airport security waits, hourly estimates, reported TSA PreCheck checkpoint status, and related airport alerts for free U.S. airport departure calculators</li>
+        <li><strong>Data shared:</strong> The selected three-letter airport code; OnTimer does not send your origin, street address, route, calendar information, precise location, or app data</li>
+        <li><strong>Privacy policy:</strong> <a href="https://www.tsawaittimes.com/privacy">https://www.tsawaittimes.com/privacy</a></li>
     </ul>
 
     <h2>6. Data Sharing and Disclosure</h2>

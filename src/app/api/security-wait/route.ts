@@ -12,11 +12,22 @@ import {
   type FlightType,
   type SecurityEstimate,
 } from "@/lib/airport-security";
+import { guardGoogleApiRequest } from "@/lib/api-cost-guard";
 
 const providerEnabled = process.env.AIRPORT_SECURITY_TSAWAITTIMES_ENABLED !== "false";
+const providerApiKey = process.env.TSA_WAIT_TIMES_API_KEY?.trim();
+const SECURITY_RATE_LIMIT = {
+  name: "security-wait",
+  perIpLimit: 60,
+  perIpWindowMs: 60 * 60_000,
+  globalLimit: 5_000,
+  globalWindowMs: 60 * 60_000,
+};
 
 const securityService = createAirportSecurityService({
-  providers: providerEnabled ? [createTsaWaitTimesProvider()] : [],
+  providers: providerEnabled && providerApiKey
+    ? [createTsaWaitTimesProvider({ apiKey: providerApiKey })]
+    : [],
   log(event) {
     console.info("[airport-security]", JSON.stringify(event));
   },
@@ -58,6 +69,18 @@ function requestInput(request: NextRequest, now: Date) {
 }
 
 export async function GET(request: NextRequest) {
+  const guard = guardGoogleApiRequest(request, SECURITY_RATE_LIMIT);
+  if (!guard.allowed) {
+    return NextResponse.json(
+      { error: guard.reason },
+      {
+        status: guard.reason === "rate_limited" ? 429 : 403,
+        headers: guard.retryAfterSeconds
+          ? { "Retry-After": String(guard.retryAfterSeconds) }
+          : undefined,
+      }
+    );
+  }
   const now = new Date();
   const input = requestInput(request, now);
   try {

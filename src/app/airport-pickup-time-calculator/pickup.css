@@ -16,25 +16,57 @@
 .pickup-input:focus { outline: 3px solid rgba(10, 108, 194, .18); border-color: var(--pickup-blue); }
 .pickup-divider { margin-top: 40px; padding-top: 34px; border-top: 1px solid #d8e4ec; }
 .pickup-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.pickup-pair label { position: relative; }
+.pickup-pair label { position: relative; min-width: 0; }
 .pickup-pair span { display: block; margin-top: 6px; color: #587083; font-size: .85rem; font-weight: 500; }
-.pickup-submit { width: 100%; min-height: 60px; margin-top: 30px; border: 0; border-radius: 999px; background: var(--pickup-blue); color: #fff; font: inherit; font-weight: 780; cursor: pointer; }
+.pickup-submit { width: 100%; min-height: 60px; margin-top: 30px; border: 0; border-radius: 999px; background: var(--pickup-blue); color: #fff; font: inherit; font-weight: 780; white-space: nowrap; cursor: pointer; }
 .pickup-submit:hover { background: #07599f; }
+.pickup-submit:focus-visible { outline: 3px solid #7dc4ff; outline-offset: 3px; }
+.pickup-submit:active { transform: translateY(1px); }
+.pickup-submit:disabled { cursor: progress; opacity: .68; }
 .pickup-error { color: #a82626; font-weight: 650; }
 .pickup-result { position: sticky; top: 100px; overflow: hidden; background: var(--pickup-ink); color: #eef8ff; min-height: 360px; }
+/* Restore dark-panel contrast for the shared calendar-to-OnTimer handoff. */
+.site-modern .pickup-result .text-white,
+.site-modern .pickup-result .text-zinc-100,
+.site-modern .pickup-result .text-zinc-200,
+.site-modern .pickup-result .text-zinc-300 { color: #eef8ff; }
+.site-modern .pickup-result .text-zinc-400 { color: #b9d9ef; }
+.site-modern .pickup-result .text-zinc-500,
+.site-modern .pickup-result .text-zinc-600 { color: #8fb4ca; }
+.site-modern .pickup-result .hover\:text-white:hover,
+.site-modern .pickup-result .hover\:text-zinc-300:hover { color: #fff; }
 .pickup-result .pickup-step { color: #83c7ff; }
 .pickup-result > p:not(.pickup-step) { color: #b9d9ef; line-height: 1.55; }
 .pickup-result--ready h2 { color: #86c8ff; font-size: clamp(2.2rem, 5vw, 4.3rem); }
 .pickup-result__date { margin-top: 9px; }
-.pickup-result dl { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 32px 0; }
+.pickup-result dl { display: grid; gap: 12px; margin: 24px 0; }
 .pickup-result dl div { padding: 18px; border: 1px solid #24465d; border-radius: 16px; }
 .pickup-result dt { color: #a9cce4; font-size: .8rem; }
 .pickup-result dd { margin: 7px 0 0; font-size: 1.3rem; font-weight: 750; }
 .pickup-assumption { padding-bottom: 24px; border-bottom: 1px solid #24465d; font-size: .9rem; }
+.pickup-choices { display: flex; flex-wrap: wrap; gap: 10px; margin: 34px 0 0; padding: 0; border: 0; }
+.pickup-choices legend { width: 100%; margin-bottom: 4px; font-weight: 750; }
+.pickup-choices label { display: flex; align-items: center; gap: 8px; min-height: 44px; margin: 0; padding: 8px 12px; border: 1px solid #b9cedc; border-radius: 999px; background: #f6fafd; font-weight: 600; white-space: nowrap; }
+.pickup-choices input { width: 18px; height: 18px; accent-color: var(--pickup-blue); }
+.pickup-manual { margin-top: 20px; color: #486174; }
+.pickup-manual summary { min-height: 44px; padding-block: 11px; cursor: pointer; font-weight: 650; }
+.pickup-timeline { position: relative; margin: 30px 0; }
+.pickup-timeline::before { position: absolute; top: 20px; bottom: 20px; left: 17px; width: 1px; background: #315269; content: ""; }
+.pickup-timeline > div { position: relative; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 14px; padding: 10px 0; }
+.pickup-timeline span { z-index: 1; display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid #4b718a; border-radius: 50%; background: var(--pickup-ink); color: #8dcaff; font-weight: 800; }
+.pickup-timeline p { margin: 0; color: #b9d9ef; line-height: 1.45; }
+.pickup-timeline strong { display: block; color: #fff; font-size: 1rem; }
+.pickup-breakdown { margin: 24px 0; border-top: 1px solid #24465d; border-bottom: 1px solid #24465d; }
+.pickup-breakdown summary { min-height: 48px; padding-block: 15px; color: #ddecf6; cursor: pointer; font-weight: 750; }
+.pickup-breakdown dl div { display: flex; justify-content: space-between; gap: 20px; padding: 10px 0; border: 0; border-top: 1px solid #18394f; border-radius: 0; }
+.pickup-breakdown dd { margin: 0; color: #fff; font-size: .9rem; text-align: right; }
+.pickup-preview { margin-top: 30px; color: #b9d9ef; line-height: 1.6; }
+.pickup-preview p:last-child { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 30px; color: #fff; }
+.pickup-preview span { color: #75bffc; }
 .pickup-guide { padding: 72px 0 96px; background: #dcecf6; }
 .pickup-guide .pickup-shell { max-width: 760px; }
 .pickup-guide h2 { margin: 44px 0 14px; font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: -.04em; }
 .pickup-guide h2:first-child { margin-top: 0; }
 .pickup-guide p { color: #29475b; font-size: 1.08rem; line-height: 1.7; }
 @media (max-width: 820px) { .pickup-shell { width: min(100% - 28px, 680px); } .pickup-hero { padding: 42px 0 34px; } .pickup-hero nav { margin-bottom: 30px; } .pickup-workbench { grid-template-columns: 1fr; gap: 18px; padding-block: 28px; } .pickup-result { position: static; } }
-@media (max-width: 470px) { .pickup-shell { width: calc(100% - 20px); } .pickup-hero h1 { font-size: clamp(2.5rem, 13vw, 3.55rem); } .pickup-form, .pickup-result { padding: 24px 18px; border-radius: 22px; } .pickup-pair, .pickup-result dl { grid-template-columns: 1fr; } }
+@media (max-width: 470px) { .pickup-shell { width: calc(100% - 20px); } .pickup-hero h1 { font-size: clamp(2.5rem, 13vw, 3.55rem); } .pickup-form, .pickup-result { padding: 24px 18px; border-radius: 22px; } .pickup-pair { grid-template-columns: 1fr; } .pickup-choices { display: grid; grid-template-columns: 1fr; } .pickup-submit { font-size: .96rem; } }

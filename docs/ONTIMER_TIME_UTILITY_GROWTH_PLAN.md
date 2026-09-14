@@ -250,6 +250,10 @@ URLs and 214 internal URLs.
 - Built the generic “when should I leave to pick someone up?” calculator without paid
   flight data. It models scheduled arrival, airport-exit time, driving, and parking or
   meeting time, then hands the leave time to the proven calendar-to-OnTimer funnel.
+- Rebuilt the generic interaction around a named passenger, optional flight number,
+  starting address, guarded traffic-aware routing, and an explainable leave → land →
+  pickup timeline. The canonical page covers natural relationship variants (wife,
+  husband, daughter, son, cousin, family member, and friend) without doorway pages.
 - Test approximately ten deliberately selected global airports only after the generic UX
   is proven.
 - Require API economics and usage evidence before adding live flight lookup.

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { extractAirportCode, predictSecurity } from "../model";
 import { createAirportSecurityService } from "../service";
 import type { ObservedSecurityWait, SecurityRequest, WaitProvider } from "../types";
-import { parseTsaWaitTimesResponse } from "../providers/tsa-wait-times";
+import { createTsaWaitTimesProvider, parseTsaWaitTimesResponse } from "../providers/tsa-wait-times";
 
 function baseRequest(overrides: Partial<SecurityRequest> = {}): SecurityRequest {
   return {
@@ -44,6 +44,22 @@ function testProviderParsing() {
   assert.equal(direct?.minutes, 18);
   assert.equal(direct?.freshness, "fresh");
 
+  const licensed = parseTsaWaitTimesResponse({
+    rightnow: 23,
+    user_reported: 30,
+    utc: -4,
+    estimated_hourly_times: [{ timeslot: "12 am - 1 am", waittime: 12.4 }],
+    precheck_checkpoints: { "Terminal A": { "Checkpoint 1": "Open" } },
+    faa_alerts: { ground_delays: { reason: "WEATHER", average: "20 minutes" } },
+  }, now);
+  assert.equal(licensed?.minutes, 23);
+  assert.equal(licensed?.userReportedMinutes, 30);
+  assert.equal(licensed?.airportUtcOffsetHours, -4);
+  assert.deepEqual(licensed?.hourlyEstimates, [{ hour: 0, minutes: 12 }]);
+  assert.deepEqual(licensed?.precheckCheckpoints, [{ terminal: "Terminal A", checkpoint: "Checkpoint 1", status: "Open" }]);
+  assert.deepEqual(licensed?.faaAlerts, [{ kind: "ground_delays", summary: "WEATHER · 20 minutes" }]);
+  assert.deepEqual(parseTsaWaitTimesResponse({ rightnow: 12, faa_alerts: { ground_delays: { reason: "", average: " " } } }, now)?.faaAlerts, []);
+
   const nested = parseTsaWaitTimesResponse({ checkpoints: [
     { wait_time_minutes: 10 },
     { current_wait: 20 },
@@ -60,6 +76,34 @@ function testProviderParsing() {
   assert.equal(epochString?.freshness, "fresh");
   assert.equal(parseTsaWaitTimesResponse({ average_wait: 999 }, now), null);
   assert.equal(parseTsaWaitTimesResponse({ checkpoints: [{ wait_time: "fast" }] }, now), null);
+}
+
+async function testLicensedProviderUsesAuthenticatedEndpoint() {
+  let requestedUrl = "";
+  const provider = createTsaWaitTimesProvider({
+    apiKey: "licensed-key",
+    fetchImpl: async (input) => {
+      requestedUrl = String(input);
+      return new Response(JSON.stringify({ rightnow: 17 }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    },
+  });
+  const evidence = await provider.fetchCurrentWait("ewr");
+  assert.equal(requestedUrl, "https://www.tsawaittimes.com/api/airport/licensed-key/EWR/json");
+  assert.equal(evidence?.minutes, 17);
+  assert.equal(evidence?.provider.id, "tsawaittimes-licensed");
+
+  let called = false;
+  const disabled = createTsaWaitTimesProvider({
+    fetchImpl: async () => {
+      called = true;
+      return new Response("{}");
+    },
+  });
+  assert.equal(await disabled.fetchCurrentWait("EWR"), null);
+  assert.equal(called, false);
 }
 
 function testSpecificAirportNameWinsOverMetroFallback() {
@@ -228,6 +272,7 @@ async function testCacheIsBounded() {
 
 async function main() {
   testProviderParsing();
+  await testLicensedProviderUsesAuthenticatedEndpoint();
   testSpecificAirportNameWinsOverMetroFallback();
   testArrivalTimePattern();
   testFreshEvidenceDominatesAndStaleEvidenceDoesNot();

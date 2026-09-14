@@ -30,6 +30,11 @@ export interface ObservedSecurityWait {
   fetchedAt: string;
   freshness: Freshness;
   confidence: Confidence;
+  userReportedMinutes?: number | null;
+  hourlyEstimates?: Array<{ hour: number; minutes: number }>;
+  airportUtcOffsetHours?: number | null;
+  precheckCheckpoints?: Array<{ terminal: string; checkpoint: string; status: string }>;
+  faaAlerts?: Array<{ kind: string; summary: string }>;
 }
 
 export interface PredictedSecurityWait {

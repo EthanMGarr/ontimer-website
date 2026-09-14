@@ -154,7 +154,11 @@ export function predictSecurity(
     method = "conservative-fallback";
   } else if (evidence && weight > 0) {
     // Carry the current airport deviation forward while allowing it to decay.
-    const projectedFromCurrent = evidence.minutes + (arrivalPattern - currentPattern);
+    const providerArrivalPattern = providerHourlyEstimate(evidence, initialArrival);
+    const providerCurrentPattern = providerHourlyEstimate(evidence, now);
+    const projectedFromCurrent = providerArrivalPattern !== null && providerCurrentPattern !== null
+      ? evidence.minutes + (providerArrivalPattern - providerCurrentPattern)
+      : evidence.minutes + (arrivalPattern - currentPattern);
     generalPrediction = Math.round(weight * projectedFromCurrent + (1 - weight) * arrivalPattern);
     method = "current-adjusted-pattern";
   }
@@ -181,4 +185,10 @@ export function predictSecurity(
     lane,
     recommendation,
   };
+}
+
+function providerHourlyEstimate(evidence: ObservedSecurityWait, time: Date): number | null {
+  if (!evidence.hourlyEstimates?.length || evidence.airportUtcOffsetHours === null || evidence.airportUtcOffsetHours === undefined) return null;
+  const airportHour = new Date(time.getTime() + evidence.airportUtcOffsetHours * 3_600_000).getUTCHours();
+  return evidence.hourlyEstimates.find((estimate) => estimate.hour === airportHour)?.minutes ?? null;
 }

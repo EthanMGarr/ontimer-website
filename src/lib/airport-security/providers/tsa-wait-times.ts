@@ -15,6 +15,12 @@ interface CheckpointPayload {
 }
 
 interface AirportPayload extends CheckpointPayload {
+  utc?: unknown;
+  rightnow?: unknown;
+  user_reported?: unknown;
+  estimated_hourly_times?: unknown;
+  precheck_checkpoints?: unknown;
+  faa_alerts?: unknown;
   checkpoints?: unknown;
   wait_times?: unknown;
   waittimes?: unknown;
@@ -28,12 +34,21 @@ export interface ParsedProviderWait {
   observedAt: Date | null;
   freshness: Freshness;
   confidence: Confidence;
+  userReportedMinutes: number | null;
+  hourlyEstimates: Array<{ hour: number; minutes: number }>;
+  airportUtcOffsetHours: number | null;
+  precheckCheckpoints: Array<{ terminal: string; checkpoint: string; status: string }>;
+  faaAlerts: Array<{ kind: string; summary: string }>;
 }
 
 function boundedMinutes(value: unknown): number | null {
   return typeof value === "number" && isFinite(value) && value >= 0 && value <= 180
     ? value
     : null;
+}
+
+function boundedUtcOffset(value: unknown): number | null {
+  return typeof value === "number" && isFinite(value) && value >= -12 && value <= 14 ? value : null;
 }
 
 function parseTimestamp(value: unknown): Date | null {
@@ -61,7 +76,9 @@ export function parseTsaWaitTimesResponse(data: unknown, now = new Date()): Pars
   const candidate = Array.isArray(data) ? data[0] : data;
   if (!candidate || typeof candidate !== "object") return null;
   const airport = candidate as AirportPayload;
-  const direct = boundedMinutes(airport.average_wait) ?? boundedMinutes(airport.current_wait);
+  const direct = boundedMinutes(airport.rightnow)
+    ?? boundedMinutes(airport.average_wait)
+    ?? boundedMinutes(airport.current_wait);
   let minutes = direct;
 
   if (minutes === null) {
@@ -82,15 +99,46 @@ export function parseTsaWaitTimesResponse(data: unknown, now = new Date()): Pars
 
   const observedAt = parseTimestamp(airport.updated_at ?? airport.last_updated ?? airport.timestamp);
   const freshness = classifyFreshness(observedAt, now);
+  const hourlyEstimates = Array.isArray(airport.estimated_hourly_times)
+    ? airport.estimated_hourly_times.flatMap((item, hour) => {
+        if (!item || typeof item !== "object") return [];
+        const minutes = boundedMinutes((item as { waittime?: unknown }).waittime);
+        return minutes === null ? [] : [{ hour, minutes: Math.round(minutes) }];
+      })
+    : [];
+  const precheckCheckpoints = airport.precheck_checkpoints && typeof airport.precheck_checkpoints === "object"
+    ? Object.entries(airport.precheck_checkpoints).flatMap(([terminal, checkpoints]) =>
+        checkpoints && typeof checkpoints === "object"
+          ? Object.entries(checkpoints).flatMap(([checkpoint, status]) =>
+              typeof status === "string" ? [{ terminal, checkpoint, status }] : []
+            )
+          : []
+      )
+    : [];
+  const faaAlerts = airport.faa_alerts && typeof airport.faa_alerts === "object"
+    ? Object.entries(airport.faa_alerts).flatMap(([kind, detail]) => {
+        if (!detail || typeof detail !== "object") return [];
+        const summary = Object.values(detail)
+          .flatMap((value) => typeof value === "string" && value.trim() ? [value.trim()] : [])
+          .join(" · ");
+        return summary ? [{ kind, summary }] : [];
+      })
+    : [];
   return {
     minutes,
     observedAt,
     freshness,
     confidence: freshness === "fresh" ? "medium" : "low",
+    userReportedMinutes: boundedMinutes(airport.user_reported) || null,
+    hourlyEstimates,
+    airportUtcOffsetHours: boundedUtcOffset(airport.utc),
+    precheckCheckpoints,
+    faaAlerts,
   };
 }
 
 export function createTsaWaitTimesProvider(options: {
+  apiKey?: string;
   fetchImpl?: FetchLike;
   now?: () => Date;
   timeoutMs?: number;
@@ -98,19 +146,21 @@ export function createTsaWaitTimesProvider(options: {
   const fetchImpl = options.fetchImpl ?? fetch;
   const now = options.now ?? (() => new Date());
   const timeoutMs = options.timeoutMs ?? 4000;
+  const apiKey = options.apiKey?.trim() ?? "";
 
   return {
     metadata: {
-      id: "tsawaittimes-legacy",
+      id: "tsawaittimes-licensed",
       name: "TSAWaitTimes.com",
       official: false,
     },
     async fetchCurrentWait(airportCode) {
+      if (!apiKey) return null;
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), timeoutMs);
       try {
         const response = await fetchImpl(
-          `https://www.tsawaittimes.com/api/airports/${encodeURIComponent(airportCode.toUpperCase())}`,
+          `https://www.tsawaittimes.com/api/airport/${encodeURIComponent(apiKey)}/${encodeURIComponent(airportCode.toUpperCase())}/json`,
           { signal: controller.signal, cache: "no-store" }
         );
         if (!response.ok) return null;
@@ -134,6 +184,11 @@ export function createTsaWaitTimesProvider(options: {
           fetchedAt: now().toISOString(),
           freshness: parsed.freshness,
           confidence: parsed.confidence,
+          userReportedMinutes: parsed.userReportedMinutes,
+          hourlyEstimates: parsed.hourlyEstimates,
+          airportUtcOffsetHours: parsed.airportUtcOffsetHours,
+          precheckCheckpoints: parsed.precheckCheckpoints,
+          faaAlerts: parsed.faaAlerts,
         } satisfies ObservedSecurityWait;
       } catch {
         return null;

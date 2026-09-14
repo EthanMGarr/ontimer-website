@@ -1,0 +1,16 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+
+const page = readFileSync("src/app/airport-pickup-time-calculator/page.tsx", "utf8");
+const calculator = readFileSync("src/app/airport-pickup-time-calculator/AirportPickupCalculator.tsx", "utf8");
+const css = readFileSync("src/app/airport-pickup-time-calculator/pickup.css", "utf8");
+assert.doesNotMatch(page, /No flight-data subscription required/);
+for (const relationship of ["wife", "husband", "girlfriend", "boyfriend", "daughter", "son", "cousin", "friend"]) assert.match(page, new RegExp(relationship));
+assert.match(page, /When should I leave to pick someone up at the airport\?/);
+assert.match(calculator, /PlaceAutocomplete/);
+assert.match(calculator, /\/api\/travel-time/);
+assert.match(calculator, /Leave by/);
+assert.match(calculator, /Get an alarm when it’s time to leave/);
+assert.match(css, /\.site-modern \.pickup-result \.text-white/);
+assert.match(css, /\.site-modern \.pickup-result \.text-zinc-400/);
+console.log("airport pickup UX checks passed");

@@ -158,6 +158,8 @@ The repository runner invokes `node_modules/vercel/dist/vc.js` directly, so PATH
 The core marketing pages build without external credentials. Production integrations use these variables when their related features are enabled:
 
 - `GOOGLE_MAPS_API_KEY` — places autocomplete and travel-time APIs
+- `TSA_WAIT_TIMES_API_KEY` — licensed TSAWaitTimes.com airport security estimates (server-side only)
+- `AIRPORT_SECURITY_TSAWAITTIMES_ENABLED=false` — optional kill switch for the security-estimate provider
 - `NEXT_PUBLIC_GA_MEASUREMENT_ID` — Google Analytics
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` — spam-report Turnstile widget
 - `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` — server-side spam reporting

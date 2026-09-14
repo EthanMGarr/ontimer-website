@@ -657,6 +657,13 @@ export default function AirportCalculator({
   const currentDepartureStatus = computedResult
     ? getAirportDepartureStatus(computedResult.leaveTime, computedResult.confidence, new Date(statusNowMs))
     : null;
+  const securityIntelligence = securityEstimate?.intelligence;
+  const licensedSecurityEvidence = securityIntelligence?.observedWait?.provider.id === "tsawaittimes-licensed"
+    ? securityIntelligence.observedWait
+    : null;
+  const openPrecheckCount = licensedSecurityEvidence?.precheckCheckpoints?.filter(
+    (checkpoint) => checkpoint.status.toLowerCase() === "open"
+  ).length ?? 0;
 
   const localizedFactors = useMemo(() => {
     if (!computedResult || locale !== "es") return computedResult?.factors ?? [];
@@ -1252,6 +1259,42 @@ export default function AirportCalculator({
                     locale={locale}
                   />
                 </div>
+
+                {licensedSecurityEvidence && (
+                  <section
+                    className="mt-5 rounded-xl border border-sky-400/25 bg-sky-400/10 p-4"
+                    aria-label={locale === "es" ? "Estimación de seguridad actual" : "Current security estimate"}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-sky-300">
+                          {locale === "es" ? "Espera de seguridad estimada ahora" : "Estimated security wait now"}
+                        </p>
+                        <p className="mt-1 text-3xl font-bold text-white">
+                          {Math.round(licensedSecurityEvidence.minutes)} <span className="text-base font-medium text-zinc-300">min</span>
+                        </p>
+                      </div>
+                      <p className="max-w-32 text-right text-[11px] leading-relaxed text-zinc-400">
+                        {locale === "es" ? "Estimación de TSAWaitTimes.com" : "TSAWaitTimes.com estimate"}
+                      </p>
+                    </div>
+                    <p className="mt-3 text-sm leading-relaxed text-zinc-200">
+                      {locale === "es"
+                        ? `Para cuando llegues a seguridad, OnTimer calcula unos ${securityIntelligence?.predictedWaitAtArrival.minutes ?? computedResult.securityMinutes} min y reserva ${computedResult.securityMinutes} min en tu hora de salida.`
+                        : `By the time you reach security, OnTimer expects about ${securityIntelligence?.predictedWaitAtArrival.minutes ?? computedResult.securityMinutes} min and reserves ${computedResult.securityMinutes} min in your leave time.`}
+                    </p>
+                    {(hasPreCheck && openPrecheckCount > 0) && (
+                      <p className="mt-2 text-xs text-sky-200">
+                        {openPrecheckCount} {locale === "es" ? "punto(s) PreCheck reportado(s) abierto(s)" : `PreCheck checkpoint${openPrecheckCount === 1 ? "" : "s"} reported open`}
+                      </p>
+                    )}
+                    {licensedSecurityEvidence.faaAlerts?.[0] && (
+                      <p className="mt-2 border-t border-sky-300/15 pt-2 text-xs leading-relaxed text-amber-200">
+                        {locale === "es" ? "Aviso del aeropuerto" : "Airport alert"}: {licensedSecurityEvidence.faaAlerts[0].summary}
+                      </p>
+                    )}
+                  </section>
+                )}
 
                 {ewrResultExperiment && (
                   <div className="mt-5 border-t border-zinc-800 pt-4">
