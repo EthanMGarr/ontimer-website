@@ -31,9 +31,9 @@ export default function AirportPickupPage() {
     </div></header>
     <AirportPickupCalculator />
     <section className="pickup-guide"><div className="pickup-shell">
-      <h2>Picking up your wife, husband, daughter, or a friend?</h2>
-      <p>The relationship does not change the timing, but it changes how you think about the pickup. Whether you are meeting your wife, girlfriend, husband, boyfriend, daughter, son, parent, cousin, another family member, or a friend, the useful question is the same: when will they actually reach the pickup area, and when should you begin driving?</p>
-      <p>Use the calculator to personalize the result and calendar event for the person you are meeting. One strong calculator answers these closely related questions more completely than a collection of repetitive pages.</p>
+      <h2>Picking up family, a friend, or a colleague?</h2>
+      <p>Whether you are meeting your wife, girlfriend, husband, boyfriend, daughter, son, parent, cousin, another family member, a friend, or a colleague, the useful question is the same: when will they actually reach the pickup area, and when should you begin driving?</p>
+      <p>The relationship is optional because it does not change the timing. Choose it only if you want the saved calendar event to say who you are picking up. One strong calculator answers these closely related questions more completely than a collection of repetitive pages.</p>
       <h2>Why you should not leave when the flight lands</h2>
       <p>Scheduled landing is usually the gate arrival—not the moment your passenger reaches the curb. Getting off the plane and walking to arrivals takes time. Checked baggage and immigration can add considerably more. For curbside pickup, arriving a few minutes after they are ready is often better than circling while they are still inside.</p>
       <h2>Put the moment to leave where you will act on it</h2>

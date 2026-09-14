@@ -1,4 +1,4 @@
-/* Hallmark: Pickup Equation Workbench — task-first, calm, utilitarian. */
+/* Hallmark · macrostructure: Workbench · tone: calm utilitarian · anchor hue: OnTimer blue */
 .pickup-page { --pickup-ink: #071b2b; --pickup-blue: #0a6cc2; --pickup-pale: #edf5fb; color: var(--pickup-ink); background: #f7fbfe; }
 .pickup-shell { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
 .pickup-hero { padding: 72px 0 48px; background: var(--pickup-pale); border-bottom: 1px solid #cbdce8; }
@@ -15,9 +15,6 @@
 .pickup-input { width: 100%; min-height: 58px; padding: 14px 16px; border: 1px solid #a9c0d0; border-radius: 13px; background: #f6fafd; color: var(--pickup-ink); font: inherit; }
 .pickup-input:focus { outline: 3px solid rgba(10, 108, 194, .18); border-color: var(--pickup-blue); }
 .pickup-divider { margin-top: 40px; padding-top: 34px; border-top: 1px solid #d8e4ec; }
-.pickup-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.pickup-pair label { position: relative; min-width: 0; }
-.pickup-pair span { display: block; margin-top: 6px; color: #587083; font-size: .85rem; font-weight: 500; }
 .pickup-submit { width: 100%; min-height: 60px; margin-top: 30px; border: 0; border-radius: 999px; background: var(--pickup-blue); color: #fff; font: inherit; font-weight: 780; white-space: nowrap; cursor: pointer; }
 .pickup-submit:hover { background: #07599f; }
 .pickup-submit:focus-visible { outline: 3px solid #7dc4ff; outline-offset: 3px; }
@@ -48,6 +45,12 @@
 .pickup-choices legend { width: 100%; margin-bottom: 4px; font-weight: 750; }
 .pickup-choices label { display: flex; align-items: center; gap: 8px; min-height: 44px; margin: 0; padding: 8px 12px; border: 1px solid #b9cedc; border-radius: 999px; background: #f6fafd; font-weight: 600; white-space: nowrap; }
 .pickup-choices input { width: 18px; height: 18px; accent-color: var(--pickup-blue); }
+.pickup-personalize { margin-top: 20px; padding-inline: 16px; border: 1px solid #d8e4ec; border-radius: 13px; background: #fbfdff; }
+.pickup-personalize summary { display: flex; min-height: 52px; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; font-weight: 700; }
+.pickup-personalize summary small { color: #587083; font-size: .78rem; font-weight: 650; letter-spacing: .02em; text-transform: uppercase; }
+.pickup-personalize[open] { padding-bottom: 16px; }
+.pickup-personalize label { margin-top: 8px; }
+.pickup-personalize p { margin: 8px 0 0; color: #587083; font-size: .85rem; line-height: 1.45; }
 .pickup-manual { margin-top: 20px; color: #486174; }
 .pickup-manual summary { min-height: 44px; padding-block: 11px; cursor: pointer; font-weight: 650; }
 .pickup-timeline { position: relative; margin: 30px 0; }
@@ -69,4 +72,4 @@
 .pickup-guide h2:first-child { margin-top: 0; }
 .pickup-guide p { color: #29475b; font-size: 1.08rem; line-height: 1.7; }
 @media (max-width: 820px) { .pickup-shell { width: min(100% - 28px, 680px); } .pickup-hero { padding: 42px 0 34px; } .pickup-hero nav { margin-bottom: 30px; } .pickup-workbench { grid-template-columns: 1fr; gap: 18px; padding-block: 28px; } .pickup-result { position: static; } }
-@media (max-width: 470px) { .pickup-shell { width: calc(100% - 20px); } .pickup-hero h1 { font-size: clamp(2.5rem, 13vw, 3.55rem); } .pickup-form, .pickup-result { padding: 24px 18px; border-radius: 22px; } .pickup-pair { grid-template-columns: 1fr; } .pickup-choices { display: grid; grid-template-columns: 1fr; } .pickup-submit { font-size: .96rem; } }
+@media (max-width: 470px) { .pickup-shell { width: calc(100% - 20px); } .pickup-hero h1 { font-size: clamp(2.5rem, 13vw, 3.55rem); } .pickup-form, .pickup-result { padding: 24px 18px; border-radius: 22px; } .pickup-choices { display: grid; grid-template-columns: 1fr; } .pickup-submit { font-size: .96rem; } }
