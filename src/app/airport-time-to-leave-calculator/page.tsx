@@ -26,7 +26,7 @@ export const metadata: Metadata = {
       "/es/calculadora-cuando-salir-al-aeropuerto",
     ),
   },
-  title: "When Should I Leave for the Airport?",
+  title: "When Should I Leave for the Airport? Free Calculator",
   description:
     "Find out what time to leave for your flight using your route, flight time, security planning, bags, parking and terminal access.",
   openGraph: {
