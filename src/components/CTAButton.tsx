@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { APP_STORE_URL } from "@/lib/constants";
+import { appStoreUrlFor } from "@/lib/app-store-links";
 import {
   trackAppStoreClick,
   trackAutomaticAlertCTAViewed,
@@ -79,15 +79,25 @@ export function AppStoreButton({
     outline:
       "border border-green-500 text-green-500 hover:bg-green-500 hover:text-black",
   };
+  const ctaVariant = typeof analyticsContext.cta_variant === "string"
+    ? analyticsContext.cta_variant
+    : undefined;
+  const calculatorType = typeof analyticsContext.calculator_type === "string"
+    ? analyticsContext.calculator_type
+    : undefined;
+  const appStoreLink = appStoreUrlFor({ location, ctaVariant, calculatorType });
+  const trackedContext = appStoreLink.campaignToken
+    ? { ...analyticsContext, app_store_campaign: appStoreLink.campaignToken }
+    : analyticsContext;
 
   const link = (
     <a
       ref={buttonRef}
-      href={APP_STORE_URL}
+      href={appStoreLink.url}
       target="_blank"
       rel="noopener noreferrer"
       className={`${base} ${variants[variant]} ${sizeClasses[size]} ${className}`}
-      onClick={() => trackAppStoreClick(location, analyticsContext)}
+      onClick={() => trackAppStoreClick(location, trackedContext)}
     >
       <AppleIcon className="h-4 w-4" />
       {label}
@@ -101,7 +111,7 @@ export function AppStoreButton({
 
   // Desktop: intercept click and show QR popover instead of navigating to App Store
   return (
-    <AppStoreQRPopover placement={placement} location={location}>
+    <AppStoreQRPopover placement={placement} location={location} appStoreUrl={appStoreLink.url}>
       {link}
     </AppStoreQRPopover>
   );

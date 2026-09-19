@@ -10,6 +10,7 @@ declare global {
   interface Window {
     gtag: (command: string, ...args: unknown[]) => void;
     dataLayer: unknown[];
+    __ontimerAnalyticsStarted?: boolean;
     __ontimerAnalyticsConfigured?: boolean;
     __ontimerStartAnalytics?: () => void;
   }

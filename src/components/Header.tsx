@@ -104,7 +104,7 @@ export default function Header() {
             onClick={closeMenus}
           >
             <Image
-              src="/images/ontimer_1024x1024.png"
+              src="/images/ontimer-menu-icon.png"
               alt=""
               width={34}
               height={34}

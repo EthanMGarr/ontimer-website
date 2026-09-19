@@ -34,6 +34,9 @@ assert.match(globalStyles, /html \{[\s\S]*?overflow-x: clip;/, "the document roo
 assert.match(globalStyles, /body \{[\s\S]*?overflow-x: clip;/, "the page body must prevent horizontal page drift");
 assert.match(globalStyles, /@media \(max-width: 639px\)[\s\S]*?input:not\(\[type="range"\]\)[\s\S]*?font-size: 1rem !important;/, "mobile form controls must remain at 16px to prevent iOS Safari focus zoom");
 assert.doesNotMatch(handoff, /inline-flex whitespace-nowrap text-zinc-500/, "result handoff links must wrap on narrow screens");
+assert.doesNotMatch(handoff, /copy\.adds|copy\.at/, "the calendar handoff must not repeat the event title and leave time visually");
+assert.match(handoff, /aria-label=\{eventPreview[\s\S]*?eventPreview\.title[\s\S]*?eventPreview\.startLabel/, "the calendar action must retain event and time context for assistive technology");
+assert.match(handoff, /setIsAndroidDevice\(isAndroidUserAgent\(navigator\.userAgent\)\)/, "affiliate routing must depend on the Android user agent, not viewport width");
 assert.match(rootLayout, /<html[^>]*suppressHydrationWarning/, "the intentional localized document-language update must not emit a hydration warning");
 
 assert.ok(page.indexOf("<LeaveTimeCalculator") < page.indexOf("How to calculate when to leave"), "the task must precede supporting SEO copy");

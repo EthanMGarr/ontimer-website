@@ -7,7 +7,7 @@ import "./until.css";
 
 export const metadata: Metadata = {
   title: "Days Until Calculator",
-  description: "Calculate how many days, full weeks, extra days, and approximate hours remain until any date, then add the event and countdown reminders to your calendar.",
+  description: "Use this free calculator to find how many days, full weeks, extra days and approximate hours remain until any date, then add it to your calendar.",
   alternates: { canonical: "https://www.ontimer.app/days-until" },
 };
 

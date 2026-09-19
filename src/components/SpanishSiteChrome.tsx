@@ -10,7 +10,7 @@ export function SpanishHeader() {
     <header className="site-spanish-header sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/es/calculadora-a-que-hora-salir" className="flex items-center gap-2.5" aria-label="Inicio de OnTimer en español">
-          <Image src="/images/ontimer_1024x1024.png" alt="" width={34} height={34} className="rounded-xl" priority />
+          <Image src="/images/ontimer-menu-icon.png" alt="" width={34} height={34} className="rounded-xl" priority />
           <span className="text-xl font-semibold tracking-tight text-white">OnTimer</span>
         </Link>
         <nav aria-label="Navegación principal" className="flex items-center gap-3 sm:gap-5">

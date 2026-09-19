@@ -28,16 +28,16 @@ export const metadata: Metadata = {
   },
   title: "When Should I Leave for the Airport? Free Calculator",
   description:
-    "Find out what time to leave for your flight using your route, flight time, security planning, bags, parking and terminal access.",
+    "Calculate exactly when to leave for your flight. This free calculator uses your route, flight time, traffic, security, bags, parking and terminal access.",
   openGraph: {
     title: "When Should I Leave for the Airport?",
     description:
-      "Find out what time to leave for your flight using your route, flight time, security planning, bags, parking and terminal access.",
+      "Calculate exactly when to leave for your flight. This free calculator uses your route, flight time, traffic, security, bags, parking and terminal access.",
   },
   twitter: {
     title: "When Should I Leave for the Airport?",
     description:
-      "Find out what time to leave for your flight using your route, flight time, security planning, bags, parking and terminal access.",
+      "Calculate exactly when to leave for your flight. This free calculator uses your route, flight time, traffic, security, bags, parking and terminal access.",
   },
 };
 
@@ -104,7 +104,7 @@ const softwareAppJsonLd = {
     priceCurrency: "USD",
   },
   description:
-    "A free personalized answer for when to leave for a flight, based on flight time, route, security, bags, parking, and terminal access.",
+    "A free calculator that gives a specific leave time for a flight using flight time, route, traffic, security, bags, parking and terminal access.",
   url: "https://www.ontimer.app/airport-time-to-leave-calculator",
   dateModified: "2026-08-24",
   author: {
@@ -177,8 +177,8 @@ export default function AirportTimeToLeaveCalculator() {
             <span className="text-green-500">make my flight?</span>
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:text-base">
-            Enter your starting address and airport. OnTimer calculates when you should leave
-            based on your flight type, travel, security, bags, parking and terminal time.
+            Enter your flight, starting point and airport. This free calculator uses traffic,
+            security, bags, parking and terminal access to give you a specific leave time.
           </p>
         </div>
       </section>
@@ -268,13 +268,13 @@ export default function AirportTimeToLeaveCalculator() {
             When Should You Leave for the Airport Based on Your Flight Time?
           </h2>
           <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
-            <p>
+            <div data-nosnippet>
               Start with the departure time on your ticket, subtract the appropriate airport-arrival
               window, then subtract your route time and any parking or terminal buffer. Because each
               input changes the result, two travelers on the same flight may need to leave at
               different times. The calculator applies those inputs to your trip instead of presenting
               one example time as your answer.
-            </p>
+            </div>
             <p>
               Flight time affects how much traffic you&apos;ll hit. An early morning flight sounds
               easy until you realize you&apos;re driving to the airport at 5 AM — which is actually

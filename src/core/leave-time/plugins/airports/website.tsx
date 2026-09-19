@@ -14,6 +14,7 @@ import {
   buildAirportAnswerDescription,
   buildAirportSnippetCandidate,
   buildAirportAnswerTitle,
+  buildAirportSearchName,
 } from "@/lib/airport-answer-seo";
 import {
   airportEventTypes,
@@ -167,7 +168,7 @@ export const airportDestinationType: DestinationTypeDefinition<AirportLocationPr
         applicationCategory: "TravelApplication",
         operatingSystem: "Web",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-        description: `A free personalized answer for when to leave for ${profile.name}, based on flight time, route, airport processing and terminal access.`,
+        description: `A free airport leave-time calculator that uses flight details, starting point, traffic, security, bags, parking and terminal access to give a specific leave time for ${profile.code}.`,
         url,
         dateModified: profile.reviewedOn,
         author: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
@@ -225,6 +226,7 @@ export function buildAirportMetadata(location: AirportLocationProfile): Metadata
 
 export function buildAirportPageModel(location: AirportLocationProfile): DestinationPageModel {
   const faqItems = airportDestinationType.buildFaqItems(location);
+  const searchName = buildAirportSearchName(location);
 
   return {
     trackerCode: location.code,
@@ -232,10 +234,10 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
     breadcrumbs: airportDestinationType.buildInternalLinks(location),
     currentBreadcrumbLabel: location.code,
     hero: {
-      eyebrow: `Free personalized leave time · ${location.code} · ${location.city}`,
-      secondaryLabels: [location.reviewedLabel, "Powered by OnTimer"],
-      titlePrefix: "What Time Should I Leave for",
-      titleHighlight: `${location.shortName} (${location.code})?`,
+      eyebrow: `Free airport calculator · ${searchName}`,
+      secondaryLabels: [location.city, location.reviewedLabel],
+      titlePrefix: "Find out exactly when to leave for",
+      titleHighlight: searchName,
       description: buildAirportSnippetCandidate(location),
     },
     planner: (

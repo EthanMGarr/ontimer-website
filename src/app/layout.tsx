@@ -5,43 +5,11 @@ import "./homepage2/homepage2.css";
 import "./site-system.css";
 import HelpSiteFrame from "@/components/HelpSiteFrame";
 import { ANALYTICS_FREE_MEDICATION_PATHS } from "@/lib/medication-route-privacy";
+import { createAnalyticsBootstrapScript, isWebsiteAnalyticsEnabled } from "@/lib/analytics-config";
 
-const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-const gaBootstrapScript = gaMeasurementId ? `
-  (function () {
-    var measurementId = ${JSON.stringify(gaMeasurementId)};
-    var analyticsFreePaths = ${JSON.stringify(ANALYTICS_FREE_MEDICATION_PATHS)};
-    var started = false;
-    function cookie(name) {
-      var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
-      return match ? decodeURIComponent(match[1]) : null;
-    }
-    function allowed() {
-      var pathname = window.location.pathname;
-      if (analyticsFreePaths.some(function (path) { return pathname === path || pathname.indexOf(path + '/') === 0; })) return false;
-      return cookie('ontimer_region') !== 'regulated' || cookie('ontimer_consent') === 'granted';
-    }
-    function start() {
-      if (started || !allowed()) return;
-      started = true;
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
-      window.gtag('js', new Date());
-      var contentLanguage = window.location.pathname === '/es' || window.location.pathname.indexOf('/es/') === 0 ? 'es' : 'en';
-      window.gtag('config', measurementId, { content_language: contentLanguage, locale: contentLanguage });
-      window.__ontimerAnalyticsConfigured = true;
-      var tag = document.createElement('script');
-      tag.async = true;
-      tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(measurementId);
-      document.head.appendChild(tag);
-    }
-    window.__ontimerStartAnalytics = start;
-    window.addEventListener('ontimer-consent', function (event) {
-      if (event && event.detail === 'granted') start();
-    });
-    start();
-  }());
-` : null;
+const gaBootstrapScript = isWebsiteAnalyticsEnabled(process.env.NODE_ENV)
+  ? createAnalyticsBootstrapScript(ANALYTICS_FREE_MEDICATION_PATHS)
+  : null;
 
 // Travelpayouts requires its Drive loader to verify site ownership. Keep it
 // constrained to the public homepage and behind the existing regional consent

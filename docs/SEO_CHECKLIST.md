@@ -49,12 +49,15 @@ Use this checklist for every production change involving pages, routes, metadata
 
 - [ ] For corrected 404, redirect, canonical, or indexing issues, use **Validate Fix** in Google Search Console.
 - [ ] Allow Google time to recrawl; a clean live audit does not immediately clear historical Search Console reports.
+- [ ] For title/description experiments, update `docs/SEO_CTR_EXPERIMENTS.md`; preserve a control cohort and compare query-level mobile CTR within the same average-position bands rather than relying on pagewide CTR.
+- [ ] Keep newly changed metadata stable until a settled recrawl and a useful measurement window exist; do not stack another metadata rewrite on an unresolved test.
 
 ## Calculator-First Search Intent
 
 - [ ] Every indexable advice page provides a prominent in-page bridge to the most relevant OnTimer calculator or scheduling tool; global navigation and footer links do not count.
 - [ ] When a visitor can complete the searched-for task with an OnTimer tool, present that tool before manual alternatives while still answering the underlying search intent accurately.
-- [ ] Lead calculator metadata and H1s with the question or outcome people search for; keep “calculator” as supporting language when the broader intent is answer-seeking.
+- [ ] Lead calculator metadata and H1s with the question or outcome people search for. When the page is an interactive utility, explicitly name the free calculator in the title and repeat “free calculator” once, naturally, in the description because Google may truncate or rewrite either field independently.
+- [ ] Use the airport name travelers actually search for: preserve familiar code-first brands such as LAX, avoid code-only labels where the natural phrase is clearer, and include the IATA code once in parentheses when useful (for example, `Newark Airport (EWR)`).
 - [ ] Apply the same answer-led language to location-page metadata, directory titles, structured-data names, navigation labels, and internal-link anchors so the intent is consistent across the whole cluster.
 - [ ] Keep the calculator and its brief orientation in the first task area. Long-form SEO/GEO guidance belongs after the tool and must not delay the primary action.
 - [ ] Give a specific result before asking for conversion: result first, calendar handoff second, OnTimer alarm handoff third.
@@ -65,6 +68,7 @@ Use this checklist for every production change involving pages, routes, metadata
 ## Search Snippet Candidates
 
 - Keep the first visible passage after a calculator H1 focused on the personalized result, user inputs, and factors the calculator actually uses.
+- For airport destination tools, prefer concrete utility language—“free calculator,” “exactly,” and “specific leave time”—over generic advice or marketing abstractions such as “personalized experience.”
 - For recurring date-answer pages, server-render the current answer and refresh it often enough that metadata, visible copy, and structured data cannot retain an obsolete count. Pair the direct answer with a concise, page-specific action or benefit that earns the click even when the search results page already shows the answer.
 - Verify recurring-answer build artifacts directly: the initial HTML must contain the numeric answer, target date, supporting units, canonical/social metadata, and structured data before client-side JavaScript runs.
 - Preserve useful rule-of-thumb guidance below the calculator. Use `data-nosnippet` only on a narrowly identified passage that is likely to replace the calculator value proposition in search results; do not suppress whole guidance or FAQ sections. Google supports this attribute only on `div`, `span`, and `section`, so never place it on a paragraph or another unsupported element. Exclude the same suppressed answer from FAQ structured data so JSON-LD does not recreate the unwanted snippet candidate.

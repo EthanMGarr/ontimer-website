@@ -10,6 +10,7 @@ import type {
 import type { CruiseTerminalLocationProfile, TravelLocationProfile } from "@/lib/travel-locations";
 import { getRelatedTravelLocationLinks } from "@/lib/travel-locations";
 import {
+  buildCruiseAnswerTitle,
   buildCruiseSnippetCandidate,
   buildCruiseSnippetDescription,
 } from "@/lib/cruise-answer-seo";
@@ -98,7 +99,7 @@ export const cruiseDestinationType: DestinationTypeDefinition<CruiseTerminalLoca
         ...(profile.aliases ?? []),
       ],
       seo: {
-        title: `${profile.shortName} Time-to-Leave Calculator`,
+        title: buildCruiseAnswerTitle(profile),
         description: buildCruiseSnippetDescription(profile),
         canonicalUrl: getCruiseUrl(profile),
       },
@@ -141,7 +142,7 @@ export const cruiseDestinationType: DestinationTypeDefinition<CruiseTerminalLoca
   buildFaqItems: buildCruiseFaqItems,
   buildSeoMetadata(profile): SeoMetadataDefinition {
     return {
-      title: `${profile.shortName} Time-to-Leave Calculator`,
+      title: buildCruiseAnswerTitle(profile),
       description: buildCruiseSnippetDescription(profile),
       canonicalUrl: getCruiseUrl(profile),
       robots: { index: true, follow: true },
@@ -156,7 +157,7 @@ export const cruiseDestinationType: DestinationTypeDefinition<CruiseTerminalLoca
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        name: `${profile.shortName} Time-to-Leave Calculator`,
+        name: buildCruiseAnswerTitle(profile),
         applicationCategory: "TravelApplication",
         operatingSystem: "Web",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
@@ -225,10 +226,10 @@ export function buildCruisePageModel(location: CruiseTerminalLocationProfile): D
     breadcrumbs: cruiseDestinationType.buildInternalLinks(location),
     currentBreadcrumbLabel: location.shortName,
     hero: {
-      eyebrow: `${location.code} · ${location.city}`,
+      eyebrow: `Free cruise calculator · ${location.shortName}`,
       secondaryLabels: [location.reviewedLabel, "Powered by OnTimer"],
-      titlePrefix: "What Time Should I Leave for",
-      titleHighlight: `${location.shortName}?`,
+      titlePrefix: "Find out exactly when to leave for",
+      titleHighlight: location.shortName,
       description: buildCruiseSnippetCandidate(location),
     },
     planner: (

@@ -2,20 +2,31 @@ export interface AirportAnswerSeoInput {
   shortName: string;
   code: string;
   name: string;
+  searchName?: string;
 }
 
-export function buildAirportAnswerTitle({ shortName, code }: AirportAnswerSeoInput): string {
-  return `When Should I Leave for ${shortName} (${code})?`;
+export function buildAirportSearchName({ shortName, code, searchName }: AirportAnswerSeoInput): string {
+  if (searchName) return searchName;
+  if (shortName.toLocaleUpperCase().includes(code.toLocaleUpperCase())) return shortName;
+  return `${shortName} (${code})`;
 }
 
-export function buildAirportAnswerDescription({ name }: AirportAnswerSeoInput): string {
-  return `Calculate what time to leave for ${name} based on your flight time, starting point, travel, security, bags, parking and terminal access.`;
+export function buildAirportAnswerTitle(input: AirportAnswerSeoInput): string {
+  const searchName = buildAirportSearchName(input);
+  const calculatorLabel = /airport/i.test(searchName) ? "Free Calculator" : "Free Airport Calculator";
+  return `When Should I Leave for ${searchName}? ${calculatorLabel}`;
 }
 
-export function buildAirportSnippetCandidate({ name, code }: AirportAnswerSeoInput): string {
-  return `Calculate when to leave for ${name} (${code}) based on your flight time, starting location, traffic-aware travel, security, bags, parking and terminal access—not a generic rule of thumb.`;
+export function buildAirportAnswerDescription(input: AirportAnswerSeoInput): string {
+  const searchName = buildAirportSearchName(input);
+  return `Calculate exactly when to leave for ${searchName}. This free calculator uses your flight, starting point, traffic, security, baggage and parking to give you a specific leave time.`;
 }
 
-export function buildAirportAnswerApplicationName({ shortName, code }: AirportAnswerSeoInput): string {
-  return `When to Leave for ${shortName} (${code})`;
+export function buildAirportSnippetCandidate(input: AirportAnswerSeoInput): string {
+  const searchName = buildAirportSearchName(input);
+  return `Enter your flight and starting point. This free calculator uses traffic, security, bags, parking and terminal access to give you a specific leave time for ${searchName}.`;
+}
+
+export function buildAirportAnswerApplicationName(input: AirportAnswerSeoInput): string {
+  return buildAirportAnswerTitle(input);
 }

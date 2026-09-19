@@ -49,6 +49,8 @@ interface TravelLocationBase {
   code: string;
   name: string;
   shortName: string;
+  /** Natural search-facing name; use only when shortName + code is not the phrase travelers use. */
+  searchName?: string;
   aliases?: string[];
   city: string;
   calculatorDestination: string;
@@ -1953,6 +1955,7 @@ export const travelLocations: TravelLocationProfile[] = [
     code: "LAX",
     name: "Los Angeles International Airport",
     shortName: "Los Angeles International Airport",
+    searchName: "LAX",
     city: "Los Angeles, California",
     calculatorDestination: "Los Angeles International Airport",
     reviewedOn: "2026-06-28",

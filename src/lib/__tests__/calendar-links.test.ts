@@ -36,6 +36,7 @@ assert.match(ics, /DTSTART:20260809T123000Z/);
 assert.match(ics, /DTEND:20260809T130000Z/);
 assert.match(ics, /SUMMARY:Arrive at Smith\\, Jones & Co\./);
 assert.match(ics, /LOCATION:123 Main St\\; Suite 2/);
-assert.match(ics, /DESCRIPTION:Calculated by OnTimer\\nGet the free iOS app: https:\/\/apps\.apple\.com/);
+assert.match(ics, /DESCRIPTION:Calculated by OnTimer\\nTurn this calendar event into an automatic alarm: https:\/\/apps\.apple\.com/);
+assert.match(ics, /ct=web_saved_calendar_event/);
 
 console.log("calendar link tests passed");

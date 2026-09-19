@@ -7,9 +7,13 @@ const files = {
   cruiseCalculator: "src/app/cruise-time-to-leave/CruiseCalculator.tsx",
   destinationTemplate: "src/components/destination-pages/DestinationPageTemplate.tsx",
   airportWebsite: "src/core/leave-time/plugins/airports/website.tsx",
+  airportAnswerSeo: "src/lib/airport-answer-seo.ts",
+  cruiseAnswerSeo: "src/lib/cruise-answer-seo.ts",
   cruiseWebsite: "src/core/leave-time/plugins/cruise-terminals/website.tsx",
   leavePage: "src/app/what-time-should-i-leave/page.tsx",
   wakePage: "src/app/wake-up-time-calculator/page.tsx",
+  calendarHandoff: "src/components/leave-time/CalendarOnTimerHandoff.tsx",
+  airportPickup: "src/app/airport-pickup-time-calculator/AirportPickupCalculator.tsx",
 };
 
 const source = Object.fromEntries(
@@ -20,14 +24,23 @@ const source = Object.fromEntries(
 
 assert.doesNotMatch(source.airportPage, /need to leave by 9:20 AM/i);
 assert.match(source.airportPage, /<div data-nosnippet>\s*A common planning baseline/);
+assert.match(source.airportPage, /<div data-nosnippet>\s*Start with the departure time on your ticket/);
 assert.match(source.airportCalculator, /Example — clearly labeled, not the user's result[\s\S]*?data-nosnippet/);
 assert.match(source.cruiseCalculator, /Your leave time includes[\s\S]*?data-nosnippet/);
 assert.match(source.destinationTemplate, /data-location-section="worked-examples"[^>]*data-nosnippet/);
 assert.match(source.destinationTemplate, /<div[\s\S]*?data-nosnippet=\{model\.faq\.noSnippetQuestions/);
 assert.match(source.airportWebsite, /const snippetEligibleFaqItems = faqItems\.slice\(2\)/);
 assert.match(source.airportWebsite, /noSnippetQuestions: \[faqItems\[0\]\.question, faqItems\[1\]\.question\]/);
+assert.match(source.airportWebsite, /Free airport calculator/);
+assert.match(source.airportWebsite, /titlePrefix: "Find out exactly when to leave for"/);
+assert.match(source.airportAnswerSeo, /When Should I Leave for \$\{searchName\}\? \$\{calculatorLabel\}/);
+assert.match(source.airportAnswerSeo, /This free calculator uses your flight, starting point, traffic, security, baggage and parking/);
+assert.match(source.airportAnswerSeo, /specific leave time for \$\{searchName\}/);
 assert.match(source.cruiseWebsite, /const snippetEligibleFaqItems = faqItems\.slice\(2\)/);
 assert.match(source.cruiseWebsite, /noSnippetQuestions: \[faqItems\[0\]\.question, faqItems\[1\]\.question\]/);
+assert.match(source.cruiseAnswerSeo, /Free Cruise Calculator/);
+assert.match(source.cruiseAnswerSeo, /This free cruise calculator uses your boarding time/);
+assert.match(source.cruiseAnswerSeo, /specific leave time for \$\{shortName\}/);
 assert.match(
   source.leavePage,
   /Going somewhere\? This free calculator uses traffic-aware routing, travel mode, arrival time, and your buffer to tell you when to leave—no sign-up required\./
@@ -37,6 +50,12 @@ assert.match(source.leavePage, /const snippetEligibleFaqItems = faqItems\.filter
 assert.match(source.leavePage, /data-nosnippet=\{index === 0 \|\| index === 4 \|\| undefined\}/);
 assert.match(source.wakePage, /<div data-nosnippet>\s*A common approach/);
 assert.match(source.wakePage, /data-nosnippet=\{index === 0 \|\| undefined\}/);
+assert.match(source.calendarHandoff, /alarmHeading: "Don’t be late\. Turn this into an alarm\."/);
+assert.match(source.calendarHandoff, /alarmBody: "OnTimer sets an automatic alarm for this calendar event\."/);
+assert.doesNotMatch(source.calendarHandoff, /Turn \$\{eventPreview\.startLabel\} into a real alarm/);
+assert.doesNotMatch(source.calendarHandoff, /Install OnTimer and connect this calendar/);
+assert.match(source.airportPickup, /postCalendarHeading="Get an alarm when it’s time to leave\."/);
+assert.match(source.airportPickup, /postCalendarBody="OnTimer turns this pickup into an automatic calendar alarm\."/);
 assert.doesNotMatch(
   Object.values(source).join("\n"),
   /<p(?:\s[^>]*)?\sdata-nosnippet(?:=|\s|>)/,

@@ -1,5 +1,6 @@
 import { isAnalyticsAllowed } from "@/lib/consent";
 import { localeForPathname, type SiteLocale } from "@/lib/i18n";
+import { isWebsiteAnalyticsEnabled, WEBSITE_GA_MEASUREMENT_ID } from "@/lib/analytics-config";
 
 /// Centralized GA4 event tracking for OnTimer marketing site.
 ///
@@ -41,17 +42,14 @@ export type AnalyticsParams = Record<string, string | number>;
 
 const ATTRIBUTION_TOKEN_KEY = "ontimer_attribution_token";
 let fallbackAttributionToken: string | null = null;
-let analyticsConfigured = false;
 
 /**
  * Create the GA command queue before the remote library finishes loading.
  * This prevents early calculator interactions from being silently discarded.
  */
 export function initializeAnalytics(): boolean {
+  if (!isWebsiteAnalyticsEnabled(process.env.NODE_ENV)) return false;
   if (typeof window === "undefined" || !isAnalyticsAllowed()) return false;
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  if (!measurementId) return false;
-
   window.dataLayer = window.dataLayer || [];
   if (typeof window.gtag !== "function") {
     window.gtag = function gtag(..._args: unknown[]) {
@@ -59,13 +57,10 @@ export function initializeAnalytics(): boolean {
     };
   }
 
-  if (!analyticsConfigured) {
-    if (!window.__ontimerAnalyticsConfigured) {
-      window.gtag("js", new Date());
-      window.gtag("config", measurementId, { send_page_view: false });
-      window.__ontimerAnalyticsConfigured = true;
-    }
-    analyticsConfigured = true;
+  if (!window.__ontimerAnalyticsConfigured) {
+    window.gtag("js", new Date());
+    window.gtag("config", WEBSITE_GA_MEASUREMENT_ID, { send_page_view: false });
+    window.__ontimerAnalyticsConfigured = true;
   }
   return true;
 }

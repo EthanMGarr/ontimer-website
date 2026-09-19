@@ -160,7 +160,8 @@ The core marketing pages build without external credentials. Production integrat
 - `GOOGLE_MAPS_API_KEY` — places autocomplete and travel-time APIs
 - `TSA_WAIT_TIMES_API_KEY` — licensed TSAWaitTimes.com airport security estimates (server-side only)
 - `AIRPORT_SECURITY_TSAWAITTIMES_ENABLED=false` — optional kill switch for the security-estimate provider
-- `NEXT_PUBLIC_GA_MEASUREMENT_ID` — Google Analytics
+- Website Google Analytics uses the source-controlled production measurement ID in
+  `src/lib/analytics-config.ts`; deployment environment variables do not override it.
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` — spam-report Turnstile widget
 - `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` — server-side spam reporting
 

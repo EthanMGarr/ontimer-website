@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/airport-theory-calculator" },
   title: "Airport Theory Calculator — How Late Can You Leave?",
   description:
-    "Calculate the absolute minimum time you can leave for the airport at three aggression levels — Responsible Adult, Cutting It Close, and Absolute Maniac. Warning: this is a terrible idea.",
+    "Use this free calculator to find the absolute latest time you could leave for the airport at three risk levels. Warning: this is not a real recommendation.",
   openGraph: {
     title: "Airport Theory Calculator: How Late Can You Leave for a Flight?",
     description:

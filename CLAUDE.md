@@ -147,11 +147,12 @@ Implementation contract:
 ## Cookie Consent & Analytics (permanent rules)
 
 Google Analytics (`src/components/GoogleAnalytics.tsx`) is geo-gated by `src/middleware.ts`:
+- The production website measurement ID is source controlled in `src/lib/analytics-config.ts`; do not reintroduce a deployment-environment override or reuse an iOS/Firebase identifier.
 - Middleware reads Vercel's `x-vercel-ip-country` header (not client-spoofable — Vercel's edge strips any client-supplied version of this header) and sets an `ontimer_region` cookie to `regulated` for EU/EEA, UK, and Switzerland, or `other` for everyone else.
 - `other` visitors (including the US) see no banner; GA loads immediately, unchanged from pre-consent behavior.
 - `regulated` visitors see `src/components/CookieConsentBanner.tsx` and GA does not load until they accept. Consent state lives in `src/lib/consent.ts`.
 - Never remove or weaken this gate to "simplify" GA loading — it exists to satisfy GDPR/UK GDPR/ePrivacy/FADP prior-consent requirements for those regions specifically.
-- Regional classification and analytics decisions are centralized in `src/lib/consent-policy.ts`. Run `npm run test:consent` whenever region coverage, banner decisions, analytics gating, or analytics-free routes change.
+- Regional classification and analytics decisions are centralized in `src/lib/consent-policy.ts`. Run `npm run test:analytics` and `npm run test:consent` whenever analytics initialization, region coverage, banner decisions, analytics gating, or analytics-free routes change.
 
 ## Website design system (permanent rules)
 

@@ -9,12 +9,14 @@ interface AppStoreQRPopoverProps {
   children: ReactNode;
   placement?: "below" | "above";
   location?: string;
+  appStoreUrl?: string;
 }
 
 export function AppStoreQRPopover({
   children,
   placement = "below",
   location = "qr_popover",
+  appStoreUrl = APP_STORE_URL,
 }: AppStoreQRPopoverProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -84,7 +86,7 @@ export function AppStoreQRPopover({
 
           <div className="flex flex-col items-center gap-3">
             <a
-              href={APP_STORE_URL}
+              href={appStoreUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackQRCodeClick(location)}
@@ -93,7 +95,7 @@ export function AppStoreQRPopover({
             >
               <QRCodeSVG
                 title="Scan to download OnTimer from the App Store"
-                value={APP_STORE_URL}
+                value={appStoreUrl}
                 size={128}
                 bgColor="#ffffff"
                 fgColor="#000000"

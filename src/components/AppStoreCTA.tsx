@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { APP_STORE_URL } from "@/lib/constants";
+import { appStoreUrlFor } from "@/lib/app-store-links";
 import {
   trackAppStoreClick,
   trackQRCodeVisible,
   trackQRCodeClick,
+  type AnalyticsParams,
 } from "@/lib/analytics";
 
 interface AppStoreCTAProps {
@@ -29,6 +30,10 @@ function AppleIcon({ className = "h-4 w-4" }: { className?: string }) {
 export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const appStoreLink = appStoreUrlFor({ location });
+  const trackingContext: AnalyticsParams = appStoreLink.campaignToken
+    ? { app_store_campaign: appStoreLink.campaignToken }
+    : {};
 
   useEffect(() => {
     setMounted(true);
@@ -46,7 +51,7 @@ export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
   if (!mounted) {
     return (
       <a
-        href={APP_STORE_URL}
+        href={appStoreLink.url}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-2.5 rounded-full bg-green-500 px-8 py-4 text-base font-semibold text-black transition-colors hover:bg-green-400"
@@ -66,14 +71,14 @@ export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
             onClick={() => trackQRCodeClick(location)}
           >
             <a
-              href={APP_STORE_URL}
+              href={appStoreLink.url}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Scan QR code to download OnTimer"
             >
               <QRCodeSVG
                 title="Scan to download OnTimer from the App Store"
-                value={APP_STORE_URL}
+                value={appStoreLink.url}
                 size={128}
                 bgColor="#ffffff"
                 fgColor="#000000"
@@ -91,11 +96,11 @@ export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
             Open your iPhone camera and point it at the QR code to download.
           </p>
           <a
-            href={APP_STORE_URL}
+            href={appStoreLink.url}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex w-fit items-center gap-2.5 rounded-full border border-green-500 px-6 py-2.5 text-sm font-semibold text-green-500 transition-colors hover:bg-green-500 hover:text-black"
-            onClick={() => trackAppStoreClick(location)}
+            onClick={() => trackAppStoreClick(location, trackingContext)}
           >
             <AppleIcon className="h-4 w-4" />
             Open in App Store
@@ -107,11 +112,11 @@ export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
 
   return (
     <a
-      href={APP_STORE_URL}
+      href={appStoreLink.url}
       target="_blank"
       rel="noopener noreferrer"
       className="inline-flex items-center gap-2.5 rounded-full bg-green-500 px-8 py-4 text-base font-semibold text-black transition-colors hover:bg-green-400"
-      onClick={() => trackAppStoreClick(location)}
+      onClick={() => trackAppStoreClick(location, trackingContext)}
     >
       <AppleIcon className="h-4 w-4" />
       Download on the App Store

@@ -9,5 +9,10 @@ assert.equal(
 );
 assert.equal(isAndroidUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X)"), false);
 assert.equal(isAndroidUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"), false);
+assert.equal(
+  isAndroidUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36"),
+  false,
+  "desktop browsers should promote OnTimer regardless of viewport width",
+);
 
 console.log("device detection tests passed");

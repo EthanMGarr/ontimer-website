@@ -4,12 +4,12 @@ import AirportPickupCalculator from "./AirportPickupCalculator";
 import "./pickup.css";
 
 export const metadata: Metadata = {
-  title: "When Should I Leave to Pick Someone Up at the Airport?",
-  description: "Find when to leave to pick up your wife, husband, daughter, son, family member, or friend at the airport using landing time, baggage, and traffic.",
+  title: "When Should I Leave for an Airport Pickup? Free Calculator",
+  description: "Calculate exactly when to leave for an airport pickup. This free calculator uses landing time, deplaning, bags, immigration, traffic and your meeting point.",
   alternates: { canonical: "https://www.ontimer.app/airport-pickup-time-calculator" },
   openGraph: {
     title: "When Should I Leave for an Airport Pickup?",
-    description: "Calculate when to leave, when the flight lands, and when your passenger should reach pickup.",
+    description: "Calculate exactly when to leave for an airport pickup. This free calculator uses landing time, deplaning, bags, immigration, traffic and your meeting point.",
     url: "https://www.ontimer.app/airport-pickup-time-calculator",
     type: "website",
   },
@@ -27,7 +27,7 @@ export default function AirportPickupPage() {
       <nav aria-label="Breadcrumb"><Link href="/time-calculators">Time Calculators</Link><span aria-hidden="true">/</span><span aria-current="page">Airport Pickup</span></nav>
       <p>Airport pickup calculator</p>
       <h1>When should I leave to pick someone up at the airport?</h1>
-      <p>Find the right time to leave—not just when the plane lands. We account for the drive, deplaning, baggage, immigration, and where you plan to meet.</p>
+      <p>Enter the flight and your starting point. This free calculator uses the drive, deplaning, baggage, immigration, and where you plan to meet to give you a specific leave time.</p>
     </div></header>
     <AirportPickupCalculator />
     <section className="pickup-guide"><div className="pickup-shell">

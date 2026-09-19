@@ -1,3 +1,5 @@
+import { SAVED_CALENDAR_APP_STORE_URL } from "./app-store-links";
+
 export interface GoogleCalendarEvent {
   title: string;
   start: Date;
@@ -7,7 +9,7 @@ export interface GoogleCalendarEvent {
 }
 
 export const ONTIMER_CALENDAR_DESCRIPTION =
-  "Calculated by OnTimer\nGet the free iOS app: https://apps.apple.com/us/app/ontimer-never-be-late/id6755317601";
+  `Calculated by OnTimer\nTurn this calendar event into an automatic alarm: ${SAVED_CALENDAR_APP_STORE_URL}`;
 
 function formatLocalGoogleDate(date: Date): string {
   const pad = (value: number) => String(value).padStart(2, "0");
