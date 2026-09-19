@@ -644,7 +644,7 @@ export default function CruiseCalculator({
                 exclusivePrimaryAction
                 compactOpenedStatus
                 postCalendarHeading="Don’t be late. Turn this into an alarm."
-                postCalendarBody="OnTimer sets an automatic alarm for this calendar event."
+                postCalendarBody="OnTimer automatically sets alarms for your calendar events"
                 appLocation={locationCode ? `cruise_${locationCode.toLowerCase()}_result` : "cruise_calculator_inline"}
                 analyticsContext={locationCode ? { location_code: locationCode } : {}}
                 eventPreview={{

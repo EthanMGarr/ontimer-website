@@ -635,7 +635,7 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
                 exclusivePrimaryAction
                 compactOpenedStatus
                 postCalendarHeading={isSpanish ? "No llegues tarde. Convierte el evento en una alarma." : "Don’t be late. Turn this into an alarm."}
-                postCalendarBody={isSpanish ? "OnTimer configura una alarma automática para este evento del calendario." : "OnTimer sets an automatic alarm for this calendar event."}
+                postCalendarBody={isSpanish ? "OnTimer configura alarmas automáticamente para los eventos de tu calendario" : "OnTimer automatically sets alarms for your calendar events"}
                 appLocation="wakeup_calculator_result"
                 locale={locale}
                 eventPreview={{

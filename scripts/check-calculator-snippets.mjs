@@ -51,7 +51,7 @@ assert.match(source.leavePage, /data-nosnippet=\{index === 0 \|\| index === 4 \|
 assert.match(source.wakePage, /<div data-nosnippet>\s*A common approach/);
 assert.match(source.wakePage, /data-nosnippet=\{index === 0 \|\| undefined\}/);
 assert.match(source.calendarHandoff, /alarmHeading: "Don’t be late\. Turn this into an alarm\."/);
-assert.match(source.calendarHandoff, /alarmBody: "OnTimer sets an automatic alarm for this calendar event\."/);
+assert.match(source.calendarHandoff, /alarmBody: "OnTimer automatically sets alarms for your calendar events"/);
 assert.doesNotMatch(source.calendarHandoff, /Turn \$\{eventPreview\.startLabel\} into a real alarm/);
 assert.doesNotMatch(source.calendarHandoff, /Install OnTimer and connect this calendar/);
 assert.match(source.airportPickup, /postCalendarHeading="Get an alarm when it’s time to leave\."/);
