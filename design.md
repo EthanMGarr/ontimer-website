@@ -56,8 +56,10 @@ position.
 
 Before calendar use, calendar-capable results retain one visually subordinate
 OnTimer acquisition path for visitors who skip the calendar action. Lead with
-“Get Automatic Alarms,” state clearly that OnTimer is free to download, and do
-not let this secondary path compete with the answer or calendar action.
+“Get Automatic Alarms,” state plainly that “OnTimer is free,” and use the
+supporting line for compatibility proof rather than repeating “free” or saying
+“free to download.” Do not let this secondary path compete with the answer or
+calendar action.
 
 The calculator's first editable input must also appear in the first practical
 mobile entry viewport. Context is compact and supporting content follows the

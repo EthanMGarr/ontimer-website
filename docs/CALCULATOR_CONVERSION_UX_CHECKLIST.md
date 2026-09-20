@@ -26,7 +26,7 @@ This is the release contract for OnTimer calculators. It protects the required i
 - Put optional calculation detail in a disclosure after the conversion handoff.
 - The calendar action must have a 44 px minimum target and an unwrapped primary label.
 - Every calendar-capable result must include a secondary OnTimer path before calendar use. Keep it visually subordinate to the calendar action and below the answer/handoff so it does not compete with the user's requested task.
-- Use the benefit-led CTA “Get Automatic Alarms” before calendar use and explicitly say “OnTimer is free to download” or “Free download on the App Store” nearby.
+- Use the benefit-led CTA “Get Automatic Alarms” before calendar use and state plainly, “OnTimer is free.” Never qualify the claim as “free to download,” and do not repeat “free” in the supporting line. Use that line for product proof instead: “Works with Google Calendar, Apple Calendar, and Microsoft 365.”
 
 ## Calendar-return rules
 

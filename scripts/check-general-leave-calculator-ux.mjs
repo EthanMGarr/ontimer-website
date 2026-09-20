@@ -66,6 +66,8 @@ assert.equal(page.includes("Never calculate this again"), false, "the competing 
 
 assert.doesNotMatch(handoff, /exclusivePrimaryAction/, "the shared OnTimer action must never be gated behind calendar use");
 assert.match(handoff, /data-calendar-secondary-acquisition/, "the shared handoff must expose a secondary OnTimer path before calendar use");
-assert.match(handoff, /Free download on the App Store/, "the acquisition path must state that OnTimer is free");
+assert.match(handoff, /OnTimer is free\. Turn calendar events into automatic alarms\./, "the acquisition path must state plainly that OnTimer is free");
+assert.match(handoff, /Works with Google Calendar, Apple Calendar, and Microsoft 365\./, "the supporting line must provide compatibility proof");
+assert.doesNotMatch(handoff, /free to download|Free download on the App Store/, "the acquisition path must not qualify or repeat the free claim");
 
 console.log("general leave-time calculator UX checks passed");
