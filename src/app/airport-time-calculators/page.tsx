@@ -6,6 +6,7 @@ import {
   LocationDirectory,
 } from "@/components/CalculatorDirectory";
 import { getTravelLocationPath } from "@/lib/travel-locations";
+import { airportPickupProfiles, getAirportPickupPath } from "@/lib/airport-pickup-profiles";
 
 export const metadata: Metadata = {
   title: "When Should I Leave for the Airport? Airport Guides",
@@ -114,6 +115,22 @@ export default function AirportTimeCalculatorsDirectory() {
         intro="Every airport-specific calculator is linked here, organized alphabetically so you can choose the airport closest to your trip."
         idPrefix="airport"
       />
+      <section className="site-section site-section--tint">
+        <div className="site-shell">
+          <p className="site-kicker">Meeting an arriving passenger?</p>
+          <h2 className="site-section-title">Airport pickup calculators</h2>
+          <p className="site-note">Choose a pilot airport for local curb, waiting-lot and terminal guidance, or use the generic pickup calculator for any airport.</p>
+          <div className="site-featured-grid site-featured-grid--spaced">
+            {airportPickupProfiles.map((profile) => (
+              <Link key={profile.slug} href={getAirportPickupPath(profile.slug)} className="site-location-link">
+                <strong>{profile.code} pickup</strong>
+                <span>When to leave for the pickup</span>
+              </Link>
+            ))}
+          </div>
+          <p className="mt-6"><Link href="/airport-pickup-time-calculator" className="site-text-action">Calculate a pickup at any airport <span aria-hidden="true">→</span></Link></p>
+        </div>
+      </section>
     </div>
   );
 }

@@ -50,7 +50,8 @@ function expectedContentAction(pathname) {
   if (/medication/.test(pathname) && !/^\/(?:how-to-remember-medication-on-time|medication-schedule|provider-medication-schedule|caregiver-medication-schedule|veterinary-medication-schedule)$/.test(pathname)) {
     return { kind: "medication schedule", paths: [toolPaths.medication] };
   }
-  if (/airport|flight/.test(pathname) && !/^\/(?:airport-time-to-leave-calculator|airport-time-to-leave\/|airport-time-calculators)/.test(pathname)) {
+  if (/^\/airport-pickup\//.test(pathname)) return null;
+  if (/airport|flight/.test(pathname) && !/^\/(?:airport-pickup-time-calculator|airport-time-to-leave-calculator|airport-time-to-leave\/|airport-time-calculators)/.test(pathname)) {
     return { kind: "airport calculator", paths: [toolPaths.airport] };
   }
   if (/when-should-i-leave|stop-being-late/.test(pathname)) {

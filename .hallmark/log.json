@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-09-20",
+    "scope": "page-family",
+    "macrostructure": "Task-first Workbench",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "practical, airport-specific, reassuring",
+    "enrichment": "reviewed pickup guidance",
+    "brief": "Six-airport pickup-intent pilot"
+  },
+  {
     "date": "2026-09-11",
     "macrostructure": "Narrative Workflow",
     "theme": "custom",

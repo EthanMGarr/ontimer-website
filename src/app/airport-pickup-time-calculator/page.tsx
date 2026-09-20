@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import AirportPickupCalculator from "./AirportPickupCalculator";
+import { airportPickupProfiles, getAirportPickupPath } from "@/lib/airport-pickup-profiles";
 import "./pickup.css";
 
 export const metadata: Metadata = {
@@ -39,6 +40,13 @@ export default function AirportPickupPage() {
       <h2>Put the moment to leave where you will act on it</h2>
       <p>Add the calculated departure to your calendar. OnTimer can turn that event into an automatic calendar alarm, making the moment to start driving harder to miss.</p>
       <p>Flying instead? Use the <Link href="/airport-time-to-leave-calculator">airport time-to-leave calculator</Link> to plan your own departure.</p>
+      <h2>Popular airport pickup calculators</h2>
+      <p>These airport-specific calculators keep the same leave-time workflow and add reviewed local pickup and waiting guidance.</p>
+      <div className="pickup-destination-links">
+        {airportPickupProfiles.map((profile) => (
+          <Link key={profile.slug} href={getAirportPickupPath(profile.slug)}>{profile.code} pickup calculator</Link>
+        ))}
+      </div>
     </div></section>
   </main>;
 }

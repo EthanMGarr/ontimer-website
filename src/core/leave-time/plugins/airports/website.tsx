@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AirportCalculator from "@/app/airport-time-to-leave-calculator/AirportCalculator";
+import AirportIntentNav, { type AirportPlanningIntent } from "@/components/airport/AirportIntentNav";
 import type { DestinationPageModel } from "@/components/destination-pages/DestinationPageTemplate";
 import type {
   DestinationTypeDefinition,
@@ -9,6 +10,7 @@ import type {
 } from "@/core/leave-time";
 import type { AirportLocationProfile, TravelLocationProfile } from "@/lib/travel-locations";
 import { getRelatedTravelLocationLinks } from "@/lib/travel-locations";
+import { isAirportPickupPilotSlug } from "@/lib/airport-pickup-profiles";
 import {
   buildAirportAnswerApplicationName,
   buildAirportAnswerDescription,
@@ -224,7 +226,10 @@ export function buildAirportMetadata(location: AirportLocationProfile): Metadata
   };
 }
 
-export function buildAirportPageModel(location: AirportLocationProfile): DestinationPageModel {
+export function buildAirportPageModel(
+  location: AirportLocationProfile,
+  planningIntent: AirportPlanningIntent = "flying",
+): DestinationPageModel {
   const faqItems = airportDestinationType.buildFaqItems(location);
   const searchName = buildAirportSearchName(location);
 
@@ -241,16 +246,26 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
       description: buildAirportSnippetCandidate(location),
     },
     planner: (
-      <AirportCalculator
-        initialAirport={location.calculatorDestination}
-        locationCode={location.code}
-        example={location.calculatorExample}
-        planningJurisdiction={location.airport.planningJurisdiction}
-        shortHaulLabel={location.airport.shortHaulLabel}
-        longHaulLabel={location.airport.longHaulLabel}
-        securityLabel={location.airport.securityLabel}
-        genericRedesign
-      />
+      <>
+        {isAirportPickupPilotSlug(location.slug) ? (
+          <AirportIntentNav
+            slug={location.slug}
+            airportCode={location.code}
+            currentIntent={planningIntent}
+          />
+        ) : null}
+        <AirportCalculator
+          initialAirport={location.calculatorDestination}
+          locationCode={location.code}
+          example={location.calculatorExample}
+          planningJurisdiction={location.airport.planningJurisdiction}
+          shortHaulLabel={location.airport.shortHaulLabel}
+          longHaulLabel={location.airport.longHaulLabel}
+          securityLabel={location.airport.securityLabel}
+          initialArrivalMode={planningIntent === "dropoff" ? "dropoff" : "parking"}
+          genericRedesign
+        />
+      </>
     ),
     planningFacts: {
       sectionId: `${location.code.toLowerCase()}-planning-facts`,

@@ -1,7 +1,7 @@
 /* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 */
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import AirportAutocomplete from "@/components/AirportAutocomplete";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
@@ -24,10 +24,24 @@ async function fetchDriveTime(origin: string, destination: string, departureAt: 
   return body;
 }
 
-export default function AirportPickupCalculator() {
+interface AirportPickupCalculatorProps {
+  initialAirport?: string;
+  locationCode?: string;
+  lockAirport?: boolean;
+  pageType?: "generic_pickup" | "airport_pickup";
+  intentNav?: ReactNode;
+}
+
+export default function AirportPickupCalculator({
+  initialAirport = "",
+  locationCode,
+  lockAirport = false,
+  pageType = "generic_pickup",
+  intentNav,
+}: AirportPickupCalculatorProps) {
   const initialArrival = useMemo(() => { const date = new Date(); date.setDate(date.getDate() + 1); date.setHours(18, 0, 0, 0); return localInput(date); }, []);
   const [relationship, setRelationship] = useState<Relationship>("someone");
-  const [airport, setAirport] = useState("");
+  const [airport, setAirport] = useState(initialAirport);
   const [arrivalValue, setArrivalValue] = useState(initialArrival);
   const [origin, setOrigin] = useState("");
   const [checkedBag, setCheckedBag] = useState(false);
@@ -40,6 +54,17 @@ export default function AirportPickupCalculator() {
   const [error, setError] = useState("");
   const started = useRef(false);
   const person = relationship === "someone" ? "your passenger" : `your ${relationship}`;
+  const analyticsContext = {
+    airport_code: locationCode ?? "unspecified",
+    page_type: pageType,
+    planning_intent: "pickup",
+  };
+
+  useEffect(() => {
+    if (initialAirport || typeof window === "undefined") return;
+    const requestedAirport = new URLSearchParams(window.location.search).get("airport")?.trim();
+    if (requestedAirport) setAirport(requestedAirport.slice(0, 120));
+  }, [initialAirport]);
 
   const calendarEvent = plan ? {
     title: `Leave to pick up ${person} at ${airport}`,
@@ -49,7 +74,7 @@ export default function AirportPickupCalculator() {
     details: `Picking up ${person}.\n\n${ONTIMER_CALENDAR_DESCRIPTION}`,
   } : null;
 
-  function noteStarted() { if (!started.current) { started.current = true; trackCalculatorStarted("airport_pickup"); } }
+  function noteStarted() { if (!started.current) { started.current = true; trackCalculatorStarted("airport_pickup", analyticsContext); } }
   function resetResult() { setPlan(null); setCalendarProvider(null); setError(""); }
 
   async function calculate() {
@@ -69,16 +94,24 @@ export default function AirportPickupCalculator() {
       if (!Number.isFinite(driveMinutes) || driveMinutes <= 0) throw new Error("Invalid travel time");
       const timing = calculateAirportPickup({ arrival, deplaneMinutes: 10, airportWalkMinutes: 10, bagMinutes: checkedBag ? 20 : 0, immigrationMinutes: international ? 45 : 0, driveMinutes, parkingMinutes: meetInside ? 20 : 0, curbTimingMinutes: meetInside ? 0 : 5 });
       setPlan({ ...timing, driveMinutes, trafficBasis });
-      trackCalculatorCompleted("airport_pickup", { relationship, checked_bag: checkedBag ? 1 : 0, international: international ? 1 : 0, meet_inside: meetInside ? 1 : 0, drive_minutes: driveMinutes });
+      trackCalculatorCompleted("airport_pickup", { ...analyticsContext, relationship, checked_bag: checkedBag ? 1 : 0, international: international ? 1 : 0, meet_inside: meetInside ? 1 : 0, drive_minutes: driveMinutes });
     } catch { setError("Automatic drive time isn’t available right now. Enter the drive time below and calculate again."); }
     finally { setIsCalculating(false); }
   }
 
   return <div className="pickup-workbench pickup-shell">
     <form className="pickup-form" onSubmit={(event) => { event.preventDefault(); void calculate(); }}>
+      {intentNav}
       <p className="pickup-step">Plan the pickup</p><h2>When should you leave?</h2>
-      <label htmlFor="pickup-airport">Pickup airport</label>
-      <AirportAutocomplete inputId="pickup-airport" value={airport} onChange={(value) => { noteStarted(); setAirport(value); resetResult(); }} options={[]} inputClassName="pickup-input" />
+      {lockAirport ? (
+        <div className="pickup-airport-context" aria-label={`Pickup airport: ${airport}`}>
+          <span>Pickup airport</span>
+          <strong>{airport}</strong>
+        </div>
+      ) : <>
+        <label htmlFor="pickup-airport">Pickup airport</label>
+        <AirportAutocomplete inputId="pickup-airport" value={airport} onChange={(value) => { noteStarted(); setAirport(value); resetResult(); }} options={[]} inputClassName="pickup-input" />
+      </>}
       <label htmlFor="pickup-arrival">Scheduled landing</label>
       <input id="pickup-arrival" className="pickup-input" type="datetime-local" value={arrivalValue} onChange={(event) => { noteStarted(); setArrivalValue(event.target.value); resetResult(); }} />
       <label htmlFor="pickup-origin">Where are you driving from?</label>
@@ -118,7 +151,7 @@ export default function AirportPickupCalculator() {
         <div className="pickup-timeline"><div><span>1</span><p><strong>You leave</strong>{formatTime(plan.leaveAt)} · {plan.driveMinutes} min drive</p></div><div><span>2</span><p><strong>Flight lands</strong>{formatTime(new Date(arrivalValue))} at {airport}</p></div><div><span>3</span><p><strong>{person} reaches pickup</strong>About {formatTime(plan.passengerReady)}</p></div></div>
         <details className="pickup-breakdown"><summary>How we estimated this</summary><dl><div><dt>Getting off the plane</dt><dd>10 min</dd></div><div><dt>Walk to arrivals</dt><dd>10 min</dd></div>{checkedBag ? <div><dt>Checked bag</dt><dd>20 min</dd></div> : null}{international ? <div><dt>Immigration</dt><dd>45 min</dd></div> : null}{meetInside ? <div><dt>Parking and walking in</dt><dd>20 min</dd></div> : <div><dt>Curb timing</dt><dd>Aim 5 min after they’re ready</dd></div>}<div><dt>Your drive</dt><dd>{plan.driveMinutes} min · {plan.trafficBasis === "live" ? "live traffic" : plan.trafficBasis === "predicted" ? "expected traffic" : "estimate"}</dd></div></dl></details>
         <p className="pickup-assumption">Flight schedules can change. Check the airline before you leave.</p>
-        {calendarEvent ? <CalendarOnTimerHandoff calendarHref={buildGoogleCalendarLink(calendarEvent)} alternateCalendarHref={buildIcsCalendarDataUri(calendarEvent)} alternateCalendarFilename="airport-pickup.ics" calendarProvider={calendarProvider} setCalendarProvider={setCalendarProvider} calculatorType="airport_pickup" readyHeading={`Put ${person}’s pickup on your calendar.`} openedItemLabel="pickup event" exclusivePrimaryAction compactOpenedStatus postCalendarHeading="Get an alarm when it’s time to leave." postCalendarBody="OnTimer turns this pickup into an automatic calendar alarm." appLocation="airport_pickup_after_calendar" analyticsContext={{ relationship }} eventPreview={{ title: calendarEvent.title, startLabel: formatDateTime(plan.leaveAt) }} /> : null}</>
+        {calendarEvent ? <CalendarOnTimerHandoff calendarHref={buildGoogleCalendarLink(calendarEvent)} alternateCalendarHref={buildIcsCalendarDataUri(calendarEvent)} alternateCalendarFilename="airport-pickup.ics" calendarProvider={calendarProvider} setCalendarProvider={setCalendarProvider} calculatorType="airport_pickup" readyHeading={`Put ${person}’s pickup on your calendar.`} openedItemLabel="pickup event" exclusivePrimaryAction compactOpenedStatus postCalendarHeading="Get an alarm when it’s time to leave." postCalendarBody="OnTimer turns this pickup into an automatic calendar alarm." appLocation="airport_pickup_after_calendar" analyticsContext={{ ...analyticsContext, relationship }} eventPreview={{ title: calendarEvent.title, startLabel: formatDateTime(plan.leaveAt) }} /> : null}</>
       : <><p className="pickup-step">What you’ll get</p><h2>One clear time to leave.</h2><div className="pickup-preview"><p>We’ll work backward from the landing, time to reach arrivals, and your drive.</p><p><strong>Leave</strong><span>→</span><strong>Land</strong><span>→</span><strong>Meet</strong></p></div></>}
     </section>
   </div>;

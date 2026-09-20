@@ -14,6 +14,7 @@ import { isSpanishAirportSlug } from "@/lib/spanish-airports";
 
 interface LocationPageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ intent?: string | string[] }>;
 }
 
 const indexableAirportLocations = indexableTravelLocations.filter((location) =>
@@ -50,7 +51,7 @@ export async function generateMetadata({ params }: LocationPageProps) {
   };
 }
 
-export default async function LocationPage({ params }: LocationPageProps) {
+export default async function LocationPage({ params, searchParams }: LocationPageProps) {
   const location = getTravelLocation((await params).slug);
   if (!location) notFound();
 
@@ -62,5 +63,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 
   if (!airportDestinationType.validateDestination(location)) notFound();
 
-  return <DestinationPageTemplate model={buildAirportPageModel(location)} />;
+  const requestedIntent = (await searchParams).intent;
+  const planningIntent = requestedIntent === "dropoff" ? "dropoff" : "flying";
+  return <DestinationPageTemplate model={buildAirportPageModel(location, planningIntent)} />;
 }

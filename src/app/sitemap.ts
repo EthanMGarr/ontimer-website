@@ -4,6 +4,7 @@ import { getDestinationSitemapRoutes } from "@/lib/destination-routing";
 import { MEDICATION_TIMING_PROFILES } from "@/lib/medication-timing-profiles";
 import { localizedAlternates, spanishAirportSlugs } from "@/lib/i18n";
 import { UNTIL_EVENTS } from "@/lib/until";
+import { airportPickupProfiles, getAirportPickupPath } from "@/lib/airport-pickup-profiles";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.ontimer.app";
@@ -161,6 +162,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
+    ...airportPickupProfiles.map(({ slug }) => ({
+      url: `${baseUrl}${getAirportPickupPath(slug)}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
     {
       url: `${baseUrl}/cruise-terminal-time-calculators`,
       lastModified: new Date(),

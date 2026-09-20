@@ -384,6 +384,7 @@ interface AirportCalculatorProps {
   securityLabel?: string;
   airportOptions?: AirportAutocompleteOption[];
   locale?: SiteLocale;
+  initialArrivalMode?: ArrivalMode;
 }
 
 const genericExample: CalculatorExample = {
@@ -404,6 +405,7 @@ export default function AirportCalculator({
   securityLabel = planningJurisdiction === "international" ? "Airport security" : "TSA security",
   airportOptions = [],
   locale = "en",
+  initialArrivalMode = "parking",
 }: AirportCalculatorProps) {
   const copy = airportCopy[locale];
   // ── Form state ──────────────────────────────────────────────────────────────
@@ -421,7 +423,7 @@ export default function AirportCalculator({
   const [hasPreCheck, setHasPreCheck] = useState(false);
   const [hasClear, setHasClear] = useState(false);
   const [hasCheckedBag, setHasCheckedBag] = useState(false);
-  const [arrivalMode, setArrivalMode] = useState<ArrivalMode>("parking");
+  const [arrivalMode, setArrivalMode] = useState<ArrivalMode>(initialArrivalMode);
   const [showBufferOverride, setShowBufferOverride] = useState(false);
   const [customBuffer, setCustomBuffer] = useState("");
   const [showManualDriveTime, setShowManualDriveTime] = useState(false);

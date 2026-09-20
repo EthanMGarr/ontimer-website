@@ -29,6 +29,8 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Redirects are permanent only when the destination is genuinely canonical.
 - [ ] Redirect destinations use the canonical `www.ontimer.app` hostname and avoid redirect chains.
 - [ ] Airport destinations use `/airport-time-to-leave/[slug]`.
+- [ ] Airport pickup destinations use `/airport-pickup/[slug]` only for allowlisted, fully reviewed pickup profiles; unsupported airports stay on the canonical generic pickup calculator.
+- [ ] Airport drop-off remains a state of the canonical airport departure page unless distinct search evidence justifies a separate route family; query-state URLs must not replace the base canonical.
 - [ ] Cruise terminals use `/cruise-time-to-leave/[slug]`.
 - [ ] Unknown destination slugs return 404; known legacy or misclassified URLs redirect to the correct canonical page.
 - [ ] `npm run build` passes.

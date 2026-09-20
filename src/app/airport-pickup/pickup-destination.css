@@ -1,0 +1,20 @@
+/* Hallmark · macrostructure: Task-first Workbench · theme: design.md locked · tone: practical and reassuring · anchor hue: OnTimer blue · contrast: pass (40–41) · nav: existing N11 · footer: existing Ft4 · slop: pass (42–45) · honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (49) · icons: pass (30) · mobile: pass (34, 49, 50–57) */
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 */
+.pickup-airport-context { margin: var(--space-md) 0 var(--space-2xs); padding: var(--space-sm) var(--space-md); border: 1px solid var(--line-strong); border-radius: 13px; background: var(--sky-50); }
+.pickup-airport-context span { display: block; color: var(--ink-soft); font-size: .78rem; font-weight: 700; text-transform: uppercase; }
+.pickup-airport-context strong { display: block; margin-top: var(--space-2xs); font-size: 1.05rem; }
+.pickup-destination-guide { padding: var(--space-2xl) 0 var(--space-3xl); background: var(--sky-50); }
+.pickup-destination-guide h2 { margin: var(--space-xl) 0 var(--space-sm); font-size: clamp(1.55rem, 3vw, 2.35rem); letter-spacing: -.035em; }
+.pickup-destination-guide h2:first-child { margin-top: 0; }
+.pickup-destination-guide h3 { margin: var(--space-lg) 0 var(--space-xs); font-size: 1.12rem; }
+.pickup-destination-guide p, .pickup-destination-guide li { color: var(--ink-muted); line-height: 1.65; }
+.pickup-destination-guide ul { padding-left: 1.2rem; }
+.pickup-destination-guide__grid { display: grid; gap: var(--space-lg); }
+.pickup-destination-sources { margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--line-strong); }
+.pickup-destination-links { display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-md); }
+.pickup-hero--destination h1 { min-width: 0; overflow-wrap: anywhere; }
+@media (min-width: 760px) { .pickup-destination-guide__grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 470px) {
+  .pickup-hero--destination h1 { font-size: clamp(1.9rem, 9.5vw, 2.25rem); line-height: 1; }
+  .pickup-hero--destination h1 + p { margin-top: 12px; font-size: 1rem; line-height: 1.4; }
+}
