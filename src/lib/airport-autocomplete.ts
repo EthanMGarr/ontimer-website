@@ -36,6 +36,12 @@ export function filterAirportOptions(
   const normalizedQuery = normalize(query.trim());
   const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
   if (tokens.length === 0) return [];
+  if (/^\d/.test(normalizedQuery)) {
+    return options.filter((option) =>
+      [option.code, ...(option.aliases ?? [])]
+        .some((identifier) => normalize(identifier) === normalizedQuery)
+    );
+  }
 
   return options
     .filter((option) => {

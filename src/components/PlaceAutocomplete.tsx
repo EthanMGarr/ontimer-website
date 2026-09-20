@@ -5,10 +5,11 @@
 /// All API calls are proxied through /api/places-autocomplete (key stays server-side).
 ///
 /// ## Include
-/// - Debounced Google autocomplete (900ms, min 4 chars)
+/// - Responsive debounced Google autocomplete (350ms, min 4 chars)
 /// - Optional immediate airport matching by IATA code or name from the local directory
 /// - Requests only while the field is focused and actively edited
-/// - Longer pause after pasted text so complete addresses can be used as-is
+/// - Slightly longer pause after pasted text so complete addresses can be used as-is
+/// - Immediate stale-request cancellation and visible searching feedback
 /// - Dedup guard (skip fetch if input unchanged since last request)
 /// - Keyboard navigation (↑ ↓ Enter Escape)
 /// - Click-outside to dismiss
@@ -70,6 +71,7 @@ export default function PlaceAutocomplete({
   const [airportOptions, setAirportOptions] = useState<AirportAutocompleteOption[]>([]);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isOpen, setIsOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const minimumCharacters = types === "airport" ? 2 : 4;
   const deferredValue = useDeferredValue(value);
   const airportSuggestions = useMemo<Prediction[]>(() => {
@@ -99,6 +101,7 @@ export default function PlaceAutocomplete({
 
   // Dedup: avoid re-fetching identical input
   const lastFetchedRef = useRef<string>("");
+  const requestIdRef = useRef(0);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const requestRef = useRef<AbortController | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -148,15 +151,23 @@ export default function PlaceAutocomplete({
   }, []);
 
   // ── Fetch suggestions ───────────────────────────────────────────────────────
-  const fetchSuggestions = useCallback(async (input: string) => {
-    if (!focusedRef.current || input.trim().length < minimumCharacters) {
+  const fetchSuggestions = useCallback(async (input: string, requestId: number) => {
+    if (
+      requestId !== requestIdRef.current ||
+      !focusedRef.current ||
+      input.trim().length < minimumCharacters
+    ) {
       setPlaceSuggestions([]);
       setIsOpen(hasAirportMatches(input));
+      if (requestId === requestIdRef.current) setIsSearching(false);
       return;
     }
 
     // Dedup: skip if this exact input was already fetched
-    if (input === lastFetchedRef.current) return;
+    if (input === lastFetchedRef.current) {
+      setIsSearching(false);
+      return;
+    }
     lastFetchedRef.current = input;
 
     try {
@@ -172,14 +183,28 @@ export default function PlaceAutocomplete({
       });
       if (!res.ok) return;
       const data: { predictions: Prediction[] } = await res.json();
+      if (
+        requestId !== requestIdRef.current ||
+        valueRef.current !== input ||
+        !focusedRef.current
+      ) return;
       const preds = data.predictions ?? [];
       setPlaceSuggestions(preds);
       setIsOpen(preds.length > 0 || hasAirportMatches(input));
       setActiveIndex(-1);
-    } catch {
+    } catch (error) {
+      if (
+        requestId !== requestIdRef.current ||
+        (error instanceof DOMException && error.name === "AbortError")
+      ) return;
       // Fail silently — manual text entry still works
       setPlaceSuggestions([]);
       setIsOpen(hasAirportMatches(input));
+    } finally {
+      if (requestId === requestIdRef.current) {
+        requestRef.current = null;
+        setIsSearching(false);
+      }
     }
   }, [hasAirportMatches, minimumCharacters, types]);
 
@@ -197,20 +222,28 @@ export default function PlaceAutocomplete({
 
       // Clear pending debounce
       if (debounceRef.current) clearTimeout(debounceRef.current);
+      requestRef.current?.abort();
+      requestRef.current = null;
+      const requestId = ++requestIdRef.current;
+      setPlaceSuggestions([]);
 
       if (val.trim().length < minimumCharacters) {
-        setPlaceSuggestions([]);
+        setIsSearching(false);
         setIsOpen(hasAirportMatches(val));
         return;
       }
 
-      if (!focusedRef.current) return;
+      if (!focusedRef.current) {
+        setIsSearching(false);
+        return;
+      }
+      setIsSearching(true);
       setIsOpen(hasAirportMatches(val));
 
       const isPaste = (e.nativeEvent as InputEvent).inputType === "insertFromPaste";
       debounceRef.current = setTimeout(() => {
-        fetchSuggestions(val);
-      }, isPaste ? 1_400 : 900);
+        fetchSuggestions(val, requestId);
+      }, isPaste ? 600 : 350);
     },
     [ensureAirportDirectoryLoaded, fetchSuggestions, hasAirportMatches, includeAirports, minimumCharacters, onChange]
   );
@@ -221,7 +254,11 @@ export default function PlaceAutocomplete({
       onChange(prediction.description);
       setPlaceSuggestions([]);
       setIsOpen(false);
+      setIsSearching(false);
       setActiveIndex(-1);
+      requestIdRef.current += 1;
+      requestRef.current?.abort();
+      requestRef.current = null;
       lastFetchedRef.current = prediction.description;
     },
     [onChange]
@@ -266,7 +303,10 @@ export default function PlaceAutocomplete({
         onBlur={() => {
           focusedRef.current = false;
           if (debounceRef.current) clearTimeout(debounceRef.current);
+          requestIdRef.current += 1;
           requestRef.current?.abort();
+          requestRef.current = null;
+          setIsSearching(false);
         }}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
@@ -276,7 +316,22 @@ export default function PlaceAutocomplete({
         aria-autocomplete="list"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
+        aria-busy={isSearching}
       />
+
+      {isSearching && (
+        <span
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
+          role="status"
+          aria-live="polite"
+        >
+          <span
+            className="block size-4 animate-spin rounded-full border-2 border-zinc-500 border-t-zinc-200"
+            aria-hidden="true"
+          />
+          <span className="sr-only">Searching addresses…</span>
+        </span>
+      )}
 
       {isOpen && suggestions.length > 0 && (
         <ul

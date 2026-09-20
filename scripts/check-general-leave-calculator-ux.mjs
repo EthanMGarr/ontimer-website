@@ -6,6 +6,7 @@ const wakeComponent = readFileSync("src/app/wake-up-time-calculator/WakeUpCalcul
 const page = readFileSync("src/app/what-time-should-i-leave/page.tsx", "utf8");
 const handoff = readFileSync("src/components/leave-time/CalendarOnTimerHandoff.tsx", "utf8");
 const currentLocationControl = readFileSync("src/components/CurrentLocationControl.tsx", "utf8");
+const placeAutocomplete = readFileSync("src/components/PlaceAutocomplete.tsx", "utf8");
 const globalStyles = readFileSync("src/app/globals.css", "utf8");
 const rootLayout = readFileSync("src/app/layout.tsx", "utf8");
 
@@ -42,6 +43,10 @@ assert.match(component, /className="mt-1 inline-flex min-h-11[^"]*">?/, "the gen
 assert.match(currentLocationControl, /!active && \(/, "shared calculator location actions must disappear after success");
 assert.match(currentLocationControl, /className="mt-1 inline-flex min-h-11[^"]*">?/, "shared current-location actions must sit close to their fields without shrinking their touch targets");
 assert.match(currentLocationControl, /className="sr-only" role="status"/, "shared location success must remain available to assistive technology");
+assert.match(placeAutocomplete, /isPaste \? 600 : 350/, "address autocomplete must respond promptly while keeping pasted text debounced");
+assert.match(placeAutocomplete, /requestRef\.current\?\.abort\(\);[\s\S]*?const requestId = \+\+requestIdRef\.current;/, "address edits must cancel and invalidate stale requests immediately");
+assert.match(placeAutocomplete, /aria-busy=\{isSearching\}/, "address autocomplete must expose its searching state");
+assert.match(placeAutocomplete, /Searching addresses…/, "address autocomplete must explain its searching state to assistive technology");
 assert.match(globalStyles, /html \{[\s\S]*?overflow-x: clip;/, "the document root must prevent horizontal page drift");
 assert.match(globalStyles, /body \{[\s\S]*?overflow-x: clip;/, "the page body must prevent horizontal page drift");
 assert.match(globalStyles, /@media \(max-width: 639px\)[\s\S]*?input:not\(\[type="range"\]\)[\s\S]*?font-size: 1rem !important;/, "mobile form controls must remain at 16px to prevent iOS Safari focus zoom");

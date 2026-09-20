@@ -28,6 +28,12 @@ const options: AirportAutocompleteOption[] = [
     name: "Montréal-Trudeau International Airport",
     city: "Montréal, Canada",
   },
+  {
+    code: "DHB",
+    name: "Deer Harbor SPB",
+    city: "Deer Harbor, United States",
+    aliases: ["42W"],
+  },
 ];
 
 assert.equal(
@@ -45,6 +51,9 @@ assert.equal(filterAirportOptions(options, "los angeles")[0]?.code, "LAX", "mult
 assert.equal(filterAirportOptions(options, "YHZ")[0]?.code, "YHZ", "YHZ should match Halifax airport by code");
 assert.equal(filterAirportOptions(options, "halifax")[0]?.code, "YHZ", "Halifax should match by city");
 assert.equal(filterAirportOptions(options, "montreal")[0]?.code, "YUL", "search should ignore diacritics");
+assert.equal(filterAirportOptions(options, "42").length, 0, "numeric street prefixes must not surface airport aliases");
+assert.equal(filterAirportOptions(options, "42 I").length, 0, "digit-leading addresses must not combine airport identifiers with location text");
+assert.equal(filterAirportOptions(options, "42W")[0]?.code, "DHB", "complete mixed-character airport identifiers should still match");
 assert.equal(filterAirportOptions(options, "heathrow").length, 0, "non-matches should return an empty list");
 assert.equal(airportPlanningJurisdictionForCountry("United States"), "us", "US airports should use TSA controls");
 assert.equal(airportPlanningJurisdictionForCountry("Canada"), "international", "Canadian airports should not use TSA controls");
