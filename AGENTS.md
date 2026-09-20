@@ -32,6 +32,7 @@ For implementation-only tasks (bug fixes, refactoring, infrastructure), BrandOS 
 
 - Treat every calculator as a conversion sequence, not a content page: visible task input → answer → calendar action → OnTimer action after calendar return.
 - On the first practical mobile viewport, show the calculator's primary editable input. Event context, caveats, breadcrumbs, source details, and explanatory copy must not push the task below the fold.
+- Generic calculator selectors must start with a neutral prompt, not a fabricated default. When “Something else” is offered, selecting it must reveal a labeled free-text field instead of using that phrase as the calculated value.
 - On the first practical mobile result viewport, show the primary answer and calendar action together. Put no timeline, provider detail, warning card, or optional explanation before the calendar handoff; allow at most one compact calculation-summary row.
 - Every calendar-capable result must retain a visually subordinate OnTimer path before calendar use. Use “Get Automatic Alarms,” state plainly that “OnTimer is free,” and use adjacent microcopy for product proof rather than repeating “free” or saying “free to download”; do not require the calendar action before visitors can discover OnTimer.
 - After a calendar action, replace that focal slot with the OnTimer acquisition action. Do not make the returning user scroll past calculation detail to find it.

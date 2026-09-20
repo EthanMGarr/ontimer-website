@@ -19,7 +19,7 @@ export default function DaysUntilPage() {
     <main className="until-page">
       <header className="until-hero">
         <div className="until-shell until-hero__grid">
-          <div><h1>How many days until?</h1><p>Pick something worth looking forward to. We’ll count the days, then help you put the date and a few useful reminders on your calendar.</p></div>
+          <div><h1>How many days until?</h1><p>Choose an event and date. We’ll count the days and help you add useful calendar reminders.</p></div>
           <Image className="until-hero__art" src="/images/countdowns/generic.png" alt="A cheerful calendar and clock" width={1254} height={1254} priority />
         </div>
       </header>

@@ -24,9 +24,9 @@ function escapeIcs(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/\r?\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
 }
 
-export default function UntilCalculator({ initialDate, initialLabel = "My event", initialNow, eventSlug = "custom", answerFirst = false }: Props) {
+export default function UntilCalculator({ initialDate, initialLabel = "", initialNow, eventSlug = "", answerFirst = false }: Props) {
   const tomorrow = useMemo(() => { const date = new Date(); date.setDate(date.getDate() + 1); return formatDateInput(date); }, []);
-  const [dateValue, setDateValue] = useState(initialDate || tomorrow);
+  const [dateValue, setDateValue] = useState(initialDate || "");
   const [label, setLabel] = useState(initialLabel);
   const [eventId, setEventId] = useState(eventSlug);
   const [now, setNow] = useState<Date | null>(() => initialNow ? new Date(initialNow) : null);
@@ -56,7 +56,19 @@ export default function UntilCalculator({ initialDate, initialLabel = "My event"
     return () => window.removeEventListener("focus", focusOffer);
   }, [calendarHandoff]);
 
-  const target = parseLocalDate(dateValue);
+  const hasEventChoice = eventId !== "";
+  const hasEventName = eventId !== "custom" || label.trim().length > 0;
+  const target = hasEventChoice && hasEventName ? parseLocalDate(dateValue) : null;
+  const emptyAnswerLabel = !hasEventChoice
+    ? "Choose an event to start"
+    : !hasEventName
+      ? "Name your event to continue"
+      : "Choose a date to see your countdown";
+  const emptyTargetLabel = !hasEventChoice
+    ? "Then choose its date."
+    : !hasEventName
+      ? "Type the event name, then choose its date."
+      : "Choose a future date.";
   const result = target && now ? calculateUntil(target, now) : null;
   const optionGroups = ["Popular", "Holidays", "Seasons", "Personal"] as const;
   const sortedMilestones = [...milestones].sort((a, b) => b - a);
@@ -95,12 +107,21 @@ export default function UntilCalculator({ initialDate, initialLabel = "My event"
   }, [dateValue, eventSlug, result?.days]);
 
   const controls = <div className="until-controls">
-    <label htmlFor="until-event">What are you counting down to?</label>
-    <select id="until-event" className="until-input" value={eventId} onChange={(event) => { noteInteraction(); setCalendarHandoff(null); const nextId = event.target.value; const option = getCountdownOption(nextId); setEventId(nextId); if (!option) return; setLabel(option.label.replace(" (choose date)", "")); if (option.nextDate) setDateValue(formatDateInput(option.nextDate(new Date()))); }}>
-      {optionGroups.map((group) => <optgroup key={group} label={group}>{COUNTDOWN_OPTIONS.filter((option) => option.category === group).map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</optgroup>)}
-    </select>
-    <label htmlFor="until-date">When is it?</label>
-    <input id="until-date" className="until-input" type="date" min={tomorrow} value={dateValue} onChange={(event) => { noteInteraction(); setCalendarHandoff(null); setDateValue(event.target.value); }} />
+    <div className="until-field">
+      <label htmlFor="until-event">What are you counting down to?</label>
+      <select id="until-event" className="until-input" value={eventId} onChange={(event) => { noteInteraction(); setCalendarHandoff(null); const nextId = event.target.value; const option = getCountdownOption(nextId); setEventId(nextId); if (!option) { setLabel(""); setDateValue(""); return; } if (nextId === "custom") { setLabel(""); setDateValue(""); return; } setLabel(option.label.replace(" (choose date)", "")); setDateValue(option.nextDate ? formatDateInput(option.nextDate(new Date())) : ""); }}>
+        <option value="" disabled>Choose an event</option>
+        {optionGroups.map((group) => <optgroup key={group} label={group}>{COUNTDOWN_OPTIONS.filter((option) => option.category === group).map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</optgroup>)}
+      </select>
+    </div>
+    {eventId === "custom" ? <div className="until-field">
+      <label htmlFor="until-custom-event">Name your event</label>
+      <input id="until-custom-event" className="until-input" type="text" value={label} maxLength={80} placeholder="Example: My birthday" autoComplete="off" autoFocus onChange={(event) => { noteInteraction(); setCalendarHandoff(null); setLabel(event.target.value); }} />
+    </div> : null}
+    <div className="until-field">
+      <label htmlFor="until-date">When is it?</label>
+      <input id="until-date" className="until-input" type="date" min={tomorrow} value={dateValue} disabled={!hasEventChoice} onChange={(event) => { noteInteraction(); setCalendarHandoff(null); setDateValue(event.target.value); }} />
+    </div>
   </div>;
 
   return (
@@ -110,10 +131,10 @@ export default function UntilCalculator({ initialDate, initialLabel = "My event"
         <div className="until-result">
           <div aria-live="polite">
             <div className="until-answer">{result ? result.days : "—"}</div>
-            <div className="until-answer-label">{result?.days === 1 ? "day until" : "days until"} {label || "your event"}</div>
+            <div className="until-answer-label">{result ? `${result.days === 1 ? "day until" : "days until"} ${label}` : emptyAnswerLabel}</div>
           </div>
-          <div className="until-target">{target ? target.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : "Choose a future date."}</div>
-          <div className="until-calendar-step">
+          <div className="until-target">{target ? target.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : emptyTargetLabel}</div>
+          {result ? <div className="until-calendar-step">
             {calendarHandoff ? <aside ref={alarmOfferRef} tabIndex={-1} className="until-alarm-offer" aria-live="polite">
               <div><h2>Turn these into {label || "event"} alarms!</h2><p>OnTimer is free. Turn calendar events into automatic alarms, so you’re never late.</p></div>
               <div><a className="until-app-button" href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_after_calendar", { event_slug: eventSlug, calendar_provider: calendarHandoff })}>Get OnTimer</a><p className="until-app-caption">Works with Google Calendar, Apple Calendar, and Microsoft 365.</p></div>
@@ -131,12 +152,12 @@ export default function UntilCalculator({ initialDate, initialLabel = "My event"
                 <div><a className="until-app-button" href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_result", { event_slug: eventSlug })}>Get Automatic Alarms</a><p className="until-app-caption">Works with Google Calendar, Apple Calendar, and Microsoft 365.</p></div>
               </aside>
             </>}
-          </div>
-          <div className="until-breakdown" aria-label="Countdown details">
+          </div> : null}
+          {result ? <div className="until-breakdown" aria-label="Countdown details">
             <div><strong>{result ? Math.floor(result.weeks).toLocaleString() : "—"}</strong><span>full weeks</span></div>
             <div><strong>{result ? (result.days % 7).toLocaleString() : "—"}</strong><span>extra days</span></div>
             <div><strong>{result ? Math.ceil(result.totalMilliseconds / 3_600_000).toLocaleString() : "—"}</strong><span>approx. hours</span></div>
-          </div>
+          </div> : null}
         </div>
         {answerFirst ? <details className="until-adjustments"><summary>Change event or date</summary>{controls}</details> : null}
       </section>

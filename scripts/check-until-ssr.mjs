@@ -25,12 +25,21 @@ const directoryHtml = readFileSync(join(root, ".next", "server", "app", "time-ca
 if (directoryHtml.includes("Time Calculators | OnTimer | OnTimer")) throw new Error("time-calculators: duplicated brand in title");
 
 const calculatorSource = readFileSync(join(root, "src", "app", "days-until", "UntilCalculator.tsx"), "utf8");
-for (const expected of ["Turn these into {label || \"event\"} alarms!", "OnTimer is free. Turn calendar events into automatic alarms", "data-calendar-secondary-acquisition", "Get Automatic Alarms", "Works with Google Calendar, Apple Calendar, and Microsoft 365."]) {
+for (const expected of ["Choose an event", "Name your event", "until-custom-event", "Name your event to continue", "Choose a date to see your countdown", "Turn these into {label || \"event\"} alarms!", "OnTimer is free. Turn calendar events into automatic alarms", "data-calendar-secondary-acquisition", "Get Automatic Alarms", "Works with Google Calendar, Apple Calendar, and Microsoft 365."]) {
   if (!calculatorSource.includes(expected)) throw new Error(`post-calendar focal copy missing: ${expected}`);
 }
+if (!calculatorSource.includes('eventId === "custom"')) throw new Error("custom event name input must be conditional on the Something else choice");
+if (!calculatorSource.includes('disabled={!hasEventChoice}')) throw new Error("date input must wait for an explicit event choice");
+if (!calculatorSource.includes('useState(initialDate || "")')) throw new Error("generic Days Until must not fabricate a default date");
+if (!calculatorSource.includes('setDateValue(option.nextDate ? formatDateInput(option.nextDate(new Date())) : "")')) throw new Error("personal event choices must clear any automatic holiday date");
 for (const retired of ["Add free alarms.", "Google Calendar opened in a new tab", "Your calendar file is ready.", "free to download", "Free download on the App Store"]) {
   if (calculatorSource.includes(retired)) throw new Error(`retired post-calendar narration returned: ${retired}`);
 }
 if ((calculatorSource.match(/setCalendarHandoff\(/g) ?? []).length < 4) throw new Error("both calendar actions must maintain the OnTimer handoff state");
+
+const genericPageSource = readFileSync(join(root, "src", "app", "days-until", "page.tsx"), "utf8");
+if (!genericPageSource.includes("Choose an event and date.")) throw new Error("generic Days Until page must lead directly into the task");
+const untilCss = readFileSync(join(root, "src", "app", "days-until", "until.css"), "utf8");
+if (!untilCss.includes(".until-page:not(.until-page--event) .until-hero__art { display: none; }")) throw new Error("generic mobile hero art must not displace the calculator");
 
 console.log("until SSR checks passed");

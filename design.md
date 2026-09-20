@@ -63,8 +63,11 @@ calendar action.
 
 The calculator's first editable input must also appear in the first practical
 mobile entry viewport. Context is compact and supporting content follows the
-workbench. The required conversion sequence is input → answer → calendar →
-OnTimer; optional detail never interrupts that sequence.
+workbench. Generic selectors begin with a neutral prompt rather than a fabricated
+default. A “Something else” escape hatch reveals a labeled free-text field; the
+phrase itself is never used as the visitor's event name. The required conversion
+sequence is input → answer → calendar → OnTimer; optional detail never interrupts
+that sequence.
 
 ## Accessibility and privacy
 

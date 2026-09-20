@@ -20,6 +20,8 @@ This is the release contract for OnTimer calculators. It protects the required i
 
 ## Result-state rules
 
+- Generic calculators must begin with a neutral prompt rather than a fabricated selection or answer. If a curated selector cannot cover every valid use case, include a clearly labeled “Something else” choice that reveals a text field for the visitor's own value.
+
 - Move focus or scroll to the result after calculation.
 - Show the answer, date/context, and no more than one compact summary row before the calendar handoff.
 - Do not put a timeline, itemized assumptions, provider details, warning cards, or educational copy before the calendar action.
