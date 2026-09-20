@@ -99,7 +99,7 @@ export default async function SpanishAirportPage({ params }: SpanishAirportPageP
         <script key={`${item["@type"]}-${index}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(item) }} />
       ))}
 
-      <nav aria-label="Migas de pan" className="border-b border-zinc-800/50">
+      <nav aria-label="Migas de pan" className="hidden border-b border-zinc-800/50 sm:block">
         <ol className="mx-auto flex max-w-5xl items-center gap-1.5 px-4 py-2.5 text-xs text-zinc-400 sm:px-6">
           <li><Link href="/es/calculadora-cuando-salir-al-aeropuerto" className="hover:text-white">Aeropuertos</Link></li>
           <li aria-hidden="true">›</li>
@@ -107,17 +107,17 @@ export default async function SpanishAirportPage({ params }: SpanishAirportPageP
         </ol>
       </nav>
 
-      <section className="relative overflow-hidden pb-7 pt-9 md:pb-9 md:pt-12">
+      <section className="relative overflow-hidden pb-3 pt-4 sm:pb-7 sm:pt-9 md:pb-9 md:pt-12">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-3xl px-4 sm:px-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-green-500">Calculadora gratuita · {location.code} · {copy.city}</p>
-          <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">¿A qué hora debo salir hacia <span className="text-green-500">{copy.shortName} ({location.code})?</span></h1>
-          <p className="mt-5 text-base leading-relaxed text-zinc-300">{copy.directAnswer}</p>
+          <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">¿A qué hora debo salir hacia <span className="text-green-500">{copy.shortName} ({location.code})?</span></h1>
+          <p className="mt-3 text-sm leading-relaxed text-zinc-300 sm:mt-5 sm:text-base">{copy.directAnswer}</p>
           <p className="mt-3 text-xs text-zinc-500">Información revisada el {new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${location.reviewedOn}T12:00:00Z`))}.</p>
         </div>
       </section>
 
-      <section id="calculadora" className="border-t border-zinc-800 pb-10 pt-5">
+      <section id="calculadora" className="border-t border-zinc-800 pb-8 pt-2 sm:pb-10 sm:pt-5">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <AirportCalculator
             initialAirport={location.calculatorDestination}

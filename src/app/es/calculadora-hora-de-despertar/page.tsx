@@ -101,7 +101,7 @@ export default function SpanishWakeUpCalculatorPage() {
         />
       ))}
 
-      <nav aria-label="Migas de pan" className="border-b border-zinc-800/50">
+      <nav aria-label="Migas de pan" className="hidden border-b border-zinc-800/50 sm:block">
         <ol className="mx-auto flex max-w-3xl items-center gap-1.5 px-4 py-2.5 text-xs text-zinc-400 sm:px-6">
           <li><Link href={spanishPath} className="hover:text-white">OnTimer</Link></li>
           <li aria-hidden="true">›</li>
@@ -109,16 +109,16 @@ export default function SpanishWakeUpCalculatorPage() {
         </ol>
       </nav>
 
-      <section className="relative overflow-hidden pb-8 pt-10 md:pb-10 md:pt-14">
+      <section className="relative overflow-hidden pb-3 pt-4 sm:pb-8 sm:pt-10 md:pb-10 md:pt-14">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-3xl px-4 sm:px-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-green-500 sm:text-sm">Calculadora gratuita · Sin registro</p>
-          <h1 className="text-4xl font-black tracking-tight text-white sm:text-6xl">¿A qué hora debo <span className="text-green-500">despertarme?</span></h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-zinc-300 sm:text-lg">Indica cuándo necesitas llegar, cuánto tardas en prepararte y el tiempo de viaje. La calculadora trabaja hacia atrás para darte una hora concreta de despertar.</p>
+          <h1 className="text-3xl font-black tracking-tight text-white sm:text-6xl">¿A qué hora debo <span className="text-green-500">despertarme?</span></h1>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:mt-4 sm:text-lg">Indica cuándo necesitas llegar, cuánto tardas en prepararte y el tiempo de viaje. La calculadora trabaja hacia atrás para darte una hora concreta de despertar.</p>
         </div>
       </section>
 
-      <section id="calculadora" className="border-t border-zinc-800 pb-10 pt-5">
+      <section id="calculadora" className="border-t border-zinc-800 pb-8 pt-2 sm:pb-10 sm:pt-5">
         <div className="mx-auto max-w-5xl px-4 sm:px-6"><WakeUpCalculator locale="es" /></div>
       </section>
 

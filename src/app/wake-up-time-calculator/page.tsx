@@ -104,7 +104,7 @@ export default function WakeUpTimeCalculatorPage() {
       />
 
       {/* ── BREADCRUMBS ── */}
-      <nav aria-label="Breadcrumb" className="border-b border-zinc-800/50 bg-zinc-950">
+      <nav aria-label="Breadcrumb" className="hidden border-b border-zinc-800/50 bg-zinc-950 sm:block">
         <div className="mx-auto max-w-3xl px-4 py-2.5 sm:px-6">
           <ol className="flex items-center gap-1.5 text-xs text-zinc-400">
             <li>
@@ -123,24 +123,24 @@ export default function WakeUpTimeCalculatorPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden pb-5 pt-9 md:pt-12">
+      <section className="relative overflow-hidden pb-3 pt-4 sm:pb-5 sm:pt-9 md:pt-12">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-green-500 sm:text-sm">
             Free Wake-Up Time Calculator · No Sign-Up Required
           </p>
-          <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
+          <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
             Wake-Up Time{" "}
             <span className="text-green-500">Calculator</span>
           </h1>
-          <p className="mt-2.5 max-w-xl text-base leading-relaxed text-zinc-400">
+          <p className="mt-2.5 max-w-xl text-sm leading-relaxed text-zinc-400 sm:text-base">
             Calculate what time to wake up based on your arrival time, travel time, and
             how long you need to get ready.
           </p>
           <p className="mt-3 max-w-xl text-sm text-zinc-400">
             Use this wake-up time calculator to determine exactly when you should wake up based on your arrival time, travel time, your morning routine, and an extra buffer.
           </p>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
+          <div className="mt-4 hidden flex-wrap items-center gap-3 sm:flex">
             <a
               href="#calculator"
               className="inline-flex items-center gap-2 rounded-full bg-green-500 px-5 py-2 text-sm font-semibold text-black transition-colors hover:bg-green-400"
@@ -158,7 +158,7 @@ export default function WakeUpTimeCalculatorPage() {
       </section>
 
       {/* ── CALCULATOR ── */}
-      <section id="calculator" className="border-t border-zinc-800 py-6 md:py-8">
+      <section id="calculator" className="border-t border-zinc-800 pb-6 pt-2 sm:py-6 md:py-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <WakeUpCalculator />
         </div>

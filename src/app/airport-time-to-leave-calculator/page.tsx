@@ -146,7 +146,7 @@ export default function AirportTimeToLeaveCalculator() {
       />
 
       {/* ── BREADCRUMBS ── */}
-      <nav aria-label="Breadcrumb" className="border-b border-zinc-800/50 bg-zinc-950">
+      <nav aria-label="Breadcrumb" className="hidden border-b border-zinc-800/50 bg-zinc-950 sm:block">
         <div className="mx-auto max-w-3xl px-4 py-2.5 sm:px-6">
           <ol className="flex items-center gap-1.5 text-xs text-zinc-400">
             <li>
@@ -184,7 +184,7 @@ export default function AirportTimeToLeaveCalculator() {
       </section>
 
       {/* ── CALCULATOR ── */}
-      <section id="calculator" className="border-t border-zinc-800 pb-6 pt-3 md:pb-8">
+      <section id="calculator" className="border-t border-zinc-800 pb-6 pt-2 sm:pt-3 md:pb-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <AirportCalculator genericRedesign airportOptions={curatedAirportOptions} />
           <p className="mt-5 text-center text-sm text-zinc-400">

@@ -19,6 +19,7 @@ import type { SiteLocale } from "@/lib/i18n";
 type TravelMode = "DRIVE" | "WALK" | "TRANSIT";
 type PlanningMode = "today" | "future";
 type TrafficBasis = "live" | "predicted" | "scheduled" | "none";
+type JourneyPurpose = "arrival" | "pickup" | "dropoff";
 
 interface CalculatorResult {
   leaveTime: Date;
@@ -101,6 +102,101 @@ const calculatorCopy = {
     update: "Actualizar hora de salida", detailsChanged: "Los datos del trayecto han cambiado", updateNeeded: "Actualiza el resultado antes de guardarlo en tu calendario.",
     resultCurrent: "Este resultado coincide con los datos del trayecto.", appStore: "Descargar OnTimer gratis", addGoogle: "Añadir a Google Calendar",
     calendarDetails: "Creado con OnTimer. Recibe alarmas automáticas para los eventos de tu calendario: https://www.ontimer.app",
+  },
+} as const;
+
+const journeyPurposeCopy = {
+  en: {
+    label: "Planning for",
+    options: {
+      arrival: "Arrive",
+      pickup: "Pick up",
+      dropoff: "Drop off",
+    },
+    purpose: {
+      arrival: {
+        heading: "Plan your trip",
+        destination: "Destination",
+        destinationPlaceholder: "Where are you going?",
+        destinationRequired: "Enter a destination.",
+        date: "Arrival date",
+        time: "Arrive by",
+        adjustHint: "Buffer, parking, or travel time",
+        prepTime: "Parking / walk-in time",
+        prepSummary: "parking / walk-in",
+        eventPrefix: "Leave for",
+      },
+      pickup: {
+        heading: "Plan a pickup",
+        destination: "Pickup location",
+        destinationPlaceholder: "Where are you picking them up?",
+        destinationRequired: "Enter a pickup location.",
+        date: "Pickup date",
+        time: "Pickup time",
+        adjustHint: "Buffer, parking, waiting, or travel time",
+        prepTime: "Parking / waiting time",
+        prepSummary: "parking / waiting",
+        eventPrefix: "Leave to pick up at",
+      },
+      dropoff: {
+        heading: "Plan a drop-off",
+        destination: "Drop-off location",
+        destinationPlaceholder: "Where are you dropping them off?",
+        destinationRequired: "Enter a drop-off location.",
+        date: "Drop-off date",
+        time: "Drop-off time",
+        adjustHint: "Buffer, handoff, or travel time",
+        prepTime: "Drop-off / handoff time",
+        prepSummary: "drop-off / handoff",
+        eventPrefix: "Leave to drop off at",
+      },
+    },
+  },
+  es: {
+    label: "Planifica",
+    options: {
+      arrival: "Llegar",
+      pickup: "Recoger",
+      dropoff: "Dejar",
+    },
+    purpose: {
+      arrival: {
+        heading: "Planifica tu trayecto",
+        destination: "Destino",
+        destinationPlaceholder: "¿Adónde vas?",
+        destinationRequired: "Indica un destino.",
+        date: "Fecha de llegada",
+        time: "Llegar antes de",
+        adjustHint: "Margen, aparcamiento o viaje",
+        prepTime: "Tiempo para aparcar / entrar",
+        prepSummary: "para aparcar / entrar",
+        eventPrefix: "Salir hacia",
+      },
+      pickup: {
+        heading: "Planifica una recogida",
+        destination: "Lugar de recogida",
+        destinationPlaceholder: "¿Dónde vas a recogerle?",
+        destinationRequired: "Indica un lugar de recogida.",
+        date: "Fecha de recogida",
+        time: "Listo para recoger a las",
+        adjustHint: "Margen, espera, aparcamiento o viaje",
+        prepTime: "Tiempo para aparcar / esperar",
+        prepSummary: "para aparcar / esperar",
+        eventPrefix: "Salir para recoger en",
+      },
+      dropoff: {
+        heading: "Planifica un traslado",
+        destination: "Lugar de destino",
+        destinationPlaceholder: "¿Dónde vas a dejarle?",
+        destinationRequired: "Indica el lugar de destino.",
+        date: "Fecha del traslado",
+        time: "Debe llegar antes de",
+        adjustHint: "Margen, acompañamiento o viaje",
+        prepTime: "Tiempo para dejarle / acompañarle",
+        prepSummary: "para dejarle / acompañarle",
+        eventPrefix: "Salir para dejarle en",
+      },
+    },
   },
 } as const;
 
@@ -251,8 +347,10 @@ function defaultArrival() {
 
 export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLocale }) {
   const copy = calculatorCopy[locale];
+  const journeyCopy = journeyPurposeCopy[locale];
 
   // Form state
+  const [journeyPurpose, setJourneyPurpose] = useState<JourneyPurpose>("arrival");
   const [today, setToday] = useState("");
   const [destination, setDestination] = useState("");
   const [origin, setOrigin] = useState("");
@@ -285,11 +383,13 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
   const resultPanelRef = useRef<HTMLDivElement>(null);
 
   // Derived
+  const purposeCopy = journeyCopy.purpose[journeyPurpose];
   const hasOrigin = origin.trim().length >= 2 || currentLocation !== null;
   const hasDestination = destination.trim().length >= 2;
   const isFormValid = hasOrigin && hasDestination && arrivalDate.length > 0 && arrivalTime.length > 0;
   const hasRouteInputs = origin.trim().length >= 2 && destination.trim().length >= 2;
   const currentFingerprint = JSON.stringify({
+    journeyPurpose,
     origin: currentLocation ?? origin.trim(),
     destination: destination.trim(),
     arrivalDate,
@@ -322,6 +422,13 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
     localStorage.setItem(TRAVEL_MODE_KEY, mode);
   }
 
+  function handleJourneyPurposeChange(purpose: JourneyPurpose) {
+    setJourneyPurpose(purpose);
+    setError(null);
+    setFallbackNotice(null);
+    track("leave_planning_purpose_selected", { planning_purpose: purpose });
+  }
+
   function handleSwap() {
     const tmp = destination;
     setDestination(currentLocation ?? origin);
@@ -331,6 +438,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
     setLocationMessage(null);
     setError(null);
     setFallbackNotice(null);
+    track("leave_locations_swapped", { planning_purpose: journeyPurpose });
   }
 
   function handleOriginChange(value: string) {
@@ -388,7 +496,10 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
       formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
-    trackCalculatorStarted("leave_time", { travel_mode: travelMode });
+    trackCalculatorStarted("leave_time", {
+      planning_purpose: journeyPurpose,
+      travel_mode: travelMode,
+    });
     setError(null);
 
     const [year, month, day] = arrivalDate.split("-").map(Number);
@@ -460,10 +571,12 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
     setCalendarProvider(null);
     setSubmitAttempted(false);
     track("leave_calculator_used", {
+      planning_purpose: journeyPurpose,
       travel_mode: travelMode,
       travel_source: travelSource,
     });
     trackCalculatorCompleted("leave_time", {
+      planning_purpose: journeyPurpose,
       travel_mode: travelMode,
       travel_source: travelSource,
     });
@@ -474,7 +587,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
 
   const leaveCalendarEvent = result
     ? {
-        title: `${copy.leaveFor} ${destination.split(",")[0] || copy.destinationFallback}`,
+        title: `${purposeCopy.eventPrefix} ${destination.split(",")[0] || copy.destinationFallback}`,
         start: result.leaveTime,
         details: copy.calendarDetails,
         location: destination || undefined,
@@ -487,10 +600,26 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
       <div className={`grid min-w-0 gap-6 ${result ? "lg:grid-cols-2 lg:gap-8" : "max-w-2xl"}`}>
         <div ref={formRef} className="min-w-0 scroll-mt-28 space-y-5">
           <div>
-            <h2 className="text-xl font-bold text-white">{locale === "es" ? "Planifica tu trayecto" : "Plan your trip"}</h2>
-            <p className="mt-1 text-sm text-zinc-400">
-              {locale === "es" ? "Los cuatro datos necesarios están aquí." : "Everything needed for your leave time is here."}
-            </p>
+            <h2 className="text-xl font-bold text-white">{purposeCopy.heading}</h2>
+            <div className="mt-3">
+              <div className="grid grid-cols-3 gap-2" role="group" aria-label={journeyCopy.label}>
+                {(Object.keys(journeyCopy.options) as JourneyPurpose[]).map((purpose) => (
+                  <button
+                    key={purpose}
+                    type="button"
+                    onClick={() => handleJourneyPurposeChange(purpose)}
+                    aria-pressed={journeyPurpose === purpose}
+                    className={`min-h-11 min-w-0 whitespace-nowrap rounded-full px-2 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 active:bg-green-400 active:text-black sm:text-sm ${
+                      journeyPurpose === purpose
+                        ? "bg-green-500 text-black"
+                        : "border border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white"
+                    }`}
+                  >
+                    {journeyCopy.options[purpose]}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -512,7 +641,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
                   type="button"
                   onClick={handleUseCurrentLocation}
                   disabled={locationStatus === "loading"}
-                  className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-green-400 transition-colors hover:bg-green-500/10 hover:text-green-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-wait disabled:text-zinc-500"
+                  className="mt-1 inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-green-400 transition-colors hover:bg-green-500/10 hover:text-green-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-wait disabled:text-zinc-500"
                 >
                   <LocationIcon />
                   {locationStatus === "loading" ? copy.findingLocation : copy.useLocation}
@@ -528,7 +657,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
               )}
             </div>
 
-            <div className="relative h-7" data-swap-control>
+            <div className="relative hidden h-7 sm:block" data-swap-control>
               <span className="absolute inset-x-0 top-1/2 h-px bg-zinc-800" aria-hidden="true" />
               <button
                 type="button"
@@ -542,24 +671,24 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
             </div>
 
             <div>
-              <FieldLabel htmlFor="leave-destination">{copy.destination}</FieldLabel>
+              <FieldLabel htmlFor="leave-destination">{purposeCopy.destination}</FieldLabel>
               <PlaceAutocomplete
                 id="leave-destination"
                 value={destination}
                 onChange={handleDestinationChange}
-                placeholder={copy.whereGoing}
+                placeholder={purposeCopy.destinationPlaceholder}
                 inputClassName={inputClass}
                 includeAirports
               />
               {submitAttempted && !hasDestination && (
-                <p className="mt-1.5 text-xs text-red-400" role="alert">{copy.destinationRequired}</p>
+                <p className="mt-1.5 text-xs text-red-400" role="alert">{purposeCopy.destinationRequired}</p>
               )}
             </div>
           </div>
 
           <div className="grid min-w-0 gap-3 sm:grid-cols-2">
             <CalculatorDateField
-              label={copy.arrivalDate}
+              label={purposeCopy.date}
               value={arrivalDate}
               today={today}
               inputClassName={inputClass}
@@ -567,7 +696,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
               locale={locale}
             />
             <div className="min-w-0">
-              <FieldLabel htmlFor="leave-arrival-time">{copy.arriveBy}</FieldLabel>
+              <FieldLabel htmlFor="leave-arrival-time">{purposeCopy.time}</FieldLabel>
               <input id="leave-arrival-time" type="time" value={arrivalTime} onChange={(e) => setArrivalTime(e.target.value)} className={timeInputClass} />
             </div>
           </div>
@@ -595,7 +724,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
             >
               <span>
                 <span className="block font-semibold">{showAssumptions ? copy.hideAdjustments : copy.adjustAssumptions}</span>
-                {!showAssumptions && <span className="mt-0.5 block text-xs font-normal text-zinc-500">{copy.adjustHint}</span>}
+                {!showAssumptions && <span className="mt-0.5 block text-xs font-normal text-zinc-500">{purposeCopy.adjustHint}</span>}
               </span>
               <span className={`flex-shrink-0 text-xs text-zinc-500 transition-transform duration-200 ${showAssumptions ? "rotate-180" : ""}`}>▾</span>
             </button>
@@ -607,7 +736,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
                   <PillSelector options={[0, 5, 10, 15, 20, 30]} value={buffer} onChange={setBuffer} locale={locale} />
                 </div>
                 <div>
-                  <FieldLabel>{copy.parkingTime} <span className="font-normal text-zinc-500">{copy.optional}</span></FieldLabel>
+                  <FieldLabel>{purposeCopy.prepTime} <span className="font-normal text-zinc-500">{copy.optional}</span></FieldLabel>
                   <PillSelector options={[0, 5, 10, 15, 20, 30]} value={prepTime} onChange={setPrepTime} locale={locale} />
                 </div>
                 <div>
@@ -673,7 +802,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
                   {result.travelSource === "google" ? ` · ${trafficLabel(result.trafficBasis, result.planningMode, locale)}` : ""}
                 </p>
                 <p className="mt-0.5 text-sm text-zinc-400">
-                  {[result.bufferMinutes > 0 ? `${result.bufferMinutes} min ${copy.buffer}` : null, result.prepMinutes > 0 ? `${result.prepMinutes} min ${copy.parkingWalkIn}` : null].filter(Boolean).join(" · ") || copy.noExtraBuffer}
+                  {[result.bufferMinutes > 0 ? `${result.bufferMinutes} min ${copy.buffer}` : null, result.prepMinutes > 0 ? `${result.prepMinutes} min ${purposeCopy.prepSummary}` : null].filter(Boolean).join(" · ") || copy.noExtraBuffer}
                 </p>
               </div>
 
@@ -696,7 +825,8 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
                   postCalendarBody={copy.alarmBody}
                   locale={locale}
                   appLocation="leave_calculator_result"
-                  eventPreview={{ title: leaveCalendarEvent?.title ?? `${copy.leaveFor} ${copy.destinationFallback}`, startLabel: fmtTime(result.leaveTime, locale) }}
+                  analyticsContext={{ planning_purpose: journeyPurpose }}
+                  eventPreview={{ title: leaveCalendarEvent?.title ?? `${purposeCopy.eventPrefix} ${copy.destinationFallback}`, startLabel: fmtTime(result.leaveTime, locale) }}
                 />
               )}
             </div>

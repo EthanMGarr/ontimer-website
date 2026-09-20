@@ -62,7 +62,7 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
         />
       ))}
 
-      <nav aria-label="Breadcrumb" className="border-b border-zinc-800/50 bg-zinc-950">
+      <nav aria-label="Breadcrumb" className="hidden border-b border-zinc-800/50 bg-zinc-950 sm:block">
         <div className="mx-auto max-w-5xl px-4 py-2.5 sm:px-6">
           <ol className="flex flex-wrap items-center gap-1.5 text-xs text-zinc-400">
             {model.breadcrumbs.map((breadcrumb) => (
@@ -78,7 +78,7 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
         </div>
       </nav>
 
-      <section className="relative overflow-hidden pb-5 pt-6 md:pt-9">
+      <section className="relative overflow-hidden pb-3 pt-4 sm:pb-5 sm:pt-6 md:pt-9">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -94,7 +94,7 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
             {model.hero.titlePrefix}{" "}
             <span className="text-green-500">{model.hero.titleHighlight}</span>
           </h1>
-          <p className="mt-4 max-w-3xl text-base leading-relaxed text-zinc-300">
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-300 sm:mt-4 sm:text-base">
             {model.hero.description}
           </p>
         </div>
@@ -103,7 +103,7 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
       <section
         id="calculator"
         data-location-section="calculator"
-        className="border-t border-zinc-800 pb-8 pt-4"
+        className="border-t border-zinc-800 pb-8 pt-2 sm:pt-4"
       >
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           {model.planner}

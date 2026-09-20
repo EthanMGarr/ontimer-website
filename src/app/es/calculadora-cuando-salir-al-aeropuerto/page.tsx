@@ -100,7 +100,7 @@ export default function SpanishAirportCalculatorPage() {
         <script key={`${item["@type"]}-${index}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(item) }} />
       ))}
 
-      <nav aria-label="Migas de pan" className="border-b border-zinc-800/50">
+      <nav aria-label="Migas de pan" className="hidden border-b border-zinc-800/50 sm:block">
         <div className="mx-auto max-w-5xl px-4 py-2.5 text-xs text-zinc-400 sm:px-6">
           <ol className="flex items-center gap-1.5">
             <li><Link href="/es/calculadora-a-que-hora-salir" className="hover:text-white">OnTimer</Link></li>
@@ -110,16 +110,16 @@ export default function SpanishAirportCalculatorPage() {
         </div>
       </nav>
 
-      <section className="relative overflow-hidden pb-6 pt-8 md:pb-8 md:pt-12">
+      <section className="relative overflow-hidden pb-3 pt-4 sm:pb-6 sm:pt-8 md:pb-8 md:pt-12">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-3xl px-4 sm:px-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-green-500 sm:text-sm">Planificador gratuito · Sin registro</p>
-          <h1 className="text-4xl font-black tracking-tight text-white sm:text-6xl">¿A qué hora debo salir para <span className="text-green-500">llegar a mi vuelo?</span></h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-zinc-300 sm:text-lg">Introduce la hora del vuelo, el punto de partida y el aeropuerto. OnTimer calcula una hora de salida con el trayecto, la seguridad, el equipaje, el aparcamiento y el acceso a la terminal.</p>
+          <h1 className="text-3xl font-black tracking-tight text-white sm:text-6xl">¿A qué hora debo salir para <span className="text-green-500">llegar a mi vuelo?</span></h1>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:mt-4 sm:text-lg">Introduce la hora del vuelo, el punto de partida y el aeropuerto. OnTimer calcula una hora de salida con el trayecto, la seguridad, el equipaje, el aparcamiento y el acceso a la terminal.</p>
         </div>
       </section>
 
-      <section id="calculadora" className="border-t border-zinc-800 pb-10 pt-5">
+      <section id="calculadora" className="border-t border-zinc-800 pb-8 pt-2 sm:pb-10 sm:pt-5">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <AirportCalculator
             genericRedesign

@@ -69,6 +69,16 @@ const faqItems = [
       "Back-calculate from the meeting or appointment start time. Subtract travel time, then add buffer for parking, check-in, or navigating a new building. For important appointments, a 10 to 15 minute buffer is a reasonable target. For client meetings or job interviews, plan to arrive at least 10 minutes early. Enter the address and arrival time into the calculator to get a specific departure time.",
   },
   {
+    question: "What time should I leave to pick someone up?",
+    answer:
+      "Use the time the person expects to be ready, then subtract the traffic-aware travel time from your starting point and any buffer for parking, waiting, or finding the pickup location. Select Pick up in the calculator to use pickup-specific labels and save the result to your calendar.",
+  },
+  {
+    question: "What time should I leave to drop someone off on time?",
+    answer:
+      "Start with when the person needs to arrive. Subtract the traffic-aware travel time, then subtract time for parking, unloading, walking them inside, or completing the handoff. Select Drop off in the calculator to calculate and save the leave time.",
+  },
+  {
     question: "Can OnTimer automatically remind me when to leave?",
     answer:
       "Yes. For any calendar event with a location, OnTimer calculates when you need to leave based on travel time and traffic, then sends you an alert at the right time. No manual calculation needed.",
@@ -119,7 +129,7 @@ export default function WhatTimeShouldILeavePage() {
       />
 
       {/* ── BREADCRUMBS ── */}
-      <nav aria-label="Breadcrumb" className="border-b border-zinc-800/50 bg-zinc-950">
+      <nav aria-label="Breadcrumb" className="hidden border-b border-zinc-800/50 bg-zinc-950 sm:block">
         <div className="mx-auto max-w-3xl px-4 py-2.5 sm:px-6">
           <ol className="flex items-center gap-1.5 text-xs text-zinc-400">
             <li>
@@ -138,17 +148,18 @@ export default function WhatTimeShouldILeavePage() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden pb-5 pt-7 md:pt-10">
+      <section className="relative overflow-hidden pb-3 pt-4 sm:pb-5 sm:pt-7 md:pt-10">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-green-500 sm:text-sm">
-            Free Departure Time Calculator · No Sign-Up Required
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-green-500 sm:mb-2 sm:text-sm">
+            <span className="sm:hidden">Free departure time calculator</span>
+            <span className="hidden sm:inline">Free Departure Time Calculator · No Sign-Up Required</span>
           </p>
-          <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
+          <h1 className="text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl">
             What Time Should{" "}
             <span className="text-green-500">I Leave?</span>
           </h1>
-          <p className="mt-3 max-w-2xl text-base leading-relaxed text-zinc-400">
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-400 sm:mt-3 sm:text-base">
             Going somewhere? This free calculator uses traffic-aware routing, travel mode, arrival
             time, and your buffer to tell you when to leave—no sign-up required.
           </p>
@@ -156,7 +167,7 @@ export default function WhatTimeShouldILeavePage() {
       </section>
 
       {/* ── CALCULATOR ── */}
-      <section id="calculator" className="border-t border-zinc-800 pb-8 pt-4 md:pb-10 md:pt-6">
+      <section id="calculator" className="border-t border-zinc-800 pb-8 pt-2 sm:pt-4 md:pb-10 md:pt-6">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <LeaveTimeCalculator />
         </div>
@@ -173,7 +184,7 @@ export default function WhatTimeShouldILeavePage() {
               buffer to give you a personalized leave time.
             </p>
             <p className="mt-3 text-xs leading-relaxed text-zinc-500">
-              Useful for commutes, meetings, appointments, school pickup, events, and airport runs.
+              Useful for commutes, meetings, appointments, pickups, drop-offs, events, and airport runs.
             </p>
           </div>
         </div>
@@ -394,35 +405,46 @@ export default function WhatTimeShouldILeavePage() {
         </div>
       </section>
 
-      {/* ── SCENARIO: Arrive On Time ── */}
+      {/* ── SCENARIOS: Pickup and drop-off ── */}
       <section className="border-t border-zinc-800 py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            What Time Should I Leave to Arrive On Time?
+            What Time Should I Leave to Pick Someone Up?
           </h2>
           <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
             <p>
-              The formula for arrival planning is straightforward: departure time equals arrival
-              time minus travel time minus buffer. The challenge is using the right inputs.
+              Start with the time the person expects to be ready, not simply when their class,
+              train, appointment, or event is scheduled to end. Subtract the traffic-aware travel
+              time from your starting point, then subtract any time you want for parking, waiting,
+              or finding the pickup location.
             </p>
             <p>
-              Traffic is the largest variable. Travel time at 7:30 AM differs from 9 AM, which
-              differs from noon. Standard route checkers give you a current snapshot, but departure
-              planning requires a traffic-adjusted estimate for the specific window you are
-              targeting. The calculator on this page uses Google&apos;s Routes API to account for
-              predicted traffic at your planned departure time.
+              Select <strong className="font-semibold text-zinc-200">Pick up</strong> in the
+              calculator above, enter the pickup location and when they expect to be ready, and add
+              a waiting or parking buffer if the handoff may take extra time. For a flight arrival,
+              use the specialized{" "}
+              <Link href="/airport-pickup-time-calculator" className="text-green-500 hover:text-green-400">
+                Airport Pickup Time Calculator
+              </Link>{" "}
+              so deplaning, bags, immigration, and the meeting point are included.
+            </p>
+
+            <h3 className="pt-6 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              What Time Should I Leave to Drop Someone Off on Time?
+            </h3>
+            <p>
+              Work backward from when the person needs to arrive. Subtract the travel time for that
+              part of the day, then subtract time for unloading, walking them inside, or completing
+              the handoff. Select <strong className="font-semibold text-zinc-200">Drop off</strong>{" "}
+              above to make the destination, arrival deadline, and handoff time explicit.
             </p>
             <p>
-              The buffer matters more than people expect. A 10-minute buffer handles most common
-              delays: a slow traffic light, a car looking for parking ahead of you, a longer walk
-              from the parking structure. You almost never regret a buffer. You frequently regret
-              not having one.
-            </p>
-            <p>
-              Departure timing is harder than it looks because small delays compound quickly. Most
-              people who run late did not plan to cut it close. They just ran through the math too
-              optimistically. Build the buffer in at the start and arrival planning becomes much
-              more reliable.
+              This works for school or daycare drop-off, a train or bus station, an appointment, or
+              an event. If you are taking someone to a flight, use the{" "}
+              <Link href="/airport-time-to-leave-calculator" className="text-green-500 hover:text-green-400">
+                Airport Time-to-Leave Calculator
+              </Link>{" "}
+              to include airline check-in, security, baggage, parking, and terminal time.
             </p>
           </div>
         </div>

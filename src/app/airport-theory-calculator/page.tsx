@@ -120,7 +120,7 @@ export default function AirportTheoryPage() {
       <main className="min-h-screen bg-zinc-950 text-white">
 
         {/* ── Hero ── */}
-        <section className="relative overflow-hidden border-b border-zinc-800 bg-gradient-to-b from-red-950/40 to-zinc-950 px-4 py-12 text-center sm:py-16">
+        <section className="relative overflow-hidden border-b border-zinc-800 bg-gradient-to-b from-red-950/40 to-zinc-950 px-4 py-8 text-center sm:py-16">
           <div className="mx-auto max-w-3xl">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-red-900/60 bg-red-950/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-red-400">
               ⚠️ Warning: This is a terrible idea
@@ -136,7 +136,7 @@ export default function AirportTheoryPage() {
         </section>
 
         {/* ── Calculator ── */}
-        <section className="px-4 py-12 sm:py-16">
+        <section className="px-4 py-8 sm:py-16">
           <div className="mx-auto max-w-5xl">
             <AirportTheoryCalculator />
           </div>
