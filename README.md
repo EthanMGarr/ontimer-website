@@ -164,6 +164,8 @@ The core marketing pages build without external credentials. Production integrat
   `src/lib/analytics-config.ts`; deployment environment variables do not override it.
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` — spam-report Turnstile widget
 - `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` — server-side spam reporting
+- `TICKETMASTER_API_KEY` — server-only event discovery for approved venue/event Time To Leave pages; reviewed fixtures keep the first vertical slice usable when this is not configured locally
+- `TICKETMASTER_EVENTS_ENABLED` — optional server-side kill switch; set to `false`, `0`, `off`, or `disabled` to stop Ticketmaster requests and fall back to reviewed fixtures
 
 Store local values in `.env.local`; never commit secrets.
 

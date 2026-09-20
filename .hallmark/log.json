@@ -10,6 +10,16 @@
     "brief": "Six-airport pickup-intent pilot"
   },
   {
+    "date": "2026-09-20",
+    "scope": "page-family",
+    "macrostructure": "Map / Diagram",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "calm, utilitarian, reassuring",
+    "enrichment": "event timing diagram",
+    "brief": "Event-aware venue Time To Leave vertical slice"
+  },
+  {
     "date": "2026-09-11",
     "macrostructure": "Narrative Workflow",
     "theme": "custom",

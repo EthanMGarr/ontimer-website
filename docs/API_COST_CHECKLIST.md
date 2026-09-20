@@ -10,7 +10,7 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] Inputs have strict minimum, maximum, and enum validation.
 - [ ] User actions make at most one paid upstream request unless a retry is explicitly cost-justified.
 - [ ] Autocomplete is debounced, starts only after four meaningful characters while the field is focused and actively edited, gives pasted complete addresses a longer pause, cancels stale requests, and avoids Place Details calls unless needed.
-- [ ] Known structured destinations such as airports and cruise terminals use the local catalog before paid autocomplete.
+- [ ] Known structured destinations such as airports, cruise terminals, and curated event venues use the local catalog before paid autocomplete or destination geocoding.
 - [ ] Public autocomplete endpoints have a generous hourly per-IP ceiling that preserves normal use while bounding automated typing loops.
 - [ ] In-memory serverless caches are described as best-effort only, never as cross-instance cost controls.
 - [ ] Failure paths degrade to manual entry rather than multiplying paid requests.
@@ -26,6 +26,15 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] Enable provider-side request limits or alerts when offered.
 - [ ] Review provider usage after deployment and again before the first renewal.
 - [ ] Record the service and environment owning each production credential without storing the credential in documentation.
+
+## Event Provider Controls
+
+- [ ] Keep Ticketmaster credentials server-only and expose a provider kill switch that falls back to reviewed records.
+- [ ] Use the lower current documented request rate when Ticketmaster's FAQ and API reference disagree, and remain within the 5,000-request daily default.
+- [ ] Cache venue/event discovery for a reasonable service period rather than requesting provider data on every page view.
+- [ ] Preserve source IDs, source URLs, provider status, and freshness timestamps without logging raw responses or credentials.
+- [ ] Maintain a documented process to remove requested Ticketmaster Event Content within 24 hours and to disable or purge provider-backed content if access terminates.
+- [ ] Keep provider-backed pages out of the sitemap and non-indexable until commercial-use, storage, attribution, privacy, and legal-review gates are explicitly cleared.
 
 ## Google Cloud Controls
 
