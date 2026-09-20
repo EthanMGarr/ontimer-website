@@ -35,6 +35,9 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] Preserve source IDs, source URLs, provider status, and freshness timestamps without logging raw responses or credentials.
 - [ ] Maintain a documented process to remove requested Ticketmaster Event Content within 24 hours and to disable or purge provider-backed content if access terminates.
 - [ ] Keep provider-backed pages out of the sitemap and non-indexable until commercial-use, storage, attribution, privacy, and legal-review gates are explicitly cleared.
+- [ ] Emit one sanitized structured health record for each upstream attempt, including endpoint class, success/failure, latency, and available rate-limit headers; never log the API key or full query string.
+- [ ] Treat the structured `quotaUnits` field as an application-side request counter only. Reconcile it with Ticketmaster's provider dashboard because cached fetches and serverless logs cannot prove billable provider usage by themselves.
+- [ ] During the five-venue pilot, review provider usage and failures after deployment, after the first full six-hour refresh window, and weekly thereafter. Escalate repeated failures, unexpected request growth, or remaining quota below the operating threshold chosen by the account owner.
 
 ## Google Cloud Controls
 

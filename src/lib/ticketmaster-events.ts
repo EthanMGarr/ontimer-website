@@ -1,6 +1,14 @@
 import "server-only";
 
-import type { EventCategory, EventRecord, EventStatus, VenueProfile } from "@/lib/event-time-to-leave";
+import {
+  VENUE_PROFILES,
+  eventLocalDateIso,
+  isAncillaryEventListingTitle,
+  type EventCategory,
+  type EventRecord,
+  type EventStatus,
+  type VenueProfile,
+} from "@/lib/event-time-to-leave";
 import { ticketmasterProviderEnabled } from "@/lib/ticketmaster-config";
 import { ticketmasterDateTime } from "@/lib/ticketmaster-date-time";
 
@@ -62,9 +70,8 @@ function eventCategory(name?: string): EventCategory {
   return "other";
 }
 
-function eventSlug(title: string, venue: string, startDateTime: string, sourceId: string): string {
-  const date = startDateTime.slice(0, 10);
-  const readable = `${title}-${venue}-${date}`
+function eventSlug(title: string, venue: string, localDate: string, sourceId: string): string {
+  const readable = `${title}-${venue}-${localDate}`
     .toLowerCase()
     .replace(/&/g, " and ")
     .replace(/[^a-z0-9]+/g, "-")
@@ -73,17 +80,39 @@ function eventSlug(title: string, venue: string, startDateTime: string, sourceId
   return `${readable}--tm-${sourceId}`;
 }
 
+function normalizedVenueName(value: string): string {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function venueForTicketmasterEvent(raw: TicketmasterEvent): VenueProfile | null {
+  const providerVenue = raw._embedded?.venues?.[0];
+  const providerName = providerVenue?.name ? normalizedVenueName(providerVenue.name) : "";
+  if (!providerName) return null;
+  return VENUE_PROFILES.find((venue) => {
+    if (providerVenue?.state?.stateCode && providerVenue.state.stateCode !== venue.state) return false;
+    const names = [venue.name, ...venue.aliases].map(normalizedVenueName);
+    return names.includes(providerName);
+  }) || null;
+}
+
 function normalizeEvent(raw: TicketmasterEvent, venueProfile: VenueProfile, checkedAt: string): EventRecord | null {
   const id = raw.id?.trim();
   const title = raw.name?.trim();
   const venue = raw._embedded?.venues?.[0];
   const flags = raw.dates?.start;
   const startDateTime = flags?.dateTime;
-  if (!id || !title || !startDateTime) return null;
+  if (!id || !title || !startDateTime || isAncillaryEventListingTitle(title)) return null;
+  const localDate = flags.localDate || eventLocalDateIso(startDateTime, venue?.timezone || venueProfile.timezone);
 
   return {
     id: `ticketmaster-${id}`,
-    slug: eventSlug(title, venue?.name || venueProfile.name, startDateTime, id),
+    slug: eventSlug(title, venue?.name || venueProfile.name, localDate, id),
     title,
     category: eventCategory(raw.classifications?.[0]?.segment?.name),
     venueId: venueProfile.id,
@@ -115,11 +144,44 @@ async function ticketmasterFetch<T>(path: string, params: URLSearchParams, reval
   if (!key) throw new Error("TICKETMASTER_API_KEY is not configured");
   params.set("apikey", key);
   await waitForTicketmasterRateLimit();
-  const response = await fetch(`${API_ROOT}${path}?${params.toString()}`, {
-    next: { revalidate },
-    headers: { Accept: "application/json" },
-  });
-  if (!response.ok) throw new Error(`Ticketmaster request failed with HTTP ${response.status}`);
+  const startedAt = Date.now();
+  let response: Response;
+  try {
+    response = await fetch(`${API_ROOT}${path}?${params.toString()}`, {
+      next: { revalidate },
+      headers: { Accept: "application/json" },
+    });
+  } catch (error) {
+    console.error("[ticketmaster] request_failed", JSON.stringify({
+      endpoint: path,
+      quotaUnits: 1,
+      durationMs: Date.now() - startedAt,
+      error: error instanceof Error ? error.message : String(error),
+    }));
+    throw error;
+  }
+  const quota = {
+    limit: response.headers.get("x-rate-limit") || response.headers.get("ratelimit-limit"),
+    remaining: response.headers.get("x-rate-limit-available") || response.headers.get("ratelimit-remaining"),
+    over: response.headers.get("x-rate-limit-over"),
+  };
+  if (!response.ok) {
+    console.error("[ticketmaster] request_failed", JSON.stringify({
+      endpoint: path,
+      quotaUnits: 1,
+      status: response.status,
+      durationMs: Date.now() - startedAt,
+      quota,
+    }));
+    throw new Error(`Ticketmaster request failed with HTTP ${response.status}`);
+  }
+  console.info("[ticketmaster] request_succeeded", JSON.stringify({
+    endpoint: path,
+    quotaUnits: 1,
+    status: response.status,
+    durationMs: Date.now() - startedAt,
+    quota,
+  }));
   const data = await response.json() as T;
   const providerDate = response.headers.get("date");
   const parsedProviderDate = providerDate ? Date.parse(providerDate) : Number.NaN;
@@ -174,12 +236,17 @@ export async function listTicketmasterEvents(venue: VenueProfile): Promise<Event
     .filter((event): event is EventRecord => Boolean(event));
 }
 
-export async function getTicketmasterEventById(sourceEventId: string, venue: VenueProfile): Promise<EventRecord | null> {
+export async function getTicketmasterEventById(sourceEventId: string): Promise<EventRecord | null> {
   if (!isTicketmasterConfigured() || !/^[A-Za-z0-9_-]{3,80}$/.test(sourceEventId)) return null;
   const response = await ticketmasterFetch<TicketmasterEvent>(
     `/events/${encodeURIComponent(sourceEventId)}.json`,
     new URLSearchParams({ locale: "en-us" }),
     EVENT_REVALIDATE_SECONDS,
   );
+  const venue = venueForTicketmasterEvent(response.data);
+  if (!venue) {
+    console.warn("[ticketmaster] unsupported_event_venue", JSON.stringify({ sourceEventId }));
+    return null;
+  }
   return normalizeEvent(response.data, venue, response.checkedAt);
 }

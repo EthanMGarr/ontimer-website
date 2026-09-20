@@ -1,7 +1,7 @@
 # OnTimer Event-Aware Venue Time-to-Leave
 ## MVP Product + SEO + Data Plan for Codex
 
-**Status:** MetLife venue hub and usable event calculators are indexable as of 2026-09-20; reviewed fixture routes are in the sitemap and live provider events are crawlable from the hub. Provider/legal and event-retirement follow-up remain active operating requirements.
+**Status:** The five-venue experiment is implemented as of 2026-09-20 for MetLife Stadium, Yankee Stadium, Madison Square Garden, Barclays Center, and Citi Field. All five venue hubs are indexable and in the sitemap; usable provider events are crawlable from those hubs. Future events use venue-local dates in URLs, retired or non-actionable events are excluded from indexing, and sanitized provider health logs record success, failure, latency, and available quota headers. Provider-account quota review and legal follow-up remain operating requirements.
 **Primary goal:** Build and test event-aware venue Time-to-Leave pages using Ticketmaster Discovery API through a provider-neutral event model, with reviewed official fixtures as the providerless fallback.
 
 **Repository role:** Working implementation plan. Instructions in the original proposal have been converted into project gates and milestones; this document does not itself authorize deployment, provider enrollment, legal publication, or production data use.
@@ -865,7 +865,7 @@ Do not stop with a research report.
 - Added reviewed/provider duplicate reconciliation so the curated AC/DC record wins over Ticketmaster's differently punctuated `AC/DC - POWER UP TOUR 2026` listing instead of showing two choices for the same event.
 - Added a static MetLife catalog entry with common aliases and coordinates so the destination requires no Google Places or geocoding request.
 - Kept both new route families out of the sitemap and `noindex, follow` while production credential, quota, lifecycle, legal/content, and indexing gates remain open.
-- Provisional next venues remain Yankee Stadium, Madison Square Garden, Barclays Center, and Citi Field, pending live coverage and timestamp-quality review with an approved credential.
+- Selected Yankee Stadium, Madison Square Garden, Barclays Center, and Citi Field as the next four venues after live coverage and timestamp-quality review with the approved credential.
 
 ---
 
@@ -898,6 +898,16 @@ Once the first event works:
 - implement event lifecycle logic
 
 Expand to first 5 venues.
+
+## Phase 2 launch implementation — 2026-09-20
+
+- Generalized the venue hub into one reviewed, data-driven route and launched the first five venue profiles: MetLife Stadium, Yankee Stadium, Madison Square Garden, Barclays Center, and Citi Field.
+- Added an indexable directory linking all five hubs and added every venue hub to the sitemap.
+- Confirmed live Ticketmaster coverage across all five venues. Pre-launch browser QA found and removed ancillary inventory such as premium seating, season-ticket memberships, parking products, VIP packages, and venue tours from the event choices.
+- Event slugs now use the venue-local calendar date instead of the UTC date. A provider-backed request using an older UTC-date slug permanently redirects to the current canonical local-date URL.
+- Future, scheduled events with precise times remain `index, follow`. Past, cancelled, postponed, rescheduled, TBA, TBD, and otherwise unusable event records are retained only as needed for a safe explanatory state and are `noindex, follow`; they do not enter venue event lists or the sitemap.
+- Ticketmaster requests emit sanitized structured health logs for success/failure, endpoint class, latency, one quota unit per upstream attempt, and any quota headers returned by the provider. No keys, query strings, user locations, or raw provider payloads are logged.
+- The implementation continues to use six-hour event revalidation and 24-hour venue revalidation rather than requesting provider data on every visitor page view. A durable event database and differential scheduler remain unnecessary for this five-venue measurement phase unless cache behavior, provider availability, or page volume shows a need.
 
 ---
 

@@ -26,6 +26,9 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Internal links point directly to canonical routes and do not depend on redirects.
 - [ ] Every published page in a programmatic or recurring-answer cluster is reachable through a normal crawlable link from its hub; do not create or link placeholder pages merely to fill a catalog.
 - [ ] Indexable event calculators require a confirmed specific start time, a self-canonical, Event schema, and a normal crawlable link from an indexable venue hub. Put reviewed fixture pages in the sitemap; provider-discovered pages may be crawled from the hub but still require retirement and removal handling after the event.
+- [ ] Event URL dates use the venue's local calendar date, not the UTC date. When URL generation changes, permanently redirect a resolvable legacy provider URL to the new self-canonical URL rather than serving duplicate pages.
+- [ ] Event hubs and pages exclude ancillary ticket inventory such as parking, premium seating, season-ticket memberships, VIP packages, access products, and venue tours unless the listing is itself the real event a visitor travels to.
+- [ ] After an event starts, remove it from venue choices and the sitemap and return `noindex, follow` if the provider-backed page remains available for status or explanatory context. Do not redirect it to a venue hub unless that destination is genuinely equivalent.
 - [ ] URLs emitted only in structured data (including breadcrumb `item` URLs) also resolve to canonical, indexable pages rather than 404s or avoidable redirects.
 - [ ] Redirects are permanent only when the destination is genuinely canonical.
 - [ ] Redirect destinations use the canonical `www.ontimer.app` hostname and avoid redirect chains.

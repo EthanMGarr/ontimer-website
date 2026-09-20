@@ -5,7 +5,7 @@ import { MEDICATION_TIMING_PROFILES } from "@/lib/medication-timing-profiles";
 import { localizedAlternates, spanishAirportSlugs } from "@/lib/i18n";
 import { UNTIL_EVENTS } from "@/lib/until";
 import { airportPickupProfiles, getAirportPickupPath } from "@/lib/airport-pickup-profiles";
-import { REVIEWED_EVENT_FIXTURES } from "@/lib/event-time-to-leave";
+import { REVIEWED_EVENT_FIXTURES, VENUE_PROFILES, isEventIndexable } from "@/lib/event-time-to-leave";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.ontimer.app";
@@ -143,6 +143,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/time-calculators`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/venue-time-to-leave-calculators`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
       priority: 0.8,
     },
     {
@@ -398,14 +404,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const eventRoutes: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/venues/metlife-stadium/time-to-leave`,
+    ...VENUE_PROFILES.map((venue) => ({
+      url: `${baseUrl}/venues/${venue.slug}/time-to-leave`,
       lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 0.8,
-    },
+    })),
     ...REVIEWED_EVENT_FIXTURES
-      .filter((event) => event.status === "scheduled" && new Date(event.startDateTime).getTime() > Date.now())
+      .filter((event) => isEventIndexable(event))
       .map((event) => ({
         url: `${baseUrl}/events/${event.slug}/when-to-leave`,
         lastModified: new Date(event.lastVerifiedAt),

@@ -5,6 +5,7 @@ import {
   cruiseLocations,
   DirectoryShell,
 } from "@/components/CalculatorDirectory";
+import { VENUE_PROFILES } from "@/lib/event-time-to-leave";
 
 export const metadata: Metadata = {
   title: "Time Calculators",
@@ -46,6 +47,12 @@ export default function TimeCalculatorsDirectory() {
               </p>
             </div>
             <div className="site-directory-list">
+              <CategoryLink
+                href="/venue-time-to-leave-calculators"
+                label="Event Venue Leave-Time Calculators"
+                description="Choose an upcoming concert or game and calculate when to leave using route time plus venue-specific arrival guidance."
+                count={VENUE_PROFILES.length}
+              />
               <CategoryLink
                 href="/airport-time-calculators"
                 label="Airport Guides & Calculators"

@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import EventLeaveCalculator from "./EventLeaveCalculator";
 import {
+  REVIEWED_EVENT_FIXTURES,
   getEventByFixtureSlug,
   getVenueProfile,
+  eventLifecycle,
+  isEventIndexable,
   isEventTimeUsable,
   type EventRecord,
 } from "@/lib/event-time-to-leave";
@@ -27,11 +30,9 @@ async function resolveEvent(slug: string): Promise<EventRecord | null> {
   if (fixture) return fixture;
 
   const ticketmasterId = ticketmasterIdFromSlug(slug);
-  const venue = getVenueProfile("metlife-stadium");
-  if (!ticketmasterId || !venue) return null;
+  if (!ticketmasterId) return null;
   try {
-    const event = await getTicketmasterEventById(ticketmasterId, venue);
-    return event?.slug === slug ? event : null;
+    return await getTicketmasterEventById(ticketmasterId);
   } catch (error) {
     console.error("[event-page] ticketmaster_lookup_failed", error instanceof Error ? error.message : String(error));
     return null;
@@ -50,7 +51,7 @@ function eventStatusUrl(status: EventRecord["status"]): string {
 }
 
 export async function generateStaticParams() {
-  return [{ slug: "ac-dc-power-up-tour-metlife-stadium-september-25-2026" }];
+  return REVIEWED_EVENT_FIXTURES.map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: EventPageProps): Promise<Metadata> {
@@ -65,17 +66,20 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
     title,
     description,
     alternates: { canonical },
-    robots: { index: true, follow: true },
+    robots: isEventIndexable(event) ? { index: true, follow: true } : { index: false, follow: true },
     openGraph: { title, description, url: canonical },
     twitter: { title, description },
   };
 }
 
 export default async function EventWhenToLeavePage({ params }: EventPageProps) {
-  const event = await resolveEvent((await params).slug);
+  const requestedSlug = (await params).slug;
+  const event = await resolveEvent(requestedSlug);
   if (!event) notFound();
+  if (event.slug !== requestedSlug) permanentRedirect(`${EVENT_ROUTE}/${event.slug}/when-to-leave`);
   const venue = getVenueProfile(event.venueId);
   if (!venue) notFound();
+  const lifecycle = eventLifecycle(event);
 
   const eventDate = formatted(event.startDateTime, event.timezone, {
     weekday: "long", month: "long", day: "numeric", year: "numeric",
@@ -104,10 +108,10 @@ export default async function EventWhenToLeavePage({ params }: EventPageProps) {
       name: venue.name,
       address: {
         "@type": "PostalAddress",
-        streetAddress: "One MetLife Stadium Drive",
+        streetAddress: venue.streetAddress,
         addressLocality: venue.city,
         addressRegion: venue.state,
-        postalCode: "07073",
+        postalCode: venue.postalCode,
         addressCountry: venue.country,
       },
       geo: { "@type": "GeoCoordinates", latitude: venue.coordinates.latitude, longitude: venue.coordinates.longitude },
@@ -142,11 +146,13 @@ export default async function EventWhenToLeavePage({ params }: EventPageProps) {
                 Event times can change. Checked {checkedAt} with <a href={event.source.url} target="_blank" rel="noopener noreferrer">{event.source.label} ↗</a>.
               </p>
             </header>
-            {isEventTimeUsable(event) && event.status === "scheduled" ? (
+            {isEventTimeUsable(event) && lifecycle === "upcoming" ? (
               <EventLeaveCalculator event={event} venue={venue} />
             ) : (
               <div className="rounded-xl border border-amber-400/40 bg-amber-400/10 p-5 text-sm text-amber-200">
-                A precise leave time is unavailable because this event’s schedule is not currently confirmed. Check the official event source before planning your trip.
+                {lifecycle === "past"
+                  ? "This event has already started or ended, so the leave-time calculator is no longer available."
+                  : "A precise leave time is unavailable because this event’s schedule is not currently confirmed. Check the official event source before planning your trip."}
               </div>
             )}
           </div>
