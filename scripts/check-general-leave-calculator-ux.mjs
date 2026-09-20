@@ -64,10 +64,8 @@ assert.match(page, /question: "What time should I leave to drop someone off on t
 assert.equal(page.includes("Popular uses:"), false, "non-interactive use-case chips should not return");
 assert.equal(page.includes("Never calculate this again"), false, "the competing pre-calculator promotion should not return");
 
-assert.match(
-  handoff,
-  /!exclusivePrimaryAction \|\| calendarOpened \|\| showAndroidAffiliate/,
-  "Android affiliate action must not be gated behind the calendar handoff"
-);
+assert.doesNotMatch(handoff, /exclusivePrimaryAction/, "the shared OnTimer action must never be gated behind calendar use");
+assert.match(handoff, /data-calendar-secondary-acquisition/, "the shared handoff must expose a secondary OnTimer path before calendar use");
+assert.match(handoff, /Free download on the App Store/, "the acquisition path must state that OnTimer is free");
 
 console.log("general leave-time calculator UX checks passed");

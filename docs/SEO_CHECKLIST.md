@@ -25,6 +25,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Sitemap pages do not use `noindex`.
 - [ ] Internal links point directly to canonical routes and do not depend on redirects.
 - [ ] Every published page in a programmatic or recurring-answer cluster is reachable through a normal crawlable link from its hub; do not create or link placeholder pages merely to fill a catalog.
+- [ ] Indexable event calculators require a confirmed specific start time, a self-canonical, Event schema, and a normal crawlable link from an indexable venue hub. Put reviewed fixture pages in the sitemap; provider-discovered pages may be crawled from the hub but still require retirement and removal handling after the event.
 - [ ] URLs emitted only in structured data (including breadcrumb `item` URLs) also resolve to canonical, indexable pages rather than 404s or avoidable redirects.
 - [ ] Redirects are permanent only when the destination is genuinely canonical.
 - [ ] Redirect destinations use the canonical `www.ontimer.app` hostname and avoid redirect chains.

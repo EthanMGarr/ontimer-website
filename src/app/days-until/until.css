@@ -74,6 +74,12 @@
 .until-app-button:hover { background: var(--blue-800); transform: translateY(-1px); }
 .until-app-button:active { transform: translateY(0); }
 .until-app-button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.until-secondary-offer { align-items: start; border-top: 1px solid var(--navy-900); display: grid; gap: var(--space-md); margin-top: var(--space-lg); padding-top: var(--space-lg); }
+.until-secondary-offer h3 { color: var(--paper); font-family: var(--font-display); font-size: var(--text-lg); line-height: 1.15; margin: 0; }
+.until-secondary-offer p { color: var(--blue-100); font-size: var(--text-sm); line-height: 1.5; margin: var(--space-xs) 0 0; max-width: 54ch; }
+.until-app-caption { font-size: var(--text-xs); line-height: 1.4; margin: var(--space-xs) 0 0; }
+.until-secondary-offer .until-app-caption { color: var(--blue-100); }
+.until-alarm-offer .until-app-caption { color: var(--ink-soft); }
 .until-copy { background: var(--sky-100); border-block: 1px solid var(--until-line); padding-block: clamp(4rem, 9vw, 7rem); }
 .until-guide { padding-block: clamp(4rem, 9vw, 7rem); }
 .until-guide h2 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: -.04em; line-height: 1; margin: 0; max-width: 18ch; overflow-wrap: anywhere; }

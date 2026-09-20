@@ -1310,7 +1310,6 @@ export default function AirportCalculator({
                   calendarProvider={calendarProvider}
                   setCalendarProvider={setCalendarProvider}
                   calculatorType="airport_leave_time"
-                  exclusivePrimaryAction={ewrResultExperiment}
                   compactOpenedStatus={ewrResultExperiment}
                   postCalendarHeading={copy.alarmHeading}
                   postCalendarBody={copy.alarmBody}

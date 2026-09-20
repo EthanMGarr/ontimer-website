@@ -25,7 +25,7 @@ const directoryHtml = readFileSync(join(root, ".next", "server", "app", "time-ca
 if (directoryHtml.includes("Time Calculators | OnTimer | OnTimer")) throw new Error("time-calculators: duplicated brand in title");
 
 const calculatorSource = readFileSync(join(root, "src", "app", "days-until", "UntilCalculator.tsx"), "utf8");
-for (const expected of ["Turn these into {label || \"event\"} alarms!", "OnTimer turns your calendar events into automatic alarms, so you’re never late."]) {
+for (const expected of ["Turn these into {label || \"event\"} alarms!", "OnTimer is free to download and turns your calendar events into automatic alarms", "data-calendar-secondary-acquisition", "Get Automatic Alarms", "Free download on the App Store"]) {
   if (!calculatorSource.includes(expected)) throw new Error(`post-calendar focal copy missing: ${expected}`);
 }
 for (const retired of ["Add free alarms.", "Google Calendar opened in a new tab", "Your calendar file is ready."]) {

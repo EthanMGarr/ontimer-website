@@ -641,7 +641,6 @@ export default function CruiseCalculator({
                 calendarProvider={calendarProvider}
                 setCalendarProvider={setCalendarProvider}
                 calculatorType="cruise_leave_time"
-                exclusivePrimaryAction
                 compactOpenedStatus
                 postCalendarHeading="Don’t be late. Turn this into an alarm."
                 postCalendarBody="OnTimer automatically sets alarms for your calendar events"

@@ -5,6 +5,7 @@ import { MEDICATION_TIMING_PROFILES } from "@/lib/medication-timing-profiles";
 import { localizedAlternates, spanishAirportSlugs } from "@/lib/i18n";
 import { UNTIL_EVENTS } from "@/lib/until";
 import { airportPickupProfiles, getAirportPickupPath } from "@/lib/airport-pickup-profiles";
+import { REVIEWED_EVENT_FIXTURES } from "@/lib/event-time-to-leave";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.ontimer.app";
@@ -396,5 +397,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...supportingContentRoutes, ...helpRoutes, ...locationRoutes, ...spanishAirportRoutes, ...medicationTimingRoutes, ...blogRoutes];
+  const eventRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/venues/metlife-stadium/time-to-leave`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    },
+    ...REVIEWED_EVENT_FIXTURES
+      .filter((event) => event.status === "scheduled" && new Date(event.startDateTime).getTime() > Date.now())
+      .map((event) => ({
+        url: `${baseUrl}/events/${event.slug}/when-to-leave`,
+        lastModified: new Date(event.lastVerifiedAt),
+        changeFrequency: "daily" as const,
+        priority: 0.7,
+      })),
+  ];
+
+  return [...staticRoutes, ...supportingContentRoutes, ...helpRoutes, ...locationRoutes, ...spanishAirportRoutes, ...medicationTimingRoutes, ...eventRoutes, ...blogRoutes];
 }

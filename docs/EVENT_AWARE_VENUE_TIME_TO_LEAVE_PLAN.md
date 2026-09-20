@@ -1,7 +1,7 @@
 # OnTimer Event-Aware Venue Time-to-Leave
 ## MVP Product + SEO + Data Plan for Codex
 
-**Status:** MetLife vertical slice working with live Ticketmaster data; remains `noindex, follow` and outside the sitemap while legal/provider and lifecycle launch gates remain open
+**Status:** MetLife venue hub and usable event calculators are indexable as of 2026-09-20; reviewed fixture routes are in the sitemap and live provider events are crawlable from the hub. Provider/legal and event-retirement follow-up remain active operating requirements.
 **Primary goal:** Build and test event-aware venue Time-to-Leave pages using Ticketmaster Discovery API through a provider-neutral event model, with reviewed official fixtures as the providerless fallback.
 
 **Repository role:** Working implementation plan. Instructions in the original proposal have been converted into project gates and milestones; this document does not itself authorize deployment, provider enrollment, legal publication, or production data use.
@@ -15,7 +15,7 @@ Implementation should proceed with the following changes:
 1. **Provider-use decision recorded.** The project owner approved Ticketmaster usage for this MVP on 2026-09-20. Before pages become indexable or enter the production sitemap, record the production account owner, applicable commercial/affiliate terms, permitted storage/refresh behavior, attribution requirements, provider quotas, and the 24-hour removal process without storing credentials here.
 2. **Build provider-neutral and fixture-first.** The first vertical slice may use reviewed fixtures behind an `EventProvider` interface. This allows the calculator, page, calendar handoff, structured data, analytics, and stale-data behavior to be tested without making unapproved production API use a launch dependency.
 3. **Start with one venue and one route family.** Prove an event page plus its venue hub for one venue before building the generic event search. A generic event search adds autocomplete, ambiguity, and a second discovery surface before the core event-page hypothesis is proven.
-4. **Do not index by default.** Keep the initial slice out of the sitemap and `noindex, follow` until the provider gate, source quality, venue-profile review, page QA, lifecycle behavior, and Search Console measurement plan are complete.
+4. **Indexing decision recorded.** On 2026-09-20 the project owner explicitly opened indexing for the MetLife venue hub and event calculators with precise usable times. Reviewed fixture routes enter the sitemap; live provider events are discoverable through normal links from the hub. TBD/TBA and unusable events remain excluded.
 5. **Require precise, usable event time.** Events with TBD/TBA dates, TBA times, or `noSpecificTime` must not produce an indexable calculator page or a precise leave-time recommendation. Show a safe unavailable state or omit them until the source provides a usable zoned start time.
 6. **Use authority-ranked venue sources.** Every indexable venue profile needs a review date and at least two authoritative sources, consistent with `docs/SEO_CHECKLIST.md`. Separate curated venue facts from provider event facts and retain provenance for each.
 7. **Treat event retirement as an SEO decision.** Do not automatically redirect every expired event to a venue hub. Remove it from the sitemap after the event; then retain, `noindex`, return `410`, or redirect only when the destination is genuinely equivalent and supported by traffic/link evidence.
@@ -30,7 +30,7 @@ Implementation should proceed with the following changes:
 
 ### Phase 0 exit decision — 2026-09-20
 
-The selected MVP path is Ticketmaster Discovery API with reviewed official-source fixtures as a providerless fallback. The first slice remains `noindex, follow` and outside the sitemap until the production credential, provider-side quotas, lifecycle behavior, and public-launch checklist are verified.
+The selected MVP path is Ticketmaster Discovery API with reviewed official-source fixtures as a providerless fallback. The production credential, provider-side quota checks, source attribution, kill switch, fixture fallback, page QA, and initial lifecycle rules were verified before the project owner opened the indexing gate on 2026-09-20.
 
 The available data paths remain:
 
@@ -44,7 +44,7 @@ If the approved provider path becomes unavailable, keep the slice fixture-backed
 
 - Production credential owner: the OnTimer project owner, stored as a protected server-side Vercel Production variable; no credential value is recorded in this repository.
 - Ticketmaster's current FAQ documents a default allowance of 5,000 requests per day and 2 requests per second, while the Discovery API reference still states 5 requests per second. OnTimer continues to use the safer 2-request-per-second ceiling.
-- Ticketmaster's General Terms of Use were last updated June 27, 2023. They require requested Event Content removal within 24 hours, permit caching only for reasonable service periods, require a privacy disclosure, and allow Ticketmaster to terminate access. They also restrict commercial use, so explicit provider/legal confirmation remains required before these pages become indexable or enter the production sitemap.
+- Ticketmaster's General Terms of Use were last reviewed for this project on 2026-09-20. The documented removal, caching, privacy, termination, and commercial-use considerations remain operating/legal follow-up items even though the project owner subsequently approved indexing the pilot.
 - The application now has a server-side `TICKETMASTER_EVENTS_ENABLED` kill switch. Disabling it stops both venue-list and event-detail requests and leaves the reviewed fixture fallback available.
 - Existing Terms surfaces are `src/app/terms/page.tsx`, `public/legal/terms.html`, and the generated `dist/legal/terms.html`. No event-specific legal language has been published; the canonical and static copies require explicit legal/content review together.
 
@@ -91,6 +91,19 @@ The page should naturally lead to:
 1. Add the event to Calendar
 2. Download OnTimer
 3. Let OnTimer turn calendar events into persistent alarms
+
+## Non-negotiable calculator experience
+
+The event page follows the same conversion contract as the primary When To Leave calculator:
+
+1. compact event context establishes relevance;
+2. the starting-location input appears in the first practical mobile viewport;
+3. calculation moves the user directly to a compact leave-time answer;
+4. the answer and Add to Calendar action appear together without another scroll;
+5. after the calendar action, the same focal slot becomes the OnTimer download action; and
+6. route timelines, itemized assumptions, provider notes, warnings, sources, and venue education follow the handoff or live in an optional disclosure.
+
+The permanent release checklist is `docs/CALCULATOR_CONVERSION_UX_CHECKLIST.md`, and `npm run test:event-calculator:ux` protects the event implementation's required source order.
 
 ---
 

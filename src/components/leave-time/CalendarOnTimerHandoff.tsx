@@ -43,7 +43,6 @@ interface CalendarOnTimerHandoffProps {
   calculatorType: string;
   readyHeading?: string;
   openedItemLabel?: string;
-  exclusivePrimaryAction?: boolean;
   compactOpenedStatus?: boolean;
   postCalendarHeading?: string;
   postCalendarBody?: string;
@@ -64,8 +63,8 @@ const handoffCopy = {
     openDownloaded: "Open the downloaded file to add this leave time.", addAnother: "Add to another calendar",
     reopenGoogle: "Re-open Google Calendar", otherCalendars: "Other calendars",
     addGoogle: "Add to Google Calendar", alarmHeading: "Don’t be late. Turn this into an alarm.",
-    alarmBody: "OnTimer automatically sets alarms for your calendar events", getFree: "Get OnTimer Free",
-    getAlarms: "Get Automatic Alarms", appStore: "Download on the App Store", paid: "Paid link: OnTimer may earn a commission if you book, at no additional cost to you.",
+    alarmBody: "OnTimer is free to download and automatically sets alarms for your calendar events.", getFree: "Get OnTimer Free",
+    getAlarms: "Get Automatic Alarms", appStore: "Free download on the App Store", paid: "Paid link: OnTimer may earn a commission if you book, at no additional cost to you.",
     android: "OnTimer for Android is coming — join the waitlist", help: "Need help adding the calendar file?",
     helpBody: "Open the downloaded .ics file, choose your calendar, then confirm the event.", again: "Download the file again",
     googleInstead: "Use Google Calendar instead",
@@ -76,8 +75,8 @@ const handoffCopy = {
     openDownloaded: "Abre el archivo descargado para añadir esta hora de salida.", addAnother: "Añadir a otro calendario",
     reopenGoogle: "Volver a abrir Google Calendar", otherCalendars: "Otros calendarios",
     addGoogle: "Añadir a Google Calendar", alarmHeading: "No llegues tarde. Convierte este evento en una alarma.",
-    alarmBody: "OnTimer configura alarmas automáticamente para los eventos de tu calendario", getFree: "Descargar OnTimer gratis",
-    getAlarms: "Recibir alarmas automáticas", appStore: "Descargar en App Store", paid: "Enlace remunerado: OnTimer puede recibir una comisión si reservas, sin coste adicional para ti.",
+    alarmBody: "OnTimer se descarga gratis y configura alarmas automáticamente para los eventos de tu calendario.", getFree: "Descargar OnTimer gratis",
+    getAlarms: "Recibir alarmas automáticas", appStore: "Descarga gratis en App Store", paid: "Enlace remunerado: OnTimer puede recibir una comisión si reservas, sin coste adicional para ti.",
     android: "OnTimer para Android está en camino — únete a la lista", help: "¿Necesitas ayuda para añadir el archivo?",
     helpBody: "Abre el archivo .ics descargado, elige tu calendario y confirma el evento.", again: "Descargar el archivo otra vez",
     googleInstead: "Usar Google Calendar",
@@ -94,7 +93,6 @@ export default function CalendarOnTimerHandoff({
   calculatorType,
   readyHeading,
   openedItemLabel,
-  exclusivePrimaryAction = false,
   compactOpenedStatus = false,
   postCalendarHeading,
   postCalendarBody,
@@ -227,7 +225,7 @@ export default function CalendarOnTimerHandoff({
         )}
       </div>
 
-      {(!exclusivePrimaryAction || calendarOpened || showAndroidAffiliate) && <div className={`mt-5 ${
+      <div data-calendar-secondary-acquisition data-state={calendarOpened ? "post-calendar" : "available"} className={`mt-5 ${
         calendarOpened
           ? "order-1 rounded-xl border border-green-500/30 bg-green-500/[0.06] p-5"
           : "border-t border-zinc-800 pt-5"
@@ -291,7 +289,7 @@ export default function CalendarOnTimerHandoff({
             </>
           )}
         </div>
-      </div>}
+      </div>
       </div>
 
       {calendarProvider === "ics" && (

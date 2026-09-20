@@ -1,6 +1,7 @@
+/* Hallmark · genre: modern-minimal · macrostructure: Task-first Conversion Workbench · design-system: design.md · designed-as-app */
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
 import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
@@ -99,6 +100,7 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [calendarProvider, setCalendarProvider] = useState<"google" | "ics" | null>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const currentInputKey = inputKey(origin, travelMode, preference, manualMinutes);
   const resultIsCurrent = result?.inputKey === currentInputKey;
@@ -172,6 +174,9 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
         venue_id: venue.id,
         days_before_event: Math.max(0, Math.ceil((eventStart.getTime() - Date.now()) / 86_400_000)),
       });
+      window.setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
     } catch (caught) {
       setResult(null);
       setError(caught instanceof Error ? caught.message : "We could not calculate this trip.");
@@ -198,11 +203,11 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
   const icsHref = calendarEvent ? buildIcsCalendarDataUri(calendarEvent) : "#";
 
   return (
-    <section className="event-calc" aria-labelledby="event-calculator-heading">
+    <section className="event-calc" aria-labelledby="event-calculator-heading" data-event-calculator-entry>
       <div className="event-calc__card">
         <div className="event-calc__intro">
           <h2 id="event-calculator-heading">Where are you leaving from?</h2>
-          <p>We’ll work backward from the scheduled start and the venue’s arrival steps.</p>
+          <p>Add your starting point. We’ll account for the trip and the venue arrival steps.</p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
@@ -284,61 +289,69 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
       </div>
 
       {result && resultIsCurrent ? (
-        <div className="event-result" aria-live="polite">
+        <div ref={resultRef} className="event-result" aria-live="polite" data-event-result>
           <div className="event-result__answer">
             <p>We recommend leaving by</p>
             <h2>{formatEventTime(result.plan.leaveAt, event.timezone)}</h2>
             <span>{formatEventDate(event.startDateTime, event.timezone)}</span>
           </div>
 
-          <div className="event-route" aria-label="How the leave time was calculated">
-            {[
-              { label: "Leave", value: formatEventTime(result.plan.leaveAt, event.timezone) },
-              { label: "Reach venue", value: formatEventTime(result.plan.venueArrivalAt, event.timezone) },
-              { label: "Be at entrance", value: formatEventTime(result.plan.entranceAt, event.timezone) },
-              { label: "Event starts", value: formatEventTime(result.plan.eventStartsAt, event.timezone) },
-            ].map((node, index) => (
-              <div className="event-route__node" key={node.label}>
-                <span className="event-route__dot" aria-hidden="true">{index + 1}</span>
-                <strong>{node.value}</strong>
-                <small>{node.label}</small>
-              </div>
-            ))}
-          </div>
-
-          <dl className="event-result__spec">
-            <div><dt>Estimated {travelMode.toLowerCase()}</dt><dd>{result.plan.travelMinutes} min</dd></div>
-            <div><dt>{travelMode === "DRIVE" ? "Parking + walk" : travelMode === "TRANSIT" ? "Station + walk" : "Venue approach"}</dt><dd>{result.plan.lastMileMinutes} min</dd></div>
-            <div><dt>Uncertainty cushion</dt><dd>{result.plan.uncertaintyMinutes} min</dd></div>
-            <div><dt>Entrance before start</dt><dd>{result.plan.arrivalBufferMinutes} min</dd></div>
-          </dl>
-
-          <p className="event-result__source">
-            Route: {result.source === "google" ? `${result.trafficBasis} Google estimate` : "your entered travel time"}. Venue timing: reviewed OnTimer profile.
-          </p>
-          <p className="event-result__warning">
-            <strong>Leave-time estimates are guidance, not a guarantee.</strong> Traffic, transit delays, parking, security lines, weather, schedule changes, and other conditions can affect your arrival time.
+          <p className="event-result__summary">
+            {result.plan.travelMinutes} min {travelMode.toLowerCase()} · {result.plan.lastMileMinutes} min venue arrival · {result.plan.arrivalBufferMinutes} min before start
           </p>
 
           {calendarEvent ? (
-            <CalendarOnTimerHandoff
-              calendarHref={calendarHref}
-              alternateCalendarHref={icsHref}
-              alternateCalendarFilename={`${event.slug}.ics`}
-              calendarProvider={calendarProvider}
-              setCalendarProvider={setCalendarProvider}
-              calculatorType="event_time_to_leave"
-              readyHeading={`Add ${event.title} to your calendar.`}
-              openedItemLabel="event"
-              exclusivePrimaryAction
-              compactOpenedStatus
-              postCalendarHeading="Don’t be late. Turn this into an alarm."
-              postCalendarBody="OnTimer turns this calendar event into an automatic alarm."
-              appLocation="event_time_to_leave_after_calendar"
-              analyticsContext={{ event_id: event.id, event_category: event.category, venue_id: venue.id }}
-              eventPreview={{ title: calendarEvent.title, startLabel: `${formatEventDate(event.startDateTime, event.timezone)} at ${formatEventTime(eventStart, event.timezone)}` }}
-            />
+            <div data-calendar-handoff-slot>
+              <CalendarOnTimerHandoff
+                calendarHref={calendarHref}
+                alternateCalendarHref={icsHref}
+                alternateCalendarFilename={`${event.slug}.ics`}
+                calendarProvider={calendarProvider}
+                setCalendarProvider={setCalendarProvider}
+                calculatorType="event_time_to_leave"
+                readyHeading="Put this leave time on your calendar."
+                openedItemLabel="event"
+                compactOpenedStatus
+                postCalendarHeading="Now make sure you leave on time."
+                postCalendarBody="OnTimer turns this calendar event into an automatic alarm."
+                appLocation="event_time_to_leave_after_calendar"
+                analyticsContext={{ event_id: event.id, event_category: event.category, venue_id: venue.id }}
+                eventPreview={{ title: calendarEvent.title, startLabel: `${formatEventDate(event.startDateTime, event.timezone)} at ${formatEventTime(eventStart, event.timezone)}` }}
+              />
+            </div>
           ) : null}
+
+          <details className="event-result__details">
+            <summary>See how this leave time was calculated</summary>
+            <div className="event-route" aria-label="How the leave time was calculated">
+              {[
+                { label: "Leave", value: formatEventTime(result.plan.leaveAt, event.timezone) },
+                { label: "Reach venue", value: formatEventTime(result.plan.venueArrivalAt, event.timezone) },
+                { label: "Be at entrance", value: formatEventTime(result.plan.entranceAt, event.timezone) },
+                { label: "Event starts", value: formatEventTime(result.plan.eventStartsAt, event.timezone) },
+              ].map((node, index) => (
+                <div className="event-route__node" key={node.label}>
+                  <span className="event-route__dot" aria-hidden="true">{index + 1}</span>
+                  <strong>{node.value}</strong>
+                  <small>{node.label}</small>
+                </div>
+              ))}
+            </div>
+
+            <dl className="event-result__spec">
+              <div><dt>Estimated {travelMode.toLowerCase()}</dt><dd>{result.plan.travelMinutes} min</dd></div>
+              <div><dt>{travelMode === "DRIVE" ? "Parking + walk" : travelMode === "TRANSIT" ? "Station + walk" : "Venue approach"}</dt><dd>{result.plan.lastMileMinutes} min</dd></div>
+              <div><dt>Uncertainty cushion</dt><dd>{result.plan.uncertaintyMinutes} min</dd></div>
+              <div><dt>Entrance before start</dt><dd>{result.plan.arrivalBufferMinutes} min</dd></div>
+            </dl>
+
+            <p className="event-result__source">
+              Route: {result.source === "google" ? `${result.trafficBasis} Google estimate` : "your entered travel time"}. Venue timing: reviewed OnTimer profile.
+            </p>
+            <p className="event-result__warning">
+              <strong>Leave-time estimates are guidance, not a guarantee.</strong> Traffic, transit delays, parking, security lines, weather, schedule changes, and other conditions can affect your arrival time.
+            </p>
+          </details>
         </div>
       ) : null}
     </section>

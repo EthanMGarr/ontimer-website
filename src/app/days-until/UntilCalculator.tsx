@@ -115,8 +115,8 @@ export default function UntilCalculator({ initialDate, initialLabel = "My event"
           <div className="until-target">{target ? target.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : "Choose a future date."}</div>
           <div className="until-calendar-step">
             {calendarHandoff ? <aside ref={alarmOfferRef} tabIndex={-1} className="until-alarm-offer" aria-live="polite">
-              <div><h2>Turn these into {label || "event"} alarms!</h2><p>OnTimer turns your calendar events into automatic alarms, so you’re never late.</p></div>
-              <a className="until-app-button" href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_after_calendar", { event_slug: eventSlug, calendar_provider: calendarHandoff })}>Get OnTimer free</a>
+              <div><h2>Turn these into {label || "event"} alarms!</h2><p>OnTimer is free to download and turns your calendar events into automatic alarms, so you’re never late.</p></div>
+              <div><a className="until-app-button" href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_after_calendar", { event_slug: eventSlug, calendar_provider: calendarHandoff })}>Get OnTimer free</a><p className="until-app-caption">Free download on the App Store</p></div>
             </aside> : <>
               <h2>Put {label || "this event"} on your calendar.</h2>
               <p>Add the date and countdown reminders in one step.</p>
@@ -126,6 +126,10 @@ export default function UntilCalculator({ initialDate, initialLabel = "My event"
               </div>
               <details className="until-reminder-options"><summary>{reminderSummary}</summary><fieldset className="until-milestones"><legend>Choose reminders</legend>{MILESTONES.map((days) => <label key={days}><input className="until-check" type="checkbox" checked={milestones.includes(days)} onChange={() => { noteInteraction(); setCalendarHandoff(null); setMilestones((current) => current.includes(days) ? current.filter((item) => item !== days) : [...current, days]); }} />{days} day{days === 1 ? "" : "s"} before</label>)}</fieldset></details>
               <p className="until-note">The first option creates a calendar file for Apple Calendar or Outlook. Google Calendar can import it on a computer.</p>
+              <aside className="until-secondary-offer" data-calendar-secondary-acquisition>
+                <div><h3>Prefer automatic alarms?</h3><p>OnTimer is free to download and automatically sets alarms for your calendar events.</p></div>
+                <div><a className="until-app-button" href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_result", { event_slug: eventSlug })}>Get Automatic Alarms</a><p className="until-app-caption">Free download on the App Store</p></div>
+              </aside>
             </>}
           </div>
           <div className="until-breakdown" aria-label="Countdown details">

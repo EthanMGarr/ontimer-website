@@ -1,9 +1,9 @@
 {
-  "scannedAt": "2026-09-11",
+  "scannedAt": "2026-09-20",
   "framework": "Next.js 15 App Router",
-  "fontStack": "existing site sans-serif stack",
-  "palette": "Tailwind zinc surfaces with #22c55e accent; homepage2 introduces a route-scoped light blue token system",
+  "fontStack": "Bricolage Grotesque display and IBM Plex Sans body through the existing CSS variables",
+  "palette": "tokens.css light blue-tinted paper, navy ink, restrained OnTimer blue, and green only for meaningful success",
   "motion": "motion-cut; no dedicated motion library",
-  "spacing": "Tailwind default spacing scale",
-  "preserve": ["framework", "existing production palette", "spacing scale", "task-first medication workbench"]
+  "spacing": "tokens.css named four-point spacing scale",
+  "preserve": ["framework", "locked design.md system", "shared public-site chrome", "task-first calculator workbench", "input → answer → calendar → OnTimer conversion sequence"]
 }

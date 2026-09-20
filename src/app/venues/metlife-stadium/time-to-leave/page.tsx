@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: "What Time Should I Leave for MetLife Stadium?",
   description: "Calculate when to leave for an event at MetLife Stadium using route time, parking or transit, venue entry, and a timing buffer.",
   alternates: { canonical },
-  robots: { index: false, follow: true },
+  robots: { index: true, follow: true },
   openGraph: {
     title: "What Time Should I Leave for MetLife Stadium?",
     description: "Calculate when to leave for an event at MetLife Stadium using route time, parking or transit, venue entry, and a timing buffer.",

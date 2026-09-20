@@ -1,5 +1,34 @@
 /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 */
-/* Hallmark · genre: modern-minimal · macrostructure: Map / Diagram · theme: design.md locked · tone: calm utilitarian · contrast: pass (40–41) · nav: shared N2 · footer: shared Ft2 · slop: pass (42–45) · honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (49) · icons: pass (30) · mobile: pass (34, 49, 50–57) */
+/* Hallmark · genre: modern-minimal · macrostructure: Task-first Conversion Workbench · theme: design.md locked · tone: calm utilitarian · contrast: pass · responsive: pass */
+.event-task__context {
+  margin: 0 auto var(--space-md);
+  max-width: 48rem;
+}
+
+.event-task__eyebrow {
+  color: var(--blue-700);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  margin: 0;
+}
+
+.event-task__context h1 {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 7vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.03;
+  margin: var(--space-xs) 0 0;
+  max-width: 20ch;
+  overflow-wrap: anywhere;
+}
+
+.event-task__context h1 span { color: var(--blue-700); }
+.event-task__schedule { color: var(--ink-muted); font-size: var(--text-sm); line-height: 1.45; margin: var(--space-sm) 0 0; }
+.event-task__schedule strong { color: var(--ink); }
+.event-task__verification { color: var(--ink-soft); font-size: var(--text-xs); line-height: 1.45; margin: var(--space-xs) 0 0; }
+.event-task__verification a { color: var(--blue-700); font-weight: 700; text-decoration: underline; text-underline-offset: 0.15em; white-space: nowrap; }
 .event-calc {
   display: grid;
   gap: var(--space-lg);
@@ -121,12 +150,17 @@
 }
 
 .event-result { background: var(--sky-50); }
+.event-result { scroll-margin-top: 7rem; }
 .event-result__answer { text-align: center; }
 .event-result__answer > p { color: var(--ink-muted); font-size: var(--text-sm); font-weight: 700; margin: 0; }
 .event-result__answer h2 { color: var(--blue-800); font-size: clamp(3.25rem, 15vw, 6rem); line-height: 0.95; margin-top: var(--space-xs); }
 .event-result__answer > span { color: var(--ink-muted); display: block; font-size: var(--text-sm); margin-top: var(--space-xs); }
+.event-result__summary { border-block: var(--rule-hairline) solid var(--line-strong); color: var(--ink-muted); font-size: var(--text-sm); line-height: 1.5; margin: var(--space-md) 0 0; padding-block: var(--space-sm); text-align: center; }
+.event-result__details { border-top: var(--rule-hairline) solid var(--line); margin-top: var(--space-lg); padding-top: var(--space-xs); }
+.event-result__details > summary { color: var(--blue-800); cursor: pointer; font-size: var(--text-sm); font-weight: 700; min-height: 2.75rem; padding-block: var(--space-sm); }
+.event-result__details > summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
-.event-route { display: grid; gap: var(--space-xs); margin-top: var(--space-xl); min-width: 0; position: relative; }
+.event-route { display: grid; gap: var(--space-xs); margin-top: var(--space-md); min-width: 0; position: relative; }
 .event-route__node {
   align-items: center;
   background: var(--paper);
@@ -156,6 +190,7 @@
   .event-calc__preference:hover { background: var(--sky-50); }
   .event-calc__submit:hover { background: var(--blue-800); }
   .event-calc__details summary:hover { color: var(--blue-700); }
+  .event-result__details > summary:hover { color: var(--blue-700); }
 }
 
 @media (min-width: 48rem) {
@@ -167,6 +202,16 @@
   .event-route::before { background: var(--line-strong); content: ""; height: var(--rule-strong); inset-inline: 10% 10%; position: absolute; top: 1.75rem; }
   .event-route__node { align-content: start; background: transparent; border: 0; gap: var(--space-xs); grid-template-columns: minmax(0, 1fr); justify-items: center; padding-inline: var(--space-xs); position: relative; text-align: center; }
   .event-route__dot { grid-row: auto; }
+}
+
+@media (max-width: 47.99rem) {
+  .event-calc__card,
+  .event-result { padding: var(--space-md); }
+  .event-calc__intro h2 { font-size: 1.5rem; }
+  .event-calc__intro p { font-size: var(--text-sm); line-height: 1.45; }
+  .event-calc form { margin-top: var(--space-md); }
+  .event-calc__field { margin-bottom: var(--space-md); }
+  .event-result__answer h2 { font-size: clamp(3.25rem, 16vw, 4.5rem); }
 }
 
 @media (prefers-reduced-motion: reduce) {

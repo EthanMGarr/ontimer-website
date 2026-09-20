@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
     title,
     description,
     alternates: { canonical },
-    robots: { index: false, follow: true },
+    robots: { index: true, follow: true },
     openGraph: { title, description, url: canonical },
     twitter: { title, description },
   };
@@ -127,30 +127,21 @@ export default async function EventWhenToLeavePage({ params }: EventPageProps) {
         </ol>
       </nav>
 
-      <header className="border-b border-zinc-800/60 py-7 sm:py-8">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <p className="text-sm font-bold text-green-500">Free event departure-time calculator</p>
-          <h1 className="mt-2 min-w-0 max-w-4xl text-3xl font-black leading-tight tracking-tight text-white [overflow-wrap:anywhere] sm:text-5xl">
-            What time should I leave for <span className="text-green-500">{event.title}</span> at {venue.name}?
-          </h1>
-          <div className="mt-4 grid gap-2 border-y border-zinc-800 py-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
-            <p><span className="block text-xs font-semibold text-zinc-500">Event</span><strong className="text-zinc-100">{event.title}{event.subtitle ? ` — ${event.subtitle}` : ""}</strong></p>
-            <p><span className="block text-xs font-semibold text-zinc-500">Venue</span><strong className="text-zinc-100">{venue.name}</strong></p>
-            <p><span className="block text-xs font-semibold text-zinc-500">Date</span><strong className="text-zinc-100">{eventDate}</strong></p>
-            <p><span className="block text-xs font-semibold text-zinc-500">Scheduled start</span><strong className="text-zinc-100">{eventTime}</strong></p>
-          </div>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-400">
-            <strong className="text-zinc-200">Event times can change.</strong> Always confirm the event date, start time, venue, and entry information with the event organizer or venue before you leave.
-          </p>
-          <p className="mt-2 text-xs text-zinc-500">
-            Schedule last checked {checkedAt}. Source: <a href={event.source.url} target="_blank" rel="noopener noreferrer" className="whitespace-nowrap font-semibold text-green-500 underline underline-offset-2">{event.source.label} ↗</a>
-          </p>
-        </div>
-      </header>
-
       <main>
-        <section className="py-7 sm:py-10">
+        <section className="event-task py-5 sm:py-9">
           <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <header className="event-task__context">
+              <p className="event-task__eyebrow">Free event leave-time calculator</p>
+              <h1>
+                When should I leave for <span>{event.title}</span>?
+              </h1>
+              <p className="event-task__schedule">
+                <strong>{eventDate} at {eventTime}</strong><span aria-hidden="true"> · </span>{venue.name}
+              </p>
+              <p className="event-task__verification">
+                Event times can change. Checked {checkedAt} with <a href={event.source.url} target="_blank" rel="noopener noreferrer">{event.source.label} ↗</a>.
+              </p>
+            </header>
             {isEventTimeUsable(event) && event.status === "scheduled" ? (
               <EventLeaveCalculator event={event} venue={venue} />
             ) : (

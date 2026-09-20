@@ -2,6 +2,16 @@
   {
     "date": "2026-09-20",
     "scope": "page-family",
+    "macrostructure": "Task-first Conversion Workbench",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "direct, useful, reassuring",
+    "enrichment": "optional timing disclosure after conversion handoff",
+    "brief": "Event calculator mobile conversion-path correction"
+  },
+  {
+    "date": "2026-09-20",
+    "scope": "page-family",
     "macrostructure": "Task-first Workbench",
     "theme": "design.md locked",
     "theme_axes": "light / geometric-sans / cool",

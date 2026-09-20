@@ -632,7 +632,6 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
                 calculatorType="wake_up"
                 readyHeading={isSpanish ? "Guarda la hora de llegada en tu calendario." : "Put your arrival appointment on your calendar."}
                 openedItemLabel={isSpanish ? "evento de llegada" : "arrival event"}
-                exclusivePrimaryAction
                 compactOpenedStatus
                 postCalendarHeading={isSpanish ? "No llegues tarde. Convierte el evento en una alarma." : "Don’t be late. Turn this into an alarm."}
                 postCalendarBody={isSpanish ? "OnTimer configura alarmas automáticamente para los eventos de tu calendario" : "OnTimer automatically sets alarms for your calendar events"}
