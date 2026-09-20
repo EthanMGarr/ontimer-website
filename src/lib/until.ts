@@ -138,7 +138,8 @@ export function getUntilSearchSummary(event: UntilEvent, from: Date) {
   return {
     target,
     days,
-    description: `There are ${days} days until ${datedEventName} on ${date}. Add ${event.shortName} plus 30-day, 10-day, and 1-day reminders to your calendar free.`,
+    title: `${event.shortName} Countdown ${target.getFullYear()}: Days Until ${event.shortName}`,
+    description: `${event.shortName} countdown: ${days} days to go. ${datedEventName} is ${date}. Add the date and 30-, 10-, and 1-day calendar reminders free.`,
   };
 }
 

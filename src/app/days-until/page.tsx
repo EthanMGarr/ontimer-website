@@ -29,7 +29,7 @@ export default function DaysUntilPage() {
       <section className="until-copy"><div className="until-shell">
         <h2>Popular countdowns</h2>
         <p>Start with a recurring date. Each published countdown rolls forward to its next occurrence automatically.</p>
-        <div className="until-directory">{UNTIL_EVENTS.map((event) => <Link key={event.slug} href={`/days-until/${event.slug}`}><span>Days until {event.shortName}</span><span aria-hidden="true">→</span></Link>)}</div>
+        <div className="until-directory">{UNTIL_EVENTS.map((event) => <Link key={event.slug} href={`/days-until/${event.slug}`}><span>{event.shortName} countdown</span><span aria-hidden="true">→</span></Link>)}</div>
       </div></section>
 
       <section className="until-guide"><div className="until-shell">

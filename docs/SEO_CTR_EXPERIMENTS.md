@@ -50,3 +50,17 @@ generated from one template. Evaluate LAX, EWR, LGA, ORD and ATL as the primary 
 use the unchanged wake-up and general leave-time calculators only as directional comparisons
 rather than strict controls because their intent and result-page composition differ. Report the
 cruise and airport-pickup cohorts separately rather than pooling them with flight-departure pages.
+
+## Recurring countdown-page treatment
+
+Beginning 2026-09-20, the five published `/days-until/[slug]` pages lead their title and description
+with the natural `{event} countdown` phrase while preserving the current numeric days-until answer,
+full target date, and calendar-reminder benefit. The same phrase appears in the visible H1,
+structured-data name, breadcrumb, and internal-link anchors so search engines and answer engines see
+one consistent task identity rather than metadata-only keyword placement.
+
+Measure the Thanksgiving, Christmas, Halloween, New Year’s Day, and Summer queries separately over
+the settled 28-day post-recrawl window. Use each page’s preceding 28-day period within the same
+query/device/position bands as its primary baseline; use the unchanged generic `/days-until` page
+and other calculator queries only as directional controls because their intent is broader. Record
+whether qualified clicks improve without losing impressions for the core `days until` variants.

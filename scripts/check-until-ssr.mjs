@@ -16,8 +16,10 @@ for (const slug of slugs) {
     if (!html.includes(`<span>${label}</span>`)) throw new Error(`${slug}: ${label} missing from initial HTML`);
   }
   if (!html.includes(`<meta property="og:url" content="${canonical}"`)) throw new Error(`${slug}: Open Graph URL is not canonical`);
-  if (!html.includes('<meta property="og:description" content="There are ')) throw new Error(`${slug}: event-specific Open Graph description missing`);
-  if (!html.includes('<meta name="twitter:description" content="There are ')) throw new Error(`${slug}: event-specific Twitter description missing`);
+  if (!/<title>[^<]*Countdown \d{4}: Days Until/.test(html)) throw new Error(`${slug}: countdown title missing`);
+  if (!html.includes('<meta property="og:description" content="') || !html.includes(' countdown: ')) throw new Error(`${slug}: countdown Open Graph description missing`);
+  if (!html.includes('<meta name="twitter:description" content="') || !html.includes(' days to go.')) throw new Error(`${slug}: countdown Twitter description missing`);
+  if (!html.includes('Countdown & Days Until Calculator') && !html.includes('Countdown \\u0026 Days Until Calculator')) throw new Error(`${slug}: countdown structured-data name missing`);
   if (!html.includes('"@type":"BreadcrumbList"')) throw new Error(`${slug}: BreadcrumbList structured data missing`);
 }
 
