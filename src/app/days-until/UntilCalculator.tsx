@@ -16,6 +16,18 @@ function parseLocalDate(value: string): Date | null {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
+function parseUtcDate(value: string): Date | null {
+  const [year, month, day] = value.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  const date = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function formatTargetDate(value: string): string {
+  const date = parseUtcDate(value);
+  return date ? date.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "UTC" }) : "";
+}
+
 function calendarDate(date: Date): string {
   return formatDateInput(date).replaceAll("-", "");
 }
@@ -30,12 +42,14 @@ export default function UntilCalculator({ initialDate, initialLabel = "", initia
   const [label, setLabel] = useState(initialLabel);
   const [eventId, setEventId] = useState(eventSlug);
   const [now, setNow] = useState<Date | null>(() => initialNow ? new Date(initialNow) : null);
+  const [hydrated, setHydrated] = useState(false);
   const [milestones, setMilestones] = useState<number[]>([30, 10, 1]);
   const [calendarHandoff, setCalendarHandoff] = useState<"google" | "file" | null>(null);
   const started = useRef(false);
   const alarmOfferRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    setHydrated(true);
     setNow(new Date());
     const timer = window.setInterval(() => setNow(new Date()), 60_000);
     return () => window.clearInterval(timer);
@@ -58,7 +72,9 @@ export default function UntilCalculator({ initialDate, initialLabel = "", initia
 
   const hasEventChoice = eventId !== "";
   const hasEventName = eventId !== "custom" || label.trim().length > 0;
-  const target = hasEventChoice && hasEventName ? parseLocalDate(dateValue) : null;
+  const target = hasEventChoice && hasEventName
+    ? initialNow && !hydrated ? parseUtcDate(dateValue) : parseLocalDate(dateValue)
+    : null;
   const emptyAnswerLabel = !hasEventChoice
     ? "Choose an event to start"
     : !hasEventName
@@ -133,7 +149,7 @@ export default function UntilCalculator({ initialDate, initialLabel = "", initia
             <div className="until-answer">{result ? result.days : "—"}</div>
             <div className="until-answer-label">{result ? `${result.days === 1 ? "day until" : "days until"} ${label}` : emptyAnswerLabel}</div>
           </div>
-          <div className="until-target">{target ? target.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : emptyTargetLabel}</div>
+          <div className="until-target">{target ? formatTargetDate(dateValue) : emptyTargetLabel}</div>
           {result ? <div className="until-calendar-step">
             {calendarHandoff ? <aside ref={alarmOfferRef} tabIndex={-1} className="until-alarm-offer" aria-live="polite">
               <div><h2>Turn these into {label || "event"} alarms!</h2><p>OnTimer is free. Turn calendar events into automatic alarms, so you’re never late.</p></div>

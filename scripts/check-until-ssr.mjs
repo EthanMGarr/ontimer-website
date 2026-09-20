@@ -34,6 +34,9 @@ if (!calculatorSource.includes('eventId === "custom"')) throw new Error("custom 
 if (!calculatorSource.includes('disabled={!hasEventChoice}')) throw new Error("date input must wait for an explicit event choice");
 if (!calculatorSource.includes('useState(initialDate || "")')) throw new Error("generic Days Until must not fabricate a default date");
 if (!calculatorSource.includes('setDateValue(option.nextDate ? formatDateInput(option.nextDate(new Date())) : "")')) throw new Error("personal event choices must clear any automatic holiday date");
+if (!calculatorSource.includes("initialNow && !hydrated ? parseUtcDate(dateValue) : parseLocalDate(dateValue)")) throw new Error("event countdown hydration must use the server-stable UTC target before switching to local time");
+if (!calculatorSource.includes("setHydrated(true)")) throw new Error("event countdown must switch to the visitor's local time after hydration");
+if (!calculatorSource.includes('timeZone: "UTC"')) throw new Error("event target-date label must remain stable across server and browser time zones");
 for (const retired of ["Add free alarms.", "Google Calendar opened in a new tab", "Your calendar file is ready.", "free to download", "Free download on the App Store"]) {
   if (calculatorSource.includes(retired)) throw new Error(`retired post-calendar narration returned: ${retired}`);
 }
