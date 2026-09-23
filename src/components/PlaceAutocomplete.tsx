@@ -29,6 +29,7 @@ import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } f
 import {
   buildAirportCalendarLocation,
   filterAirportOptions,
+  hasExactAirportIdentifierMatch,
   type AirportAutocompleteOption,
 } from "@/lib/airport-autocomplete";
 import {
@@ -67,6 +68,7 @@ export default function PlaceAutocomplete({
   types = "geocode",
   includeAirports = false,
 }: PlaceAutocompleteProps) {
+  const usesAirportDirectory = includeAirports || types === "airport";
   const [placeSuggestions, setPlaceSuggestions] = useState<Prediction[]>([]);
   const [airportOptions, setAirportOptions] = useState<AirportAutocompleteOption[]>([]);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -75,7 +77,7 @@ export default function PlaceAutocomplete({
   const minimumCharacters = types === "airport" ? 2 : 4;
   const deferredValue = useDeferredValue(value);
   const airportSuggestions = useMemo<Prediction[]>(() => {
-    if (!includeAirports || deferredValue.trim().length < 2) return [];
+    if (!usesAirportDirectory || deferredValue.trim().length < 2) return [];
 
     return filterAirportOptions(airportOptions, deferredValue)
       .slice(0, 6)
@@ -86,7 +88,7 @@ export default function PlaceAutocomplete({
         secondaryText: option.city,
         kind: "airport",
       }));
-  }, [airportOptions, deferredValue, includeAirports]);
+  }, [airportOptions, deferredValue, usesAirportDirectory]);
   const suggestions = useMemo(() => {
     const airportDescriptions = new Set(
       airportSuggestions.map(({ description }) => description.toLocaleLowerCase())
@@ -112,12 +114,17 @@ export default function PlaceAutocomplete({
 
   const hasAirportMatches = useCallback(
     (input: string, options = airportOptions) =>
-      includeAirports && input.trim().length >= 2 && filterAirportOptions(options, input).length > 0,
-    [airportOptions, includeAirports]
+      usesAirportDirectory && input.trim().length >= 2 && filterAirportOptions(options, input).length > 0,
+    [airportOptions, usesAirportDirectory]
+  );
+
+  const hasExactAirportMatch = useCallback(
+    (input: string) => hasExactAirportIdentifierMatch(airportOptions, input),
+    [airportOptions]
   );
 
   const ensureAirportDirectoryLoaded = useCallback(() => {
-    if (!includeAirports || directoryLoadStartedRef.current) return;
+    if (!usesAirportDirectory || directoryLoadStartedRef.current) return;
     directoryLoadStartedRef.current = true;
     void loadAirportDirectoryOptions()
       .then((options) => {
@@ -132,7 +139,7 @@ export default function PlaceAutocomplete({
         directoryLoadStartedRef.current = false;
         setAirportOptions([]);
       });
-  }, [hasAirportMatches, includeAirports]);
+  }, [hasAirportMatches, usesAirportDirectory]);
 
   // ── Close on click outside ──────────────────────────────────────────────────
   useEffect(() => {
@@ -170,6 +177,20 @@ export default function PlaceAutocomplete({
     }
     lastFetchedRef.current = input;
 
+    // Airport-only fields can be satisfied entirely by the lazy local
+    // directory. General place fields retain Google suggestions unless the
+    // visitor entered an exact airport identifier such as JFK or 42W.
+    if (
+      (types === "airport" && hasAirportMatches(input)) ||
+      (includeAirports && hasExactAirportMatch(input))
+    ) {
+      setPlaceSuggestions([]);
+      setIsOpen(true);
+      setActiveIndex(-1);
+      setIsSearching(false);
+      return;
+    }
+
     try {
       const params = new URLSearchParams({
         input,
@@ -206,14 +227,14 @@ export default function PlaceAutocomplete({
         setIsSearching(false);
       }
     }
-  }, [hasAirportMatches, minimumCharacters, types]);
+  }, [hasAirportMatches, hasExactAirportMatch, includeAirports, minimumCharacters, types]);
 
   // ── Input change handler ────────────────────────────────────────────────────
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const val = e.target.value;
       onChange(val);
-      if (includeAirports) ensureAirportDirectoryLoaded();
+      if (usesAirportDirectory) ensureAirportDirectoryLoaded();
 
       // Reset dedup when user keeps typing
       if (val !== lastFetchedRef.current) {
@@ -245,7 +266,7 @@ export default function PlaceAutocomplete({
         fetchSuggestions(val, requestId);
       }, isPaste ? 600 : 350);
     },
-    [ensureAirportDirectoryLoaded, fetchSuggestions, hasAirportMatches, includeAirports, minimumCharacters, onChange]
+    [ensureAirportDirectoryLoaded, fetchSuggestions, hasAirportMatches, minimumCharacters, onChange, usesAirportDirectory]
   );
 
   // ── Selection ───────────────────────────────────────────────────────────────

@@ -3,6 +3,7 @@ import {
   airportPlanningJurisdictionForCountry,
   buildAirportCalendarLocation,
   filterAirportOptions,
+  hasExactAirportIdentifierMatch,
   type AirportAutocompleteOption,
 } from "../airport-autocomplete";
 
@@ -55,6 +56,10 @@ assert.equal(filterAirportOptions(options, "42").length, 0, "numeric street pref
 assert.equal(filterAirportOptions(options, "42 I").length, 0, "digit-leading addresses must not combine airport identifiers with location text");
 assert.equal(filterAirportOptions(options, "42W")[0]?.code, "DHB", "complete mixed-character airport identifiers should still match");
 assert.equal(filterAirportOptions(options, "heathrow").length, 0, "non-matches should return an empty list");
+assert.equal(hasExactAirportIdentifierMatch(options, "jfk"), true, "exact IATA codes should be safe to resolve locally");
+assert.equal(hasExactAirportIdentifierMatch(options, " 42w "), true, "exact mixed-character aliases should be safe to resolve locally");
+assert.equal(hasExactAirportIdentifierMatch(options, "new york"), false, "place names must retain ordinary place suggestions");
+assert.equal(hasExactAirportIdentifierMatch(options, "42"), false, "partial numeric identifiers must retain ordinary place suggestions");
 assert.equal(airportPlanningJurisdictionForCountry("United States"), "us", "US airports should use TSA controls");
 assert.equal(airportPlanningJurisdictionForCountry("Canada"), "international", "Canadian airports should not use TSA controls");
 

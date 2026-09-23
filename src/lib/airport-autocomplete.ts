@@ -25,6 +25,19 @@ export function buildAirportCalendarLocation({ code, name, city }: AirportLocati
   return `${normalizedName} (${normalizedCode}), ${city}`;
 }
 
+export function hasExactAirportIdentifierMatch(
+  options: AirportAutocompleteOption[],
+  query: string
+): boolean {
+  const normalizedQuery = query.trim().toUpperCase();
+  if (!/^(?=.*[A-Z])[A-Z0-9]{3}$/.test(normalizedQuery)) return false;
+
+  return options.some((option) =>
+    [option.code, ...(option.aliases ?? [])]
+      .some((identifier) => identifier.trim().toUpperCase() === normalizedQuery)
+  );
+}
+
 export function filterAirportOptions(
   options: AirportAutocompleteOption[],
   query: string

@@ -44,6 +44,8 @@ assert.match(currentLocationControl, /!active && \(/, "shared calculator locatio
 assert.match(currentLocationControl, /className="mt-1 inline-flex min-h-11[^"]*">?/, "shared current-location actions must sit close to their fields without shrinking their touch targets");
 assert.match(currentLocationControl, /className="sr-only" role="status"/, "shared location success must remain available to assistive technology");
 assert.match(placeAutocomplete, /isPaste \? 600 : 350/, "address autocomplete must respond promptly while keeping pasted text debounced");
+assert.match(placeAutocomplete, /types === "airport" && hasAirportMatches\(input\)/, "airport-only fields must use local directory matches before the proxy");
+assert.match(placeAutocomplete, /includeAirports && hasExactAirportMatch\(input\)/, "exact airport identifiers in general fields must avoid a redundant proxy request");
 assert.match(placeAutocomplete, /requestRef\.current\?\.abort\(\);[\s\S]*?const requestId = \+\+requestIdRef\.current;/, "address edits must cancel and invalidate stale requests immediately");
 assert.match(placeAutocomplete, /aria-busy=\{isSearching\}/, "address autocomplete must expose its searching state");
 assert.match(placeAutocomplete, /Searching addresses…/, "address autocomplete must explain its searching state to assistive technology");
