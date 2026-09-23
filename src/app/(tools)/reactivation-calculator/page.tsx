@@ -1,11 +1,20 @@
 'use client';
 
 import { useReducer, useRef, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import type { CalculatorState, CalculatorAction } from './types/calculator';
 import { useCalculator } from './hooks/useCalculator';
 import CategoryPricing from './components/CategoryPricing';
 import SubscriberInputs from './components/SubscriberInputs';
-import ResultsPanel from './components/ResultsPanel';
+
+const ResultsPanel = dynamic(() => import('./components/ResultsPanel'), {
+  ssr: false,
+  loading: () => (
+    <p role="status" style={{ color: '#666', fontSize: 14, margin: 0 }}>
+      Preparing your opportunity chart…
+    </p>
+  ),
+});
 
 // ── State ────────────────────────────────────────────────────────────────────
 
@@ -170,6 +179,10 @@ export default function ReactivationCalculatorPage() {
 
   const show2 = canSeeSection2(state) || state.activeSection >= 2;
   const show3 = canSeeSection3(state) || state.activeSection >= 3;
+
+  useEffect(() => {
+    if (show2 && !show3) void import('./components/ResultsPanel');
+  }, [show2, show3]);
 
   return (
     <div style={{

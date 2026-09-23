@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Bricolage_Grotesque, IBM_Plex_Sans } from "next/font/google";
 import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
 import { ANDROID_WAITLIST_URL, APP_STORE_URL } from "@/lib/constants";
+import "./homepage2-page.css";
 
 const display = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -203,6 +204,7 @@ export default function Homepage2() {
               alt="OnTimer persistent meeting alarm on an iPhone"
               width={1242}
               height={2688}
+              sizes="(max-width: 639px) 42vw, (max-width: 959px) 18rem, 17rem"
               priority
             />
             <Image
@@ -211,7 +213,7 @@ export default function Homepage2() {
               alt="OnTimer time-to-leave alarm for a doctor's appointment"
               width={1242}
               height={2688}
-              priority
+              sizes="(max-width: 639px) 42vw, (max-width: 959px) 18rem, 17rem"
             />
           </div>
         </div>
@@ -253,6 +255,7 @@ export default function Homepage2() {
               alt="OnTimer options for connecting Google, Microsoft 365, and Apple calendars"
               width={1242}
               height={2688}
+              sizes="(max-width: 959px) 72vw, 19rem"
             />
           </article>
 
@@ -270,12 +273,14 @@ export default function Homepage2() {
                 alt="A persistent OnTimer meeting alarm"
                 width={1242}
                 height={2688}
+                sizes="(max-width: 959px) 54vw, 17rem"
               />
               <Image
                 src="/images/homepage2/early-warning.png"
                 alt="OnTimer early warning alarm settings"
                 width={1242}
                 height={2688}
+                sizes="(max-width: 959px) 54vw, 17rem"
               />
             </div>
           </article>
@@ -293,6 +298,7 @@ export default function Homepage2() {
               alt="OnTimer time-to-leave alerts based on traffic"
               width={1242}
               height={2688}
+              sizes="(max-width: 959px) 72vw, 19rem"
             />
           </article>
         </div>
@@ -314,6 +320,7 @@ export default function Homepage2() {
             alt="OnTimer controls for travel alerts, recurring meetings, business hours, and pausing"
             width={1242}
             height={2688}
+            sizes="(max-width: 959px) 88vw, 27rem"
           />
         </div>
       </section>
@@ -393,6 +400,7 @@ export default function Homepage2() {
             alt=""
             width={200}
             height={200}
+            sizes="88px"
           />
           <div>
             <p className="hp2-kicker">One less thing to remember</p>

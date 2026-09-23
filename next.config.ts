@@ -8,9 +8,21 @@ const createNextConfig = (phase: string): NextConfig => ({
   distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next-dev" : ".next",
   images: {
     formats: ["image/avif", "image/webp"],
+    // Public image filenames are stable, so keep this conservative: visitors
+    // get repeat-load wins without making replacements stale for long periods.
+    minimumCacheTTL: 86_400,
   },
   async headers() {
     return [
+      {
+        source: "/images/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
       {
         // RFC 8288 Link header — advertise API catalog on every page for agent discovery
         source: "/(.*)",

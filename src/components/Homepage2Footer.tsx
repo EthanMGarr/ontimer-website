@@ -14,7 +14,7 @@ export function Homepage2Footer() {
   return (
     <footer className="hp2-footer">
       <div className="hp2-footer__lead">
-        <Image src="/images/homepage2/ontimer-wordmark.png" alt="OnTimer" width={238} height={158} />
+        <Image src="/images/homepage2/ontimer-wordmark.png" alt="OnTimer" width={238} height={158} sizes="208px" />
         <p>
           OnTimer is an iPhone calendar alarm app that turns events from Google Calendar,
           Apple Calendar, and Microsoft 365 into automatic, persistent alarms, so you know
