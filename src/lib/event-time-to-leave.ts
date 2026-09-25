@@ -8,6 +8,17 @@ export interface EventSource {
   url: string;
 }
 
+export interface EventPerformer {
+  name: string;
+  url?: string;
+  schemaType: "PerformingGroup" | "SportsTeam" | "Organization";
+}
+
+export interface EventOffer {
+  url: string;
+  validFrom?: string;
+}
+
 export interface EventRecord {
   id: string;
   slug: string;
@@ -25,6 +36,10 @@ export interface EventRecord {
   timeTBA: boolean;
   noSpecificTime: boolean;
   source: EventSource;
+  imageUrls?: string[];
+  performers?: EventPerformer[];
+  organizerName?: string;
+  offer?: EventOffer;
   sourceEventId: string;
   lastVerifiedAt: string;
 }
@@ -220,6 +235,9 @@ export const REVIEWED_EVENT_FIXTURES: EventRecord[] = [
       label: "MetLife Stadium",
       url: "https://www.metlifestadium.com/events/detail/acdc-power-up-tour-2026",
     },
+    imageUrls: ["https://www.metlifestadium.com/assets/img/ACDC-2024-Show11-Vienna-049-copy-2-c95e175331.jpg"],
+    performers: [{ name: "AC/DC", schemaType: "PerformingGroup" }],
+    offer: { url: "https://www.ticketmaster.com/event/0000635EBB18AA63" },
     sourceEventId: "acdc-power-up-tour-2026",
     lastVerifiedAt: "2026-09-20T12:00:00-04:00",
   },

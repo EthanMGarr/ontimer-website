@@ -29,7 +29,9 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Event URL dates use the venue's local calendar date, not the UTC date. When URL generation changes, permanently redirect a resolvable legacy provider URL to the new self-canonical URL rather than serving duplicate pages.
 - [ ] Event hubs and pages exclude ancillary ticket inventory such as parking, premium seating, season-ticket memberships, VIP packages, access products, and venue tours unless the listing is itself the real event a visitor travels to.
 - [ ] After an event starts, remove it from venue choices and the sitemap and return `noindex, follow` if the provider-backed page remains available for status or explanatory context. Do not redirect it to a venue hub unless that destination is genuinely equivalent.
+- [ ] Provider-backed event detail routes must not cache a transient upstream failure as a persistent 404. Keep successful provider data cached within quota, but make the route recover on a later request.
 - [ ] URLs emitted only in structured data (including breadcrumb `item` URLs) also resolve to canonical, indexable pages rather than 404s or avoidable redirects.
+- [ ] Event structured data includes source-backed recommended fields when available (description, image, performer, organizer, offers, and endDate). Missing optional data is preferable to inferring an end time, price, availability, performer identity, or organizer that the source does not establish.
 - [ ] Redirects are permanent only when the destination is genuinely canonical.
 - [ ] Redirect destinations use the canonical `www.ontimer.app` hostname and avoid redirect chains.
 - [ ] Airport destinations use `/airport-time-to-leave/[slug]`.

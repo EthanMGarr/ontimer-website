@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import EventLeaveCalculator from "./EventLeaveCalculator";
 import {
-  REVIEWED_EVENT_FIXTURES,
   getEventByFixtureSlug,
   getVenueProfile,
   eventLifecycle,
@@ -12,12 +11,17 @@ import {
   type EventRecord,
 } from "@/lib/event-time-to-leave";
 import { getTicketmasterEventById } from "@/lib/ticketmaster-events";
+import { buildEventStructuredData, eventPageDescription } from "@/lib/event-structured-data";
 
 interface EventPageProps {
   params: Promise<{ slug: string }>;
 }
 
 const EVENT_ROUTE = "/events";
+
+// The provider response remains cached below, but the route itself must not preserve a
+// transient provider failure as a long-lived prerendered 404.
+export const dynamic = "force-dynamic";
 
 function ticketmasterIdFromSlug(slug: string): string | null {
   const marker = "--tm-";
@@ -43,17 +47,6 @@ function formatted(date: string, timezone: string, options: Intl.DateTimeFormatO
   return new Intl.DateTimeFormat("en-US", { timeZone: timezone, ...options }).format(new Date(date));
 }
 
-function eventStatusUrl(status: EventRecord["status"]): string {
-  if (status === "cancelled") return "https://schema.org/EventCancelled";
-  if (status === "postponed") return "https://schema.org/EventPostponed";
-  if (status === "rescheduled") return "https://schema.org/EventRescheduled";
-  return "https://schema.org/EventScheduled";
-}
-
-export async function generateStaticParams() {
-  return REVIEWED_EVENT_FIXTURES.map(({ slug }) => ({ slug }));
-}
-
 export async function generateMetadata({ params }: EventPageProps): Promise<Metadata> {
   const { slug } = await params;
   const event = await resolveEvent(slug);
@@ -61,7 +54,7 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
   if (!event || !venue) return { robots: { index: false, follow: false } };
   const canonical = `https://www.ontimer.app${EVENT_ROUTE}/${event.slug}/when-to-leave`;
   const title = `What Time Should I Leave for ${event.title} at ${venue.name}?`;
-  const description = `Going to ${event.title} at ${venue.name}? Calculate when to leave using route time, venue arrival guidance, parking or transit, and timing buffers.`;
+  const description = eventPageDescription(event, venue);
   return {
     title,
     description,
@@ -95,28 +88,7 @@ export default async function EventWhenToLeavePage({ params }: EventPageProps) {
     month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit",
   });
   const canonical = `https://www.ontimer.app${EVENT_ROUTE}/${event.slug}/when-to-leave`;
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    name: `${event.title}${event.subtitle ? ` — ${event.subtitle}` : ""}`,
-    startDate: event.startDateTime,
-    eventStatus: eventStatusUrl(event.status),
-    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    url: canonical,
-    location: {
-      "@type": "Place",
-      name: venue.name,
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: venue.streetAddress,
-        addressLocality: venue.city,
-        addressRegion: venue.state,
-        postalCode: venue.postalCode,
-        addressCountry: venue.country,
-      },
-      geo: { "@type": "GeoCoordinates", latitude: venue.coordinates.latitude, longitude: venue.coordinates.longitude },
-    },
-  };
+  const jsonLd = buildEventStructuredData(event, venue, canonical);
 
   return (
     <>

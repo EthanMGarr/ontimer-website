@@ -30,10 +30,17 @@ interface TicketmasterEvent {
   url?: string;
   dates?: {
     start?: { dateTime?: string; localDate?: string; localTime?: string; noSpecificTime?: boolean; dateTBD?: boolean; dateTBA?: boolean; timeTBA?: boolean };
+    end?: { dateTime?: string };
     status?: { code?: string };
   };
+  images?: Array<{ url?: string; width?: number; height?: number; ratio?: string }>;
+  promoter?: { name?: string };
+  sales?: { public?: { startDateTime?: string } };
   classifications?: Array<{ segment?: { name?: string } }>;
-  _embedded?: { venues?: TicketmasterVenue[] };
+  _embedded?: {
+    venues?: TicketmasterVenue[];
+    attractions?: Array<{ name?: string; url?: string }>;
+  };
 }
 
 interface TicketmasterCollection<T> {
@@ -68,6 +75,34 @@ function eventCategory(name?: string): EventCategory {
   if (value === "music") return "concert";
   if (value === "sports") return "sports";
   return "other";
+}
+
+function eventImages(images: TicketmasterEvent["images"]): string[] {
+  const candidates = (images || [])
+    .filter((image): image is Required<Pick<NonNullable<TicketmasterEvent["images"]>[number], "url" | "width" | "height">> & { ratio?: string } => (
+      Boolean(image.url?.startsWith("https://"))
+      && image.url!.toLowerCase().includes(".jpg")
+      && (image.width || 0) >= 720
+      && (image.width || 0) * (image.height || 0) >= 50_000
+    ))
+    .sort((left, right) => (right.width * right.height) - (left.width * left.height));
+
+  const seenRatios = new Set<string>();
+  const selected: string[] = [];
+  for (const image of candidates) {
+    const ratio = image.ratio || `${Math.round((image.width / image.height) * 100)}`;
+    if (seenRatios.has(ratio)) continue;
+    seenRatios.add(ratio);
+    selected.push(image.url);
+    if (selected.length === 3) break;
+  }
+  return selected;
+}
+
+function credibleOrganizerName(category: EventCategory, name?: string): string | undefined {
+  if (category !== "concert") return undefined;
+  const trimmed = name?.trim();
+  return trimmed || undefined;
 }
 
 function eventSlug(title: string, venue: string, localDate: string, sourceId: string): string {
@@ -109,20 +144,35 @@ function normalizeEvent(raw: TicketmasterEvent, venueProfile: VenueProfile, chec
   const startDateTime = flags?.dateTime;
   if (!id || !title || !startDateTime || isAncillaryEventListingTitle(title)) return null;
   const localDate = flags.localDate || eventLocalDateIso(startDateTime, venue?.timezone || venueProfile.timezone);
+  const category = eventCategory(raw.classifications?.[0]?.segment?.name);
+  const imageUrls = eventImages(raw.images);
+  const performers = (raw._embedded?.attractions || [])
+    .map((attraction) => ({
+      name: attraction.name?.trim() || "",
+      url: attraction.url?.startsWith("https://") ? attraction.url : undefined,
+      schemaType: category === "sports" ? "SportsTeam" as const : category === "concert" ? "PerformingGroup" as const : "Organization" as const,
+    }))
+    .filter((performer) => performer.name);
+  const organizerName = credibleOrganizerName(category, raw.promoter?.name);
 
   return {
     id: `ticketmaster-${id}`,
     slug: eventSlug(title, venue?.name || venueProfile.name, localDate, id),
     title,
-    category: eventCategory(raw.classifications?.[0]?.segment?.name),
+    category,
     venueId: venueProfile.id,
     startDateTime,
+    endDateTime: raw.dates?.end?.dateTime,
     timezone: venue?.timezone || venueProfile.timezone,
     status: eventStatus(raw.dates?.status?.code),
     dateTBD: Boolean(flags?.dateTBD || flags?.dateTBA),
     timeTBA: Boolean(flags?.timeTBA),
     noSpecificTime: Boolean(flags?.noSpecificTime),
     source: { label: "Ticketmaster", url: raw.url || `https://www.ticketmaster.com/event/${id}` },
+    imageUrls: imageUrls.length ? imageUrls : undefined,
+    performers: performers.length ? performers : undefined,
+    organizerName,
+    offer: raw.url ? { url: raw.url, validFrom: raw.sales?.public?.startDateTime } : undefined,
     sourceEventId: id,
     lastVerifiedAt: checkedAt,
   };
