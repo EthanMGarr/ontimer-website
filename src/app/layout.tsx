@@ -11,36 +11,6 @@ const gaBootstrapScript = isWebsiteAnalyticsEnabled(process.env.NODE_ENV)
   ? createAnalyticsBootstrapScript(ANALYTICS_FREE_MEDICATION_PATHS)
   : null;
 
-// Travelpayouts requires its Drive loader to verify site ownership. Keep it
-// constrained to the public homepage and behind the existing regional consent
-// gate; calculator monetization continues to use explicit affiliate links.
-const travelpayoutsVerificationScript = `
-  (function () {
-    var started = false;
-    function cookie(name) {
-      var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
-      return match ? decodeURIComponent(match[1]) : null;
-    }
-    function allowed() {
-      if (window.location.pathname !== '/') return false;
-      return cookie('ontimer_region') !== 'regulated' || cookie('ontimer_consent') === 'granted';
-    }
-    function start() {
-      if (started || !allowed()) return;
-      started = true;
-      var script = document.createElement('script');
-      script.async = true;
-      script.setAttribute('data-cmp-ab', '2');
-      script.src = 'https://tpembars.com/NTY5Njgw.js?t=569680';
-      document.head.appendChild(script);
-    }
-    window.addEventListener('ontimer-consent', function (event) {
-      if (event && event.detail === 'granted') start();
-    });
-    start();
-  }());
-`;
-
 // Set the document language before hydration for explicit localized routes.
 // English remains the default and there are deliberately no automatic redirects.
 const documentLanguageScript = `
@@ -125,7 +95,6 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: documentLanguageScript }} />
         {gaBootstrapScript ? <script dangerouslySetInnerHTML={{ __html: gaBootstrapScript }} /> : null}
-        <script dangerouslySetInnerHTML={{ __html: travelpayoutsVerificationScript }} />
       </head>
       <body className="bg-zinc-950 text-white min-h-screen flex flex-col">
         <HelpSiteFrame>{children}</HelpSiteFrame>

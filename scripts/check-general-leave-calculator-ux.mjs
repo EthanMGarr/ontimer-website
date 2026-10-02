@@ -78,6 +78,8 @@ assert.doesNotMatch(handoff, /inline-flex whitespace-nowrap text-zinc-500/, "res
 assert.doesNotMatch(handoff, /copy\.adds|copy\.at/, "the calendar handoff must not repeat the event title and leave time visually");
 assert.match(handoff, /aria-label=\{eventPreview[\s\S]*?eventPreview\.title[\s\S]*?eventPreview\.startLabel/, "the calendar action must retain event and time context for assistive technology");
 assert.match(handoff, /setIsAndroidDevice\(isAndroidUserAgent\(navigator\.userAgent\)\)/, "affiliate routing must depend on the Android user agent, not viewport width");
+assert.match(handoff, /href: "https:\/\/tpx\.lv\/0BXXJ4gE"/, "the explicit Android affiliate offer must remain available");
+assert.doesNotMatch(rootLayout, /tpembars|Travelpayouts|travelpayoutsVerificationScript/i, "the global layout must not load Travelpayouts Drive or automatic monetization");
 assert.match(rootLayout, /<html[^>]*suppressHydrationWarning/, "the intentional localized document-language update must not emit a hydration warning");
 
 assert.ok(page.indexOf("<LeaveTimeCalculator") < page.indexOf("How to calculate when to leave"), "the task must precede supporting SEO copy");
