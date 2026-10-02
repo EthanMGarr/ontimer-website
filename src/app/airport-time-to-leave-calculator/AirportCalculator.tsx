@@ -69,17 +69,19 @@ const airportCopy = {
     startError: "Enter your starting location for automatic travel time, or enter the journey time manually below.",
     adjustFlight: "Adjust flight details", enterFlight: "Enter flight details", editTrip: "Edit Trip", yourTrip: "Your Trip",
     flightDate: "Flight date", flightDeparts: "Flight departs at", flightType: "Flight type", domestic: "Domestic", international: "International",
+    recommendedArrival: "Recommended airport arrival", beforeFlight: "before the flight", startingPointHelp: "Enter your starting location or use your current location so we can estimate the trip.",
     route: "Route", leavingFrom: "Leaving from", addressCity: "Your address or city", departureAirport: "Departure airport",
     airportPlaceholder: "Departure airport name or IATA code", airportExample: "e.g. JFK, LAX, Newark",
     calculating: "Calculating leave time...", update: "Update Leave Time", show: "Show My Leave Time", calculate: "Calculate leave time",
-    addAirport: "Add your airport to calculate.", addOrigin: "Add where you are leaving from, or enter the journey time manually.",
+    addAirport: "Add your airport to calculate.",
     whatWeUse: "What we use", smartTiming: "Smart airport timing enabled", smartTimingBody: "We automatically account for the timing factors most travelers miss.",
     bagDropTime: "Bag drop time", hideAdjustments: "Hide adjustments", hideAssumptions: "Hide assumptions", adjustAssumptions: "Adjust assumptions", customize: "Customize timing assumptions", modified: "modified",
     trustedPrograms: "Trusted traveler programs", bags: "Bags", checkingBag: "Checking a bag", gettingThere: "Getting to the airport by",
     parkingMode: "Parking", rideshare: "Rideshare", dropoff: "Drop-off", publicTransit: "Public transit", transitTime: "Transit time", driveTime: "Drive time",
     automaticTravel: "Estimated automatically from your locations for the selected travel mode.", manualTravel: "Enter travel time manually instead", example35: "e.g. 35",
-    automaticInstead: "Use automatic estimate instead", recommendedBuffer: "Use recommended buffer", adjustBuffer: "Adjust airport arrival buffer", recommended: "recommended",
-    recommendedPlaceholder: "Recommended", bufferHelp: "How early to arrive at the airport before your flight.", adjustSecurity: "Adjust security time manually", customSecurity: "Custom security time", auto: "Auto", estimatedInstead: "Use estimated time instead",
+    automaticInstead: "Use automatic estimate instead", recommendedBuffer: "Use recommended buffer", adjustBuffer: "Adjust airport arrival buffer",
+    recommendedPlaceholder: "Recommended", adjustSecurity: "Adjust security time manually", customSecurity: "Custom security time", auto: "Auto", estimatedInstead: "Use estimated time instead",
+    customBufferMinutes: "Custom airport arrival time in minutes", customBufferHelp: "Enter the total time you want between reaching the airport and your flight departure.",
     forFlight: "For your", flight: "flight", leaveBy: "Leave by", drive: "drive", security: "security", arriveBy: "Arrive by",
     parkingIncluded: "Parking included", transferIncluded: "Terminal transfer included", rideshareIncluded: "Rideshare access included", dropoffIncluded: "Drop-off access included", bagIncluded: "Bag drop included",
     alarmHeading: "Don’t be late. Turn this into an alarm.", alarmBody: "OnTimer automatically sets alarms for your calendar events",
@@ -97,17 +99,19 @@ const airportCopy = {
     startError: "Indica tu punto de partida para calcular el trayecto automáticamente o escribe el tiempo de viaje abajo.",
     adjustFlight: "Modificar datos del vuelo", enterFlight: "Introduce los datos del vuelo", editTrip: "Editar viaje", yourTrip: "Tu viaje",
     flightDate: "Fecha del vuelo", flightDeparts: "El vuelo sale a las", flightType: "Tipo de vuelo", domestic: "Nacional", international: "Internacional",
+    recommendedArrival: "Llegada recomendada al aeropuerto", beforeFlight: "antes del vuelo", startingPointHelp: "Indica tu punto de partida o usa tu ubicación actual para calcular el trayecto.",
     route: "Trayecto", leavingFrom: "Sales desde", addressCity: "Tu dirección o ciudad", departureAirport: "Aeropuerto de salida",
     airportPlaceholder: "Nombre o código IATA del aeropuerto de salida", airportExample: "p. ej., MAD, MEX, SCL",
     calculating: "Calculando la hora de salida…", update: "Actualizar hora de salida", show: "Mostrar mi hora de salida", calculate: "Calcular hora de salida",
-    addAirport: "Añade tu aeropuerto para calcular.", addOrigin: "Indica desde dónde sales o introduce el tiempo de viaje manualmente.",
+    addAirport: "Añade tu aeropuerto para calcular.",
     whatWeUse: "Qué tenemos en cuenta", smartTiming: "Planificación inteligente del aeropuerto", smartTimingBody: "Incluimos automáticamente los tiempos que más suelen olvidarse.",
     bagDropTime: "Tiempo para facturar equipaje", hideAdjustments: "Ocultar ajustes", hideAssumptions: "Ocultar supuestos", adjustAssumptions: "Ajustar tiempos", customize: "Personalizar tiempos", modified: "modificados",
     trustedPrograms: "Programas para viajeros autorizados", bags: "Equipaje", checkingBag: "Voy a facturar equipaje", gettingThere: "Cómo llegarás al aeropuerto",
     parkingMode: "Aparcamiento", rideshare: "VTC / taxi", dropoff: "Me dejan en la terminal", publicTransit: "Transporte público", transitTime: "Tiempo en transporte", driveTime: "Tiempo en coche",
     automaticTravel: "Calculado automáticamente con tus ubicaciones y el medio de transporte elegido.", manualTravel: "Indicar el tiempo de viaje manualmente", example35: "p. ej., 35",
-    automaticInstead: "Usar el cálculo automático", recommendedBuffer: "Usar el margen recomendado", adjustBuffer: "Ajustar el margen de llegada", recommended: "recomendado",
-    recommendedPlaceholder: "Recomendado", bufferHelp: "Antelación con la que quieres llegar al aeropuerto antes del vuelo.", adjustSecurity: "Ajustar manualmente el tiempo de seguridad", customSecurity: "Tiempo de seguridad personalizado", auto: "Automático", estimatedInstead: "Usar el tiempo estimado",
+    automaticInstead: "Usar el cálculo automático", recommendedBuffer: "Usar el margen recomendado", adjustBuffer: "Ajustar el margen de llegada",
+    recommendedPlaceholder: "Recomendado", adjustSecurity: "Ajustar manualmente el tiempo de seguridad", customSecurity: "Tiempo de seguridad personalizado", auto: "Automático", estimatedInstead: "Usar el tiempo estimado",
+    customBufferMinutes: "Tiempo personalizado de llegada al aeropuerto en minutos", customBufferHelp: "Indica el tiempo total que quieres entre llegar al aeropuerto y la salida del vuelo.",
     forFlight: "Para tu vuelo", flight: "", leaveBy: "Sal a más tardar a las", drive: "en coche", security: "de seguridad", arriveBy: "Llega antes de las",
     parkingIncluded: "Aparcamiento incluido", transferIncluded: "Traslado a la terminal incluido", rideshareIncluded: "Acceso en VTC / taxi incluido", dropoffIncluded: "Acceso a la terminal incluido", bagIncluded: "Facturación de equipaje incluida",
     alarmHeading: "No llegues tarde. Convierte este evento en una alarma.", alarmBody: "OnTimer configura alarmas automáticamente para los eventos de tu calendario",
@@ -279,7 +283,7 @@ function SegmentedControl<T extends string>({
   onChange,
 }: {
   options: { value: T; label: string }[];
-  value: T;
+  value: T | null;
   onChange: (v: T) => void;
 }) {
   return (
@@ -927,6 +931,9 @@ export default function AirportCalculator({
                   value={flightType}
                   onChange={setFlightType}
                 />
+                <p className="mt-2 text-xs leading-relaxed text-zinc-400" role="status">
+                  {`${copy.recommendedArrival}: ${fmtDuration(defaultBuffer, locale)} ${copy.beforeFlight} (${defaultBuffer} min).`}
+                </p>
               </div>
             </div>
 
@@ -941,16 +948,21 @@ export default function AirportCalculator({
                 <div className="min-w-0">
                   <FieldLabel>{copy.leavingFrom}</FieldLabel>
                   <PlaceAutocomplete
+                    id="airport-origin"
                     value={origin}
                     onChange={handleOriginChange}
                     placeholder={copy.addressCity}
                     inputClassName={inputClass}
+                    ariaDescribedBy="airport-origin-help"
                   />
                   <CurrentLocationControl
                     active={currentLocation !== null}
                     onLocationChange={handleCurrentLocationChange}
                     locale={locale}
                   />
+                  <p id="airport-origin-help" className="mt-1.5 text-xs leading-relaxed text-zinc-400">
+                    {copy.startingPointHelp}
+                  </p>
                 </div>
                 <div>
                   <FieldLabel>{copy.departureAirport}</FieldLabel>
@@ -1006,12 +1018,6 @@ export default function AirportCalculator({
                 {copy.addAirport}
               </p>
             )}
-            {airport.trim().length >= 2 && !origin.trim() && !hasManualDriveTime && (
-              <p className="text-center text-xs text-zinc-500">
-                {copy.addOrigin}
-              </p>
-            )}
-
             {/* Smart airport timing card */}
             <div className={`rounded-xl border p-4 ${
               resultHeroMode ? "border-zinc-800 bg-zinc-900/60" : "border-zinc-700 bg-zinc-800/70"
@@ -1150,23 +1156,22 @@ export default function AirportCalculator({
                       onClick={() => setShowBufferOverride(!showBufferOverride)}
                       className="text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
                     >
-                      {showBufferOverride
-                        ? copy.recommendedBuffer
-                        : `${copy.adjustBuffer} (${fmtDuration(defaultBuffer, locale)} ${copy.recommended})`}
+                      {showBufferOverride ? copy.recommendedBuffer : copy.adjustBuffer}
                     </button>
                     {showBufferOverride && (
                       <div className="mt-3">
+                        <FieldLabel>{copy.customBufferMinutes}</FieldLabel>
                         <input
                           type="number"
                           min="0"
                           max="480"
-                          placeholder={`${copy.recommendedPlaceholder}: ${defaultBuffer} min`}
+                          placeholder={String(defaultBuffer)}
                           value={customBuffer}
                           onChange={(e) => setCustomBuffer(e.target.value)}
                           className={inputClass}
                         />
                         <p className="mt-1.5 text-xs text-zinc-400">
-                          {copy.bufferHelp}
+                          {`${copy.recommendedPlaceholder}: ${fmtDuration(defaultBuffer, locale)} (${defaultBuffer} min). ${copy.customBufferHelp}`}
                         </p>
                       </div>
                     )}

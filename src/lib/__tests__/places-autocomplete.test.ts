@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import {
   AUTOCOMPLETE_FIELD_MASK,
+  AUTOCOMPLETE_PASTE_DEBOUNCE_MS,
+  AUTOCOMPLETE_TYPING_DEBOUNCE_MS,
   includedPrimaryTypesFor,
   isAirportCodeQuery,
   isAutocompleteInputEligible,
@@ -9,6 +11,8 @@ import {
 } from "../places-autocomplete";
 
 async function main() {
+  assert.equal(AUTOCOMPLETE_TYPING_DEBOUNCE_MS, 650);
+  assert.equal(AUTOCOMPLETE_PASTE_DEBOUNCE_MS, 750);
   assert.equal(isAutocompleteInputEligible("ab"), false);
   assert.equal(isAutocompleteInputEligible("  ab  "), false);
   assert.equal(isAutocompleteInputEligible("abc"), false);
@@ -26,6 +30,7 @@ async function main() {
 
   let capturedUrl = "";
   let capturedInit: RequestInit | undefined;
+  const healthReports: Array<{ outcome: string; predictionCount: number }> = [];
   const predictions = await requestAutocomplete(
   "Newark",
   ["geocode"],
@@ -48,7 +53,8 @@ async function main() {
         { queryPrediction: { text: { text: "ignored query" } } },
       ],
     }), { status: 200 });
-  }
+  },
+  (health) => healthReports.push(health)
   );
 
   assert.deepEqual(predictions, [{
@@ -66,6 +72,9 @@ async function main() {
   const body = JSON.parse(String(capturedInit?.body)) as Record<string, unknown>;
   assert.equal(body.sessionToken, undefined);
   assert.equal(capturedUrl.includes("session"), false);
+  assert.equal(healthReports.length, 1);
+  assert.equal(healthReports[0]?.outcome, "succeeded");
+  assert.equal(healthReports[0]?.predictionCount, 1);
 
   const originalConsoleError = console.error;
   const errorLogs: string[] = [];

@@ -158,6 +158,9 @@ The repository runner invokes `node_modules/vercel/dist/vc.js` directly, so PATH
 The core marketing pages build without external credentials. Production integrations use these variables when their related features are enabled:
 
 - `GOOGLE_MAPS_API_KEY` — places autocomplete and travel-time APIs
+- `MAPBOX_ACCESS_TOKEN` — server-only Search Box and Directions token for the general-calculator pilot
+- `MAPBOX_PILOT_ENABLED=false` — server-side kill switch; set to `true` to use Mapbox for general-calculator autocomplete and eligible driving/walking routes
+- `MAPBOX_PILOT_EXPIRES_AT` — required ISO timestamp for an enabled Mapbox pilot; the site fails closed to Google when the timestamp is missing, invalid, or reached
 - `TSA_WAIT_TIMES_API_KEY` — licensed TSAWaitTimes.com airport security estimates (server-side only)
 - `AIRPORT_SECURITY_TSAWAITTIMES_ENABLED=false` — optional kill switch for the security-estimate provider
 - Website Google Analytics uses the source-controlled production measurement ID in

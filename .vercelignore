@@ -1,0 +1,5 @@
+.next
+.next-dev
+.local-preview
+node_modules
+tsconfig.tsbuildinfo

@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
 import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
-import PlaceAutocomplete from "@/components/PlaceAutocomplete";
+import PlaceAutocomplete, { type SelectedAutocompletePlace } from "@/components/PlaceAutocomplete";
 import {
   fireEvent,
   trackCalculatorCompleted,
@@ -27,7 +27,7 @@ interface CalculatorResult {
   travelMinutes: number;
   bufferMinutes: number;
   prepMinutes: number;
-  travelSource: "google" | "manual";
+  travelSource: "google" | "mapbox" | "manual";
   hasTrafficData: boolean;
   trafficBasis: TrafficBasis;
   planningMode: PlanningMode;
@@ -39,6 +39,7 @@ interface TravelTimeResponse {
   hasTrafficData: boolean;
   trafficBasis: TrafficBasis;
   cacheHit: boolean;
+  provider: "google" | "mapbox";
   error?: string;
 }
 
@@ -49,7 +50,7 @@ const calculatorCopy = {
     locationUnavailable: "Current location is not available in this browser. Enter an address instead.",
     currentLocation: "Current location", locationAdded: "Current location added.",
     locationDenied: "We couldn’t access your location. Allow location access or enter an address.",
-    automaticUnavailable: "Automatic travel time is unavailable for this route. Enter travel time below, or try a fuller address.",
+    automaticUnavailable: "Automatic travel time is unavailable for this route. Use Timing options above to enter travel time manually, or try a fuller address.",
     startingLocationNeeded: "Add a starting location for automatic travel time, or enter minutes manually in timing assumptions.",
     modes: { DRIVE: "drive", WALK: "walk", TRANSIT: "transit" },
     leaveFor: "Leave for", destinationFallback: "destination", leaveBy: "Leave by",
@@ -63,7 +64,7 @@ const calculatorCopy = {
     startingRequired: "Enter a starting location or use your current location.", destinationRequired: "Enter a destination.",
     arrivalDate: "Arrival date", arriveBy: "Arrive by", travelMode: "Travel mode",
     driving: "Driving", walking: "Walking", transit: "Transit",
-    estimating: "Estimating travel time…", calculate: "Calculate leave time",
+    confirmingAddress: "Confirming address…", estimating: "Estimating travel time…", calculate: "Calculate leave time",
     extraBuffer: "Extra buffer you like to have", parkingTime: "Parking / walk-in time",
     hideAdjustments: "Hide adjustments", travelTime: "Travel time",
     automaticEstimate: "Estimated automatically from your locations.", manualInstead: "✏︎ Edit travel time manually",
@@ -79,7 +80,7 @@ const calculatorCopy = {
     locationUnavailable: "Tu ubicación actual no está disponible en este navegador. Escribe una dirección.",
     currentLocation: "Ubicación actual", locationAdded: "Ubicación actual añadida.",
     locationDenied: "No pudimos acceder a tu ubicación. Permite el acceso o escribe una dirección.",
-    automaticUnavailable: "No se pudo calcular automáticamente el tiempo para esta ruta. Indica el tiempo de viaje o prueba con una dirección más completa.",
+    automaticUnavailable: "No se pudo calcular automáticamente el tiempo para esta ruta. Usa Opciones de tiempo arriba para indicar el viaje manualmente o prueba con una dirección más completa.",
     startingLocationNeeded: "Añade un punto de partida para calcular el viaje automáticamente o indica los minutos en los ajustes.",
     modes: { DRIVE: "en coche", WALK: "a pie", TRANSIT: "en transporte público" },
     leaveFor: "Salir hacia", destinationFallback: "el destino", leaveBy: "Sal a más tardar a las",
@@ -93,7 +94,7 @@ const calculatorCopy = {
     startingRequired: "Indica un punto de partida o usa tu ubicación actual.", destinationRequired: "Indica un destino.",
     arrivalDate: "Fecha de llegada", arriveBy: "Llegar antes de", travelMode: "Medio de transporte",
     driving: "Coche", walking: "A pie", transit: "Transporte público",
-    estimating: "Calculando el viaje…", calculate: "Calcular hora de salida",
+    confirmingAddress: "Confirmando dirección…", estimating: "Calculando el viaje…", calculate: "Calcular hora de salida",
     extraBuffer: "Margen adicional que prefieres", parkingTime: "Tiempo para aparcar / entrar",
     hideAdjustments: "Ocultar ajustes", travelTime: "Tiempo de viaje",
     automaticEstimate: "Calculado automáticamente a partir de tus ubicaciones.", manualInstead: "✏︎ Indicar el tiempo manualmente",
@@ -206,18 +207,88 @@ async function fetchTravelTime(
   origin: string,
   destination: string,
   departureAt: Date,
-  travelMode: TravelMode
+  travelMode: TravelMode,
+  provider: "google" | "mapbox",
+  originCoordinates?: SelectedAutocompletePlace["coordinates"],
+  destinationCoordinates?: SelectedAutocompletePlace["coordinates"]
 ): Promise<TravelTimeResponse> {
   const params = new URLSearchParams({
     origin: origin.trim(),
     destination: destination.trim(),
     departureTime: Math.floor(departureAt.getTime() / 1000).toString(),
     travelMode,
+    provider,
   });
-  const res = await fetch(`/api/travel-time?${params}`);
+  if (originCoordinates && destinationCoordinates) {
+    params.set("originLatitude", String(originCoordinates.latitude));
+    params.set("originLongitude", String(originCoordinates.longitude));
+    params.set("destinationLatitude", String(destinationCoordinates.latitude));
+    params.set("destinationLongitude", String(destinationCoordinates.longitude));
+  }
+  const res = provider === "mapbox"
+    ? await fetch("/api/travel-time", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.fromEntries(params)),
+    })
+    : await fetch(`/api/travel-time?${params}`);
   const body: TravelTimeResponse = await res.json();
   if (!res.ok) throw new Error(body.error ?? `API error ${res.status}`);
   return body;
+}
+
+async function resolveTypedMapboxLocation(
+  input: string,
+  locale: SiteLocale
+): Promise<SelectedAutocompletePlace | null> {
+  const sessionToken = globalThis.crypto?.randomUUID?.()
+    ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  const suggestResponse = await fetch("/api/mapbox-search", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "suggest",
+      input: input.trim(),
+      sessionToken,
+      language: locale,
+    }),
+  });
+  if (!suggestResponse.ok) return null;
+  const suggestBody = await suggestResponse.json() as {
+    predictions?: Array<{
+      placeId: string;
+      description: string;
+      mainText: string;
+      secondaryText: string;
+    }>;
+  };
+  const prediction = suggestBody.predictions?.[0];
+  if (!prediction) return null;
+
+  const retrieveResponse = await fetch("/api/mapbox-search", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "retrieve",
+      placeId: prediction.placeId,
+      sessionToken,
+      language: locale,
+    }),
+  });
+  if (!retrieveResponse.ok) return null;
+  const retrieveBody = await retrieveResponse.json() as {
+    place?: SelectedAutocompletePlace;
+  };
+  if (!retrieveBody.place) return null;
+
+  const reviewedDescription = [prediction.mainText.trim(), prediction.secondaryText.trim()]
+    .filter(Boolean)
+    .join(", ") || prediction.description;
+  return {
+    ...retrieveBody.place,
+    provider: "mapbox",
+    description: reviewedDescription,
+  };
 }
 
 // ─── Analytics ────────────────────────────────────────────────────────────────
@@ -324,8 +395,6 @@ function SegmentedControl<T extends string>({
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const TRAVEL_MODE_KEY = "leaveCalc_travelMode";
-
 const inputClass =
   "min-h-11 min-w-0 w-full max-w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500";
 
@@ -345,7 +414,13 @@ function defaultArrival() {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLocale }) {
+export default function LeaveTimeCalculator({
+  locale = "en",
+  mapboxPilotEnabled = false,
+}: {
+  locale?: SiteLocale;
+  mapboxPilotEnabled?: boolean;
+}) {
   const copy = calculatorCopy[locale];
   const journeyCopy = journeyPurposeCopy[locale];
 
@@ -354,6 +429,8 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
   const [today, setToday] = useState("");
   const [destination, setDestination] = useState("");
   const [origin, setOrigin] = useState("");
+  const [originPlace, setOriginPlace] = useState<SelectedAutocompletePlace | null>(null);
+  const [destinationPlace, setDestinationPlace] = useState<SelectedAutocompletePlace | null>(null);
   const [currentLocation, setCurrentLocation] = useState<string | null>(null);
   const [locationStatus, setLocationStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [locationMessage, setLocationMessage] = useState<string | null>(null);
@@ -361,6 +438,8 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
   const planningMode = planningModeForDate(arrivalDate);
   const [arrivalTime, setArrivalTime] = useState("");
   const [travelMode, setTravelMode] = useState<TravelMode>("DRIVE");
+  const [isResolvingOrigin, setIsResolvingOrigin] = useState(false);
+  const [isResolvingDestination, setIsResolvingDestination] = useState(false);
   const [buffer, setBuffer] = useState(10);
   const [prepTime, setPrepTime] = useState(0);
 
@@ -381,6 +460,10 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
   const assumptionsRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const resultPanelRef = useRef<HTMLDivElement>(null);
+  const originResolutionPendingRef = useRef(false);
+  const destinationResolutionPendingRef = useRef(false);
+  const calculateAfterResolutionRef = useRef(false);
+  const handleCalculateRef = useRef<() => void>(() => undefined);
 
   // Derived
   const purposeCopy = journeyCopy.purpose[journeyPurpose];
@@ -411,15 +494,19 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
     setArrivalTime(time);
   }, []);
 
-  // Restore travel mode from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem(TRAVEL_MODE_KEY) as TravelMode;
-    if (["DRIVE", "WALK", "TRANSIT"].includes(saved)) setTravelMode(saved);
-  }, []);
+    if (
+      !isResolvingOrigin &&
+      !isResolvingDestination &&
+      calculateAfterResolutionRef.current
+    ) {
+      calculateAfterResolutionRef.current = false;
+      handleCalculateRef.current();
+    }
+  }, [isResolvingDestination, isResolvingOrigin]);
 
   function handleTravelModeChange(mode: TravelMode) {
     setTravelMode(mode);
-    localStorage.setItem(TRAVEL_MODE_KEY, mode);
   }
 
   function handleJourneyPurposeChange(purpose: JourneyPurpose) {
@@ -433,6 +520,8 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
     const tmp = destination;
     setDestination(currentLocation ?? origin);
     setOrigin(tmp);
+    setOriginPlace(destinationPlace);
+    setDestinationPlace(currentLocation ? null : originPlace);
     setCurrentLocation(null);
     setLocationStatus("idle");
     setLocationMessage(null);
@@ -443,6 +532,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
 
   function handleOriginChange(value: string) {
     setOrigin(value);
+    setOriginPlace(null);
     setCurrentLocation(null);
     setLocationStatus("idle");
     setLocationMessage(null);
@@ -452,8 +542,19 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
 
   function handleDestinationChange(value: string) {
     setDestination(value);
+    setDestinationPlace(null);
     setError(null);
     setFallbackNotice(null);
+  }
+
+  function handleOriginResolutionChange(isResolving: boolean) {
+    originResolutionPendingRef.current = isResolving;
+    setIsResolvingOrigin(isResolving);
+  }
+
+  function handleDestinationResolutionChange(isResolving: boolean) {
+    destinationResolutionPendingRef.current = isResolving;
+    setIsResolvingDestination(isResolving);
   }
 
   function handleUseCurrentLocation() {
@@ -469,6 +570,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
       ({ coords }) => {
         setCurrentLocation(`${coords.latitude},${coords.longitude}`);
         setOrigin(copy.currentLocation);
+        setOriginPlace(null);
         setLocationStatus("success");
         setLocationMessage(copy.locationAdded);
         track("current_location_used", { accuracy_meters: Math.round(coords.accuracy) });
@@ -491,6 +593,10 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
   }
 
   async function handleCalculate() {
+    if (originResolutionPendingRef.current || destinationResolutionPendingRef.current) {
+      calculateAfterResolutionRef.current = true;
+      return;
+    }
     setSubmitAttempted(true);
     if (!isFormValid) {
       formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -507,7 +613,7 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
     const arrival = new Date(year, month - 1, day, hour, minute, 0);
 
     let travelMinutes: number;
-    let travelSource: "google" | "manual" = "manual";
+    let travelSource: "google" | "mapbox" | "manual" = "manual";
     let hasTrafficData = false;
     let trafficBasis: TrafficBasis = "none";
 
@@ -517,9 +623,56 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
     } else if (hasRouteInputs) {
       setIsCalculating(true);
       try {
-        const res = await fetchTravelTime(currentLocation ?? origin, destination, arrival, travelMode);
+        const currentCoordinates = currentLocation
+          ? (() => {
+            const [latitude, longitude] = currentLocation.split(",").map(Number);
+            return Number.isFinite(latitude) && Number.isFinite(longitude)
+              ? { latitude, longitude }
+              : undefined;
+          })()
+          : undefined;
+        let resolvedOriginPlace = originPlace;
+        let resolvedDestinationPlace = destinationPlace;
+        let originCoordinates = currentCoordinates ?? resolvedOriginPlace?.coordinates;
+        let destinationCoordinates = resolvedDestinationPlace?.coordinates;
+
+        // Mobile browsers do not agree on the order of blur, outside-click,
+        // and button events. Resolve any still-typed Mapbox endpoint inside the
+        // Calculate operation so current-location Walking can never silently
+        // fall through to Google merely because a suggestion tap was skipped.
+        if (mapboxPilotEnabled && travelMode !== "TRANSIT") {
+          if (!originCoordinates && origin.trim().length >= 2) {
+            resolvedOriginPlace = await resolveTypedMapboxLocation(origin, locale);
+            if (resolvedOriginPlace) {
+              originCoordinates = resolvedOriginPlace.coordinates;
+              setOriginPlace(resolvedOriginPlace);
+            }
+          }
+          if (!destinationCoordinates && destination.trim().length >= 2) {
+            resolvedDestinationPlace = await resolveTypedMapboxLocation(destination, locale);
+            if (resolvedDestinationPlace) {
+              destinationCoordinates = resolvedDestinationPlace.coordinates;
+              setDestinationPlace(resolvedDestinationPlace);
+            }
+          }
+        }
+        const routeProvider = mapboxPilotEnabled
+          && travelMode !== "TRANSIT"
+          && originCoordinates
+          && destinationCoordinates
+          ? "mapbox"
+          : "google";
+        const res = await fetchTravelTime(
+          currentLocation ?? origin,
+          destination,
+          arrival,
+          travelMode,
+          routeProvider,
+          originCoordinates,
+          destinationCoordinates
+        );
         travelMinutes = res.durationMinutes;
-        travelSource = "google";
+        travelSource = res.provider;
         hasTrafficData = res.hasTrafficData;
         trafficBasis = res.trafficBasis;
         track(res.cacheHit ? "travel_time_cache_hit" : "routes_api_called", {
@@ -585,6 +738,10 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
     }, 50);
   }
 
+  handleCalculateRef.current = () => {
+    void handleCalculate();
+  };
+
   const leaveCalendarEvent = result
     ? {
         title: `${purposeCopy.eventPrefix} ${destination.split(",")[0] || copy.destinationFallback}`,
@@ -632,6 +789,10 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
                 placeholder={copy.startingAddress}
                 inputClassName={inputClass}
                 includeAirports
+                provider={mapboxPilotEnabled ? "mapbox" : "google"}
+                locale={locale}
+                onPlaceSelected={setOriginPlace}
+                onResolutionChange={handleOriginResolutionChange}
               />
               {submitAttempted && !hasOrigin && (
                 <p className="mt-1.5 text-xs text-red-400" role="alert">{copy.startingRequired}</p>
@@ -679,6 +840,10 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
                 placeholder={purposeCopy.destinationPlaceholder}
                 inputClassName={inputClass}
                 includeAirports
+                provider={mapboxPilotEnabled ? "mapbox" : "google"}
+                locale={locale}
+                onPlaceSelected={setDestinationPlace}
+                onResolutionChange={handleDestinationResolutionChange}
               />
               {submitAttempted && !hasDestination && (
                 <p className="mt-1.5 text-xs text-red-400" role="alert">{purposeCopy.destinationRequired}</p>
@@ -778,10 +943,14 @@ export default function LeaveTimeCalculator({ locale = "en" }: { locale?: SiteLo
               <button
                 type="button"
                 onClick={handleCalculate}
-                disabled={isCalculating}
+                disabled={isCalculating || isResolvingOrigin || isResolvingDestination}
                 className="min-h-12 w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 active:bg-green-600 disabled:cursor-wait disabled:opacity-60"
               >
-                {isCalculating ? (result ? copy.updating : copy.estimating) : result ? copy.update : copy.calculate}
+                {isResolvingOrigin || isResolvingDestination
+                  ? copy.confirmingAddress
+                  : isCalculating
+                    ? (result ? copy.updating : copy.estimating)
+                    : result ? copy.update : copy.calculate}
               </button>
             </div>
           ) : (

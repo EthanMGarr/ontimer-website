@@ -1,11 +1,11 @@
-/// Reusable address autocomplete input backed by Google Places API.
+/// Reusable address autocomplete input backed by Google Places or the Mapbox pilot.
 ///
 /// ## Purpose
 /// Drop-in replacement for a plain text input wherever address suggestions improve UX.
-/// All API calls are proxied through /api/places-autocomplete (key stays server-side).
+/// All API calls are proxied through same-origin routes (provider keys stay server-side).
 ///
 /// ## Include
-/// - Responsive debounced Google autocomplete (350ms, min 4 chars)
+/// - Responsive debounced Google autocomplete (650ms, min 4 chars)
 /// - Optional immediate airport matching by IATA code or name from the local directory
 /// - Requests only while the field is focused and actively edited
 /// - Slightly longer pause after pasted text so complete addresses can be used as-is
@@ -36,6 +36,19 @@ import {
   loadAirportDirectoryOptions,
   resetAirportDirectoryOptionsForRetry,
 } from "@/lib/airport-directory-options";
+import {
+  AUTOCOMPLETE_PASTE_DEBOUNCE_MS,
+  AUTOCOMPLETE_TYPING_DEBOUNCE_MS,
+} from "@/lib/places-autocomplete";
+
+let pageAutocompleteSessionId: string | null = null;
+
+function autocompleteSessionId(): string {
+  if (pageAutocompleteSessionId) return pageAutocompleteSessionId;
+  pageAutocompleteSessionId = globalThis.crypto?.randomUUID?.()
+    ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  return pageAutocompleteSessionId;
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -47,14 +60,29 @@ interface Prediction {
   kind?: "airport" | "place";
 }
 
+export interface SelectedAutocompletePlace {
+  provider: "mapbox";
+  placeId: string;
+  description: string;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
 interface PlaceAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   inputClassName?: string;
   id?: string;
+  ariaDescribedBy?: string;
   types?: string;
   includeAirports?: boolean;
+  provider?: "google" | "mapbox";
+  locale?: "en" | "es";
+  onPlaceSelected?: (place: SelectedAutocompletePlace | null) => void;
+  onResolutionChange?: (isResolving: boolean) => void;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -65,8 +93,13 @@ export default function PlaceAutocomplete({
   placeholder = "Start typing an address or city",
   inputClassName = "",
   id,
+  ariaDescribedBy,
   types = "geocode",
   includeAirports = false,
+  provider = "google",
+  locale = "en",
+  onPlaceSelected,
+  onResolutionChange,
 }: PlaceAutocompleteProps) {
   const usesAirportDirectory = includeAirports || types === "airport";
   const [placeSuggestions, setPlaceSuggestions] = useState<Prediction[]>([]);
@@ -108,9 +141,25 @@ export default function PlaceAutocomplete({
   const requestRef = useRef<AbortController | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const focusedRef = useRef(false);
+  const finishBulkLookupAfterBlurRef = useRef(false);
+  const selectFirstAfterBlurRef = useRef(false);
+  const selectionInFlightRef = useRef(false);
+  const selectedValueRef = useRef("");
   const valueRef = useRef(value);
+  const placeSuggestionsRef = useRef<Prediction[]>([]);
   const directoryLoadStartedRef = useRef(false);
+  const mapboxSessionRef = useRef<string | null>(null);
+  const handleSelectRef = useRef<(prediction: Prediction) => void>(() => undefined);
   valueRef.current = value;
+  placeSuggestionsRef.current = placeSuggestions;
+
+  const mapboxSessionToken = useCallback(() => {
+    if (!mapboxSessionRef.current) {
+      mapboxSessionRef.current = globalThis.crypto?.randomUUID?.()
+        ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    }
+    return mapboxSessionRef.current;
+  }, []);
 
   const hasAirportMatches = useCallback(
     (input: string, options = airportOptions) =>
@@ -148,6 +197,34 @@ export default function PlaceAutocomplete({
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
+        const hasUnresolvedMapboxValue = provider === "mapbox"
+          && valueRef.current.trim().length >= minimumCharacters
+          && selectedValueRef.current !== valueRef.current;
+        const firstPlaceSuggestion = placeSuggestionsRef.current[0];
+        const lookupPending = debounceRef.current !== null || requestRef.current !== null;
+
+        // Clicking Calculate, another field, or any control outside the input
+        // must not discard a valid Mapbox lookup. Resolve the top suggestion
+        // through the same retrieve flow so routing receives coordinates.
+        if (hasUnresolvedMapboxValue && (firstPlaceSuggestion || lookupPending)) {
+          focusedRef.current = false;
+          finishBulkLookupAfterBlurRef.current = true;
+          selectFirstAfterBlurRef.current = true;
+          onResolutionChange?.(true);
+          if (firstPlaceSuggestion) handleSelectRef.current(firstPlaceSuggestion);
+          return;
+        }
+
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = null;
+        requestIdRef.current += 1;
+        requestRef.current?.abort();
+        requestRef.current = null;
+        finishBulkLookupAfterBlurRef.current = false;
+        selectFirstAfterBlurRef.current = false;
+        selectionInFlightRef.current = false;
+        onResolutionChange?.(false);
+        setIsSearching(false);
         setPlaceSuggestions([]);
         setIsOpen(false);
         setActiveIndex(-1);
@@ -155,13 +232,19 @@ export default function PlaceAutocomplete({
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, []);
+  }, [minimumCharacters, onResolutionChange, provider]);
 
   // ── Fetch suggestions ───────────────────────────────────────────────────────
-  const fetchSuggestions = useCallback(async (input: string, requestId: number) => {
+  const fetchSuggestions = useCallback(async (
+    input: string,
+    requestId: number,
+    allowAfterBlur = false,
+    selectFirstResult = false
+  ) => {
+    let selectionStarted = false;
     if (
       requestId !== requestIdRef.current ||
-      !focusedRef.current ||
+      (!focusedRef.current && !allowAfterBlur && !selectFirstAfterBlurRef.current) ||
       input.trim().length < minimumCharacters
     ) {
       setPlaceSuggestions([]);
@@ -192,24 +275,38 @@ export default function PlaceAutocomplete({
     }
 
     try {
-      const params = new URLSearchParams({
-        input,
-        types,
-      });
       requestRef.current?.abort();
       const controller = new AbortController();
       requestRef.current = controller;
-      const res = await fetch(`/api/places-autocomplete?${params}`, {
+      const endpoint = provider === "mapbox" ? "/api/mapbox-search" : "/api/places-autocomplete";
+      const googleParams = new URLSearchParams({ input, types });
+      const res = await fetch(provider === "mapbox" ? endpoint : `${endpoint}?${googleParams}`, {
+        method: provider === "mapbox" ? "POST" : "GET",
         signal: controller.signal,
+        headers: {
+          ...(provider === "mapbox" ? { "Content-Type": "application/json" } : {}),
+          "X-OnTimer-Autocomplete-Session": autocompleteSessionId(),
+        },
+        body: provider === "mapbox" ? JSON.stringify({
+          action: "suggest",
+          input,
+          sessionToken: mapboxSessionToken(),
+          language: locale,
+        }) : undefined,
       });
       if (!res.ok) return;
       const data: { predictions: Prediction[] } = await res.json();
       if (
         requestId !== requestIdRef.current ||
         valueRef.current !== input ||
-        !focusedRef.current
+        (!focusedRef.current && !allowAfterBlur && !selectFirstAfterBlurRef.current)
       ) return;
       const preds = data.predictions ?? [];
+      if ((selectFirstResult || selectFirstAfterBlurRef.current) && preds[0]) {
+        selectionStarted = true;
+        handleSelectRef.current(preds[0]);
+        return;
+      }
       setPlaceSuggestions(preds);
       setIsOpen(preds.length > 0 || hasAirportMatches(input));
       setActiveIndex(-1);
@@ -224,16 +321,35 @@ export default function PlaceAutocomplete({
     } finally {
       if (requestId === requestIdRef.current) {
         requestRef.current = null;
+        finishBulkLookupAfterBlurRef.current = false;
+        selectFirstAfterBlurRef.current = false;
+        if (!selectionStarted) onResolutionChange?.(false);
         setIsSearching(false);
       }
     }
-  }, [hasAirportMatches, hasExactAirportMatch, includeAirports, minimumCharacters, types]);
+  }, [hasAirportMatches, hasExactAirportMatch, includeAirports, locale, mapboxSessionToken, minimumCharacters, onResolutionChange, provider, types]);
 
   // ── Input change handler ────────────────────────────────────────────────────
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const val = e.target.value;
+      const previousValue = valueRef.current;
+      const inputType = (e.nativeEvent as InputEvent).inputType ?? "";
+      const isPaste = inputType === "insertFromPaste";
+      const isAutoFill = inputType === "insertReplacementText"
+        || inputType === "insertFromAutoFill"
+        || (!isPaste && val.length - previousValue.length > 1);
+      // iOS Contact AutoFill and password-manager address fills commonly
+      // replace an empty/partial value in one event, then blur the field. Keep
+      // that one lookup alive so the user can choose a normalized place without
+      // having to type another character. This path is shared by Google and
+      // Mapbox autocomplete.
+      const isBulkInsertion = isPaste || isAutoFill;
       onChange(val);
+      onPlaceSelected?.(null);
+      selectedValueRef.current = "";
+      selectionInFlightRef.current = false;
+      onResolutionChange?.(isAutoFill && val.trim().length >= minimumCharacters);
       if (usesAirportDirectory) ensureAirportDirectoryLoaded();
 
       // Reset dedup when user keeps typing
@@ -246,33 +362,40 @@ export default function PlaceAutocomplete({
       requestRef.current?.abort();
       requestRef.current = null;
       const requestId = ++requestIdRef.current;
+      finishBulkLookupAfterBlurRef.current = isBulkInsertion;
       setPlaceSuggestions([]);
 
       if (val.trim().length < minimumCharacters) {
+        onResolutionChange?.(false);
         setIsSearching(false);
         setIsOpen(hasAirportMatches(val));
         return;
       }
 
       if (!focusedRef.current) {
+        onResolutionChange?.(false);
         setIsSearching(false);
         return;
       }
       setIsSearching(true);
       setIsOpen(hasAirportMatches(val));
 
-      const isPaste = (e.nativeEvent as InputEvent).inputType === "insertFromPaste";
       debounceRef.current = setTimeout(() => {
-        fetchSuggestions(val, requestId);
-      }, isPaste ? 600 : 350);
+        debounceRef.current = null;
+        fetchSuggestions(val, requestId, isBulkInsertion, isAutoFill);
+      }, isPaste ? AUTOCOMPLETE_PASTE_DEBOUNCE_MS : AUTOCOMPLETE_TYPING_DEBOUNCE_MS);
     },
-    [ensureAirportDirectoryLoaded, fetchSuggestions, hasAirportMatches, minimumCharacters, onChange, usesAirportDirectory]
+    [ensureAirportDirectoryLoaded, fetchSuggestions, hasAirportMatches, minimumCharacters, onChange, onPlaceSelected, onResolutionChange, usesAirportDirectory]
   );
 
   // ── Selection ───────────────────────────────────────────────────────────────
   const handleSelect = useCallback(
     (prediction: Prediction) => {
-      onChange(prediction.description);
+      const reviewedDescription = provider === "mapbox" && prediction.kind !== "airport"
+        ? [prediction.mainText.trim(), prediction.secondaryText.trim()].filter(Boolean).join(", ")
+          || prediction.description
+        : prediction.description;
+      onChange(reviewedDescription);
       setPlaceSuggestions([]);
       setIsOpen(false);
       setIsSearching(false);
@@ -280,10 +403,73 @@ export default function PlaceAutocomplete({
       requestIdRef.current += 1;
       requestRef.current?.abort();
       requestRef.current = null;
-      lastFetchedRef.current = prediction.description;
+      lastFetchedRef.current = reviewedDescription;
+      finishBulkLookupAfterBlurRef.current = false;
+      selectFirstAfterBlurRef.current = false;
+      selectedValueRef.current = reviewedDescription;
+
+      if (provider !== "mapbox" || prediction.kind === "airport") {
+        selectionInFlightRef.current = false;
+        onPlaceSelected?.(null);
+        onResolutionChange?.(false);
+        return;
+      }
+
+      onResolutionChange?.(true);
+      selectionInFlightRef.current = true;
+      const sessionToken = mapboxSessionToken();
+      const selectionRequestId = requestIdRef.current;
+      // The captured token completes this selection. A subsequent edit must
+      // begin a distinct concurrent Mapbox billing session.
+      mapboxSessionRef.current = null;
+      void fetch("/api/mapbox-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "retrieve",
+          placeId: prediction.placeId,
+          sessionToken,
+          language: locale,
+        }),
+      })
+        .then(async (response) => {
+          if (!response.ok) throw new Error(`Mapbox retrieve failed: ${response.status}`);
+          const data = await response.json() as {
+            place?: {
+              placeId: string;
+              description: string;
+              coordinates: { latitude: number; longitude: number };
+            };
+          };
+          if (!data.place) throw new Error("Mapbox retrieve returned no place");
+          if (
+            selectionRequestId !== requestIdRef.current ||
+            valueRef.current !== reviewedDescription
+          ) return;
+          // Keep exactly the main and secondary label shown in the suggestion
+          // list. Hidden provider full-address fields can be lower quality even
+          // when the visible result and routing coordinates are valid.
+          onChange(reviewedDescription);
+          lastFetchedRef.current = reviewedDescription;
+          onPlaceSelected?.({
+            provider: "mapbox",
+            ...data.place,
+            description: reviewedDescription,
+          });
+        })
+        .catch(() => {
+          if (selectionRequestId === requestIdRef.current) onPlaceSelected?.(null);
+        })
+        .finally(() => {
+          if (selectionRequestId === requestIdRef.current) {
+            selectionInFlightRef.current = false;
+            onResolutionChange?.(false);
+          }
+        });
     },
-    [onChange]
+    [locale, mapboxSessionToken, onChange, onPlaceSelected, onResolutionChange, provider]
   );
+  handleSelectRef.current = handleSelect;
 
   // ── Keyboard navigation ─────────────────────────────────────────────────────
   const handleKeyDown = useCallback(
@@ -313,6 +499,7 @@ export default function PlaceAutocomplete({
     <div ref={containerRef} className="relative">
       <input
         id={id}
+        aria-describedby={ariaDescribedBy}
         type="text"
         value={value}
         onChange={handleChange}
@@ -323,7 +510,9 @@ export default function PlaceAutocomplete({
         }}
         onBlur={() => {
           focusedRef.current = false;
+          if (finishBulkLookupAfterBlurRef.current || selectionInFlightRef.current) return;
           if (debounceRef.current) clearTimeout(debounceRef.current);
+          debounceRef.current = null;
           requestIdRef.current += 1;
           requestRef.current?.abort();
           requestRef.current = null;
@@ -382,6 +571,11 @@ export default function PlaceAutocomplete({
               )}
             </li>
           ))}
+          {provider === "mapbox" && placeSuggestions.length > 0 && (
+            <li role="presentation" className="border-t border-zinc-700/50 px-3 py-2 text-right text-[11px] text-zinc-400">
+              Search results powered by Mapbox
+            </li>
+          )}
         </ul>
       )}
     </div>

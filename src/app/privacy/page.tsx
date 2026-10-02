@@ -81,8 +81,8 @@ export default function PrivacyPage() {
           <p>
             Travel and Time To Leave calculators may send the location text you enter,
             travel mode, and departure-time information through OnTimer&apos;s server to
-            Google Maps Platform services for place suggestions, routes, and travel-time
-            estimates. We do not use those entries to build a user profile.
+            Google Maps Platform or Mapbox services for place suggestions, routes, and
+            travel-time estimates. We do not use those entries to build a user profile.
           </p>
           <p>
             Medication schedule generators create calendar files in your browser. OnTimer

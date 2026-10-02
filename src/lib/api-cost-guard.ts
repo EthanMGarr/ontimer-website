@@ -116,6 +116,9 @@ export function guardGoogleApiRequest(
   return { allowed: true };
 }
 
+/** Provider-neutral alias for new paid integrations. */
+export const guardPaidApiRequest = guardGoogleApiRequest;
+
 export function resetApiCostGuardForTests() {
   counters.clear();
 }

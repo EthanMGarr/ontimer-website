@@ -15,6 +15,7 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] In-memory serverless caches are described as best-effort only, never as cross-instance cost controls.
 - [ ] Failure paths degrade to manual entry rather than multiplying paid requests.
 - [ ] Upstream failures are logged with sanitized provider status/reason fields; never log API keys or user-entered locations.
+- [ ] Temporary autocomplete diagnostics auto-expire and emit sanitized request health using only input length, route path without query parameters, and a short hash of an ephemeral page-session identifier; never log the raw identifier, IP address, input, place ID, or full referrer.
 - [ ] Rate-limit and provenance behavior has automated regression coverage.
 - [ ] Provider credentials use documented authenticated endpoints; undocumented free endpoints are not retained as fallback paths.
 - [ ] Provider attribution and evidence labels distinguish third-party estimates from official government or operator data.
@@ -43,12 +44,27 @@ Use this checklist whenever adding or changing a paid API integration.
 
 - [ ] Restrict the API key to only the required APIs.
 - [ ] Set low daily or per-minute quotas independently for Places API (New) and Routes API.
+- [ ] Do not describe warm-instance counters as durable protection. Use a provider quota as the hard ceiling unless a distributed rate limiter or platform firewall is available; validate shared-IP and multi-region behavior before enforcing a new edge rule.
 - [ ] Review Billing Reports grouped by **Service**, then **SKU**, before attributing spend to traffic or SEO.
 - [ ] Confirm whether an alert is based on actual or forecasted spend.
 - [ ] Remember that a standard budget alert does not stop Google Maps Platform spending.
 - [ ] Keep alert thresholds below the true maximum because billing data is delayed.
 - [ ] Review quota and billing graphs after every paid-API deployment.
 - [ ] Confirm the project that owns the deployed credential by project number; do not assume the active CLI or billing-console project owns the key.
+
+## Mapbox Search and Directions Controls
+
+- [ ] Keep the access token server-side, scope it only to required public APIs, and set provider usage alerts before enabling the pilot.
+- [ ] Send user-entered locations, retrieved place identifiers, coordinates, and Search Box session tokens in POST bodies rather than query strings so routine access logs do not retain them in request URLs.
+- [ ] Use a distinct UUID-style Search Box session token for each active field, reuse it for `/suggest` and the selected `/retrieve`, and rotate it after selection; do not add ETA parameters that create Matrix API charges.
+- [ ] Treat Search Box results as temporary data: use retrieved coordinates only for the immediate route calculation and do not persist them in calendar links, analytics, logs, or application storage.
+- [ ] Account for Search Box geography coverage (United States, Canada, and Europe); preserve manual text entry and the one-call Google route fallback for unsupported or unselected locations.
+- [ ] Use Mapbox Directions only when both endpoints already have validated coordinates. Do not turn one calculation into two forward-geocoding requests plus a route request.
+- [ ] Keep transit on a provider that supports transit routing, and make the Mapbox pilot flag a server-side kill switch.
+- [ ] Give every temporary Mapbox production pilot a required server-side expiry timestamp, enforce it in both the rendered provider choice and paid API routes, and fail closed when it is missing or reached.
+- [ ] Never retry a failed Mapbox request against Google in the same user action. Fall back to manual travel-time entry so an outage cannot double provider costs.
+- [ ] Reconcile Search Box sessions and Directions requests in the Mapbox dashboard after deployment; application request counters are not billing records.
+- [ ] Treat Mapbox usage notifications as email alerts only: Mapbox does not provide a customer-configurable spending cap that stops service. Keep the production kill switch off until billing, token isolation, notification thresholds, and a deliberate hard-stop mechanism are reviewed.
 
 ## Incident Response
 

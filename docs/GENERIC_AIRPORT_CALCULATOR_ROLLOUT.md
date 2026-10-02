@@ -1,6 +1,6 @@
 # Generic Airport Calculator Rollout
 
-This rollout is intentionally limited to `/airport-time-to-leave-calculator`. Airport-specific landing pages and the generic point-to-point calculator remain unchanged until the generic airport experience is reviewed.
+This rollout began on `/airport-time-to-leave-calculator` and expanded to the English and Spanish airport calculator family after production review. The generic point-to-point, venue, wake-up, cruise and pickup calculators remain unchanged because their tasks and inputs differ.
 
 ## Phase 1 — Mechanical UX and copy
 
@@ -26,3 +26,15 @@ Recommended model/effort for similar follow-up work: Sol, medium/high effort.
 ## Expansion gate
 
 Review the generic page on mobile and desktop before extending these changes to airport-specific pages. Confirm airport-search accuracy, calendar geocoding, calendar-preview clarity, calculator completion, calendar handoff and App Store CTA behavior. Preserve existing metadata, schema, crawlable guidance and URL structure during any expansion.
+
+## Phase 3 — External UX review follow-up
+
+This treatment was validated on `/airport-time-to-leave-calculator` before family expansion:
+
+- Describe the actual input as the flight's departure time rather than implying flight-number lookup.
+- Keep Domestic selected by default so the familiar majority path is immediately usable; International remains one tap away.
+- Show the recommended airport-arrival allowance directly beneath flight type, in both readable duration and total minutes.
+- Keep the custom arrival allowance inside “Adjust assumptions,” with an explicit minutes label and the same dual-format recommendation.
+- Place starting-location guidance beside its field and connect the helper to the input for assistive technology; do not repeat the instruction below the submit action.
+
+The approved treatment now lives in the shared airport calculator used by generic and airport-specific English and Spanish routes. Future changes must still be reviewed at 320, 375, 414, and 768 px through calculation, calendar handoff, and OnTimer return state.

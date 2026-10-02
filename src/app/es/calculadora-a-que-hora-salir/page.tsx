@@ -3,10 +3,13 @@ import Link from "next/link";
 import { AppStoreButton } from "@/components/CTAButton";
 import { localizedAlternates } from "@/lib/i18n";
 import LeaveTimeCalculator from "@/app/what-time-should-i-leave/LeaveTimeCalculator";
+import { isMapboxPilotActive } from "@/lib/mapbox-pilot";
 
 const englishPath = "/what-time-should-i-leave";
 const spanishPath = "/es/calculadora-a-que-hora-salir";
 const canonical = `https://www.ontimer.app${spanishPath}`;
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "¿A qué hora debo salir? Calculadora gratuita",
@@ -70,6 +73,7 @@ const structuredData = [
 ];
 
 export default function SpanishLeaveTimeCalculatorPage() {
+  const mapboxPilotEnabled = isMapboxPilotActive();
   return (
     <>
       {structuredData.map((item) => (
@@ -96,7 +100,7 @@ export default function SpanishLeaveTimeCalculatorPage() {
       </section>
 
       <section id="calculadora" className="border-t border-zinc-800 pb-8 pt-2 sm:pb-10 sm:pt-5">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6"><LeaveTimeCalculator locale="es" /></div>
+        <div className="mx-auto max-w-5xl px-4 sm:px-6"><LeaveTimeCalculator locale="es" mapboxPilotEnabled={mapboxPilotEnabled} /></div>
       </section>
 
       <section className="border-t border-zinc-800 bg-zinc-900/40 py-16">

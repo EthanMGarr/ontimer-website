@@ -3,6 +3,9 @@ import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 import LeaveTimeCalculator from "./LeaveTimeCalculator";
 import { localizedAlternates } from "@/lib/i18n";
+import { isMapboxPilotActive } from "@/lib/mapbox-pilot";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   alternates: {
@@ -51,7 +54,7 @@ const faqItems = [
   {
     question: "Does travel time change based on when I leave?",
     answer:
-      "Yes. Traffic varies significantly by time of day and day of week. Leaving at 8 AM on a Tuesday is very different from leaving at 10 AM or on a Saturday. This calculator uses Google's live traffic data to estimate travel time based on when you plan to arrive.",
+      "Yes. Traffic varies significantly by time of day and day of week. Leaving at 8 AM on a Tuesday is very different from leaving at 10 AM or on a Saturday. This calculator uses traffic-aware route data to estimate travel time based on when you plan to arrive.",
   },
   {
     question: "What if I am taking transit or walking?",
@@ -113,6 +116,7 @@ const breadcrumbJsonLd = {
 };
 
 export default function WhatTimeShouldILeavePage() {
+  const mapboxPilotEnabled = isMapboxPilotActive();
   return (
     <>
       <script
@@ -169,7 +173,7 @@ export default function WhatTimeShouldILeavePage() {
       {/* ── CALCULATOR ── */}
       <section id="calculator" className="border-t border-zinc-800 pb-8 pt-2 sm:pt-4 md:pb-10 md:pt-6">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <LeaveTimeCalculator />
+          <LeaveTimeCalculator mapboxPilotEnabled={mapboxPilotEnabled} />
         </div>
       </section>
 

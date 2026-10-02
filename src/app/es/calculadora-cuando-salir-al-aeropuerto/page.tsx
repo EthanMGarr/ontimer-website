@@ -115,7 +115,7 @@ export default function SpanishAirportCalculatorPage() {
         <div className="relative mx-auto max-w-3xl px-4 sm:px-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-green-500 sm:text-sm">Planificador gratuito · Sin registro</p>
           <h1 className="text-3xl font-black tracking-tight text-white sm:text-6xl">¿A qué hora debo salir para <span className="text-green-500">llegar a mi vuelo?</span></h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:mt-4 sm:text-lg">Introduce la hora del vuelo, el punto de partida y el aeropuerto. OnTimer calcula una hora de salida con el trayecto, la seguridad, el equipaje, el aparcamiento y el acceso a la terminal.</p>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:mt-4 sm:text-lg">Introduce la hora de salida del vuelo, el punto de partida y el aeropuerto. OnTimer calcula una hora de salida con el trayecto, la seguridad, el equipaje, el aparcamiento y el acceso a la terminal.</p>
         </div>
       </section>
 

@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { guardGoogleApiRequest } from "@/lib/api-cost-guard";
+import { guardPaidApiRequest } from "@/lib/api-cost-guard";
+import {
+  parseRouteCoordinates,
+  requestMapboxRoute,
+  type RouteCoordinates,
+} from "@/lib/mapbox-routing";
 import { buildRoutesWaypoint } from "@/lib/routes-waypoint";
+import { isMapboxPilotActive } from "@/lib/mapbox-pilot";
 
 /// Server-side proxy for travel-time estimation with bounded, best-effort caching.
 ///
@@ -52,6 +58,7 @@ interface TravelResult {
   durationMinutes: number;
   hasTrafficData: boolean;
   trafficBasis: "live" | "predicted" | "scheduled" | "none";
+  provider: "google" | "mapbox";
 }
 
 interface CacheEntry {
@@ -110,8 +117,8 @@ function bucketTime(unixSeconds: number): number {
   return Math.round(unixSeconds / bucketSec) * bucketSec;
 }
 
-function cacheKey(origin: string, dest: string, bucket: number, mode: string): string {
-  return `${normalize(origin)}|${normalize(dest)}|${bucket}|${mode}`;
+function cacheKey(origin: string, dest: string, bucket: number, mode: string, provider: string): string {
+  return `${provider}|${normalize(origin)}|${normalize(dest)}|${bucket}|${mode}`;
 }
 
 /**
@@ -195,13 +202,35 @@ async function callRoutesApi(
     // hasTrafficData only meaningful for DRIVE; WALK/TRANSIT don't use traffic routing
     hasTrafficData: travelMode === "DRIVE" && durationSec !== staticSec,
     trafficBasis: trafficBasisFor(bucketedTime, travelMode),
+    provider: "google",
+  };
+}
+
+async function callMapboxDirectionsApi(
+  origin: RouteCoordinates,
+  destination: RouteCoordinates,
+  bucketedTime: number,
+  accessToken: string,
+  travelMode: "DRIVE" | "WALK"
+): Promise<TravelResult> {
+  const route = await requestMapboxRoute(
+    origin,
+    destination,
+    bucketedTime,
+    travelMode,
+    accessToken
+  );
+  return {
+    ...route,
+    trafficBasis: trafficBasisFor(bucketedTime, travelMode),
+    provider: "mapbox",
   };
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 
-export async function GET(request: NextRequest) {
-  const guard = guardGoogleApiRequest(request, TRAVEL_RATE_LIMIT);
+async function handleTravelTimeRequest(request: NextRequest, searchParams: URLSearchParams) {
+  const guard = guardPaidApiRequest(request, TRAVEL_RATE_LIMIT);
   if (!guard.allowed) {
     return NextResponse.json(
       { error: guard.reason },
@@ -214,13 +243,20 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const { searchParams } = request.nextUrl;
-
   const rawOrigin = searchParams.get("origin") ?? "";
   const rawDest = searchParams.get("destination") ?? "";
   const rawTime = searchParams.get("departureTime") ?? "";
   const rawMode = searchParams.get("travelMode") ?? "DRIVE";
   const travelMode = ["DRIVE", "WALK", "TRANSIT"].includes(rawMode) ? rawMode : "DRIVE";
+  const requestedProvider = searchParams.get("provider") === "mapbox" ? "mapbox" : "google";
+  const originCoordinates = parseRouteCoordinates(
+    searchParams.get("originLatitude"),
+    searchParams.get("originLongitude")
+  );
+  const destinationCoordinates = parseRouteCoordinates(
+    searchParams.get("destinationLatitude"),
+    searchParams.get("destinationLongitude")
+  );
 
   if (!rawOrigin.trim() || !rawDest.trim()) {
     return NextResponse.json(
@@ -233,8 +269,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Route input is too long" }, { status: 400 });
   }
 
+  const mapboxEnabled = isMapboxPilotActive();
+  const mapboxToken = process.env.MAPBOX_ACCESS_TOKEN;
+  const useMapbox = requestedProvider === "mapbox"
+    && mapboxEnabled
+    && Boolean(mapboxToken)
+    && travelMode !== "TRANSIT"
+    && originCoordinates !== null
+    && destinationCoordinates !== null;
   const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-  if (!apiKey) {
+  if (!useMapbox && !apiKey) {
     console.error("[travel-time] GOOGLE_MAPS_API_KEY not configured");
     return NextResponse.json(
       { error: "Travel time service not configured" },
@@ -249,20 +293,27 @@ export async function GET(request: NextRequest) {
     ? rawUnix
     : Math.floor(Date.now() / 1000);
   const bucket = bucketTime(departureUnix);
-  const key = cacheKey(origin, destination, bucket, travelMode);
+  const provider = useMapbox ? "mapbox" : "google";
+  const routingOrigin = useMapbox
+    ? `${originCoordinates.latitude},${originCoordinates.longitude}`
+    : origin;
+  const routingDestination = useMapbox
+    ? `${destinationCoordinates.latitude},${destinationCoordinates.longitude}`
+    : destination;
+  const key = cacheKey(routingOrigin, routingDestination, bucket, travelMode, provider);
 
   // ── In-memory TTL cache ──────────────────────────────────────────────────
   const cached = cacheGet(key);
   if (cached) {
-    console.log(`[travel-time] cache_hit key="${key}"`);
+    console.log("[travel-time] cache_hit", JSON.stringify({ provider, travelMode }));
     return NextResponse.json({ ...cached, cacheHit: true });
   }
-  console.log(`[travel-time] cache_miss key="${key}"`);
+  console.log("[travel-time] cache_miss", JSON.stringify({ provider, travelMode }));
 
   // ── In-flight deduplication ──────────────────────────────────────────────
   const pending = inflight.get(key);
   if (pending) {
-    console.log(`[travel-time] dedup_hit key="${key}"`);
+    console.log("[travel-time] dedup_hit", JSON.stringify({ provider, travelMode }));
     try {
       const result = await pending;
       return NextResponse.json({ ...result, cacheHit: false });
@@ -271,21 +322,36 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // ── Single Google Maps Routes API call ───────────────────────────────────
-  const promise = callRoutesApi(origin, destination, bucket, apiKey, travelMode);
+  // ── Single provider routing call ──────────────────────────────────────────
+  // Never retry one paid provider with another. A provider failure returns the
+  // existing manual-entry fallback instead of creating a second billable call.
+  const promise = useMapbox
+    ? callMapboxDirectionsApi(
+      originCoordinates,
+      destinationCoordinates,
+      bucket,
+      mapboxToken as string,
+      travelMode as "DRIVE" | "WALK"
+    )
+    : callRoutesApi(origin, destination, bucket, apiKey as string, travelMode);
   inflight.set(key, promise);
 
   try {
     const result = await promise;
     cacheSet(key, result);
     console.log(
-      `[travel-time] routes_api_called origin="${origin}" dest="${destination}" ` +
-      `bucket=${bucket} mode=${travelMode} duration=${result.durationMinutes}min traffic=${result.hasTrafficData}`
+      "[travel-time] routes_api_called",
+      JSON.stringify({
+        provider: result.provider,
+        travelMode,
+        durationMinutes: result.durationMinutes,
+        hasTrafficData: result.hasTrafficData,
+      })
     );
     return NextResponse.json({ ...result, cacheHit: false });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    console.error(`[travel-time] routes_api_failed key="${key}" err="${msg}"`);
+    console.error("[travel-time] routes_api_failed", JSON.stringify({ provider, travelMode, message: msg }));
 
     return NextResponse.json(
       { error: msg, cacheHit: false },
@@ -294,4 +360,34 @@ export async function GET(request: NextRequest) {
   } finally {
     inflight.delete(key);
   }
+}
+
+export async function GET(request: NextRequest) {
+  return handleTravelTimeRequest(request, request.nextUrl.searchParams);
+}
+
+export async function POST(request: NextRequest) {
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json() as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  const allowedKeys = [
+    "origin",
+    "destination",
+    "departureTime",
+    "travelMode",
+    "provider",
+    "originLatitude",
+    "originLongitude",
+    "destinationLatitude",
+    "destinationLongitude",
+  ];
+  const searchParams = new URLSearchParams();
+  for (const key of allowedKeys) {
+    if (typeof body[key] === "string") searchParams.set(key, body[key]);
+  }
+  return handleTravelTimeRequest(request, searchParams);
 }

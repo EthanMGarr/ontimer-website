@@ -12,6 +12,10 @@ const autocompleteSource = fs.readFileSync(
   path.join(root, "src/components/AirportAutocomplete.tsx"),
   "utf8"
 );
+const directoryLoaderSource = fs.readFileSync(
+  path.join(root, "src/lib/airport-directory-options.ts"),
+  "utf8"
+);
 
 assert.doesNotMatch(
   pageSource,
@@ -19,9 +23,9 @@ assert.doesNotMatch(
   "the server page must not serialize the full airport directory into its initial RSC payload"
 );
 assert.match(
-  autocompleteSource,
+  directoryLoaderSource,
   /import\("@\/lib\/airport-directory\.generated"\)/,
-  "the browser autocomplete must load the full airport directory on demand"
+  "the shared browser loader must load the full airport directory on demand"
 );
 assert.doesNotMatch(
   autocompleteSource,

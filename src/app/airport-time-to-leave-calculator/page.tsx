@@ -177,8 +177,8 @@ export default function AirportTimeToLeaveCalculator() {
             <span className="text-green-500">make my flight?</span>
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:text-base">
-            Enter your flight, starting point and airport. This free calculator uses traffic,
-            security, bags, parking and terminal access to give you a specific leave time.
+            Enter your flight&apos;s departure time, starting point and airport. This free calculator
+            uses traffic, security, bags, parking and terminal access to give you a specific leave time.
           </p>
         </div>
       </section>
@@ -186,7 +186,10 @@ export default function AirportTimeToLeaveCalculator() {
       {/* ── CALCULATOR ── */}
       <section id="calculator" className="border-t border-zinc-800 pb-6 pt-2 sm:pt-3 md:pb-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <AirportCalculator genericRedesign airportOptions={curatedAirportOptions} />
+          <AirportCalculator
+            genericRedesign
+            airportOptions={curatedAirportOptions}
+          />
           <p className="mt-5 text-center text-sm text-zinc-400">
             This calculator is for realistic departure planning. For a fun take on risky airport
             timing, see the{" "}

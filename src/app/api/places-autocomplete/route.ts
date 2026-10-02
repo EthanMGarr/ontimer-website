@@ -27,6 +27,11 @@ import {
   shouldRequestPaidAutocomplete,
 } from "@/lib/places-autocomplete";
 import { guardGoogleApiRequest } from "@/lib/api-cost-guard";
+import {
+  autocompleteDiagnosticsEnabled,
+  autocompleteSourcePath,
+  hashAutocompleteSession,
+} from "@/lib/autocomplete-observability";
 import { travelLocations } from "@/lib/travel-locations";
 
 const AUTOCOMPLETE_RATE_LIMIT = {
@@ -112,10 +117,34 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    const diagnosticsEnabled = autocompleteDiagnosticsEnabled();
+    const sessionHash = diagnosticsEnabled
+      ? hashAutocompleteSession(req.headers.get("x-ontimer-autocomplete-session"))
+      : undefined;
+    const sourcePath = diagnosticsEnabled
+      ? autocompleteSourcePath(req.headers.get("referer"))
+      : undefined;
     const predictions = await requestAutocomplete(
       input,
       includedPrimaryTypes,
-      apiKey
+      apiKey,
+      fetch,
+      diagnosticsEnabled ? (health) => {
+        const record = JSON.stringify({
+          event: "places_autocomplete_upstream",
+          quotaUnits: 1,
+          sessionHash,
+          sourcePath,
+          inputLength: input.length,
+          requestType: types,
+          ...health,
+        });
+        if (health.outcome === "succeeded") {
+          console.info("[places-autocomplete] request_succeeded", record);
+        } else {
+          console.error("[places-autocomplete] request_failed", record);
+        }
+      } : undefined
     );
 
     return NextResponse.json({ predictions });

@@ -5,6 +5,19 @@ export interface AutocompletePrediction {
   secondaryText: string;
 }
 
+export interface AutocompleteRequestHealth {
+  outcome: "succeeded" | "failed";
+  durationMs: number;
+  predictionCount: number;
+  statusCode?: number;
+  providerStatus?: string;
+  providerReason?: string;
+  failureType?: string;
+}
+
+export const AUTOCOMPLETE_TYPING_DEBOUNCE_MS = 650;
+export const AUTOCOMPLETE_PASTE_DEBOUNCE_MS = 750;
+
 interface GoogleAutocompleteResponse {
   suggestions?: Array<{
     placePrediction?: {
@@ -88,8 +101,10 @@ export async function requestAutocomplete(
   input: string,
   includedPrimaryTypes: readonly string[],
   apiKey: string,
-  fetcher: typeof fetch = fetch
+  fetcher: typeof fetch = fetch,
+  reportHealth?: (health: AutocompleteRequestHealth) => void
 ): Promise<AutocompletePrediction[]> {
+  const startedAt = Date.now();
   try {
     const response = await fetcher(
       "https://places.googleapis.com/v1/places:autocomplete",
@@ -129,11 +144,26 @@ export async function requestAutocomplete(
         providerStatus,
         providerReason,
       }));
+      reportHealth?.({
+        outcome: "failed",
+        durationMs: Date.now() - startedAt,
+        predictionCount: 0,
+        statusCode: response.status,
+        providerStatus,
+        providerReason,
+      });
       return [];
     }
-    return normalizeAutocompleteResponse(
+    const predictions = normalizeAutocompleteResponse(
       (await response.json()) as GoogleAutocompleteResponse
     );
+    reportHealth?.({
+      outcome: "succeeded",
+      durationMs: Date.now() - startedAt,
+      predictionCount: predictions.length,
+      statusCode: response.status,
+    });
+    return predictions;
   } catch (error) {
     console.error(JSON.stringify({
       level: "error",
@@ -141,6 +171,12 @@ export async function requestAutocomplete(
       provider: "google-places",
       failureType: error instanceof Error ? error.name : "unknown",
     }));
+    reportHealth?.({
+      outcome: "failed",
+      durationMs: Date.now() - startedAt,
+      predictionCount: 0,
+      failureType: error instanceof Error ? error.name : "unknown",
+    });
     return [];
   }
 }
