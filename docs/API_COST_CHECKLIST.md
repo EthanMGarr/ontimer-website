@@ -65,11 +65,14 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] Never retry a failed Mapbox request against Google in the same user action. Fall back to manual travel-time entry so an outage cannot double provider costs.
 - [ ] Reconcile Search Box sessions and Directions requests in the Mapbox dashboard after deployment; application request counters are not billing records.
 - [ ] Treat Mapbox usage notifications as email alerts only: Mapbox does not provide a customer-configurable spending cap that stops service. Keep the production kill switch off until billing, token isolation, notification thresholds, and a deliberate hard-stop mechanism are reviewed.
+- [ ] Do not infer Search Box cost from completed calculations or Directions volume. Audit when sessions are created, rotated, retrieved, and abandoned because browsing and partially completed inputs can consume sessions without producing a route.
+- [ ] Do not re-enable Mapbox Search Box after an unexpected usage spike until the provider dashboard has been reconciled and a measurable application-side volume breaker can disable new Mapbox sessions independently of the pilot expiry.
 
 ## Incident Response
 
 - [ ] Capture the budget period, threshold type, project scope, service, SKU, daily cost, and request count.
 - [ ] If spend is still accelerating, temporarily disable the affected API or set its quota to zero in Google Cloud.
+- [ ] When a Mapbox usage alert crosses the approved operating threshold, disable the application kill switch immediately; the alert itself is not a hard cap.
 - [ ] Deploy application-side request guards before restoring quota.
 - [ ] Verify blocked direct requests do not reach Google.
 - [ ] Verify a legitimate same-origin request still works.
