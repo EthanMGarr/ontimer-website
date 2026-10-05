@@ -11,6 +11,8 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] User actions make at most one paid upstream request unless a retry is explicitly cost-justified.
 - [ ] Autocomplete uses a responsive trailing debounce, starts only after four meaningful characters while the field is focused and actively edited, gives pasted complete addresses a slightly longer pause, cancels stale requests immediately on every edit, shows pending feedback, and avoids Place Details calls unless needed.
 - [ ] Known structured destinations such as airports, cruise terminals, and curated event venues use the local catalog before paid autocomplete or destination geocoding.
+- [ ] Shared address inputs preserve and complete a pending iOS Contact AutoFill or pasted-address lookup when the visitor leaves the field or taps Calculate; calculator submission waits for that one lookup instead of routing an unresolved fragment or issuing a duplicate request.
+- [ ] Travel-time responses expose a stable invalid-location reason distinct from provider/quota/network failures, and calculators ask for a valid address before offering manual travel-time fallback.
 - [ ] Public autocomplete endpoints have a generous hourly per-IP ceiling that preserves normal use while bounding automated typing loops.
 - [ ] In-memory serverless caches are described as best-effort only, never as cross-instance cost controls.
 - [ ] Failure paths degrade to manual entry rather than multiplying paid requests.

@@ -4,6 +4,7 @@ export interface AirportAutocompleteOption {
   city: string;
   aliases?: string[];
   planningJurisdiction?: "us" | "international";
+  detailPageHref?: string;
 }
 
 interface AirportLocationInput {

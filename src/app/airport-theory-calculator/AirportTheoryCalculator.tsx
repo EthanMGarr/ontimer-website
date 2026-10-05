@@ -34,6 +34,11 @@ import {
   trackAffiliateOfferViewed,
   trackAndroidWaitlistClick,
 } from "@/lib/analytics";
+import {
+  invalidAddressMessage,
+  isInvalidTravelTimeLocation,
+  readTravelTimeResponse,
+} from "@/lib/travel-time-errors";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -191,9 +196,7 @@ async function fetchTravelTime(
     departureTime: Math.floor(departureAt.getTime() / 1000).toString(),
   });
   const res = await fetch(`/api/travel-time?${params}`);
-  const body: TravelTimeResponse = await res.json();
-  if (!res.ok) throw new Error(body.error ?? `API error ${res.status}`);
-  return body;
+  return readTravelTimeResponse<TravelTimeResponse>(res);
 }
 
 // ─── Formatting ───────────────────────────────────────────────────────────────
@@ -310,6 +313,8 @@ export default function AirportTheoryCalculator() {
   const [showManualTravel, setShowManualTravel] = useState(false);
 
   const [isCalculating, setIsCalculating] = useState(false);
+  const [isResolvingOrigin, setIsResolvingOrigin] = useState(false);
+  const [isResolvingAirport, setIsResolvingAirport] = useState(false);
   const [result, setResult] = useState<TheoryResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
@@ -387,13 +392,15 @@ export default function AirportTheoryCalculator() {
         travelMinutes = res.durationMinutes;
         travelSource = "google";
         trafficBasis = res.trafficBasis;
-      } catch {
+      } catch (caught) {
         const manual = parseInt(manualTravelMinutes, 10);
         if (!isNaN(manual) && manual >= 0) {
           travelMinutes = manual;
         } else {
           setShowManualTravel(true);
-          setFallbackNotice("Live drive time did not load. Enter drive time below to calculate without live traffic.");
+          setFallbackNotice(isInvalidTravelTimeLocation(caught)
+            ? invalidAddressMessage()
+            : "Live drive time did not load. Enter drive time below to calculate without live traffic.");
           setIsCalculating(false);
           return;
         }
@@ -474,7 +481,8 @@ export default function AirportTheoryCalculator() {
             <div className="min-w-0">
               <FieldLabel>Starting location</FieldLabel>
               <PlaceAutocomplete value={origin} onChange={handleOriginChange}
-                placeholder="Start typing an address" inputClassName={inputClass} />
+                placeholder="Start typing an address" inputClassName={inputClass}
+                onResolutionChange={setIsResolvingOrigin} />
               <CurrentLocationControl
                 active={currentLocation !== null}
                 onLocationChange={handleCurrentLocationChange}
@@ -483,7 +491,8 @@ export default function AirportTheoryCalculator() {
             <div>
               <FieldLabel>Airport</FieldLabel>
               <PlaceAutocomplete value={airport} onChange={setAirport}
-                placeholder="e.g. JFK, LAX, Newark" inputClassName={inputClass} types="airport" />
+                placeholder="e.g. JFK, LAX, Newark" inputClassName={inputClass} types="airport"
+                onResolutionChange={setIsResolvingAirport} />
             </div>
           </div>
 
@@ -551,9 +560,9 @@ export default function AirportTheoryCalculator() {
             </p>
           )}
 
-          <button type="button" onClick={handleCalculate} disabled={isCalculating}
+          <button type="button" onClick={handleCalculate} disabled={isCalculating || isResolvingOrigin || isResolvingAirport}
             className="w-full rounded-full bg-red-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-60">
-            {isCalculating ? "Calculating…" : `Calculate Risk ${level.emoji}`}
+            {isResolvingOrigin || isResolvingAirport ? "Checking the address…" : isCalculating ? "Calculating…" : `Calculate Risk ${level.emoji}`}
           </button>
         </div>
 

@@ -169,6 +169,38 @@ async function testCacheAndInFlightDeduplication() {
   assert.equal(calls, 1);
 }
 
+async function testCurrentStatusIsIndependentOfTripTiming() {
+  const now = new Date(2026, 8, 4, 10, 0);
+  let calls = 0;
+  const provider: WaitProvider = {
+    metadata: { id: "test-provider", name: "Test provider", official: false },
+    async fetchCurrentWait() {
+      calls += 1;
+      return providerEvidence(now, { airportCode: "EWR", minutes: 18 });
+    },
+  };
+  const service = createAirportSecurityService({ providers: [provider], now: () => now });
+  const status = await service.currentStatus({ airportInput: "EWR", jurisdiction: "us" });
+  assert.equal(status.airportCode, "EWR");
+  assert.equal(status.observedWait?.minutes, 18);
+  assert.equal(status.providerCacheHit, false);
+
+  const nearTrip = await service.estimate(baseRequest({
+    airportInput: "EWR",
+    departure: new Date(2026, 8, 4, 13, 0),
+  }));
+  assert.equal(nearTrip.intelligence.observedWait?.minutes, 18);
+  assert.equal(nearTrip.intelligence.providerCacheHit, true);
+  assert.equal(calls, 1);
+
+  const international = await service.currentStatus({
+    airportInput: "LHR",
+    jurisdiction: "international",
+  });
+  assert.equal(international.observedWait, null);
+  assert.equal(calls, 1);
+}
+
 async function testSourceSemanticsAndFallbacks() {
   const now = new Date(2026, 8, 4, 10, 0);
   let calls = 0;
@@ -278,6 +310,7 @@ async function main() {
   testFreshEvidenceDominatesAndStaleEvidenceDoesNot();
   testTrustedTravelerFactorsAreConservative();
   await testCacheAndInFlightDeduplication();
+  await testCurrentStatusIsIndependentOfTripTiming();
   await testSourceSemanticsAndFallbacks();
   await testMalformedProviderGracefullyFallsBack();
   await testCachedEvidenceFreshnessAndDiagnostics();

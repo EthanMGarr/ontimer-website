@@ -25,7 +25,7 @@
 
 "use client";
 
-import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   buildAirportCalendarLocation,
   filterAirportOptions,
@@ -81,6 +81,8 @@ interface PlaceAutocompleteProps {
   includeAirports?: boolean;
   provider?: "google" | "mapbox";
   locale?: "en" | "es";
+  autoComplete?: string;
+  name?: string;
   onPlaceSelected?: (place: SelectedAutocompletePlace | null) => void;
   onResolutionChange?: (isResolving: boolean) => void;
 }
@@ -98,10 +100,16 @@ export default function PlaceAutocomplete({
   includeAirports = false,
   provider = "google",
   locale = "en",
+  autoComplete,
+  name,
   onPlaceSelected,
   onResolutionChange,
 }: PlaceAutocompleteProps) {
   const usesAirportDirectory = includeAirports || types === "airport";
+  const generatedId = useId();
+  const inputId = id ?? `place-${generatedId.replace(/:/g, "")}`;
+  const inputName = name ?? inputId;
+  const browserAutoComplete = autoComplete ?? (types === "airport" ? "off" : "street-address");
   const [placeSuggestions, setPlaceSuggestions] = useState<Prediction[]>([]);
   const [airportOptions, setAirportOptions] = useState<AirportAutocompleteOption[]>([]);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -197,16 +205,18 @@ export default function PlaceAutocomplete({
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
-        const hasUnresolvedMapboxValue = provider === "mapbox"
-          && valueRef.current.trim().length >= minimumCharacters
+        const hasUnresolvedValue = valueRef.current.trim().length >= minimumCharacters
           && selectedValueRef.current !== valueRef.current;
+        const shouldResolveBeforeLeaving = hasUnresolvedValue
+          && (finishBulkLookupAfterBlurRef.current || provider === "mapbox");
         const firstPlaceSuggestion = placeSuggestionsRef.current[0];
         const lookupPending = debounceRef.current !== null || requestRef.current !== null;
 
         // Clicking Calculate, another field, or any control outside the input
-        // must not discard a valid Mapbox lookup. Resolve the top suggestion
-        // through the same retrieve flow so routing receives coordinates.
-        if (hasUnresolvedMapboxValue && (firstPlaceSuggestion || lookupPending)) {
+        // must not discard a saved-address/paste lookup. Resolve the top
+        // suggestion for both Google and Mapbox; Mapbox also keeps this path
+        // for ordinary typed values because routing needs retrieved coordinates.
+        if (shouldResolveBeforeLeaving && (firstPlaceSuggestion || lookupPending)) {
           focusedRef.current = false;
           finishBulkLookupAfterBlurRef.current = true;
           selectFirstAfterBlurRef.current = true;
@@ -498,7 +508,8 @@ export default function PlaceAutocomplete({
   return (
     <div ref={containerRef} className="relative">
       <input
-        id={id}
+        id={inputId}
+        name={inputName}
         aria-describedby={ariaDescribedBy}
         type="text"
         value={value}
@@ -520,7 +531,7 @@ export default function PlaceAutocomplete({
         }}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        autoComplete="off"
+        autoComplete={browserAutoComplete}
         className={inputClassName}
         role="combobox"
         aria-autocomplete="list"

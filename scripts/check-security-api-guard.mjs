@@ -9,6 +9,8 @@ assert.ok(route.includes("process.env.TSA_WAIT_TIMES_API_KEY"), "licensed key mu
 assert.ok(route.includes("perIpLimit"), "security endpoint must retain per-IP limiting");
 assert.ok(route.includes("globalLimit"), "security endpoint must retain global limiting");
 assert.ok(guardPosition >= 0 && guardPosition < providerPosition, "request guard must run before any provider estimate");
+assert.ok(guardPosition < route.indexOf("securityService.currentStatus(input)"), "request guard must run before the current-status provider request");
+assert.ok(route.includes('searchParams.get("mode") === "current"'), "security endpoint must expose the current-status mode");
 assert.ok(route.includes('status: guard.reason === "rate_limited" ? 429 : 403'), "guard failures must be rejected");
 
 console.log("security API cost guard checks passed");

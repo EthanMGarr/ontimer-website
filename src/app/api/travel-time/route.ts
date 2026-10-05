@@ -7,6 +7,10 @@ import {
 } from "@/lib/mapbox-routing";
 import { buildRoutesWaypoint } from "@/lib/routes-waypoint";
 import { isMapboxPilotActive } from "@/lib/mapbox-pilot";
+import {
+  TravelTimeRequestError,
+  travelTimeErrorCodeFromMessage,
+} from "@/lib/travel-time-errors";
 
 /// Server-side proxy for travel-time estimation with bounded, best-effort caching.
 ///
@@ -183,16 +187,29 @@ async function callRoutesApi(
     }
   );
 
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  if (!res.ok) {
+    let providerMessage = `HTTP ${res.status}`;
+    try {
+      const providerBody = await res.json() as RoutesApiResponse;
+      if (providerBody.error?.message) providerMessage = providerBody.error.message;
+    } catch {
+      // Preserve the HTTP status when the provider does not return JSON.
+    }
+    throw new TravelTimeRequestError(
+      providerMessage,
+      travelTimeErrorCodeFromMessage(providerMessage)
+    );
+  }
 
   const data: RoutesApiResponse = await res.json();
 
   if (data.error) {
-    throw new Error(`Routes API error ${data.error.code}: ${data.error.message} (${data.error.status})`);
+    const message = `Routes API error ${data.error.code}: ${data.error.message} (${data.error.status})`;
+    throw new TravelTimeRequestError(message, travelTimeErrorCodeFromMessage(message));
   }
 
   const route = data.routes?.[0];
-  if (!route) throw new Error("Routes API returned no routes");
+  if (!route) throw new TravelTimeRequestError("Routes API returned no routes", "invalid_location");
 
   const durationSec = parseDurationSeconds(route.duration);
   const staticSec = parseDurationSeconds(route.staticDuration);
@@ -351,11 +368,14 @@ async function handleTravelTimeRequest(request: NextRequest, searchParams: URLSe
     return NextResponse.json({ ...result, cacheHit: false });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
+    const code = err instanceof TravelTimeRequestError
+      ? err.code
+      : travelTimeErrorCodeFromMessage(msg);
     console.error("[travel-time] routes_api_failed", JSON.stringify({ provider, travelMode, message: msg }));
 
     return NextResponse.json(
-      { error: msg, cacheHit: false },
-      { status: 502 }
+      { error: msg, code, cacheHit: false },
+      { status: code === "invalid_location" ? 422 : 502 }
     );
   } finally {
     inflight.delete(key);

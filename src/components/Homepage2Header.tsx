@@ -125,6 +125,7 @@ export function Homepage2Header() {
           </button>
           {mobileToolsOpen ? (
             <div className="hp2-mobile-tools" id={mobileToolsId}>
+              <Link href="/time-calculators" className="hp2-mobile-tools__all" onClick={closeMobileNavigation}>Browse all tools <span aria-hidden="true">→</span></Link>
               {toolGroups.map((group) => (
                 <section key={group.title}>
                   <h2>{group.title}</h2>
@@ -133,7 +134,6 @@ export function Homepage2Header() {
                   ))}
                 </section>
               ))}
-              <Link href="/time-calculators" className="hp2-mobile-tools__all" onClick={closeMobileNavigation}>Browse all tools <span aria-hidden="true">→</span></Link>
             </div>
           ) : null}
           <Link href="/why-calendar-notifications-fail" onClick={closeMobileNavigation}>Learn</Link>

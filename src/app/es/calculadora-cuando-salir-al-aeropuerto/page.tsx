@@ -3,7 +3,7 @@ import Link from "next/link";
 import AirportCalculator from "@/app/airport-time-to-leave-calculator/AirportCalculator";
 import { AppStoreButton } from "@/components/CTAButton";
 import type { AirportAutocompleteOption } from "@/lib/airport-autocomplete";
-import { localizedAlternates } from "@/lib/i18n";
+import { localizedAlternates, spanishAirportSlugs } from "@/lib/i18n";
 import { indexableTravelLocations } from "@/lib/travel-locations";
 
 const englishPath = "/airport-time-to-leave-calculator";
@@ -18,6 +18,9 @@ const airportOptions: AirportAutocompleteOption[] = indexableTravelLocations
     city: location.city,
     aliases: [location.shortName, ...(location.aliases ?? [])],
     planningJurisdiction: location.airport.planningJurisdiction ?? "us",
+    detailPageHref: spanishAirportSlugs.includes(location.slug as (typeof spanishAirportSlugs)[number])
+      ? `/es/aeropuerto/${location.slug}`
+      : undefined,
   }));
 
 export const metadata: Metadata = {
@@ -53,6 +56,10 @@ const faqItems = [
   {
     question: "¿Incluye el tráfico y el transporte público?",
     answer: "Puedes calcular el trayecto en coche o transporte público. Cuando hay datos disponibles, OnTimer usa una estimación para la hora prevista; también puedes introducir el tiempo manualmente.",
+  },
+  {
+    question: "¿La calculadora usa tiempos de espera actuales del control de seguridad?",
+    answer: "Para los aeropuertos estadounidenses compatibles, al seleccionar un aeropuerto se muestra una estimación actual para todo el aeropuerto proporcionada por TSAWaitTimes.com. La calculadora usa datos actuales cuando son relevantes y una estimación por hora del día para viajes futuros, junto con el margen que aparece en el resultado. Son estimaciones de planificación, no mediciones oficiales de un control de la TSA, y las condiciones pueden cambiar.",
   },
   {
     question: "¿OnTimer garantiza que llegaré a tiempo?",

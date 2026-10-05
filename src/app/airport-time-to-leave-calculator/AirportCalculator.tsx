@@ -12,7 +12,11 @@ import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 import { getAirportDepartureStatus } from "@/lib/airport-departure-status";
-import type { SecurityEstimate } from "@/lib/airport-security";
+import { getDefaultAirportEventTime } from "@/lib/airport-planning-default";
+import type {
+  CurrentAirportSecurityStatus,
+  SecurityEstimate,
+} from "@/lib/airport-security";
 import type { CalculatorExample } from "@/lib/travel-locations";
 import {
   buildAirportCalendarLocation,
@@ -36,6 +40,11 @@ import {
   type AirportPlanningContext,
 } from "@/core/leave-time/plugins/airports";
 import type { SiteLocale } from "@/lib/i18n";
+import {
+  invalidAddressMessage,
+  isInvalidTravelTimeLocation,
+  readTravelTimeResponse,
+} from "@/lib/travel-time-errors";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -121,6 +130,24 @@ const airportCopy = {
   },
 } as const;
 
+function formatAirportAlert(summary: string, locale: SiteLocale): string {
+  const plainSummary = summary
+    .replace(/^TM Initiatives:[^·]+(?:·\s*)?/i, "")
+    .trim();
+  const departureDelay = plainSummary.match(
+    /^Departures are experiencing delays between (\d+) minutes and (\d+) minutes and (increasing|decreasing)$/i
+  );
+
+  if (!departureDelay) return plainSummary;
+
+  const [, minimum, maximum, trend] = departureDelay;
+  if (locale === "es") {
+    return `Retrasos en salidas de ${minimum}–${maximum} min; la situación ${trend.toLowerCase() === "decreasing" ? "está mejorando" : "está empeorando"}.`;
+  }
+
+  return `Departure delays of ${minimum}–${maximum} min; conditions are ${trend.toLowerCase() === "decreasing" ? "improving" : "worsening"}.`;
+}
+
 // ─── API helpers ──────────────────────────────────────────────────────────────
 
 async function fetchSecurityEstimate(
@@ -154,6 +181,23 @@ async function fetchSecurityEstimate(
   }
 }
 
+async function fetchCurrentAirportSecurityStatus(
+  airportCode: string
+): Promise<CurrentAirportSecurityStatus | null> {
+  try {
+    const params = new URLSearchParams({
+      mode: "current",
+      airportCode,
+      jurisdiction: "us",
+    });
+    const res = await fetch(`/api/security-wait?${params}`);
+    if (!res.ok) return null;
+    return await res.json() as CurrentAirportSecurityStatus;
+  } catch {
+    return null;
+  }
+}
+
 interface TravelTimeResponse {
   durationMinutes: number;
   hasTrafficData: boolean;
@@ -175,9 +219,7 @@ async function fetchTravelTime(
     travelMode,
   });
   const res = await fetch(`/api/travel-time?${params}`);
-  const body: TravelTimeResponse = await res.json();
-  if (!res.ok) throw new Error(body.error ?? `API error ${res.status}`);
-  return body;
+  return readTravelTimeResponse<TravelTimeResponse>(res);
 }
 
 // ─── Analytics ────────────────────────────────────────────────────────────────
@@ -365,16 +407,6 @@ const timeInputClass = `${inputClass} block h-12 appearance-none box-border py-0
 
 // ─── Default departure ────────────────────────────────────────────────────────
 
-function defaultDeparture() {
-  const d = new Date(Date.now() + 4 * 60 * 60 * 1000);
-  const mins = d.getMinutes();
-  const remainder = mins % 15;
-  if (remainder !== 0) d.setMinutes(mins + (15 - remainder), 0, 0);
-  const date = d.toLocaleDateString("en-CA");
-  const time = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-  return { date, time };
-}
-
 // ─── Main component ───────────────────────────────────────────────────────────
 
 interface AirportCalculatorProps {
@@ -438,6 +470,8 @@ export default function AirportCalculator({
   // ── Security estimate state ─────────────────────────────────────────────────
   const [securityEstimate, setSecurityEstimate] = useState<SecurityEstimate | null>(null);
   const [isFetchingSecurityEstimate, setIsFetchingSecurityEstimate] = useState(false);
+  const [currentAirportSecurityStatus, setCurrentAirportSecurityStatus] = useState<CurrentAirportSecurityStatus | null>(null);
+  const [currentAirportStatusResolved, setCurrentAirportStatusResolved] = useState(false);
 
   // ── Travel time state ───────────────────────────────────────────────────────
   const [travelMins, setTravelMins] = useState<number | null>(null);
@@ -445,6 +479,7 @@ export default function AirportCalculator({
   const [hasTrafficData, setHasTrafficData] = useState(false);
   const [trafficBasis, setTrafficBasis] = useState<TrafficBasis>("none");
   const [isFetchingTravel, setIsFetchingTravel] = useState(false);
+  const [isResolvingOrigin, setIsResolvingOrigin] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
 
@@ -457,7 +492,7 @@ export default function AirportCalculator({
   const resultPanelRef = useRef<HTMLDivElement | null>(null);
   const answerAnalyticsSignatureRef = useRef<string | null>(null);
   useEffect(() => {
-    const { date, time } = defaultDeparture();
+    const { date, time } = getDefaultAirportEventTime();
     setToday(localDateString());
     setDepartureDate(date);
     setDepartureTime(time);
@@ -484,6 +519,32 @@ export default function AirportCalculator({
     : locale === "es"
       ? effectivePlanningJurisdiction === "international" ? copy.airportSecurity : copy.tsaSecurity
       : securityLabel;
+  const candidateCurrentSecurityAirportCode = (effectiveAirportOption?.code ?? locationCode ?? "")
+    .trim()
+    .toUpperCase();
+  const currentSecurityAirportCode = effectivePlanningJurisdiction === "us"
+    && /^[A-Z]{3}$/.test(candidateCurrentSecurityAirportCode)
+    ? candidateCurrentSecurityAirportCode
+    : null;
+
+  // Current airport status is intentionally independent of the selected flight
+  // date. Future trips still use the normal historical model for their result.
+  useEffect(() => {
+    setCurrentAirportSecurityStatus(null);
+    setCurrentAirportStatusResolved(false);
+    if (!currentSecurityAirportCode) {
+      setCurrentAirportStatusResolved(true);
+      return;
+    }
+    let cancelled = false;
+    void fetchCurrentAirportSecurityStatus(currentSecurityAirportCode).then((status) => {
+      if (!cancelled) {
+        setCurrentAirportSecurityStatus(status);
+        setCurrentAirportStatusResolved(true);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [currentSecurityAirportCode]);
 
   // ── Auto-fetch security estimate ────────────────────────────────────────────
   useEffect(() => {
@@ -664,6 +725,11 @@ export default function AirportCalculator({
     ? getAirportDepartureStatus(computedResult.leaveTime, computedResult.confidence, new Date(statusNowMs))
     : null;
   const securityIntelligence = securityEstimate?.intelligence;
+  const currentAirportSecurityEvidence = currentSecurityAirportCode
+    && currentAirportSecurityStatus?.airportCode === currentSecurityAirportCode
+    && currentAirportSecurityStatus?.observedWait?.provider.id === "tsawaittimes-licensed"
+    ? currentAirportSecurityStatus.observedWait
+    : null;
   const licensedSecurityEvidence = securityIntelligence?.observedWait?.provider.id === "tsawaittimes-licensed"
     ? securityIntelligence.observedWait
     : null;
@@ -808,7 +874,7 @@ export default function AirportCalculator({
         setHasTrafficData(res.hasTrafficData);
         setTrafficBasis(res.trafficBasis);
         track("routes_api_called", { duration_minutes: res.durationMinutes, trigger: "manual" });
-      } catch {
+      } catch (caught) {
         const manual = parseInt(manualTravelMinutes, 10);
         if (!isNaN(manual) && manual >= 0) {
           setTravelMins(manual);
@@ -820,7 +886,9 @@ export default function AirportCalculator({
           setShowRefinements(true);
           setShowManualDriveTime(true);
           setFormExpanded(true);
-          setFallbackNotice(copy.autoTravelError);
+          setFallbackNotice(isInvalidTravelTimeLocation(caught)
+            ? invalidAddressMessage(locale)
+            : copy.autoTravelError);
         }
       } finally {
         setIsFetchingTravel(false);
@@ -895,9 +963,30 @@ export default function AirportCalculator({
               resultHeroMode ? "border-zinc-800/70 bg-zinc-950/25" : "border-zinc-800 bg-zinc-950/40"
             }` : ""}>
               {genericRedesign && (
-                <p className="mb-4 text-sm font-bold text-white">
-                  {resultHeroMode ? copy.editTrip : copy.yourTrip}
-                </p>
+                <div className="mb-4 flex min-w-0 items-baseline justify-between gap-3">
+                  <p className="text-sm font-bold text-white">
+                    {resultHeroMode ? copy.editTrip : copy.yourTrip}
+                  </p>
+                  {currentSecurityAirportCode && (!currentAirportStatusResolved || currentAirportSecurityEvidence) && (
+                    <p
+                      className="flex min-w-0 shrink items-baseline justify-end gap-1 overflow-hidden text-right text-xs text-zinc-300"
+                      data-current-airport-security
+                      data-nosnippet
+                      role="status"
+                      aria-live="polite"
+                    >
+                      <span className="truncate text-zinc-400">
+                        {locale === "es" ? `Seguridad ${currentSecurityAirportCode}` : `${currentSecurityAirportCode} security`}
+                        <span className="hidden sm:inline">{locale === "es" ? " actual" : " now"}</span>
+                      </span>{" "}
+                      <strong className="shrink-0 font-bold text-white">
+                        {currentAirportSecurityEvidence
+                          ? `~${Math.round(currentAirportSecurityEvidence.minutes)} min`
+                          : locale === "es" ? "Consultando…" : "Checking…"}
+                      </strong>
+                    </p>
+                  )}
+                </div>
               )}
               <div className="grid gap-3 sm:grid-cols-2">
                 <CalculatorDateField
@@ -954,6 +1043,7 @@ export default function AirportCalculator({
                     placeholder={copy.addressCity}
                     inputClassName={inputClass}
                     ariaDescribedBy="airport-origin-help"
+                    onResolutionChange={setIsResolvingOrigin}
                   />
                   <CurrentLocationControl
                     active={currentLocation !== null}
@@ -967,15 +1057,28 @@ export default function AirportCalculator({
                 <div>
                   <FieldLabel>{copy.departureAirport}</FieldLabel>
                   {genericRedesign && airportOptions.length > 0 ? (
-                    <AirportAutocomplete
-                      value={airport}
-                      onChange={setAirport}
-                      onOptionSelected={setSelectedAirportOption}
-                      options={airportOptions}
-                      placeholder={copy.airportPlaceholder}
-                      inputClassName={inputClass}
-                      locale={locale}
-                    />
+                    <>
+                      <AirportAutocomplete
+                        value={airport}
+                        onChange={setAirport}
+                        onOptionSelected={setSelectedAirportOption}
+                        options={airportOptions}
+                        placeholder={copy.airportPlaceholder}
+                        inputClassName={inputClass}
+                        locale={locale}
+                      />
+                      {effectiveAirportOption?.detailPageHref && (
+                        <a
+                          href={effectiveAirportOption.detailPageHref}
+                          className="mt-2 inline-flex min-h-6 items-center text-xs font-medium text-zinc-400 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-zinc-200 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 active:text-white"
+                          data-airport-detail-link
+                        >
+                          {locale === "es"
+                            ? `Guía y calculadora de ${effectiveAirportOption.code} →`
+                            : `${effectiveAirportOption.code} airport guide & calculator →`}
+                        </a>
+                      )}
+                    </>
                   ) : (
                     <PlaceAutocomplete
                       value={airport}
@@ -998,6 +1101,7 @@ export default function AirportCalculator({
                 airport.trim().length < 2 ||
                 (!hasRouteInputs && !hasManualDriveTime) ||
                 isFetchingTravel
+                || isResolvingOrigin
               }
               className={`w-full rounded-full px-6 py-3 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                 resultHeroMode
@@ -1005,7 +1109,9 @@ export default function AirportCalculator({
                   : "bg-green-500 text-black hover:bg-green-400"
               }`}
             >
-              {isFetchingTravel
+              {isResolvingOrigin
+                ? locale === "es" ? "Comprobando la dirección…" : "Checking the address…"
+                : isFetchingTravel
                 ? copy.calculating
                 : resultHeroMode
                   ? copy.update
@@ -1356,10 +1462,15 @@ export default function AirportCalculator({
                         ? `A tu llegada: ~${securityIntelligence?.predictedWaitAtArrival.minutes ?? computedResult.securityMinutes} min · ${computedResult.securityMinutes} min incluidos${hasPreCheck && openPrecheckCount > 0 ? ` · ${openPrecheckCount} PreCheck abierto${openPrecheckCount === 1 ? "" : "s"}` : ""}`
                         : `At arrival: ~${securityIntelligence?.predictedWaitAtArrival.minutes ?? computedResult.securityMinutes} min · ${computedResult.securityMinutes} min included${hasPreCheck && openPrecheckCount > 0 ? ` · ${openPrecheckCount} PreCheck checkpoint${openPrecheckCount === 1 ? "" : "s"} open` : ""}`}
                     </p>
+                    <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+                      {locale === "es"
+                        ? "Fuente: TSAWaitTimes.com · estimación externa para todo el aeropuerto, no una medición oficial de la TSA."
+                        : "Source: TSAWaitTimes.com · third-party airport-wide estimate, not an official TSA measurement."}
+                    </p>
                     {licensedSecurityEvidence.faaAlerts?.[0] && (
-                      <p className="mt-1 text-xs leading-relaxed text-amber-800">
-                        <span className="font-semibold">{locale === "es" ? "Aviso del aeropuerto" : "Airport alert"}:</span>{" "}
-                        {licensedSecurityEvidence.faaAlerts[0].summary}
+                      <p className="mt-2 text-xs leading-relaxed text-zinc-400">
+                        <span className="font-semibold text-zinc-300">{locale === "es" ? "Actualización del aeropuerto" : "Airport update"}:</span>{" "}
+                        {formatAirportAlert(licensedSecurityEvidence.faaAlerts[0].summary, locale)}
                       </p>
                     )}
                   </section>

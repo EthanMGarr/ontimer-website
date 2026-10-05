@@ -1,6 +1,7 @@
 import { extractAirportCode, predictSecurity } from "./model";
 import type {
   AirportSecurityIntelligence,
+  CurrentAirportSecurityStatus,
   ObservedSecurityWait,
   SecurityEstimate,
   SecurityRequest,
@@ -21,6 +22,7 @@ interface ProviderAttempt {
 
 export interface SecurityService {
   estimate(request: SecurityRequest): Promise<SecurityEstimate>;
+  currentStatus(request: Pick<SecurityRequest, "airportInput" | "jurisdiction">): Promise<CurrentAirportSecurityStatus>;
 }
 
 export function createAirportSecurityService(options: {
@@ -84,6 +86,60 @@ export function createAirportSecurityService(options: {
   }
 
   return {
+    async currentStatus(request) {
+      const generatedAt = now();
+      const airportCode = extractAirportCode(request.airportInput);
+      let evidence: ObservedSecurityWait | null = null;
+      let providerCacheHit = false;
+      const providerAttempts: ProviderAttempt[] = [];
+
+      if (request.jurisdiction === "us" && airportCode) {
+        for (const provider of options.providers) {
+          const result = await cachedFetch(provider, airportCode);
+          providerCacheHit ||= result.cacheHit;
+          const candidate = result.value
+            ? refreshEvidenceFreshness(result.value, generatedAt)
+            : null;
+          const outcome = !candidate
+            ? "no-data"
+            : candidate.freshness === "stale" ? "stale" : "accepted";
+          providerAttempts.push({
+            providerId: provider.metadata.id,
+            cacheHit: result.cacheHit,
+            durationMs: result.durationMs,
+            outcome,
+          });
+          if (candidate && candidate.freshness !== "stale") {
+            evidence = candidate;
+            break;
+          }
+        }
+      }
+
+      options.log?.({
+        event: "airport_security_current_status",
+        airportCode,
+        providerCacheHit,
+        providerFreshness: evidence?.freshness ?? null,
+        fallbackReason: request.jurisdiction !== "us"
+          ? "international-jurisdiction"
+          : !airportCode
+            ? "airport-code-unavailable"
+            : !evidence
+              ? options.providers.length === 0
+                ? "providers-disabled"
+                : "provider-unavailable-invalid-or-stale"
+              : null,
+        providerAttempts,
+      });
+
+      return {
+        airportCode,
+        observedWait: evidence,
+        generatedAt: generatedAt.toISOString(),
+        providerCacheHit,
+      };
+    },
     async estimate(request) {
       const generatedAt = now();
       const airportCode = extractAirportCode(request.airportInput);

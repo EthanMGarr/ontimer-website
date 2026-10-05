@@ -16,6 +16,12 @@ import {
   type VenueProfile,
 } from "@/lib/event-time-to-leave";
 import { venueRouteWaypoint } from "@/lib/venue-catalog";
+import {
+  invalidAddressMessage,
+  isInvalidTravelTimeLocation,
+  readTravelTimeResponse,
+  TravelTimeRequestError,
+} from "@/lib/travel-time-errors";
 import "./event-leave.css";
 
 interface TravelTimeResponse {
@@ -99,6 +105,7 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
   const [result, setResult] = useState<CalculatedResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isResolvingOrigin, setIsResolvingOrigin] = useState(false);
   const [calendarProvider, setCalendarProvider] = useState<"google" | "ics" | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -150,10 +157,8 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
           travelMode,
         });
         const response = await fetch(`/api/travel-time?${params.toString()}`);
-        const payload = await response.json() as TravelTimeResponse;
-        if (!response.ok || !payload.durationMinutes) {
-          throw new Error("Automatic travel time is unavailable. Open Timing options and enter the trip time manually.");
-        }
+        const payload = await readTravelTimeResponse<TravelTimeResponse>(response);
+        if (!payload.durationMinutes) throw new TravelTimeRequestError("No route found", "invalid_location");
         travelMinutes = payload.durationMinutes;
         source = "google";
         trafficBasis = payload.trafficBasis || "predicted";
@@ -179,7 +184,11 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
       }, 50);
     } catch (caught) {
       setResult(null);
-      setError(caught instanceof Error ? caught.message : "We could not calculate this trip.");
+      setError(isInvalidTravelTimeLocation(caught)
+        ? invalidAddressMessage()
+        : caught instanceof Error
+          ? caught.message
+          : "We could not calculate this trip.");
     } finally {
       setIsLoading(false);
     }
@@ -219,6 +228,7 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
               onChange={setOrigin}
               placeholder="Address, neighborhood, or place"
               inputClassName="event-calc__input"
+              onResolutionChange={setIsResolvingOrigin}
             />
             <p className="event-calc__helper">Used only to estimate this trip. It is not added to the event page.</p>
           </div>
@@ -282,8 +292,8 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
             <p className="event-calc__notice" role="status">Trip details changed. Update the result before adding it to your calendar.</p>
           ) : null}
 
-          <button className="event-calc__submit" type="submit" disabled={isLoading} data-state={isLoading ? "loading" : "default"}>
-            {isLoading ? "Estimating travel time…" : result ? "Update leave time" : "Calculate leave time"}
+          <button className="event-calc__submit" type="submit" disabled={isLoading || isResolvingOrigin} data-state={isLoading || isResolvingOrigin ? "loading" : "default"}>
+            {isResolvingOrigin ? "Checking the address…" : isLoading ? "Estimating travel time…" : result ? "Update leave time" : "Calculate leave time"}
           </button>
         </form>
       </div>

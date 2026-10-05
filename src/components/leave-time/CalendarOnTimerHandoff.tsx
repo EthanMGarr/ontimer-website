@@ -110,7 +110,9 @@ export default function CalendarOnTimerHandoff({
   const effectivePostCalendarBody = postCalendarBody ?? copy.alarmBody;
   const [isAndroidDevice, setIsAndroidDevice] = useState<boolean | null>(null);
   const affiliateRef = useRef<HTMLAnchorElement>(null);
+  const acquisitionRef = useRef<HTMLDivElement>(null);
   const affiliateViewTrackedRef = useRef(false);
+  const calendarReturnCleanupRef = useRef<(() => void) | null>(null);
   const calendarOpened = calendarProvider !== null;
   const effectiveAndroidAffiliateOffer = androidAffiliateOffer ?? DEFAULT_ANDROID_AFFILIATE_OFFER;
   const showAndroidAffiliate = isAndroidDevice === true;
@@ -124,6 +126,53 @@ export default function CalendarOnTimerHandoff({
   useEffect(() => {
     setIsAndroidDevice(isAndroidUserAgent(navigator.userAgent));
   }, []);
+
+  useEffect(() => () => calendarReturnCleanupRef.current?.(), []);
+
+  function focusAcquisition() {
+    window.requestAnimationFrame(() => {
+      const acquisition = acquisitionRef.current;
+      if (!acquisition) return;
+      acquisition.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "center",
+      });
+      acquisition.focus({ preventScroll: true });
+    });
+  }
+
+  function armCalendarReturn(provider: "google" | "ics") {
+    calendarReturnCleanupRef.current?.();
+    let timeout: number | undefined;
+
+    const cleanup = () => {
+      window.removeEventListener("focus", handleReturn);
+      window.removeEventListener("pageshow", handleReturn);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (timeout !== undefined) window.clearTimeout(timeout);
+      calendarReturnCleanupRef.current = null;
+    };
+    const moveToAcquisition = () => {
+      cleanup();
+      focusAcquisition();
+    };
+    const handleReturn = () => moveToAcquisition();
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") moveToAcquisition();
+    };
+
+    window.addEventListener("focus", handleReturn, { once: true });
+    window.addEventListener("pageshow", handleReturn, { once: true });
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    if (provider === "ics") timeout = window.setTimeout(moveToAcquisition, 150);
+    calendarReturnCleanupRef.current = cleanup;
+  }
+
+  function chooseCalendar(provider: "google" | "ics") {
+    armCalendarReturn(provider);
+    trackCalendarHandoffOpened(calculatorType, provider, analyticsContext);
+    setCalendarProvider(provider);
+  }
 
   useEffect(() => {
     if (!showAndroidAffiliate || affiliateViewTrackedRef.current) return;
@@ -168,6 +217,7 @@ export default function CalendarOnTimerHandoff({
               href={calendarHref}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => armCalendarReturn("google")}
               className="inline-flex max-w-full whitespace-normal text-zinc-500 underline underline-offset-2 transition-colors [overflow-wrap:anywhere] hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
             >
               {copy.reopenGoogle}
@@ -175,10 +225,7 @@ export default function CalendarOnTimerHandoff({
             <a
               href={alternateCalendarHref}
               download={alternateCalendarFilename}
-              onClick={() => {
-                trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext);
-                setCalendarProvider("ics");
-              }}
+              onClick={() => chooseCalendar("ics")}
               className="inline-flex max-w-full whitespace-normal text-zinc-500 underline underline-offset-2 transition-colors [overflow-wrap:anywhere] hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
             >
               {copy.otherCalendars}
@@ -202,10 +249,7 @@ export default function CalendarOnTimerHandoff({
               aria-label={eventPreview
                 ? `${copy.addGoogle}: ${eventPreview.title}, ${eventPreview.startLabel}`
                 : copy.addGoogle}
-              onClick={() => {
-                trackCalendarHandoffOpened(calculatorType, "google", analyticsContext);
-                setCalendarProvider("google");
-              }}
+              onClick={() => chooseCalendar("google")}
               className="mt-4 flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"
             >
               {copy.addGoogle}
@@ -213,10 +257,7 @@ export default function CalendarOnTimerHandoff({
             <a
               href={alternateCalendarHref}
               download={alternateCalendarFilename}
-              onClick={() => {
-                trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext);
-                setCalendarProvider("ics");
-              }}
+              onClick={() => chooseCalendar("ics")}
               className="mt-3 inline-flex max-w-full whitespace-normal text-left text-[11px] font-medium leading-relaxed text-zinc-400 underline underline-offset-2 transition-colors [overflow-wrap:anywhere] hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:text-xs"
             >
               {effectiveAlternateCalendarLabel}
@@ -225,7 +266,7 @@ export default function CalendarOnTimerHandoff({
         )}
       </div>
 
-      <div data-calendar-secondary-acquisition data-state={calendarOpened ? "post-calendar" : "available"} className={`mt-5 ${
+      <div ref={acquisitionRef} tabIndex={-1} data-calendar-secondary-acquisition data-state={calendarOpened ? "post-calendar" : "available"} className={`mt-5 scroll-mt-24 outline-none ${
         calendarOpened
           ? "order-1 rounded-xl border border-green-500/30 bg-green-500/[0.06] p-5"
           : "border-t border-zinc-800 pt-5"
@@ -303,7 +344,7 @@ export default function CalendarOnTimerHandoff({
               <a
                 href={alternateCalendarHref}
                 download={alternateCalendarFilename}
-                onClick={() => trackCalendarHandoffOpened(calculatorType, "ics", analyticsContext)}
+                onClick={() => chooseCalendar("ics")}
                 className="whitespace-nowrap underline underline-offset-2 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
               >
                 {copy.again}
@@ -312,10 +353,7 @@ export default function CalendarOnTimerHandoff({
                 href={calendarHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => {
-                  trackCalendarHandoffOpened(calculatorType, "google", analyticsContext);
-                  setCalendarProvider("google");
-                }}
+                onClick={() => chooseCalendar("google")}
                 className="whitespace-nowrap underline underline-offset-2 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
               >
                 {copy.googleInstead}

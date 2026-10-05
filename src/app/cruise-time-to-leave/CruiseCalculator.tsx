@@ -25,6 +25,11 @@ import {
 import type { CalculatorExample } from "@/lib/travel-locations";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
+import {
+  invalidAddressMessage,
+  isInvalidTravelTimeLocation,
+  readTravelTimeResponse,
+} from "@/lib/travel-time-errors";
 
 interface TravelTimeResponse {
   durationMinutes: number;
@@ -114,9 +119,7 @@ async function fetchTravelTime(
     departureTime: Math.floor(departureAt.getTime() / 1000).toString(),
   });
   const res = await fetch(`/api/travel-time?${params}`);
-  const body: TravelTimeResponse = await res.json();
-  if (!res.ok) throw new Error(body.error ?? `API error ${res.status}`);
-  return body;
+  return readTravelTimeResponse<TravelTimeResponse>(res);
 }
 
 function track(name: string, params?: Record<string, string | number>) {
@@ -213,6 +216,8 @@ export default function CruiseCalculator({
   const [hasTrafficData, setHasTrafficData] = useState(false);
   const [trafficBasis, setTrafficBasis] = useState<TrafficBasis>("none");
   const [isFetchingTravel, setIsFetchingTravel] = useState(false);
+  const [isResolvingOrigin, setIsResolvingOrigin] = useState(false);
+  const [isResolvingTerminal, setIsResolvingTerminal] = useState(false);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
   const [calendarProvider, setCalendarProvider] = useState<"google" | "ics" | null>(null);
   const resultPanelRef = useRef<HTMLDivElement>(null);
@@ -337,7 +342,7 @@ export default function CruiseCalculator({
         setTravelSource("google");
         setHasTrafficData(res.hasTrafficData);
         setTrafficBasis(res.trafficBasis);
-      } catch {
+      } catch (caught) {
         if (hasManualDriveTime) {
           setTravelMins(manualDriveMinutes);
           setTravelSource("manual");
@@ -346,7 +351,9 @@ export default function CruiseCalculator({
         } else {
           setShowAdvanced(true);
           setShowManualTravelTime(true);
-          setFallbackNotice("Live travel time did not load. Enter travel time below to calculate without live traffic.");
+          setFallbackNotice(isInvalidTravelTimeLocation(caught)
+            ? invalidAddressMessage()
+            : "Live travel time did not load. Enter travel time below to calculate without live traffic.");
         }
       } finally {
         setIsFetchingTravel(false);
@@ -434,6 +441,7 @@ export default function CruiseCalculator({
                   onChange={handleOriginChange}
                   placeholder="Your address, hotel, or city"
                   inputClassName={inputClass}
+                  onResolutionChange={setIsResolvingOrigin}
                 />
                 <CurrentLocationControl
                   active={currentLocation !== null}
@@ -447,6 +455,7 @@ export default function CruiseCalculator({
                   onChange={setTerminal}
                   placeholder="e.g. PortMiami"
                   inputClassName={inputClass}
+                  onResolutionChange={setIsResolvingTerminal}
                   types="cruise-terminal"
                 />
               </div>
@@ -462,6 +471,8 @@ export default function CruiseCalculator({
               terminal.trim().length < 2 ||
               (!hasRouteInputs && !hasManualDriveTime) ||
               isFetchingTravel
+              || isResolvingOrigin
+              || isResolvingTerminal
             }
             className={`w-full rounded-full px-6 py-3 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
               computedResult
@@ -469,7 +480,9 @@ export default function CruiseCalculator({
                 : "bg-green-500 text-black hover:bg-green-400"
             }`}
           >
-            {isFetchingTravel
+            {isResolvingOrigin || isResolvingTerminal
+              ? "Checking the address…"
+              : isFetchingTravel
               ? "Calculating leave time..."
               : computedResult
                 ? "Update Leave Time"

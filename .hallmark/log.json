@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-10-03",
+    "scope": "page-family",
+    "macrostructure": "Task-first Workbench / Compact Directory",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "direct, legible, responsive",
+    "enrichment": "none",
+    "brief": "Airport pickup parity, shared display-scale correction, and mobile tools-menu priority"
+  },
+  {
     "date": "2026-09-20",
     "scope": "page-family",
     "macrostructure": "Task-first Conversion Workbench",

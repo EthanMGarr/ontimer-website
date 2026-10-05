@@ -1,6 +1,7 @@
 /* Hallmark · route family: product education · design-system: design.md · designed-as-app
  * genre: modern-minimal · tone: calm precision · anchor: editorial steps and framed app screens
  * accessibility: WCAG 2.2 AA targets, visible focus, 44px controls, reduced-motion safe
+ * pre-emit critique: P5 H5 E5 S5 R5 V4
  */
 .site-page {
   background: var(--paper);
@@ -77,10 +78,12 @@
 }
 
 .site-title {
-  font-size: clamp(3rem, 9vw, 6.5rem);
-  line-height: 0.94;
+  font-size: clamp(2.6rem, 5.25vw, 4.75rem);
+  line-height: 1;
   margin: 0;
-  max-width: 12ch;
+  max-width: 16ch;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .site-hero__content--center .site-title {
@@ -645,7 +648,7 @@
   }
 
   .site-directory-grid {
-    grid-template-columns: minmax(14rem, 0.34fr) minmax(0, 0.66fr);
+    grid-template-columns: minmax(18rem, 0.4fr) minmax(0, 0.6fr);
   }
 
   .site-featured-grid {
@@ -655,7 +658,7 @@
 
 @media (max-width: 24rem) {
   .site-title {
-    font-size: clamp(2.65rem, 15vw, 3.5rem);
+    font-size: clamp(2.35rem, 12vw, 2.85rem);
   }
 
   .site-actions > *,

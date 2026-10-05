@@ -24,6 +24,11 @@ import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 import type { SiteLocale } from "@/lib/i18n";
+import {
+  invalidAddressMessage,
+  isInvalidTravelTimeLocation,
+  readTravelTimeResponse,
+} from "@/lib/travel-time-errors";
 
 type TravelMode = "DRIVE" | "WALK" | "TRANSIT";
 type PlanningMode = "today" | "future";
@@ -63,9 +68,7 @@ async function fetchTravelTime(
     travelMode,
   });
   const res = await fetch(`/api/travel-time?${params}`);
-  const body: TravelTimeResponse = await res.json();
-  if (!res.ok) throw new Error(body.error ?? `API error ${res.status}`);
-  return body;
+  return readTravelTimeResponse<TravelTimeResponse>(res);
 }
 
 function fmtTime(d: Date, locale: SiteLocale) {
@@ -255,6 +258,8 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
   const [manualTravelMinutes, setManualTravelMinutes] = useState("");
 
   const [isCalculating, setIsCalculating] = useState(false);
+  const [isResolvingOrigin, setIsResolvingOrigin] = useState(false);
+  const [isResolvingDestination, setIsResolvingDestination] = useState(false);
   const [result, setResult] = useState<CalculatorResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
@@ -316,15 +321,17 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
           page_path: window.location.pathname,
           duration_minutes: travelMinutes,
         });
-      } catch {
+      } catch (caught) {
         const manual = parseInt(manualTravelMinutes, 10);
         if (!isNaN(manual) && manual >= 0) {
           travelMinutes = manual;
           fireEvent("quota_fallback_used", { page_path: window.location.pathname });
         } else {
-          setFallbackNotice(isSpanish
-            ? "La estimación automática no está disponible para este trayecto. Introduce el tiempo manualmente o prueba con una dirección más completa."
-            : "Automatic travel time is unavailable for this route. Enter travel time manually below, or try a fuller address.");
+          setFallbackNotice(isInvalidTravelTimeLocation(caught)
+            ? invalidAddressMessage(locale)
+            : isSpanish
+              ? "La estimación automática no está disponible para este trayecto. Introduce el tiempo manualmente."
+              : "Automatic travel time is unavailable for this route. Enter travel time manually below.");
           setIsCalculating(false);
           return;
         }
@@ -400,6 +407,7 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
                 onChange={setDestination}
                 placeholder={copy.destinationPlaceholder}
                 inputClassName={inputClass}
+                onResolutionChange={setIsResolvingDestination}
                 includeAirports
               />
             </div>
@@ -410,6 +418,7 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
                 onChange={handleOriginChange}
                 placeholder={copy.originPlaceholder}
                 inputClassName={inputClass}
+                onResolutionChange={setIsResolvingOrigin}
                 includeAirports
               />
               <CurrentLocationControl
@@ -543,10 +552,12 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
           <button
             type="button"
             onClick={handleCalculate}
-            disabled={isCalculating}
+            disabled={isCalculating || isResolvingOrigin || isResolvingDestination}
             className="w-full rounded-full bg-green-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isCalculating ? copy.calculating : copy.calculate}
+            {isResolvingOrigin || isResolvingDestination
+              ? isSpanish ? "Comprobando la dirección…" : "Checking the address…"
+              : isCalculating ? copy.calculating : copy.calculate}
           </button>
         </div>
 

@@ -66,6 +66,13 @@ export interface AirportSecurityIntelligence {
   providerCacheHit: boolean;
 }
 
+export interface CurrentAirportSecurityStatus {
+  airportCode: string | null;
+  observedWait: ObservedSecurityWait | null;
+  generatedAt: string;
+  providerCacheHit: boolean;
+}
+
 export interface SecurityEstimate extends WaitRange {
   source: "live" | "historical" | "fallback" | "official-guidance";
   context: string;

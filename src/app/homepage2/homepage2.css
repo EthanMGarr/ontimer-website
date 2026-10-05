@@ -421,14 +421,14 @@ body {
 
 .hp2-mobile-tools .hp2-mobile-tools__all {
   align-items: center;
-  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
   color: var(--blue-700);
   display: flex;
   font-size: var(--text-sm);
   font-weight: 650;
   justify-content: space-between;
   min-height: 2.75rem;
-  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
   text-decoration: none;
 }
 

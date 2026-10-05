@@ -17,6 +17,9 @@ This is the release contract for OnTimer calculators. It protects the required i
 - Keep breadcrumbs out of the visual mobile task path.
 - Do not place detail grids, repeated metadata, full disclaimers, provider explanations, promotional panels, or supporting SEO copy before the primary input.
 - Keep the first field label and editable control visible at 320, 375, and 414 px widths in a representative phone-height viewport, including normal site chrome.
+- When a route starts from the visitor, keep the shared “Use my current location” control directly with the starting-location field; use its coordinates for routing while retaining a readable display label.
+- When current external data adds trust before calculation, keep it to one compact status line in existing calculator chrome. Show it only for destinations the provider supports and only when current evidence is available; it must not become a card, push the first editable input below the practical mobile viewport, or imply that a third-party estimate is an official measurement.
+- When a reviewed destination page exists for a selected airport, expose at most one quiet contextual link beside that selection. Keep it subordinate to the input and calculate action; do not add a destination card or directory to the mobile task path.
 
 ## Result-state rules
 
@@ -26,6 +29,7 @@ This is the release contract for OnTimer calculators. It protects the required i
 - Show the answer, date/context, and no more than one compact summary row before the calendar handoff.
 - Do not put a timeline, itemized assumptions, provider details, warning cards, or educational copy before the calendar action.
 - Put optional calculation detail in a disclosure after the conversion handoff.
+- Put provider attribution, current-status detail, and alerts after the calendar and OnTimer handoff; changing live values must not appear in search-result snippets. Translate raw provider or operations codes into concise customer language, and reserve warning colors for conditions that require a clear user action.
 - The calendar action must have a 44 px minimum target and an unwrapped primary label.
 - Every calendar-capable result must include a secondary OnTimer path before calendar use. Keep it visually subordinate to the calendar action and below the answer/handoff so it does not compete with the user's requested task.
 - Use the benefit-led CTA “Get Automatic Alarms” before calendar use and state plainly, “OnTimer is free.” Never qualify the claim as “free to download,” and do not repeat “free” in the supporting line. Use that line for product proof instead: “Works with Google Calendar, Apple Calendar, and Microsoft 365.”
@@ -34,6 +38,7 @@ This is the release contract for OnTimer calculators. It protects the required i
 
 - Opening or downloading a calendar event changes the handoff slot to the OnTimer acquisition state.
 - The OnTimer action stays in the same visible focal area; it must not appear beneath calculation details.
+- When the browser regains focus or visibility after the calendar handoff, move focus and scroll to the replacement acquisition action. On iOS this is OnTimer; on Android this is the configured Travelpayouts offer.
 - Retain an understated way to reopen Google Calendar or download another calendar format.
 
 ## Verification

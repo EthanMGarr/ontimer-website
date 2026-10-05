@@ -25,6 +25,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Sitemap pages do not use `noindex`.
 - [ ] Internal links point directly to canonical routes and do not depend on redirects.
 - [ ] Every published page in a programmatic or recurring-answer cluster is reachable through a normal crawlable link from its hub; do not create or link placeholder pages merely to fill a catalog.
+- [ ] Add FAQ content only when it answers a real decision or trust question that the page does not already resolve clearly. Keep visible FAQ copy and FAQ structured data identical, and do not justify FAQ additions by rich-result eligibility alone; commercial sites should not expect regular Google FAQ rich results.
 - [ ] Indexable event calculators require a confirmed specific start time, a self-canonical, Event schema, and a normal crawlable link from an indexable venue hub. Put reviewed fixture pages in the sitemap; provider-discovered pages may be crawled from the hub but still require retirement and removal handling after the event.
 - [ ] Event URL dates use the venue's local calendar date, not the UTC date. When URL generation changes, permanently redirect a resolvable legacy provider URL to the new self-canonical URL rather than serving duplicate pages.
 - [ ] Event hubs and pages exclude ancillary ticket inventory such as parking, premium seating, season-ticket memberships, VIP packages, access products, and venue tours unless the listing is itself the real event a visitor travels to.

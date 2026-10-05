@@ -15,6 +15,7 @@ const curatedAirportOptions: AirportAutocompleteOption[] = indexableAirportLocat
     city: location.city,
     aliases: [location.shortName, ...(location.aliases ?? [])],
     planningJurisdiction: location.airport.planningJurisdiction ?? "us",
+    detailPageHref: `/airport-time-to-leave/${location.slug}`,
   }));
 import AirportCalculator from "./AirportCalculator";
 
@@ -73,6 +74,11 @@ const faqItems = [
       "Yes. Most airlines close bag check 30–45 minutes before departure. If you're running late and can't check your bag, you may be denied boarding. Add 15–20 minutes to your buffer if you're checking luggage.",
   },
   {
+    question: "Does this calculator use current airport security wait times?",
+    answer:
+      "For supported U.S. airports, selecting an airport shows a current third-party airport-wide estimate from TSAWaitTimes.com. The calculator uses current evidence when it is relevant and a time-of-day planning estimate for future trips, together with the buffer shown in your result. These are planning estimates, not official TSA checkpoint measurements, and conditions can change.",
+  },
+  {
     question: "Can OnTimer remind me when to leave for the airport?",
     answer:
       "OnTimer is built for calendar events with locations — like flights, meetings, and appointments. For any event with an address, OnTimer's Time-to-Leave feature can alert you when it's time to head out, based on travel time and traffic. Time-to-Leave is a Pro feature.",
@@ -106,7 +112,7 @@ const softwareAppJsonLd = {
   description:
     "A free calculator that gives a specific leave time for a flight using flight time, route, traffic, security, bags, parking and terminal access.",
   url: "https://www.ontimer.app/airport-time-to-leave-calculator",
-  dateModified: "2026-08-24",
+  dateModified: "2026-10-04",
   author: {
     "@type": "Organization",
     name: "OnTimer",

@@ -13,6 +13,11 @@ import {
 } from "@/lib/analytics";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 import type { SiteLocale } from "@/lib/i18n";
+import {
+  invalidAddressMessage,
+  isInvalidTravelTimeLocation,
+  readTravelTimeResponse,
+} from "@/lib/travel-time-errors";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -232,9 +237,7 @@ async function fetchTravelTime(
       body: JSON.stringify(Object.fromEntries(params)),
     })
     : await fetch(`/api/travel-time?${params}`);
-  const body: TravelTimeResponse = await res.json();
-  if (!res.ok) throw new Error(body.error ?? `API error ${res.status}`);
-  return body;
+  return readTravelTimeResponse<TravelTimeResponse>(res);
 }
 
 async function resolveTypedMapboxLocation(
@@ -678,16 +681,16 @@ export default function LeaveTimeCalculator({
         track(res.cacheHit ? "travel_time_cache_hit" : "routes_api_called", {
           duration_minutes: travelMinutes,
         });
-      } catch {
+      } catch (caught) {
         if (!isNaN(manual) && manual >= 0) {
           travelMinutes = manual;
           track("quota_fallback_used");
         } else {
           setShowAssumptions(true);
           setShowManualTravel(true);
-          setFallbackNotice(
-            copy.automaticUnavailable
-          );
+          setFallbackNotice(isInvalidTravelTimeLocation(caught)
+            ? invalidAddressMessage(locale)
+            : copy.automaticUnavailable);
           setIsCalculating(false);
           return;
         }

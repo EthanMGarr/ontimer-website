@@ -9,6 +9,7 @@ import {
   createAirportSecurityService,
   createTsaWaitTimesProvider,
   type ArrivalMode,
+  type CurrentAirportSecurityStatus,
   type FlightType,
   type SecurityEstimate,
 } from "@/lib/airport-security";
@@ -84,13 +85,22 @@ export async function GET(request: NextRequest) {
   const now = new Date();
   const input = requestInput(request, now);
   try {
+    if (request.nextUrl.searchParams.get("mode") === "current") {
+      const status = await securityService.currentStatus(input);
+      return NextResponse.json(status satisfies CurrentAirportSecurityStatus);
+    }
     const estimate = await securityService.estimate(input);
     return NextResponse.json(estimate satisfies SecurityEstimate);
   } catch (error) {
     console.error("[airport-security] estimate_failed", {
       error: error instanceof Error ? error.message : "unknown",
     });
-    const fallback = await createAirportSecurityService({ providers: [] }).estimate(input);
-    return NextResponse.json(fallback satisfies SecurityEstimate);
+    const fallbackService = createAirportSecurityService({ providers: [] });
+    if (request.nextUrl.searchParams.get("mode") === "current") {
+      const status = await fallbackService.currentStatus(input);
+      return NextResponse.json(status satisfies CurrentAirportSecurityStatus);
+    }
+    const estimate = await fallbackService.estimate(input);
+    return NextResponse.json(estimate satisfies SecurityEstimate);
   }
 }

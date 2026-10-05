@@ -27,5 +27,10 @@ assert.match(
   "the shared Tools menu must link to the published Days Until hub"
 );
 assert.match(header, /href: "\/airport-pickup-time-calculator", label: "Airport Pickup Time Calculator"/, "the Tools menu must link to the airport pickup calculator");
+assert.match(
+  header,
+  /<div className="hp2-mobile-tools"[^>]*>\s*<Link href="\/time-calculators"[^>]*>Browse all tools[\s\S]*?<\/Link>\s*\{toolGroups\.map/,
+  "the mobile Tools menu must put the all-tools directory before individual calculators"
+);
 
 console.log("site footer copy checks passed");

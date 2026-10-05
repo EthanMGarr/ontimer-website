@@ -14,6 +14,11 @@ const callers = [
 
 assert.doesNotMatch(handoff, /exclusivePrimaryAction/, "shared acquisition cannot be gated behind calendar use");
 assert.match(handoff, /data-calendar-secondary-acquisition/, "shared result handoff needs a persistent secondary acquisition path");
+assert.match(handoff, /acquisition\.scrollIntoView/, "calendar return must move the platform-specific acquisition action into view");
+assert.match(handoff, /window\.addEventListener\("focus", handleReturn/, "calendar return must respond when the browser regains focus");
+assert.match(handoff, /document\.addEventListener\("visibilitychange", handleVisibilityChange\)/, "calendar return must handle mobile app-to-browser visibility changes");
+assert.match(handoff, /showAndroidAffiliate[\s\S]*effectiveAndroidAffiliateOffer\.heading/, "Android calendar return must lead to the travel affiliate offer");
+assert.match(handoff, /calendarOpened \? copy\.getFree : copy\.getAlarms/, "iOS calendar return must lead to the OnTimer action");
 assert.match(handoff, /Get Automatic Alarms/, "the pre-calendar OnTimer action must lead with its benefit");
 assert.match(handoff, /OnTimer is free\. Turn calendar events into automatic alarms\./, "the shared English offer must state that OnTimer is free without qualifying the claim");
 assert.match(handoff, /Works with Google Calendar, Apple Calendar, and Microsoft 365\./, "the shared supporting line must provide compatibility proof instead of repeating price");

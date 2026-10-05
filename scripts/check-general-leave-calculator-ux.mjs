@@ -55,7 +55,7 @@ assert.match(placeAutocomplete, /val\.length - previousValue\.length > 1/, "addr
 assert.match(placeAutocomplete, /fetchSuggestions\(val, requestId, isBulkInsertion, isAutoFill\)/, "bulk AutoFill and paste lookups must be allowed to finish after the browser blurs the field");
 assert.match(placeAutocomplete, /handleSelectRef\.current\(preds\[0\]\)/, "an iPhone AutoFill insertion must complete the same provider selection flow as a suggestion tap");
 assert.match(component, /disabled=\{isCalculating \|\| isResolvingOrigin \|\| isResolvingDestination\}/, "calculation must wait until an automatically filled Mapbox address has coordinates");
-assert.match(placeAutocomplete, /hasUnresolvedMapboxValue[\s\S]*?handleSelectRef\.current\(firstPlaceSuggestion\)/, "leaving a typed Mapbox field must resolve the top suggestion instead of cancelling its coordinates");
+assert.match(placeAutocomplete, /shouldResolveBeforeLeaving[\s\S]*?handleSelectRef\.current\(firstPlaceSuggestion\)/, "leaving a saved-address or typed Mapbox field must resolve the top suggestion instead of cancelling it");
 assert.match(placeAutocomplete, /selectFirstAfterBlurRef\.current[\s\S]*?handleSelectRef\.current\(preds\[0\]\)/, "a pending Mapbox lookup must finish and select its top result after field blur");
 assert.match(placeAutocomplete, /finishBulkLookupAfterBlurRef\.current \|\| selectionInFlightRef\.current/, "field blur must not invalidate a Mapbox retrieve already in flight");
 assert.match(component, /originResolutionPendingRef\.current \|\| destinationResolutionPendingRef\.current/, "a same-gesture Calculate click must not outrun coordinate retrieval state updates");
