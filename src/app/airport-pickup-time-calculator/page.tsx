@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import AirportPickupCalculator from "./AirportPickupCalculator";
+import AirportPickupPlanPrefill from "@/components/airport/AirportPickupPlanPrefill";
 import { airportPickupProfiles, getAirportPickupPath } from "@/lib/airport-pickup-profiles";
 import "./pickup.css";
 
@@ -30,7 +32,9 @@ export default function AirportPickupPage() {
       <h1>When should I leave to pick someone up at the airport?</h1>
       <p>Enter the flight and your starting point. This free calculator uses the drive, deplaning, baggage, immigration, and where you plan to meet to give you a specific leave time.</p>
     </div></header>
-    <AirportPickupCalculator />
+    <Suspense fallback={<AirportPickupCalculator />}>
+      <AirportPickupPlanPrefill />
+    </Suspense>
     <section className="pickup-guide"><div className="pickup-shell">
       <h2>Picking up family, a friend, or a colleague?</h2>
       <p>Whether you are meeting your wife, girlfriend, husband, boyfriend, daughter, son, parent, cousin, another family member, a friend, or a colleague, the useful question is the same: when will they actually reach the pickup area, and when should you begin driving?</p>

@@ -9,8 +9,8 @@ This document defines the version 1 URL contract shared by the OnTimer website a
 - Times are UTC ISO 8601 timestamps with seconds and a `Z` suffix, for example `2026-10-12T14:59:00Z`. Offset timestamps and fractional seconds are not part of v1.
 - Readers ignore unknown or invalid parameters silently. Writers must not add undocumented parameters to v1.
 - The calendar description uses three blocks separated by blank lines: the OnTimer attribution, the recalculation link, and the automatic-alarm message.
-- Departure links are labeled `Recalculate Leave Time: <url>` in English or `Recalcular hora de salida: <url>` in Spanish. Readers should recognize the canonical URL and its `v=1` and `k` values rather than relying only on mutable presentation copy.
-- The English attribution is `Calculated by OnTimer - Never be late`. The EWR pilot emits this block before the recalculation link.
+- Departure links are labeled `Recalculate Leave Time: <url>` in English or `Recalcular hora de salida: <url>` in Spanish. Pickup links are labeled `Recalculate Pickup Time: <url>`. Readers should recognize the canonical URL and its `v=1` and `k` values rather than relying only on mutable presentation copy.
+- The English attribution is `Calculated by OnTimer - Never be late`. Calculators emit this block before the recalculation link.
 
 ## Departure Link
 
@@ -60,4 +60,4 @@ These links contain only the airport plan inputs above. They must never contain 
 
 When a supported v1 link opens, the calculator prefills valid matching fields and converts the UTC timestamp to the visitor's local date and time. It does not calculate until the visitor supplies an origin and chooses Calculate.
 
-The first production pilot emits departure links only from the canonical EWR departure calculator. The generic departure calculator accepts those links. The shared builder and parser cover both schemas so later airport and pickup expansion can preserve this exact v1 format.
+All airport departure calculators emit departure links, including generic, airport-specific, and Spanish pages. All airport pickup calculators emit pickup links. The generic calculator for each family accepts its matching links; the pickup calculator also continues to accept its legacy `?airport=` query.

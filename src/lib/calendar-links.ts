@@ -23,6 +23,14 @@ export function buildDepartureAirportPlanCalendarDescription(
   return `Calculated by OnTimer - Never be late\n\nRecalculate Leave Time: ${recalculateUrl}\n\n${automaticAlarmMessage}`;
 }
 
+export function buildPickupAirportPlanCalendarDescription(
+  recalculateUrl: string,
+  pickupNote: string,
+): string {
+  const automaticAlarmMessage = ONTIMER_CALENDAR_DESCRIPTION.split("\n").slice(1).join("\n");
+  return `Calculated by OnTimer - Never be late\n\nRecalculate Pickup Time: ${recalculateUrl}\n\n${pickupNote}\n\n${automaticAlarmMessage}`;
+}
+
 function formatLocalGoogleDate(date: Date): string {
   const pad = (value: number) => String(value).padStart(2, "0");
   return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`;

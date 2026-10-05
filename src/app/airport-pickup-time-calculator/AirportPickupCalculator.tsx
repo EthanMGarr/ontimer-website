@@ -10,7 +10,15 @@ import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 import { getDefaultAirportEventTime } from "@/lib/airport-planning-default";
 import { calculateAirportPickup, type AirportPickupPlan } from "@/lib/airport-pickup";
-import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
+import {
+  buildGoogleCalendarLink,
+  buildIcsCalendarDataUri,
+  buildPickupAirportPlanCalendarDescription,
+} from "@/lib/calendar-links";
+import {
+  buildAirportPlanLink,
+  type ParsedPickupAirportPlan,
+} from "@/lib/airport-plan-link";
 import {
   invalidAddressMessage,
   isInvalidTravelTimeLocation,
@@ -21,6 +29,14 @@ type Relationship = "someone" | "friend" | "colleague" | "wife" | "husband" | "g
 type TravelResult = { durationMinutes: number; hasTrafficData: boolean; trafficBasis: "live" | "predicted" | "scheduled" | "none" };
 const formatTime = (date: Date) => date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 const formatDateTime = (date: Date) => date.toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+const localInputDateString = (date: Date) => {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+};
+const localInputTimeString = (date: Date) => {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};
 
 async function fetchDriveTime(origin: string, destination: string, departureAt: Date): Promise<TravelResult> {
   const params = new URLSearchParams({ origin: origin.trim(), destination: destination.trim(), departureTime: Math.floor(departureAt.getTime() / 1000).toString(), travelMode: "DRIVE" });
@@ -34,6 +50,7 @@ interface AirportPickupCalculatorProps {
   lockAirport?: boolean;
   pageType?: "generic_pickup" | "airport_pickup";
   intentNav?: ReactNode;
+  initialPlan?: ParsedPickupAirportPlan;
 }
 
 export default function AirportPickupCalculator({
@@ -42,17 +59,27 @@ export default function AirportPickupCalculator({
   lockAirport = false,
   pageType = "generic_pickup",
   intentNav,
+  initialPlan,
 }: AirportPickupCalculatorProps) {
+  const initialLandingDate = initialPlan?.landingAt
+    ? localInputDateString(initialPlan.landingAt)
+    : "";
+  const initialLandingTime = initialPlan?.landingAt
+    ? localInputTimeString(initialPlan.landingAt)
+    : "";
+  const initialAirportValue = initialPlan?.airportName ?? initialPlan?.airportCode ?? initialAirport;
+  const hasInitialLanding = Boolean(initialPlan?.landingAt);
   const [today, setToday] = useState("");
   const [relationship, setRelationship] = useState<Relationship>("someone");
-  const [airport, setAirport] = useState(initialAirport);
-  const [arrivalDate, setArrivalDate] = useState("");
-  const [arrivalTime, setArrivalTime] = useState("");
+  const [airport, setAirport] = useState(initialAirportValue);
+  const [selectedAirportCode, setSelectedAirportCode] = useState<string | null>(initialPlan?.airportCode ?? locationCode ?? null);
+  const [arrivalDate, setArrivalDate] = useState(initialLandingDate);
+  const [arrivalTime, setArrivalTime] = useState(initialLandingTime);
   const [origin, setOrigin] = useState("");
   const [currentLocation, setCurrentLocation] = useState<string | null>(null);
-  const [checkedBag, setCheckedBag] = useState(false);
-  const [international, setInternational] = useState(false);
-  const [meetInside, setMeetInside] = useState(false);
+  const [checkedBag, setCheckedBag] = useState(initialPlan?.checkedBag ?? false);
+  const [international, setInternational] = useState(initialPlan?.flightType === "international");
+  const [meetInside, setMeetInside] = useState(initialPlan?.meetMode === "inside");
   const [manualDrive, setManualDrive] = useState("");
   const [plan, setPlan] = useState<(AirportPickupPlan & { driveMinutes: number; trafficBasis: TravelResult["trafficBasis"] | "manual" }) | null>(null);
   const [calendarProvider, setCalendarProvider] = useState<"google" | "ics" | null>(null);
@@ -72,9 +99,11 @@ export default function AirportPickupCalculator({
   useEffect(() => {
     const defaults = getDefaultAirportEventTime();
     setToday(defaults.date);
-    setArrivalDate(defaults.date);
-    setArrivalTime(defaults.time);
-  }, []);
+    if (!hasInitialLanding) {
+      setArrivalDate(defaults.date);
+      setArrivalTime(defaults.time);
+    }
+  }, [hasInitialLanding]);
 
   useEffect(() => {
     if (initialAirport || typeof window === "undefined") return;
@@ -93,12 +122,30 @@ export default function AirportPickupCalculator({
     return () => window.cancelAnimationFrame(frame);
   }, [plan]);
 
-  const calendarEvent = plan ? {
+  const landingAt = arrivalValue ? new Date(arrivalValue) : null;
+  const normalizedAirportCode = (selectedAirportCode ?? airport).trim().toUpperCase();
+  const airportPlanCode = normalizedAirportCode && /^[A-Z]{3}$/.test(normalizedAirportCode)
+    ? normalizedAirportCode
+    : undefined;
+  const recalculateUrl = plan && landingAt && !Number.isNaN(landingAt.getTime())
+    ? buildAirportPlanLink({
+        kind: "pickup",
+        ...(airportPlanCode ? { airportCode: airportPlanCode } : { airportName: airport }),
+        landingAt,
+        flightType: international ? "international" : "domestic",
+        checkedBag,
+        meetMode: meetInside ? "inside" : "curb",
+      })
+    : null;
+  const calendarEvent = plan && recalculateUrl ? {
     title: `Leave to pick up ${person} at ${airport}`,
     start: plan.leaveAt,
     end: new Date(plan.leaveAt.getTime() + 30 * 60_000),
     location: airport,
-    details: `Picking up ${person}.\n\n${ONTIMER_CALENDAR_DESCRIPTION}`,
+    details: buildPickupAirportPlanCalendarDescription(
+      recalculateUrl,
+      `Picking up ${person}.`,
+    ),
   } : null;
 
   function noteStarted() { if (!started.current) { started.current = true; trackCalculatorStarted("airport_pickup", analyticsContext); } }
@@ -161,7 +208,14 @@ export default function AirportPickupCalculator({
           </div>
         ) : <div className="pickup-field pickup-field--airport">
           <label htmlFor="pickup-airport">Pickup airport</label>
-          <AirportAutocomplete inputId="pickup-airport" value={airport} onChange={(value) => { noteStarted(); setAirport(value); resetResult(); }} options={[]} inputClassName="pickup-input" />
+          <AirportAutocomplete
+            inputId="pickup-airport"
+            value={airport}
+            onChange={(value) => { noteStarted(); setAirport(value); resetResult(); }}
+            onOptionSelected={(option) => setSelectedAirportCode(option?.code ?? null)}
+            options={[]}
+            inputClassName="pickup-input"
+          />
         </div>}
         <div className="pickup-landing__fields">
           <CalculatorDateField

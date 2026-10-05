@@ -563,9 +563,15 @@ export default function AirportCalculator({
     : locale === "es"
       ? effectivePlanningJurisdiction === "international" ? copy.airportSecurity : copy.tsaSecurity
       : securityLabel;
-  const candidateCurrentSecurityAirportCode = (effectiveAirportOption?.code ?? locationCode ?? "")
+  const airportInputCode = /^[A-Z]{3}$/.test(airport.trim().toUpperCase())
+    ? airport.trim().toUpperCase()
+    : "";
+  const candidateCurrentSecurityAirportCode = (effectiveAirportOption?.code ?? locationCode ?? airportInputCode)
     .trim()
     .toUpperCase();
+  const airportPlanCode = /^[A-Z]{3}$/.test(candidateCurrentSecurityAirportCode)
+    ? candidateCurrentSecurityAirportCode
+    : undefined;
   const currentSecurityAirportCode = effectivePlanningJurisdiction === "us"
     && /^[A-Z]{3}$/.test(candidateCurrentSecurityAirportCode)
     ? candidateCurrentSecurityAirportCode
@@ -758,10 +764,10 @@ export default function AirportCalculator({
       customSecurityMinutes, showBufferOverride, customBuffer, manualTravelMinutes,
       planningMode, flightType, arrivalMode, hasCheckedBag, airport, effectiveSecurityLabel]);
 
-  const recalculateUrl = computedResult && flightDepartureAt && locationCode === "EWR"
+  const recalculateUrl = computedResult && flightDepartureAt
     ? buildAirportPlanLink({
         kind: "departure",
-        airportCode: "EWR",
+        ...(airportPlanCode ? { airportCode: airportPlanCode } : { airportName: airport }),
         departureAt: flightDepartureAt,
         flightType,
         checkedBag: hasCheckedBag,
