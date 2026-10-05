@@ -11,6 +11,18 @@ export interface GoogleCalendarEvent {
 export const ONTIMER_CALENDAR_DESCRIPTION =
   `Calculated by OnTimer\nTurn this calendar event into an automatic alarm: ${SAVED_CALENDAR_APP_STORE_URL}`;
 
+export function buildDepartureAirportPlanCalendarDescription(
+  recalculateUrl: string,
+  locale: "en" | "es" = "en",
+): string {
+  if (locale === "es") {
+    return `Creado con OnTimer - No llegues tarde\n\nRecalcular hora de salida: ${recalculateUrl}\n\nRecibe alarmas automáticas para los eventos de tu calendario: https://www.ontimer.app`;
+  }
+
+  const automaticAlarmMessage = ONTIMER_CALENDAR_DESCRIPTION.split("\n").slice(1).join("\n");
+  return `Calculated by OnTimer - Never be late\n\nRecalculate Leave Time: ${recalculateUrl}\n\n${automaticAlarmMessage}`;
+}
+
 function formatLocalGoogleDate(date: Date): string {
   const pad = (value: number) => String(value).padStart(2, "0");
   return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`;

@@ -8,7 +8,9 @@ This document defines the version 1 URL contract shared by the OnTimer website a
 - Query parameter names and enum values are case-sensitive. IATA values are uppercase.
 - Times are UTC ISO 8601 timestamps with seconds and a `Z` suffix, for example `2026-10-12T14:59:00Z`. Offset timestamps and fractional seconds are not part of v1.
 - Readers ignore unknown or invalid parameters silently. Writers must not add undocumented parameters to v1.
-- The calendar description puts the link on its first line as `Recalculate: <url>` in English or `Recalcular: <url>` in Spanish. The existing OnTimer calendar description follows on the next line.
+- The calendar description uses three blocks separated by blank lines: the OnTimer attribution, the recalculation link, and the automatic-alarm message.
+- Departure links are labeled `Recalculate Leave Time: <url>` in English or `Recalcular hora de salida: <url>` in Spanish. Readers should recognize the canonical URL and its `v=1` and `k` values rather than relying only on mutable presentation copy.
+- The English attribution is `Calculated by OnTimer - Never be late`. The EWR pilot emits this block before the recalculation link.
 
 ## Departure Link
 

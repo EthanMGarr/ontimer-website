@@ -10,7 +10,12 @@ import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import AirportAutocomplete from "@/components/AirportAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
-import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
+import {
+  buildDepartureAirportPlanCalendarDescription,
+  buildGoogleCalendarLink,
+  buildIcsCalendarDataUri,
+  ONTIMER_CALENDAR_DESCRIPTION,
+} from "@/lib/calendar-links";
 import { getAirportDepartureStatus } from "@/lib/airport-departure-status";
 import { getDefaultAirportEventTime } from "@/lib/airport-planning-default";
 import {
@@ -765,7 +770,7 @@ export default function AirportCalculator({
       })
     : null;
   const calendarDetails = recalculateUrl
-    ? `${locale === "es" ? "Recalcular" : "Recalculate"}: ${recalculateUrl}\n${copy.calendarDetails}`
+    ? buildDepartureAirportPlanCalendarDescription(recalculateUrl, locale)
     : copy.calendarDetails;
 
   const [statusNowMs, setStatusNowMs] = useState(() => Date.now());

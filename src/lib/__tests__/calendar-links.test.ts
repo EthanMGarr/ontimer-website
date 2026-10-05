@@ -1,9 +1,13 @@
 import assert from "node:assert/strict";
-import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "../calendar-links";
+import {
+  buildDepartureAirportPlanCalendarDescription,
+  buildGoogleCalendarLink,
+  buildIcsCalendarDataUri,
+} from "../calendar-links";
 
 const start = new Date(2026, 7, 9, 8, 30, 0);
 const recalculateUrl = "https://www.ontimer.app/airport-time-to-leave-calculator?v=1&k=dep&a=EWR&dep=2026-10-12T14%3A59%3A00Z&ft=dom&bag=0&m=parking";
-const recalculateDescription = `Recalculate: ${recalculateUrl}\n${ONTIMER_CALENDAR_DESCRIPTION}`;
+const recalculateDescription = buildDepartureAirportPlanCalendarDescription(recalculateUrl);
 const link = new URL(buildGoogleCalendarLink({
   title: "Leave for EWR",
   start,
@@ -15,7 +19,7 @@ assert.equal(link.pathname, "/calendar/r/eventedit");
 assert.equal(link.searchParams.get("text"), "Leave for EWR");
 assert.equal(link.searchParams.get("dates"), "20260809T083000/20260809T084500");
 assert.equal(link.searchParams.get("details"), recalculateDescription);
-assert.match(link.searchParams.get("details") ?? "", /^Recalculate: https:\/\/www\.ontimer\.app\//);
+assert.match(link.searchParams.get("details") ?? "", /^Calculated by OnTimer - Never be late\n\nRecalculate Leave Time: https:\/\/www\.ontimer\.app\//);
 assert.match(link.searchParams.get("details") ?? "", /\?v=1&k=dep&a=EWR&dep=/);
 assert.equal(link.searchParams.has("location"), false);
 
@@ -40,8 +44,8 @@ assert.match(ics, /DTSTART:20260809T123000Z/);
 assert.match(ics, /DTEND:20260809T130000Z/);
 assert.match(ics, /SUMMARY:Arrive at Smith\\, Jones & Co\./);
 assert.match(ics, /LOCATION:123 Main St\\; Suite 2/);
-assert.match(ics, /DESCRIPTION:Recalculate: https:\/\/www\.ontimer\.app\/airport-time-to-leave-calculator\?v=1&k=dep&a=EWR&dep=/);
-assert.match(ics, /&ft=dom&bag=0&m=parking\\nCalculated by OnTimer\\nTurn this calendar event into an automatic alarm: https:\/\/apps\.apple\.com/);
+assert.match(ics, /DESCRIPTION:Calculated by OnTimer - Never be late\\n\\nRecalculate Leave Time: https:\/\/www\.ontimer\.app\/airport-time-to-leave-calculator\?v=1&k=dep&a=EWR&dep=/);
+assert.match(ics, /&ft=dom&bag=0&m=parking\\n\\nTurn this calendar event into an automatic alarm: https:\/\/apps\.apple\.com/);
 assert.match(ics, /ct=web_saved_calendar_event/);
 
 console.log("calendar link tests passed");
