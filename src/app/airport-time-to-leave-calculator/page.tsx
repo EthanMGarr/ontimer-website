@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 import { indexableTravelLocations } from "@/lib/travel-locations";
@@ -18,6 +19,7 @@ const curatedAirportOptions: AirportAutocompleteOption[] = indexableAirportLocat
     detailPageHref: `/airport-time-to-leave/${location.slug}`,
   }));
 import AirportCalculator from "./AirportCalculator";
+import AirportCalculatorPlanPrefill from "@/components/airport/AirportCalculatorPlanPrefill";
 
 export const metadata: Metadata = {
   alternates: {
@@ -192,10 +194,16 @@ export default function AirportTimeToLeaveCalculator() {
       {/* ── CALCULATOR ── */}
       <section id="calculator" className="border-t border-zinc-800 pb-6 pt-2 sm:pt-3 md:pb-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <AirportCalculator
-            genericRedesign
-            airportOptions={curatedAirportOptions}
-          />
+          <Suspense
+            fallback={(
+              <AirportCalculator
+                genericRedesign
+                airportOptions={curatedAirportOptions}
+              />
+            )}
+          >
+            <AirportCalculatorPlanPrefill airportOptions={curatedAirportOptions} />
+          </Suspense>
           <p className="mt-5 text-center text-sm text-zinc-400">
             This calculator is for realistic departure planning. For a fun take on risky airport
             timing, see the{" "}

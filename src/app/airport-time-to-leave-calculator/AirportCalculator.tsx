@@ -13,6 +13,10 @@ import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted } from "@/l
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 import { getAirportDepartureStatus } from "@/lib/airport-departure-status";
 import { getDefaultAirportEventTime } from "@/lib/airport-planning-default";
+import {
+  buildAirportPlanLink,
+  type ParsedDepartureAirportPlan,
+} from "@/lib/airport-plan-link";
 import type {
   CurrentAirportSecurityStatus,
   SecurityEstimate,
@@ -269,6 +273,24 @@ function localDateString(date = new Date()): string {
   return date.toLocaleDateString("en-CA");
 }
 
+function localInputDateString(date: Date): string {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function localInputTimeString(date: Date): string {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function parseLocalDateTime(date: string, time: string): Date | null {
+  if (!date || !time) return null;
+  const [year, month, day] = date.split("-").map(Number);
+  const [hour, minute] = time.split(":").map(Number);
+  const parsed = new Date(year, month - 1, day, hour, minute, 0);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
 function planningModeForDate(date: string): PlanningMode {
   return date === localDateString() ? "today" : "future";
 }
@@ -421,6 +443,7 @@ interface AirportCalculatorProps {
   airportOptions?: AirportAutocompleteOption[];
   locale?: SiteLocale;
   initialArrivalMode?: ArrivalMode;
+  initialPlan?: ParsedDepartureAirportPlan;
 }
 
 const genericExample: CalculatorExample = {
@@ -442,24 +465,38 @@ export default function AirportCalculator({
   airportOptions = [],
   locale = "en",
   initialArrivalMode = "parking",
+  initialPlan,
 }: AirportCalculatorProps) {
   const copy = airportCopy[locale];
+  const initialAirportOption = initialPlan?.airportCode
+    ? airportOptions.find((option) => option.code.toUpperCase() === initialPlan.airportCode)
+    : undefined;
+  const initialAirportValue = initialAirportOption
+    ? buildAirportCalendarLocation(initialAirportOption)
+    : initialPlan?.airportName ?? initialPlan?.airportCode ?? initialAirport;
+  const initialFlightDate = initialPlan?.departureAt
+    ? localInputDateString(initialPlan.departureAt)
+    : "";
+  const initialFlightTime = initialPlan?.departureAt
+    ? localInputTimeString(initialPlan.departureAt)
+    : "";
+  const hasInitialDeparture = Boolean(initialPlan?.departureAt);
   // ── Form state ──────────────────────────────────────────────────────────────
   const [today, setToday] = useState("");
-  const [departureDate, setDepartureDate] = useState("");
-  const [departureTime, setDepartureTime] = useState("");
-  const [flightType, setFlightType] = useState<FlightType>("domestic");
+  const [departureDate, setDepartureDate] = useState(initialFlightDate);
+  const [departureTime, setDepartureTime] = useState(initialFlightTime);
+  const [flightType, setFlightType] = useState<FlightType>(initialPlan?.flightType ?? "domestic");
   const [origin, setOrigin] = useState("");
   const [currentLocation, setCurrentLocation] = useState<string | null>(null);
-  const [airport, setAirport] = useState(initialAirport);
-  const [selectedAirportOption, setSelectedAirportOption] = useState<AirportAutocompleteOption | null>(null);
+  const [airport, setAirport] = useState(initialAirportValue);
+  const [selectedAirportOption, setSelectedAirportOption] = useState<AirportAutocompleteOption | null>(initialAirportOption ?? null);
 
   // ── Refinement state ────────────────────────────────────────────────────────
   const [showRefinements, setShowRefinements] = useState(false);
   const [hasPreCheck, setHasPreCheck] = useState(false);
   const [hasClear, setHasClear] = useState(false);
-  const [hasCheckedBag, setHasCheckedBag] = useState(false);
-  const [arrivalMode, setArrivalMode] = useState<ArrivalMode>(initialArrivalMode);
+  const [hasCheckedBag, setHasCheckedBag] = useState(initialPlan?.checkedBag ?? false);
+  const [arrivalMode, setArrivalMode] = useState<ArrivalMode>(initialPlan?.arrivalMode ?? initialArrivalMode);
   const [showBufferOverride, setShowBufferOverride] = useState(false);
   const [customBuffer, setCustomBuffer] = useState("");
   const [showManualDriveTime, setShowManualDriveTime] = useState(false);
@@ -494,9 +531,11 @@ export default function AirportCalculator({
   useEffect(() => {
     const { date, time } = getDefaultAirportEventTime();
     setToday(localDateString());
-    setDepartureDate(date);
-    setDepartureTime(time);
-  }, []);
+    if (!hasInitialDeparture) {
+      setDepartureDate(date);
+      setDepartureTime(time);
+    }
+  }, [hasInitialDeparture]);
 
   useEffect(() => {
     setError(null);
@@ -655,13 +694,14 @@ export default function AirportCalculator({
     `${locale === "es" ? (flightType === "international" ? copy.international : copy.domestic) : (flightType === "international" ? longHaulLabel : shortHaulLabel)}: ${copy.recommendations}`,
   ];
 
+  const flightDepartureAt = useMemo(
+    () => parseLocalDateTime(departureDate, departureTime),
+    [departureDate, departureTime],
+  );
+
   // ── Computed result ─────────────────────────────────────────────────────────
   const computedResult = useMemo((): ComputedResult | null => {
-    if (!departureDate || !departureTime) return null;
-    const [year, month, day] = departureDate.split("-").map(Number);
-    const [hour, minute] = departureTime.split(":").map(Number);
-    const departure = new Date(year, month - 1, day, hour, minute, 0);
-    if (isNaN(departure.getTime())) return null;
+    if (!flightDepartureAt) return null;
 
     const planningContext: AirportPlanningContext = {
       flightType,
@@ -686,7 +726,7 @@ export default function AirportCalculator({
       {
         destination: createAirportDestination(airport),
         eventType: airportEventTypeFor(flightType),
-        targetTime: departure,
+        targetTime: flightDepartureAt,
         context: planningContext,
       },
       AirportPlugin
@@ -708,10 +748,25 @@ export default function AirportCalculator({
       confidence: result.confidence,
       factors: result.factors,
     };
-  }, [departureDate, departureTime, travelMins, travelSource, hasTrafficData, trafficBasis,
+  }, [flightDepartureAt, travelMins, travelSource, hasTrafficData, trafficBasis,
       estimatedSecurityMins, baseBuffer, defaultBuffer, showSecurityOverride,
       customSecurityMinutes, showBufferOverride, customBuffer, manualTravelMinutes,
       planningMode, flightType, arrivalMode, hasCheckedBag, airport, effectiveSecurityLabel]);
+
+  const recalculateUrl = computedResult && flightDepartureAt && locationCode === "EWR"
+    ? buildAirportPlanLink({
+        kind: "departure",
+        airportCode: "EWR",
+        departureAt: flightDepartureAt,
+        flightType,
+        checkedBag: hasCheckedBag,
+        arrivalMode,
+        locale,
+      })
+    : null;
+  const calendarDetails = recalculateUrl
+    ? `${locale === "es" ? "Recalcular" : "Recalculate"}: ${recalculateUrl}\n${copy.calendarDetails}`
+    : copy.calendarDetails;
 
   const [statusNowMs, setStatusNowMs] = useState(() => Date.now());
   useEffect(() => {
@@ -1408,13 +1463,13 @@ export default function AirportCalculator({
                   calendarHref={buildGoogleCalendarLink({
                     title: calendarEventTitle,
                     start: computedResult.leaveTime,
-                    details: copy.calendarDetails,
+                    details: calendarDetails,
                     location: airport || undefined,
                   })}
                   alternateCalendarHref={buildIcsCalendarDataUri({
                     title: calendarEventTitle,
                     start: computedResult.leaveTime,
-                    details: copy.calendarDetails,
+                    details: calendarDetails,
                     location: airport || undefined,
                   })}
                   alternateCalendarFilename="airport-leave-time.ics"
@@ -1632,7 +1687,7 @@ export default function AirportCalculator({
                 href={buildGoogleCalendarLink({
                   title: airport ? `Leave for ${buildAirportShortDisplay(airport, locationCode)}` : "Leave for airport",
                   start: computedResult.leaveTime,
-                  details: ONTIMER_CALENDAR_DESCRIPTION,
+                  details: calendarDetails,
                   location: airport || undefined,
                 })}
                 target="_blank"

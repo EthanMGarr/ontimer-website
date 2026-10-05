@@ -3,6 +3,9 @@ import { readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(path, "utf8");
 const handoff = read("src/components/leave-time/CalendarOnTimerHandoff.tsx");
+const airportCalculator = read("src/app/airport-time-to-leave-calculator/AirportCalculator.tsx");
+const airportPage = read("src/app/airport-time-to-leave-calculator/page.tsx");
+const airportPrefill = read("src/components/airport/AirportCalculatorPlanPrefill.tsx");
 const callers = [
   "src/app/what-time-should-i-leave/LeaveTimeCalculator.tsx",
   "src/app/airport-time-to-leave-calculator/AirportCalculator.tsx",
@@ -24,6 +27,10 @@ assert.match(handoff, /OnTimer is free\. Turn calendar events into automatic ala
 assert.match(handoff, /Works with Google Calendar, Apple Calendar, and Microsoft 365\./, "the shared supporting line must provide compatibility proof instead of repeating price");
 assert.match(handoff, /OnTimer es gratis\. Convierte los eventos de tu calendario en alarmas automáticas\./, "the shared Spanish offer must retain the same free-value disclosure");
 assert.doesNotMatch(handoff, /free to download|Free download on the App Store|se descarga gratis|Descarga gratis en App Store/, "calculator acquisition copy must not qualify or repeat the free claim");
+assert.match(airportCalculator, /locationCode === "EWR"[\s\S]*?buildAirportPlanLink/, "the airport-plan calendar pilot must remain limited to EWR");
+assert.equal((airportCalculator.match(/details: calendarDetails/g) ?? []).length, 3, "every EWR Google and ICS calendar builder must use the recalculation description");
+assert.match(airportPage, /<Suspense[\s\S]*?<AirportCalculatorPlanPrefill/, "the generic airport page must isolate URL prefill behind Suspense");
+assert.match(airportPrefill, /useSearchParams\(\)[\s\S]*?initialPlan=/, "the generic airport calculator must parse v1 URL state into initial fields");
 
 for (const path of callers) {
   const source = read(path);
