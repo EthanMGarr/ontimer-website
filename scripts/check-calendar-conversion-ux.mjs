@@ -65,7 +65,9 @@ assert.match(handoff, /CONSENT_EVENT/, "shared calculator UI must resync its ass
 assert.match(until, /CONSENT_EVENT/, "Days Until UI must resync its assigned variant after consent changes");
 
 assert.match(experiment, /calculator_app_primary_v1/, "the calculator CTA experiment needs a stable ID");
-assert.match(experiment, /stored === "control" \|\| stored === "app_primary"/, "the experiment assignment must persist across visits");
+assert.match(experiment, /experiment_variant: "app_primary"/, "the measured rollout must give eligible visitors the app-primary result");
+assert.match(experiment, /assignment_method: "full_rollout"/, "the measured rollout must identify its assignment method");
+assert.doesNotMatch(experiment, /!analyticsAllowed/, "analytics consent must not decide which calculator experience a visitor receives");
 assert.match(experiment, /!\/Android\/i\.test/, "Android visitors must remain outside the iPhone download experiment");
 assert.match(analytics, /"experiment_assignment"/, "GA4 must receive an explicit assignment event");
 assert.match(analytics, /\.\.\.\(experiment \?\? \{\}\)/, "calculator outcome events must carry the experiment context");

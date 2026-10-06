@@ -42,7 +42,7 @@ assert.match(page, /robots: isEventIndexable\(event\) \? \{ index: true, follow:
 assert.match(sitemap, /REVIEWED_EVENT_FIXTURES/, "reviewed event pages must enter the sitemap");
 assert.match(sitemap, /VENUE_PROFILES\.map/, "every reviewed venue hub must enter the sitemap");
 assert.match(styles, /Task-first Conversion Workbench/, "the page must retain its locked Hallmark structure");
-assert.match(guidance, /input → answer → action conversion sequence/, "the durable checklist must state the experiment-aware conversion sequence");
-assert.match(guidance, /control keeps calendar primary and OnTimer secondary; treatment makes OnTimer primary/, "the durable checklist must preserve both experiment variants");
+assert.match(guidance, /input → answer → action conversion sequence/, "the durable checklist must state the rollout-aware conversion sequence");
+assert.match(guidance, /non-Android visitors see OnTimer as the primary result action/, "the durable checklist must preserve the measured rollout hierarchy");
 
 console.log("event calculator conversion UX checks passed");

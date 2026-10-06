@@ -1,14 +1,14 @@
 # Calculator Conversion UX Checklist
 
-This is the release contract for OnTimer calculators. It protects the required input → answer → action conversion sequence and the active app-primary experiment.
+This is the release contract for OnTimer calculators. It protects the required input → answer → action conversion sequence and the app-primary measured rollout.
 
 ## Required sequence
 
 1. The searcher immediately understands what the calculator answers.
 2. The primary editable input is visible in the first practical mobile viewport.
 3. The calculator returns one clear primary answer.
-4. The answer and the experiment-assigned primary action are visible together without additional scrolling.
-5. Both OnTimer and the one-result calendar handoff remain available before calendar use; only their hierarchy changes by assigned variant.
+4. The answer and the app-primary action are visible together without additional scrolling.
+5. Both OnTimer and the one-result calendar handoff remain available before calendar use; OnTimer is primary for eligible iPhone acquisition traffic.
 6. After the calendar action, the OnTimer action moves into the focal slot.
 
 ## Entry-state rules
@@ -31,14 +31,14 @@ This is the release contract for OnTimer calculators. It protects the required i
 - Put optional calculation detail in a disclosure after the conversion handoff.
 - Put provider attribution, current-status detail, and alerts after the calendar and OnTimer handoff; changing live values must not appear in search-result snippets. Translate raw provider or operations codes into concise customer language, and reserve warning colors for conditions that require a clear user action.
 - The calendar action must have a 44 px minimum target and an unwrapped primary label.
-- During `calculator_app_primary_v1`, control keeps calendar primary and OnTimer secondary; treatment makes OnTimer primary and retains calendar as a clearly labeled secondary one-result action. Never hide the calculated answer or either path.
+- During the `calculator_app_primary_v1` measured rollout, non-Android visitors see OnTimer as the primary result action with calendar retained as a clearly labeled secondary one-result action. Never hide the calculated answer or either path.
 - Use the benefit-led CTA “Get Automatic Alarms” before calendar use and state plainly, “OnTimer is free.” Never qualify the claim as “free to download,” and do not repeat “free” in the supporting line. Use that line for product proof instead: “Works with Google Calendar, Apple Calendar, and Microsoft 365.”
 
-## Experiment rules
+## Rollout rules
 
-- Use a stable 50/50 assignment for analytics-eligible non-Android visitors. Visitors without analytics consent and Android visitors remain on control.
-- Fire `experiment_assignment` once per browser-tab session and attach `experiment_id`, `experiment_variant`, and `assignment_method` to subsequent calculator events.
-- Keep the assignment stable across calculator routes and visits so repeat users do not cross treatment arms.
+- Use the app-primary experience for all non-Android calculator visitors; analytics consent controls measurement, not the user experience. Android visitors retain the established calendar/affiliate experience.
+- For measurable visits, fire `experiment_assignment` once per browser-tab session and attach `experiment_id`, `experiment_variant=app_primary`, and `assignment_method=full_rollout` to subsequent calculator events.
+- Keep the development-only control override available for regression review, but never enable query overrides in production.
 - Use distinct App Store campaign tokens for treatment clicks. Report GA4 outbound intent and App Store Connect campaign outcomes separately; never label an outbound click as an install.
 - Change one primary variable at a time. The first test changes action hierarchy only; calendar collapsing or result gating requires a later experiment.
 
