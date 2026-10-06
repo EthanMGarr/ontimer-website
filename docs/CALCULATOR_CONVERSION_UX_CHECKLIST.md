@@ -1,14 +1,14 @@
 # Calculator Conversion UX Checklist
 
-This is the release contract for OnTimer calculators. It protects the required input → answer → calendar → OnTimer conversion sequence.
+This is the release contract for OnTimer calculators. It protects the required input → answer → action conversion sequence and the active app-primary experiment.
 
 ## Required sequence
 
 1. The searcher immediately understands what the calculator answers.
 2. The primary editable input is visible in the first practical mobile viewport.
 3. The calculator returns one clear primary answer.
-4. The answer and primary calendar action are visible together without additional scrolling.
-5. A restrained secondary OnTimer action remains available before calendar use for people who do not want the calendar handoff.
+4. The answer and the experiment-assigned primary action are visible together without additional scrolling.
+5. Both OnTimer and the one-result calendar handoff remain available before calendar use; only their hierarchy changes by assigned variant.
 6. After the calendar action, the OnTimer action moves into the focal slot.
 
 ## Entry-state rules
@@ -26,13 +26,21 @@ This is the release contract for OnTimer calculators. It protects the required i
 - Generic calculators must begin with a neutral prompt rather than a fabricated selection or answer. If a curated selector cannot cover every valid use case, include a clearly labeled “Something else” choice that reveals a text field for the visitor's own value.
 
 - Move focus or scroll to the result after calculation.
-- Show the answer, date/context, and no more than one compact summary row before the calendar handoff.
-- Do not put a timeline, itemized assumptions, provider details, warning cards, or educational copy before the calendar action.
+- Show the answer, date/context, and no more than one compact summary row before the assigned primary action.
+- Do not put a timeline, itemized assumptions, provider details, warning cards, or educational copy before the conversion actions.
 - Put optional calculation detail in a disclosure after the conversion handoff.
 - Put provider attribution, current-status detail, and alerts after the calendar and OnTimer handoff; changing live values must not appear in search-result snippets. Translate raw provider or operations codes into concise customer language, and reserve warning colors for conditions that require a clear user action.
 - The calendar action must have a 44 px minimum target and an unwrapped primary label.
-- Every calendar-capable result must include a secondary OnTimer path before calendar use. Keep it visually subordinate to the calendar action and below the answer/handoff so it does not compete with the user's requested task.
+- During `calculator_app_primary_v1`, control keeps calendar primary and OnTimer secondary; treatment makes OnTimer primary and retains calendar as a clearly labeled secondary one-result action. Never hide the calculated answer or either path.
 - Use the benefit-led CTA “Get Automatic Alarms” before calendar use and state plainly, “OnTimer is free.” Never qualify the claim as “free to download,” and do not repeat “free” in the supporting line. Use that line for product proof instead: “Works with Google Calendar, Apple Calendar, and Microsoft 365.”
+
+## Experiment rules
+
+- Use a stable 50/50 assignment for analytics-eligible non-Android visitors. Visitors without analytics consent and Android visitors remain on control.
+- Fire `experiment_assignment` once per browser-tab session and attach `experiment_id`, `experiment_variant`, and `assignment_method` to subsequent calculator events.
+- Keep the assignment stable across calculator routes and visits so repeat users do not cross treatment arms.
+- Use distinct App Store campaign tokens for treatment clicks. Report GA4 outbound intent and App Store Connect campaign outcomes separately; never label an outbound click as an install.
+- Change one primary variable at a time. The first test changes action hierarchy only; calendar collapsing or result gating requires a later experiment.
 
 ## Calendar-return rules
 

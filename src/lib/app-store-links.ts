@@ -11,9 +11,11 @@ export interface AppStoreLinkContext {
 const calculatorProductPageUrl =
   process.env.NEXT_PUBLIC_APP_STORE_CALCULATOR_PRODUCT_PAGE_URL?.trim() || APP_STORE_URL;
 
-function calculatorFamily(context: AppStoreLinkContext): "leave" | "airport" | "wake" | null {
+function calculatorFamily(context: AppStoreLinkContext): "leave" | "airport" | "wake" | "cruise" | "until" | null {
   const value = `${context.calculatorType ?? ""} ${context.location ?? ""}`.toLowerCase();
   if (value.includes("airport")) return "airport";
+  if (value.includes("cruise")) return "cruise";
+  if (value.includes("days_until") || value.includes("days-until")) return "until";
   if (value.includes("wakeup") || value.includes("wake_up") || value.includes("wake-up")) return "wake";
   if (value.includes("leave_time") || value.includes("leave_calculator")) return "leave";
   return null;
@@ -28,6 +30,9 @@ export function appStoreCampaignToken(context: AppStoreLinkContext): string | nu
   }
   if (context.ctaVariant === "result_automatic_alert") {
     return `web_${family}_result`;
+  }
+  if (context.ctaVariant === "result_app_primary_v1") {
+    return `web_${family}_result_app_primary_v1`;
   }
   return `web_${family}_content`;
 }

@@ -13,6 +13,11 @@ import {
   type AnalyticsParams,
 } from "@/lib/analytics";
 import { isAndroidUserAgent } from "@/lib/device-detection";
+import { CONSENT_EVENT, isAnalyticsAllowed } from "@/lib/consent";
+import {
+  getCalculatorCtaExperimentAssignment,
+  type CalculatorCtaVariant,
+} from "@/lib/calculator-cta-experiment";
 import type { SiteLocale } from "@/lib/i18n";
 
 interface AndroidAffiliateOffer {
@@ -62,7 +67,7 @@ const handoffCopy = {
     fileDownloaded: "Calendar file downloaded", googleOpened: "Google Calendar {item} opened",
     openDownloaded: "Open the downloaded file to add this leave time.", addAnother: "Add to another calendar",
     reopenGoogle: "Re-open Google Calendar", otherCalendars: "Other calendars",
-    addGoogle: "Add to Google Calendar", alarmHeading: "Don’t be late. Turn this into an alarm.",
+    addGoogle: "Add to Google Calendar", addOneGoogle: "Add this result to Google Calendar", alarmHeading: "Don’t be late. Turn this into an alarm.",
     alarmBody: "OnTimer is free. Turn calendar events into automatic alarms.", getFree: "Get OnTimer",
     getAlarms: "Get Automatic Alarms", appStore: "Works with Google Calendar, Apple Calendar, and Microsoft 365.", paid: "Paid link: OnTimer may earn a commission if you book, at no additional cost to you.",
     android: "OnTimer for Android is coming — join the waitlist", help: "Need help adding the calendar file?",
@@ -74,7 +79,7 @@ const handoffCopy = {
     fileDownloaded: "Archivo de calendario descargado", googleOpened: "Evento abierto en Google Calendar",
     openDownloaded: "Abre el archivo descargado para añadir esta hora de salida.", addAnother: "Añadir a otro calendario",
     reopenGoogle: "Volver a abrir Google Calendar", otherCalendars: "Otros calendarios",
-    addGoogle: "Añadir a Google Calendar", alarmHeading: "No llegues tarde. Convierte este evento en una alarma.",
+    addGoogle: "Añadir a Google Calendar", addOneGoogle: "Añadir este resultado a Google Calendar", alarmHeading: "No llegues tarde. Convierte este evento en una alarma.",
     alarmBody: "OnTimer es gratis. Convierte los eventos de tu calendario en alarmas automáticas.", getFree: "Obtener OnTimer",
     getAlarms: "Recibir alarmas automáticas", appStore: "Funciona con Google Calendar, Apple Calendar y Microsoft 365.", paid: "Enlace remunerado: OnTimer puede recibir una comisión si reservas, sin coste adicional para ti.",
     android: "OnTimer para Android está en camino — únete a la lista", help: "¿Necesitas ayuda para añadir el archivo?",
@@ -109,11 +114,13 @@ export default function CalendarOnTimerHandoff({
   const effectivePostCalendarHeading = postCalendarHeading ?? copy.alarmHeading;
   const effectivePostCalendarBody = postCalendarBody ?? copy.alarmBody;
   const [isAndroidDevice, setIsAndroidDevice] = useState<boolean | null>(null);
+  const [experimentVariant, setExperimentVariant] = useState<CalculatorCtaVariant>("control");
   const affiliateRef = useRef<HTMLAnchorElement>(null);
   const acquisitionRef = useRef<HTMLDivElement>(null);
   const affiliateViewTrackedRef = useRef(false);
   const calendarReturnCleanupRef = useRef<(() => void) | null>(null);
   const calendarOpened = calendarProvider !== null;
+  const appPrimary = experimentVariant === "app_primary" && !calendarOpened;
   const effectiveAndroidAffiliateOffer = androidAffiliateOffer ?? DEFAULT_ANDROID_AFFILIATE_OFFER;
   const showAndroidAffiliate = isAndroidDevice === true;
   const openedHeading = calendarProvider === "ics"
@@ -125,6 +132,13 @@ export default function CalendarOnTimerHandoff({
 
   useEffect(() => {
     setIsAndroidDevice(isAndroidUserAgent(navigator.userAgent));
+    const syncExperimentAssignment = () => {
+      const assignment = getCalculatorCtaExperimentAssignment(isAnalyticsAllowed());
+      setExperimentVariant(assignment?.experiment_variant ?? "control");
+    };
+    syncExperimentAssignment();
+    window.addEventListener(CONSENT_EVENT, syncExperimentAssignment);
+    return () => window.removeEventListener(CONSENT_EVENT, syncExperimentAssignment);
   }, []);
 
   useEffect(() => () => calendarReturnCleanupRef.current?.(), []);
@@ -197,7 +211,7 @@ export default function CalendarOnTimerHandoff({
   return (
     <>
       <div className="flex flex-col">
-      <div className={`mt-5 min-w-0 rounded-xl border ${
+      <div data-calendar-action data-experiment-variant={experimentVariant} className={`mt-5 min-w-0 rounded-xl border ${
         calendarOpened && compactOpenedStatus
           ? "px-0 pb-0 pt-4"
           : calendarProvider === "ics"
@@ -208,7 +222,9 @@ export default function CalendarOnTimerHandoff({
           ? compactOpenedStatus
             ? "order-2 border-0 border-t border-zinc-800 bg-transparent"
             : "order-2 border-zinc-700 bg-zinc-950/40"
-          : "border-green-500/40 bg-green-500/[0.07]"
+          : appPrimary
+            ? "order-2 border-zinc-800 bg-zinc-950/30"
+            : "order-1 border-green-500/40 bg-green-500/[0.07]"
       }`}>
         {calendarProvider === "google" ? (
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs">
@@ -241,7 +257,9 @@ export default function CalendarOnTimerHandoff({
           </div>
         ) : (
           <>
-            <p className="text-lg font-bold text-white">{effectiveReadyHeading}</p>
+            <p className={appPrimary ? "text-sm font-semibold text-zinc-300" : "text-lg font-bold text-white"}>
+              {appPrimary ? copy.addGoogle : effectiveReadyHeading}
+            </p>
             <a
               href={calendarHref}
               target="_blank"
@@ -250,9 +268,11 @@ export default function CalendarOnTimerHandoff({
                 ? `${copy.addGoogle}: ${eventPreview.title}, ${eventPreview.startLabel}`
                 : copy.addGoogle}
               onClick={() => chooseCalendar("google")}
-              className="mt-4 flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"
+              className={appPrimary
+                ? "mt-3 flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full border border-zinc-700 bg-transparent px-5 py-3 text-sm font-bold text-zinc-200 transition-colors hover:border-zinc-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-zinc-900"
+                : "mt-4 flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"}
             >
-              {copy.addGoogle}
+              {appPrimary ? copy.addOneGoogle : copy.addGoogle}
             </a>
             <a
               href={alternateCalendarHref}
@@ -266,10 +286,12 @@ export default function CalendarOnTimerHandoff({
         )}
       </div>
 
-      <div ref={acquisitionRef} tabIndex={-1} data-calendar-secondary-acquisition data-state={calendarOpened ? "post-calendar" : "available"} className={`mt-5 scroll-mt-24 outline-none ${
+      <div ref={acquisitionRef} tabIndex={-1} data-calendar-secondary-acquisition data-experiment-variant={experimentVariant} data-state={calendarOpened ? "post-calendar" : appPrimary ? "primary" : "available"} className={`mt-5 scroll-mt-24 outline-none ${
         calendarOpened
           ? "order-1 rounded-xl border border-green-500/30 bg-green-500/[0.06] p-5"
-          : "border-t border-zinc-800 pt-5"
+          : appPrimary
+            ? "order-1 rounded-xl border border-green-500/40 bg-green-500/[0.07] p-5"
+            : "order-2 border-t border-zinc-800 pt-5"
       }`}>
         <p className="text-base font-bold text-white">
           {showAndroidAffiliate
@@ -316,13 +338,17 @@ export default function CalendarOnTimerHandoff({
           ) : (
             <>
               <AppStoreButton
-                size={calendarOpened ? "lg" : "md"}
+                size={calendarOpened || appPrimary ? "lg" : "md"}
                 label={calendarOpened ? copy.getFree : copy.getAlarms}
-                className={calendarOpened ? "w-full justify-center whitespace-nowrap" : "justify-center whitespace-nowrap"}
+                className={calendarOpened || appPrimary ? "w-full justify-center whitespace-nowrap" : "justify-center whitespace-nowrap"}
                 location={appLocation}
                 analyticsContext={{
                   calculator_type: calculatorType,
-                  cta_variant: calendarOpened ? "post_calendar_automatic_alert" : "result_automatic_alert",
+                  cta_variant: calendarOpened
+                    ? "post_calendar_automatic_alert"
+                    : appPrimary
+                      ? "result_app_primary_v1"
+                      : "result_automatic_alert",
                   ...analyticsContext,
                 }}
               />

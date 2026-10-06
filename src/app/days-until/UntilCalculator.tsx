@@ -1,9 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { fireEvent, trackAppStoreClick, trackCalculatorCompleted, trackCalculatorStarted, trackCalendarHandoffOpened } from "@/lib/analytics";
+import { fireEvent, trackAppStoreClick, trackAutomaticAlertCTAViewed, trackCalculatorCompleted, trackCalculatorStarted, trackCalendarHandoffOpened } from "@/lib/analytics";
+import { appStoreUrlFor } from "@/lib/app-store-links";
 import { ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
-import { APP_STORE_URL } from "@/lib/constants";
+import {
+  getCalculatorCtaExperimentAssignment,
+  type CalculatorCtaVariant,
+} from "@/lib/calculator-cta-experiment";
+import { CONSENT_EVENT, isAnalyticsAllowed } from "@/lib/consent";
 import { calculateUntil, COUNTDOWN_OPTIONS, formatDateInput, getCountdownOption } from "@/lib/until";
 
 type Props = { initialDate?: string; initialLabel?: string; initialNow?: string; eventSlug?: string; answerFirst?: boolean };
@@ -45,14 +50,26 @@ export default function UntilCalculator({ initialDate, initialLabel = "", initia
   const [hydrated, setHydrated] = useState(false);
   const [milestones, setMilestones] = useState<number[]>([30, 10, 1]);
   const [calendarHandoff, setCalendarHandoff] = useState<"google" | "file" | null>(null);
+  const [experimentVariant, setExperimentVariant] = useState<CalculatorCtaVariant>("control");
   const started = useRef(false);
   const alarmOfferRef = useRef<HTMLElement>(null);
+  const resultAppCtaRef = useRef<HTMLAnchorElement>(null);
+  const resultCtaViewTrackedRef = useRef<string | null>(null);
 
   useEffect(() => {
     setHydrated(true);
     setNow(new Date());
+    const syncExperimentAssignment = () => {
+      const assignment = getCalculatorCtaExperimentAssignment(isAnalyticsAllowed());
+      setExperimentVariant(assignment?.experiment_variant ?? "control");
+    };
+    syncExperimentAssignment();
+    window.addEventListener(CONSENT_EVENT, syncExperimentAssignment);
     const timer = window.setInterval(() => setNow(new Date()), 60_000);
-    return () => window.clearInterval(timer);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener(CONSENT_EVENT, syncExperimentAssignment);
+    };
   }, []);
 
   useEffect(() => {
@@ -90,6 +107,18 @@ export default function UntilCalculator({ initialDate, initialLabel = "", initia
   const sortedMilestones = [...milestones].sort((a, b) => b - a);
   const reminderList = sortedMilestones.length < 2 ? `${sortedMilestones[0] ?? ""}` : `${sortedMilestones.slice(0, -1).join(", ")}, and ${sortedMilestones.at(-1)}`;
   const reminderSummary = milestones.length === 0 ? "No countdown reminders selected" : `Includes reminders ${reminderList} day${milestones.length === 1 && milestones[0] === 1 ? "" : "s"} before`;
+  const appPrimary = experimentVariant === "app_primary";
+  const resultCtaVariant = appPrimary ? "result_app_primary_v1" : "result_automatic_alert";
+  const resultAppStoreUrl = appStoreUrlFor({
+    location: "days_until_result",
+    calculatorType: "days_until",
+    ctaVariant: resultCtaVariant,
+  }).url;
+  const postCalendarAppStoreUrl = appStoreUrlFor({
+    location: "days_until_after_calendar",
+    calculatorType: "days_until",
+    ctaVariant: "post_calendar_automatic_alert",
+  }).url;
 
   function noteInteraction() {
     if (started.current) return;
@@ -122,6 +151,22 @@ export default function UntilCalculator({ initialDate, initialLabel = "", initia
     trackCalculatorCompleted("days_until", { event_slug: eventSlug, days_remaining: result.days });
   }, [dateValue, eventSlug, result?.days]);
 
+  useEffect(() => {
+    const cta = resultAppCtaRef.current;
+    if (!cta || !result || calendarHandoff) return;
+    const viewKey = `${eventSlug}:${dateValue}:${resultCtaVariant}`;
+    if (resultCtaViewTrackedRef.current === viewKey) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry?.isIntersecting || entry.intersectionRatio < 0.5) return;
+      resultCtaViewTrackedRef.current = viewKey;
+      trackAutomaticAlertCTAViewed("days_until", resultCtaVariant, { event_slug: eventSlug });
+      observer.disconnect();
+    }, { threshold: 0.5 });
+    observer.observe(cta);
+    return () => observer.disconnect();
+  }, [calendarHandoff, dateValue, eventSlug, result?.days, resultCtaVariant]);
+
   const controls = <div className="until-controls">
     <div className="until-field">
       <label htmlFor="until-event">What are you counting down to?</label>
@@ -153,8 +198,13 @@ export default function UntilCalculator({ initialDate, initialLabel = "", initia
           {result ? <div className="until-calendar-step">
             {calendarHandoff ? <aside ref={alarmOfferRef} tabIndex={-1} className="until-alarm-offer" aria-live="polite">
               <div><h2>Turn these into {label || "event"} alarms!</h2><p>OnTimer is free. Turn calendar events into automatic alarms, so you’re never late.</p></div>
-              <div><a className="until-app-button" href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_after_calendar", { event_slug: eventSlug, calendar_provider: calendarHandoff })}>Get OnTimer</a><p className="until-app-caption">Works with Google Calendar, Apple Calendar, and Microsoft 365.</p></div>
+              <div><a className="until-app-button" href={postCalendarAppStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_after_calendar", { calculator_type: "days_until", cta_variant: "post_calendar_automatic_alert", event_slug: eventSlug, calendar_provider: calendarHandoff })}>Get OnTimer</a><p className="until-app-caption">Works with Google Calendar, Apple Calendar, and Microsoft 365.</p></div>
             </aside> : <>
+              {appPrimary ? <aside className="until-alarm-offer until-alarm-offer--result-primary" data-calendar-secondary-acquisition data-experiment-variant={experimentVariant}>
+                <div><h2>Don’t stop at the countdown.</h2><p>OnTimer is free. Turn calendar events into automatic alarms, so you’re never late.</p></div>
+                <div><a ref={resultAppCtaRef} className="until-app-button" href={resultAppStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_result", { calculator_type: "days_until", cta_variant: resultCtaVariant, event_slug: eventSlug })}>Get Automatic Alarms</a><p className="until-app-caption">Works with Google Calendar, Apple Calendar, and Microsoft 365.</p></div>
+              </aside> : null}
+              <div className={appPrimary ? "until-calendar-secondary" : undefined} data-calendar-action data-experiment-variant={experimentVariant}>
               <h2>Put {label || "this event"} on your calendar.</h2>
               <p>Add the date and countdown reminders in one step.</p>
               <div className="until-action-row">
@@ -163,10 +213,11 @@ export default function UntilCalculator({ initialDate, initialLabel = "", initia
               </div>
               <details className="until-reminder-options"><summary>{reminderSummary}</summary><fieldset className="until-milestones"><legend>Choose reminders</legend>{MILESTONES.map((days) => <label key={days}><input className="until-check" type="checkbox" checked={milestones.includes(days)} onChange={() => { noteInteraction(); setCalendarHandoff(null); setMilestones((current) => current.includes(days) ? current.filter((item) => item !== days) : [...current, days]); }} />{days} day{days === 1 ? "" : "s"} before</label>)}</fieldset></details>
               <p className="until-note">The first option creates a calendar file for Apple Calendar or Outlook. Google Calendar can import it on a computer.</p>
-              <aside className="until-secondary-offer" data-calendar-secondary-acquisition>
+              </div>
+              {!appPrimary ? <aside className="until-secondary-offer" data-calendar-secondary-acquisition data-experiment-variant={experimentVariant}>
                 <div><h3>Prefer automatic alarms?</h3><p>OnTimer is free. Turn calendar events into automatic alarms.</p></div>
-                <div><a className="until-app-button" href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_result", { event_slug: eventSlug })}>Get Automatic Alarms</a><p className="until-app-caption">Works with Google Calendar, Apple Calendar, and Microsoft 365.</p></div>
-              </aside>
+                <div><a ref={resultAppCtaRef} className="until-app-button" href={resultAppStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_result", { calculator_type: "days_until", cta_variant: resultCtaVariant, event_slug: eventSlug })}>Get Automatic Alarms</a><p className="until-app-caption">Works with Google Calendar, Apple Calendar, and Microsoft 365.</p></div>
+              </aside> : null}
             </>}
           </div> : null}
           {result ? <div className="until-breakdown" aria-label="Countdown details">

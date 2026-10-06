@@ -19,6 +19,16 @@ assert.equal(appStoreCampaignToken({
   ctaVariant: "result_automatic_alert",
 }), "web_airport_result");
 assert.equal(appStoreCampaignToken({ location: "wakeup_calculator_final_cta" }), "web_wake_content");
+assert.equal(appStoreCampaignToken({
+  calculatorType: "cruise_leave_time",
+  location: "cruise_result",
+  ctaVariant: "result_app_primary_v1",
+}), "web_cruise_result_app_primary_v1");
+assert.equal(appStoreCampaignToken({
+  calculatorType: "days_until",
+  location: "days_until_result",
+  ctaVariant: "result_app_primary_v1",
+}), "web_until_result_app_primary_v1");
 assert.equal(appStoreCampaignToken({ location: "footer" }), null);
 
 const campaignUrl = new URL(appStoreCampaignUrl("web_leave_result"));

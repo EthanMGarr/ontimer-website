@@ -1,4 +1,8 @@
 import { isAnalyticsAllowed } from "@/lib/consent";
+import {
+  getCalculatorCtaExperimentAssignment,
+  shouldTrackCalculatorExperimentAssignment,
+} from "@/lib/calculator-cta-experiment";
 import { localeForPathname, type SiteLocale } from "@/lib/i18n";
 import { isWebsiteAnalyticsEnabled, WEBSITE_GA_MEASUREMENT_ID } from "@/lib/analytics-config";
 
@@ -114,7 +118,12 @@ export function fireEvent(eventName: string, params: AnalyticsParams = {}): void
   }
 
   if (!initializeAnalytics()) return;
-  window.gtag("event", eventName, { ...acquisitionParams(), ...params });
+  const acquisition = acquisitionParams();
+  const experiment = getCalculatorCtaExperimentAssignment(true);
+  if (experiment && shouldTrackCalculatorExperimentAssignment()) {
+    window.gtag("event", "experiment_assignment", { ...acquisition, ...experiment });
+  }
+  window.gtag("event", eventName, { ...acquisition, ...params, ...(experiment ?? {}) });
 }
 
 function baseParams(location: string): AnalyticsParams {
