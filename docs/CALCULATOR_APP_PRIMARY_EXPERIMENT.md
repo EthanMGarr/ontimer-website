@@ -47,8 +47,9 @@ Supporting metrics:
 
 App Store measurement:
 
-- Treatment links use variant-specific Apple campaign tokens by calculator family.
-- Use App Store Connect campaign reporting for product-page views and downloads where Apple makes them available.
+- Treatment links use Apple-compliant variant-specific campaign tokens by calculator family, such as `web_airport_result_ap1`. Keep every `ct` token within Apple's 30-character limit.
+- App Store Connect attributes impressions, product-page views, downloads, usage, sales, and subscriptions to campaign tokens. A first-time download is credited when it occurs within 24 hours of the campaign-link visit; dashboard metrics appear only after meeting Apple's privacy threshold of five.
+- Compare treatment campaign downloads, trial/offer starts, paid conversions, and proceeds with control campaign cohorts in App Store Connect. Use RevenueCat for authoritative subscription totals and lifecycle diagnosis, but do not claim that RevenueCat can identify the originating website click unless the app implements a separate attribution/deferred-deep-link integration.
 - GA4 outbound clicks are not installs. The website still has no deterministic person-level join to install, onboarding, trial, paid conversion, or MRR; report those as campaign/cohort outcomes unless the app adds a privacy-safe referral join.
 
 ## GA4 setup

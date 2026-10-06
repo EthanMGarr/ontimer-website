@@ -32,7 +32,7 @@ export function appStoreCampaignToken(context: AppStoreLinkContext): string | nu
     return `web_${family}_result`;
   }
   if (context.ctaVariant === "result_app_primary_v1") {
-    return `web_${family}_result_app_primary_v1`;
+    return `web_${family}_result_ap1`;
   }
   return `web_${family}_content`;
 }

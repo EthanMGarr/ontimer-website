@@ -15,9 +15,12 @@ let fallbackAssignmentEventSent = false;
 
 export function isCalculatorExperimentPath(pathname: string): boolean {
   return pathname.includes("calculator")
+    || pathname.includes("/es/calculadora")
     || pathname.includes("/what-time-should-i-leave")
     || pathname.includes("/days-until")
     || pathname.includes("/airport-time-to-leave/")
+    || pathname.includes("/airport-pickup/")
+    || pathname.includes("/es/aeropuerto/")
     || pathname.includes("/when-to-leave")
     || pathname.includes("/cruise-time-to-leave");
 }

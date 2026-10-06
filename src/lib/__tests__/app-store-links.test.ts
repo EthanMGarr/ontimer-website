@@ -23,13 +23,18 @@ assert.equal(appStoreCampaignToken({
   calculatorType: "cruise_leave_time",
   location: "cruise_result",
   ctaVariant: "result_app_primary_v1",
-}), "web_cruise_result_app_primary_v1");
+}), "web_cruise_result_ap1");
 assert.equal(appStoreCampaignToken({
   calculatorType: "days_until",
   location: "days_until_result",
   ctaVariant: "result_app_primary_v1",
-}), "web_until_result_app_primary_v1");
+}), "web_until_result_ap1");
 assert.equal(appStoreCampaignToken({ location: "footer" }), null);
+
+for (const calculatorType of ["leave_time", "airport_leave_time", "wake_up", "cruise_leave_time", "days_until"]) {
+  const token = appStoreCampaignToken({ calculatorType, ctaVariant: "result_app_primary_v1" });
+  assert.ok(token && token.length <= 30, `${calculatorType} treatment token must fit Apple's 30-character limit`);
+}
 
 const campaignUrl = new URL(appStoreCampaignUrl("web_leave_result"));
 assert.equal(campaignUrl.searchParams.get("pt"), "118607861");
