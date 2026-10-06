@@ -14,6 +14,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Large autocomplete or destination lookup catalogs load on demand and are not serialized into the initial HTML/RSC payload; compare the changed route's response size before and after.
 - [ ] Every intended indexable HTML page has a unique title and description.
 - [ ] Page-level Open Graph URLs use the page canonical, and Open Graph/Twitter descriptions match the page-specific intent instead of inheriting generic site copy.
+- [ ] The global iOS Smart App Banner keeps its App Store `app-argument` attribution URL with the `web_smart_banner` campaign token; verify the rendered `apple-itunes-app` meta tag after deployment.
 - [ ] Every intended indexable HTML page has a self-referencing canonical URL on `https://www.ontimer.app`.
 - [ ] Every localized page has an explicit locale URL, reciprocal `hreflang` links for each published language plus `x-default`, a locale-correct canonical, and matching entries in the sitemap. Do not use automatic country or browser-language redirects.
 - [ ] Localized pages render complete translated UI, metadata, structured data, validation, result and calendar-handoff copy; do not index pages with silent English fallback content.

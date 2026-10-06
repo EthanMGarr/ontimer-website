@@ -5,6 +5,7 @@ import {
   appStoreCampaignUrl,
   appStoreUrlFor,
   SAVED_CALENDAR_APP_STORE_URL,
+  SMART_APP_BANNER_APP_STORE_URL,
 } from "../app-store-links";
 
 assert.equal(APP_STORE_PROVIDER_TOKEN, "118607861");
@@ -41,6 +42,11 @@ assert.equal(campaignUrl.searchParams.get("pt"), "118607861");
 assert.equal(campaignUrl.searchParams.get("ct"), "web_leave_result");
 assert.equal(campaignUrl.searchParams.get("mt"), "8");
 assert.match(SAVED_CALENDAR_APP_STORE_URL, /ct=web_saved_calendar_event/);
+const smartBannerUrl = new URL(SMART_APP_BANNER_APP_STORE_URL);
+assert.equal(smartBannerUrl.origin + smartBannerUrl.pathname, "https://apps.apple.com/us/app/ontimer-never-be-late/id6755317601");
+assert.equal(smartBannerUrl.searchParams.get("pt"), APP_STORE_PROVIDER_TOKEN);
+assert.equal(smartBannerUrl.searchParams.get("ct"), "web_smart_banner");
+assert.equal(smartBannerUrl.searchParams.get("mt"), "8");
 assert.equal(appStoreUrlFor({ location: "footer" }).campaignToken, null);
 
 console.log("App Store campaign link tests passed.");

@@ -60,3 +60,7 @@ export function appStoreUrlFor(context: AppStoreLinkContext): {
 }
 
 export const SAVED_CALENDAR_APP_STORE_URL = appStoreCampaignUrl("web_saved_calendar_event");
+export const SMART_APP_BANNER_APP_STORE_URL = appStoreCampaignUrl(
+  "web_smart_banner",
+  APP_STORE_URL,
+);

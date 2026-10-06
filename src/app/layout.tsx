@@ -6,6 +6,7 @@ import "./site-system.css";
 import HelpSiteFrame from "@/components/HelpSiteFrame";
 import { ANALYTICS_FREE_MEDICATION_PATHS } from "@/lib/medication-route-privacy";
 import { createAnalyticsBootstrapScript, isWebsiteAnalyticsEnabled } from "@/lib/analytics-config";
+import { SMART_APP_BANNER_APP_STORE_URL } from "@/lib/app-store-links";
 
 const gaBootstrapScript = isWebsiteAnalyticsEnabled(process.env.NODE_ENV)
   ? createAnalyticsBootstrapScript(ANALYTICS_FREE_MEDICATION_PATHS)
@@ -31,6 +32,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.ontimer.app"),
   itunes: {
     appId: "6755317601",
+    appArgument: SMART_APP_BANNER_APP_STORE_URL,
   },
   title: {
     default: "OnTimer — Calendar Alarm App to Never Be Late for Meetings",
