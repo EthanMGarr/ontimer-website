@@ -58,22 +58,6 @@ export default function AirportTimeCalculatorsDirectory() {
               </p>
 
               <AirportDirectorySearch guides={airportGuides} />
-
-              <div className="site-alpha-nav">
-                <p>
-                  Flying from another airport?
-                </p>
-                <p className="site-note">
-                  Use the all-airport planner to get a personalized leave time without
-                  choosing an airport guide first.
-                </p>
-                <Link
-                  href="/airport-time-to-leave-calculator"
-                  className="site-text-action"
-                >
-                  Find out when to leave <span aria-hidden="true">→</span>
-                </Link>
-              </div>
             </div>
 
             <div>
