@@ -7,6 +7,7 @@ import {
 } from "@/components/CalculatorDirectory";
 import { getTravelLocationPath } from "@/lib/travel-locations";
 import { airportPickupProfiles, getAirportPickupPath } from "@/lib/airport-pickup-profiles";
+import AirportDirectorySearch from "@/components/airport/AirportDirectorySearch";
 
 export const metadata: Metadata = {
   title: "When Should I Leave for the Airport? Airport Guides",
@@ -20,6 +21,12 @@ const featuredAirports = featuredCodes
   .map((code) => airportLocations.find((location) => location.code === code))
   .filter((location): location is (typeof airportLocations)[number] => Boolean(location));
 const airportLetters = Object.keys(groupLocationsAlphabetically(airportLocations)).sort();
+const airportGuides = airportLocations.map((airport) => ({
+  code: airport.code,
+  name: airport.shortName,
+  city: airport.city,
+  href: getTravelLocationPath(airport),
+}));
 
 const collectionJsonLd = {
   "@context": "https://schema.org",
@@ -49,6 +56,8 @@ export default function AirportTimeCalculatorsDirectory() {
                 Choose your airport, enter your flight and route, and get a leave time
                 that includes local traffic, parking, terminal movement and security planning.
               </p>
+
+              <AirportDirectorySearch guides={airportGuides} />
 
               <div className="site-alpha-nav">
                 <p>
