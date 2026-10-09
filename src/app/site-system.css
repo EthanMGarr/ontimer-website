@@ -683,8 +683,42 @@
 
 /* Airport directory "Find your airport" search */
 .site-airport-search {
-  margin-top: var(--space-xl);
+  margin-bottom: var(--space-lg);
   max-width: 34rem;
+}
+
+/* Airport directory hero: tighter on phones so the search and the start of
+   Popular airports share the first screen. */
+.site-hero--airport-directory {
+  padding-block: var(--space-lg) var(--space-2xl);
+}
+
+.site-hero--airport-directory .site-directory-grid {
+  gap: var(--space-lg);
+}
+
+.site-hero--airport-directory .site-lede {
+  font-size: 1.05rem;
+  margin-top: var(--space-md);
+}
+
+@media (min-width: 60rem) {
+  .site-hero--airport-directory {
+    padding-block: clamp(4rem, 9vw, 6.5rem);
+  }
+
+  .site-hero--airport-directory .site-directory-grid {
+    gap: var(--space-2xl);
+  }
+
+  .site-airport-search {
+    margin-bottom: var(--space-xl);
+  }
+
+  .site-hero--airport-directory .site-lede {
+    font-size: clamp(1.1rem, 2.3vw, 1.4rem);
+    margin-top: var(--space-lg);
+  }
 }
 
 .site-airport-search__label {

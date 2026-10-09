@@ -44,7 +44,7 @@ export default function AirportTimeCalculatorsDirectory() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
       />
-      <section className="site-hero site-hero--compact">
+      <section className="site-hero site-hero--compact site-hero--airport-directory">
         <div className="site-shell">
           <div className="site-directory-grid">
             <div>
@@ -56,11 +56,11 @@ export default function AirportTimeCalculatorsDirectory() {
                 Choose your airport, enter your flight and route, and get a leave time
                 that includes local traffic, parking, terminal movement and security planning.
               </p>
-
-              <AirportDirectorySearch guides={airportGuides} />
             </div>
 
             <div>
+              <AirportDirectorySearch guides={airportGuides} />
+
               <div className="site-directory-intro">
                 <div>
                     <p>
@@ -112,7 +112,7 @@ export default function AirportTimeCalculatorsDirectory() {
         <div className="site-shell">
           <p className="site-kicker">Meeting an arriving passenger?</p>
           <h2 className="site-section-title">Airport pickup calculators</h2>
-          <p className="site-note">Choose a pilot airport for local curb, waiting-lot and terminal guidance, or use the generic pickup calculator for any airport.</p>
+          <p className="site-note">Choose a reviewed airport for local curb, waiting-lot and terminal guidance, or use the generic pickup calculator for any airport.</p>
           <div className="site-featured-grid site-featured-grid--spaced">
             {airportPickupProfiles.map((profile) => (
               <Link key={profile.slug} href={getAirportPickupPath(profile.slug)} className="site-location-link">
