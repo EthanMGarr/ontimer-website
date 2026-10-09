@@ -614,7 +614,7 @@ export default function CruiseCalculator({
           className={`${computedResult ? "order-1 lg:order-1" : "order-2"} scroll-mt-28 flex flex-col`}
         >
           {computedResult ? (
-            <div className="rounded-xl border border-green-500/30 bg-zinc-900 p-5 shadow-[0_0_40px_rgba(34,197,94,0.08)] transition-all duration-300 sm:p-7">
+            <div className="rounded-xl border border-green-500/30 bg-zinc-900 p-5 shadow-[0_0_40px_rgba(34,197,94,0.08)] transition-colors duration-300 sm:p-7">
               <p className="mb-2 text-xs text-zinc-500">
                 For your {fmtTime(computedResult.targetTime)} {eventKind} cruise boarding
               </p>
@@ -625,16 +625,11 @@ export default function CruiseCalculator({
               <p className="mt-2 text-base text-zinc-300">{fmtDate(computedResult.leaveAt)}</p>
               <p className="mt-1.5 text-xs text-green-500">{confidenceLabel(computedResult.confidence)}</p>
 
-              <div className="mt-5 border-t border-zinc-800 pt-4">
-                <p className="text-sm text-zinc-300">
+              <div className="mt-4 border-t border-zinc-800 pt-3">
+                <p className="text-sm leading-relaxed text-zinc-300">
                   {fmtDuration(computedResult.travelMinutes)} travel · arrive by {fmtTime(computedResult.arriveBy)}
+                  {" · "}{fmtDuration(computedResult.totalBufferMinutes)} terminal and boarding buffer
                 </p>
-                <p className="mt-0.5 text-sm text-zinc-400">
-                  {fmtDuration(computedResult.totalBufferMinutes)} terminal and boarding buffer
-                </p>
-                <button type="button" onClick={openResultAdjustments} className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-green-400 underline underline-offset-4 hover:text-green-300">
-                  Adjust assumptions
-                </button>
               </div>
 
               <CalendarOnTimerHandoff
@@ -664,6 +659,10 @@ export default function CruiseCalculator({
                   startLabel: fmtTime(computedResult.leaveAt),
                 }}
               />
+
+              <button type="button" onClick={openResultAdjustments} className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-zinc-400 underline underline-offset-4 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400">
+                Adjust assumptions
+              </button>
 
               <details className="group mt-5 border-t border-zinc-800 pt-4">
                 <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-lg border border-zinc-800 px-3 text-sm font-semibold text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 [&::-webkit-details-marker]:hidden">

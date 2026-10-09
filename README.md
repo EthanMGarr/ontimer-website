@@ -87,7 +87,7 @@ ontimer-website/
 
 **Design system:** `design.md` defines the shared page families and accessibility/SEO invariants; `tokens.css` is the canonical source for color, type, spacing, shape, motion, and focus tokens. New public UI should consume those tokens instead of introducing route-specific values.
 
-**Cookie consent:** Google Analytics only loads immediately for visitors outside the EU/EEA/UK/Switzerland. Regulated visitors see a consent banner first (`src/middleware.ts` classifies by IP country, `src/components/CookieConsentBanner.tsx` renders the banner, `src/lib/consent.ts` reads browser state, and `src/lib/consent-policy.ts` contains the testable policy rules). Run `npm run test:consent` when this flow changes.
+**Cookie consent:** Google Analytics only loads immediately for visitors outside the EU/EEA/UK/Switzerland. Regulated visitors see a consent banner first (`src/middleware.ts` classifies by IP country when the 24-hour `ontimer_region` cookie is absent, `src/components/CookieConsentBanner.tsx` renders the banner, `src/lib/consent.ts` reads browser state, and `src/lib/consent-policy.ts` contains the testable policy rules). Analytics-free medication routes retain unconditional middleware coverage for their privacy headers, and the provider schedule retains its preview-access check. Run `npm run test:consent`, `npm run test:analytics`, and `npm run test:middleware-compute` when this flow or its matcher changes.
 
 To inspect the banner locally without changing region headers, add `?consent-preview=regulated` to any non-medication route while running the development server. This preview switch is disabled in production builds.
 
@@ -144,14 +144,15 @@ Your site will be live in ~60 seconds. Future pushes to `main` deploy automatica
 ### Option 2: Deploy with Vercel CLI
 
 ```bash
-# Verifies the pinned CLI, project link, and saved login without uploading
+# Runs calculator conversion guardrails, then verifies the pinned CLI,
+# project link, and saved login without uploading
 npm run vercel:check
 
 # Repeats the preflight, then publishes with that same local CLI
 npm run deploy:prod
 ```
 
-The repository runner invokes `node_modules/vercel/dist/vc.js` directly, so PATH resolution cannot silently select a global or newly downloaded CLI. Run `npm ci` if the pinned dependency is missing or mismatched, `npm run vercel:link` if `.vercel/project.json` is absent, and `npm run vercel:login` only if the pinned CLI reports invalid or expired authorization. Never use `npx vercel@latest` for this repository.
+The repository runner runs `npm run test:calculator-release-guardrails` before checking credentials or uploading, then invokes `node_modules/vercel/dist/vc.js` directly so PATH resolution cannot silently select a global or newly downloaded CLI. A calculator guardrail failure blocks production. Run `npm ci` if the pinned dependency is missing or mismatched, `npm run vercel:link` if `.vercel/project.json` is absent, and `npm run vercel:login` only if the pinned CLI reports invalid or expired authorization. Never use `npx vercel@latest` for this repository.
 
 ### Environment Variables
 
@@ -165,6 +166,9 @@ The core marketing pages build without external credentials. Production integrat
 - `AIRPORT_SECURITY_TSAWAITTIMES_ENABLED=false` — optional kill switch for the security-estimate provider
 - Website Google Analytics uses the source-controlled production measurement ID in
   `src/lib/analytics-config.ts`; deployment environment variables do not override it.
+- `GA4_MEASUREMENT_PROTOCOL_API_SECRET` — server-only secret for the first-party
+  `/api/analytics/events` relay. Custom conversion events use this relay as their
+  authoritative path and fall back to the browser tag only if the relay fails.
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` — spam-report Turnstile widget
 - `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` — server-side spam reporting
 - `TICKETMASTER_API_KEY` — server-only event discovery for approved venue/event Time To Leave pages; reviewed fixtures keep the first vertical slice usable when this is not configured locally

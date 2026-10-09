@@ -33,7 +33,8 @@ assert.match(source.airportWebsite, /const snippetEligibleFaqItems = faqItems\.s
 assert.match(source.airportWebsite, /noSnippetQuestions: \[faqItems\[0\]\.question, faqItems\[1\]\.question\]/);
 assert.match(source.airportWebsite, /Free airport calculator/);
 assert.match(source.airportWebsite, /titlePrefix: "Find out exactly when to leave for"/);
-assert.match(source.airportAnswerSeo, /When Should I Leave for \$\{searchName\}\? \$\{calculatorLabel\}/);
+assert.match(source.airportAnswerSeo, /Find out exactly when to leave for \$\{buildAirportSearchName\(input\)\}/);
+assert.match(source.airportAnswerSeo, /Find out exactly when to leave for a pickup at \$\{buildAirportSearchName\(input\)\}/);
 assert.match(source.airportAnswerSeo, /This free calculator uses your flight, starting point, traffic, security, baggage and parking/);
 assert.match(source.airportAnswerSeo, /specific leave time for \$\{searchName\}/);
 assert.match(source.cruiseWebsite, /const snippetEligibleFaqItems = faqItems\.slice\(2\)/);

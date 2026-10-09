@@ -10,7 +10,8 @@ Tailwind CSS
 Deploy on Vercel
 
 Permanent deployment workflow:
-- Run `npm run vercel:check` before a release and use `npm run deploy:prod` from the repository root. The repository runner invokes the exact Vercel CLI pinned in `package.json`, verifies `.vercel/project.json` matches the OnTimer production target, and checks the saved login before any upload.
+- Run `npm run vercel:check` before a release and use `npm run deploy:prod` from the repository root. The repository runner runs the calculator conversion release guardrails, invokes the exact Vercel CLI pinned in `package.json`, verifies `.vercel/project.json` matches the OnTimer production target, and checks the saved login before any upload.
+- Never encode a required calculator mode as duplicated optional props on Suspense fallback and hydrated branches. Use an invariant wrapper shared by both branches; `npm run test:calculator-release-guardrails` enforces the generic-airport wrapper and result-action ordering across calculator families.
 - Never deploy with `npx vercel@latest`, `npx -y vercel@latest`, a global `vercel`, or any newly downloaded CLI. Do not fall back to one if a release command fails.
 - If dependencies are missing or the pinned version does not match, run `npm ci`. If the project link is missing, run `npm run vercel:link`. Run `npm run vercel:login` only when the pinned CLI reports invalid or expired authorization.
 - `.vercel/project.json` contains project-link metadata, not credentials. Authentication is confirmed by the runner's local-CLI `whoami` preflight.
@@ -152,11 +153,13 @@ Implementation contract:
 
 Google Analytics (`src/components/GoogleAnalytics.tsx`) is geo-gated by `src/middleware.ts`:
 - The production website measurement ID is source controlled in `src/lib/analytics-config.ts`; do not reintroduce a deployment-environment override or reuse an iOS/Firebase identifier.
-- Middleware reads Vercel's `x-vercel-ip-country` header (not client-spoofable — Vercel's edge strips any client-supplied version of this header) and sets an `ontimer_region` cookie to `regulated` for EU/EEA, UK, and Switzerland, or `other` for everyone else.
+- When the 24-hour `ontimer_region` cookie is absent, middleware reads Vercel's `x-vercel-ip-country` header (not client-spoofable — Vercel's edge strips any client-supplied version of this header) and sets the cookie to `regulated` for EU/EEA, UK, and Switzerland, or `other` for everyone else. Do not restore sitewide middleware execution on every page view; the missing-cookie matcher is a Vercel Fluid Active CPU safeguard.
+- Analytics-free medication routes must retain unconditional middleware coverage for their privacy headers, and `/provider-medication-schedule` must retain its preview-access check even when the region cookie exists.
 - `other` visitors (including the US) see no banner; GA loads immediately, unchanged from pre-consent behavior.
 - `regulated` visitors see `src/components/CookieConsentBanner.tsx` and GA does not load until they accept. Consent state lives in `src/lib/consent.ts`.
 - Never remove or weaken this gate to "simplify" GA loading — it exists to satisfy GDPR/UK GDPR/ePrivacy/FADP prior-consent requirements for those regions specifically.
-- Regional classification and analytics decisions are centralized in `src/lib/consent-policy.ts`. Run `npm run test:analytics` and `npm run test:consent` whenever analytics initialization, region coverage, banner decisions, analytics gating, or analytics-free routes change.
+- Custom website events use the same consent decision, then go through the same-origin `/api/analytics/events` relay and GA4 Measurement Protocol. Keep `GA4_MEASUREMENT_PROTOCOL_API_SECRET` server-only, retain strict payload validation and same-origin/rate-limit guards, and avoid also sending successful relay events through `gtag`, which would double-count conversions.
+- Regional classification and analytics decisions are centralized in `src/lib/consent-policy.ts`. Run `npm run test:analytics`, `npm run test:consent`, and `npm run test:middleware-compute` whenever analytics initialization, region coverage, banner decisions, analytics gating, analytics-free routes, or the middleware matcher change.
 
 ## Website design system (permanent rules)
 

@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-const [page, calculator, destinationPlanner, spanishGeneric, spanishAirport, placeAutocomplete] = await Promise.all([
+const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spanishGeneric, spanishAirport, placeAutocomplete] = await Promise.all([
   readFile(new URL("../src/app/airport-time-to-leave-calculator/page.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/app/airport-time-to-leave-calculator/AirportCalculator.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/components/airport/GenericAirportCalculator.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/components/airport/AirportCalculatorPlanPrefill.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/airport/AirportDeparturePlanner.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/app/es/calculadora-cuando-salir-al-aeropuerto/page.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/app/es/aeropuerto/[slug]/page.tsx", import.meta.url), "utf8"),
@@ -14,6 +16,41 @@ assert.match(
   page,
   /Enter your flight&apos;s departure time, starting point and airport\./,
   "the generic hero must describe the departure-time input accurately",
+);
+for (const [name, source] of [["English generic", page], ["Spanish generic", spanishGeneric]]) {
+  assert.match(source, /fallback=\{\([\s\S]*?<GenericAirportCalculator/, `${name} fallback must use the invariant generic wrapper`);
+  assert.match(source, /<AirportCalculatorPlanPrefill/, `${name} hydrated branch must use the generic prefill wrapper`);
+  assert.doesNotMatch(source, /<AirportCalculator\b/, `${name} must not bypass the invariant generic wrapper`);
+}
+assert.match(
+  genericCalculator,
+  /<AirportCalculator \{\.\.\.props\} genericRedesign \/>/,
+  "the generic wrapper must enforce the reviewed task-first experience after all caller props",
+);
+assert.match(
+  genericCalculator,
+  /Omit<[\s\S]*?"genericRedesign"/,
+  "callers must not be able to disable the generic task-first experience",
+);
+assert.match(
+  planPrefill,
+  /<GenericAirportCalculator[\s\S]*?initialPlan=/,
+  "the hydrated URL-prefill branch must flow through the invariant generic wrapper",
+);
+assert.match(
+  calculator,
+  /data-route-details[\s\S]*?order-1/,
+  "the route and Leaving from field must be first in the generic mobile task flow",
+);
+assert.match(
+  calculator,
+  /data-flight-details[\s\S]*?order-2/,
+  "flight timing must follow the starting-location task in the generic mobile flow",
+);
+assert.match(
+  calculator,
+  /<CalendarOnTimerHandoff[\s\S]*?\/>[\s\S]*?copy\.adjustAssumptions/,
+  "optional result adjustments must follow the conversion handoff",
 );
 assert.doesNotMatch(
   `${page}\n${calculator}\n${destinationPlanner}\n${spanishGeneric}\n${spanishAirport}`,

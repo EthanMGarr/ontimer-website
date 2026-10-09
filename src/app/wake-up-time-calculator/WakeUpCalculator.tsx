@@ -16,7 +16,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
 import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
@@ -264,6 +264,7 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
   const [error, setError] = useState<string | null>(null);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
   const [calendarProvider, setCalendarProvider] = useState<"google" | "ics" | null>(null);
+  const resultPanelRef = useRef<HTMLDivElement>(null);
 
   const hasRouteInputs =
     origin.trim().length >= 2 && destination.trim().length >= 2;
@@ -278,6 +279,13 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
     setArrivalDate(date);
     setArrivalTime(time);
   }, []);
+
+  useEffect(() => {
+    if (!result || typeof window === "undefined" || window.innerWidth >= 1024) return;
+    window.requestAnimationFrame(() => {
+      resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [result]);
 
   function handleOriginChange(value: string) {
     setOrigin(value);
@@ -562,7 +570,7 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
         </div>
 
         {/* ── Results ── */}
-        <div className="flex flex-col">
+        <div ref={resultPanelRef} className="scroll-mt-28 flex flex-col">
           {result ? (
             <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-6">
               <div className="border-b border-zinc-700 pb-5">
@@ -575,7 +583,31 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
                 <p className="mt-1 text-sm text-zinc-400">{fmtDate(result.wakeUpTime, locale)}</p>
               </div>
 
-              <div className="space-y-3 pt-4">
+              <p className="pt-4 text-sm leading-relaxed text-zinc-300">
+                {copy.arriveBy} {fmtTime(result.arrivalTime, locale)} · {result.travelMinutes} min {copy.travelTime.toLowerCase()} · {result.getReadyMinutes} min {copy.getReady.toLowerCase()}
+              </p>
+
+              <CalendarOnTimerHandoff
+                calendarHref={arrivalCalendarHref}
+                alternateCalendarHref={arrivalCalendarIcsHref}
+                alternateCalendarFilename="arrival-event.ics"
+                calendarProvider={calendarProvider}
+                setCalendarProvider={setCalendarProvider}
+                calculatorType="wake_up"
+                readyHeading={isSpanish ? "Guarda la hora de llegada en tu calendario." : "Put your arrival appointment on your calendar."}
+                openedItemLabel={isSpanish ? "evento de llegada" : "arrival event"}
+                compactOpenedStatus
+                postCalendarHeading={isSpanish ? "No llegues tarde. Convierte el evento en una alarma." : "Don’t be late. Turn this into an alarm."}
+                postCalendarBody={isSpanish ? "OnTimer configura alarmas automáticamente para los eventos de tu calendario" : "OnTimer automatically sets alarms for your calendar events"}
+                appLocation="wakeup_calculator_result"
+                locale={locale}
+                eventPreview={{
+                  title: arrivalCalendarEvent?.title ?? (isSpanish ? "Llegar al destino" : "Arrive at destination"),
+                  startLabel: fmtTime(result.arrivalTime, locale),
+                }}
+              />
+
+              <div className="mt-4 space-y-3 border-t border-zinc-700 pt-4">
                 <div className="flex items-baseline justify-between">
                   <p className="text-xs text-zinc-400">{copy.arriveBy}</p>
                   <p className="text-sm font-semibold text-white">
@@ -633,26 +665,6 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
               >
                 {copy.adjust}
               </button>
-
-              <CalendarOnTimerHandoff
-                calendarHref={arrivalCalendarHref}
-                alternateCalendarHref={arrivalCalendarIcsHref}
-                alternateCalendarFilename="arrival-event.ics"
-                calendarProvider={calendarProvider}
-                setCalendarProvider={setCalendarProvider}
-                calculatorType="wake_up"
-                readyHeading={isSpanish ? "Guarda la hora de llegada en tu calendario." : "Put your arrival appointment on your calendar."}
-                openedItemLabel={isSpanish ? "evento de llegada" : "arrival event"}
-                compactOpenedStatus
-                postCalendarHeading={isSpanish ? "No llegues tarde. Convierte el evento en una alarma." : "Don’t be late. Turn this into an alarm."}
-                postCalendarBody={isSpanish ? "OnTimer configura alarmas automáticamente para los eventos de tu calendario" : "OnTimer automatically sets alarms for your calendar events"}
-                appLocation="wakeup_calculator_result"
-                locale={locale}
-                eventPreview={{
-                  title: arrivalCalendarEvent?.title ?? (isSpanish ? "Llegar al destino" : "Arrive at destination"),
-                  startLabel: fmtTime(result.arrivalTime, locale),
-                }}
-              />
             </div>
           ) : (
             <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-zinc-700 p-10 text-center">

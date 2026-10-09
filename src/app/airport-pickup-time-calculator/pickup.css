@@ -1,7 +1,7 @@
 /* Hallmark · macrostructure: Workbench · tone: calm utilitarian · anchor hue: OnTimer blue
  * pre-emit critique: P5 H5 E5 S5 R5 V4
  */
-.pickup-page { --pickup-ink: #071b2b; --pickup-blue: #0a6cc2; --pickup-pale: #edf5fb; --pickup-workbench: #e5eff7; --pickup-field: #f6fafd; --pickup-input-surface: #dbe9f4; --pickup-border: #a9c0d0; --pickup-muted: #456074; color: var(--pickup-ink); background: #f7fbfe; }
+.pickup-page { --pickup-ink: #071b2b; --pickup-blue: #0a6cc2; --pickup-pale: #edf5fb; --pickup-workbench: #e5eff7; --pickup-field: #f6fafd; --pickup-input-surface: #dbe9f4; --pickup-border: #a9c0d0; --pickup-muted: #456074; color: var(--pickup-ink); background: #f7fbfe; font-family: var(--font-body); }
 .pickup-shell { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
 .pickup-hero { padding: 72px 0 48px; background: var(--pickup-pale); border-bottom: 1px solid #cbdce8; }
 .pickup-hero nav { display: flex; gap: 10px; margin-bottom: 40px; color: #456074; font-size: .9rem; }

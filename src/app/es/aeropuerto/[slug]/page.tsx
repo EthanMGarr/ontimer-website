@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: SpanishAirportPageProps): Pro
   const englishPath = `/airport-time-to-leave/${slug}`;
   const spanishPath = `/es/aeropuerto/${slug}`;
   const canonical = `https://www.ontimer.app${spanishPath}`;
-  const title = `¿A qué hora salir hacia ${copy.shortName} (${location.code})?`;
+  const title = `Descubre exactamente cuándo salir hacia ${copy.shortName} (${location.code}) — Calculadora gratuita`;
   const description = `Calcula cuándo salir hacia ${location.code} desde tu ubicación. Incluye el trayecto, tráfico, terminal, seguridad, equipaje y tiempo dentro del aeropuerto.`;
 
   return {
@@ -63,7 +63,7 @@ export default async function SpanishAirportPage({ params }: SpanishAirportPageP
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
-      name: `Calculadora de hora de salida hacia ${copy.shortName}`,
+      name: `Descubre exactamente cuándo salir hacia ${copy.shortName} (${location.code})`,
       applicationCategory: "TravelApplication",
       operatingSystem: "Web",
       inLanguage: "es",
@@ -111,7 +111,7 @@ export default async function SpanishAirportPage({ params }: SpanishAirportPageP
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-3xl px-4 sm:px-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-green-500">Calculadora gratuita · {location.code} · {copy.city}</p>
-          <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">¿A qué hora debo salir hacia <span className="text-green-500">{copy.shortName} ({location.code})?</span></h1>
+          <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">Descubre exactamente cuándo salir hacia <span className="text-green-500">{copy.shortName} ({location.code})</span></h1>
           <p className="mt-3 text-sm leading-relaxed text-zinc-300 sm:mt-5 sm:text-base">{copy.directAnswer}</p>
           <p className="mt-3 text-xs text-zinc-500">Información revisada el {new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${location.reviewedOn}T12:00:00Z`))}.</p>
         </div>

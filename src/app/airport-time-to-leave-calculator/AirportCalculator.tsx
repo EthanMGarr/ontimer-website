@@ -1,3 +1,5 @@
+// Hallmark · genre: modern-minimal · macrostructure: Task-first Conversion Workbench · design-system: design.md · designed-as-app
+// Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -857,7 +859,6 @@ export default function AirportCalculator({
       showBufferOverride, showSecurityOverride, activeRefinementCount, locationCode, securityEstimate]);
 
   const resultHeroMode = genericRedesign && computedResult !== null;
-  // Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4
   const ewrResultExperiment = genericRedesign;
 
   function openResultAdjustments() {
@@ -1021,11 +1022,15 @@ export default function AirportCalculator({
 
             <div
               id="airport-calculator-form"
-              className={`space-y-4 ${genericRedesign || formExpanded ? "block" : "hidden lg:block"}`}
+              className={genericRedesign
+                ? "flex flex-col gap-4"
+                : formExpanded
+                  ? "block space-y-4"
+                  : "hidden space-y-4 lg:block"}
             >
 
             {/* Flight date + time */}
-            <div className={genericRedesign ? `rounded-xl border p-4 ${
+            <div data-flight-details className={genericRedesign ? `order-2 rounded-xl border p-4 ${
               resultHeroMode ? "border-zinc-800/70 bg-zinc-950/25" : "border-zinc-800 bg-zinc-950/40"
             }` : ""}>
               {genericRedesign && (
@@ -1034,7 +1039,7 @@ export default function AirportCalculator({
                     {resultHeroMode ? copy.editTrip : copy.yourTrip}
                   </p>
                   {currentSecurityAirportCode && (!currentAirportStatusResolved || currentAirportSecurityEvidence) && (
-                    <p
+                    <div
                       className="flex min-w-0 shrink items-baseline justify-end gap-1 overflow-hidden text-right text-xs text-zinc-300"
                       data-current-airport-security
                       data-nosnippet
@@ -1050,7 +1055,7 @@ export default function AirportCalculator({
                           ? `~${Math.round(currentAirportSecurityEvidence.minutes)} min`
                           : locale === "es" ? "Consultando…" : "Checking…"}
                       </strong>
-                    </p>
+                    </div>
                   )}
                 </div>
               )}
@@ -1093,7 +1098,7 @@ export default function AirportCalculator({
             </div>
 
             {/* Route */}
-            <div className={genericRedesign ? `rounded-xl border p-4 ${
+            <div data-route-details className={genericRedesign ? `order-1 rounded-xl border p-4 ${
               resultHeroMode ? "border-zinc-800/70 bg-zinc-950/25" : "border-zinc-800 bg-zinc-950/40"
             }` : ""}>
               {genericRedesign && (
@@ -1169,7 +1174,7 @@ export default function AirportCalculator({
                 isFetchingTravel
                 || isResolvingOrigin
               }
-              className={`w-full rounded-full px-6 py-3 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+              className={`w-full rounded-full px-6 py-3 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${genericRedesign ? "order-3" : ""} ${
                 resultHeroMode
                   ? "border border-zinc-600 bg-zinc-800 text-zinc-100 hover:border-zinc-500 hover:bg-zinc-700"
                   : "bg-green-500 text-black hover:bg-green-400"
@@ -1186,12 +1191,12 @@ export default function AirportCalculator({
                   : copy.calculate}
             </button>
             {airport.trim().length < 2 && (
-              <p className="text-center text-xs text-zinc-500">
+              <p className={`${genericRedesign ? "order-4" : ""} text-center text-xs text-zinc-500`}>
                 {copy.addAirport}
               </p>
             )}
             {/* Smart airport timing card */}
-            <div className={`rounded-xl border p-4 ${
+            <div className={`${genericRedesign ? "order-5" : ""} rounded-xl border p-4 ${
               resultHeroMode ? "border-zinc-800 bg-zinc-900/60" : "border-zinc-700 bg-zinc-800/70"
             }`}>
 
@@ -1384,12 +1389,12 @@ export default function AirportCalculator({
             </div>
 
             {error && (
-              <div className="rounded-lg border border-red-900/50 bg-red-950/30 px-4 py-3">
+              <div className={`${genericRedesign ? "order-6" : ""} rounded-lg border border-red-900/50 bg-red-950/30 px-4 py-3`}>
                 <p className="text-sm text-red-400">{error}</p>
               </div>
             )}
             {fallbackNotice && !error && (
-              <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3">
+              <div className={`${genericRedesign ? "order-6" : ""} rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3`}>
                 <p className="text-sm text-amber-200">{fallbackNotice}</p>
               </div>
             )}
@@ -1408,7 +1413,7 @@ export default function AirportCalculator({
             {computedResult ? (
               /* ── COMPLETE ── */
               <div
-                className={`rounded-xl border p-5 transition-all duration-300 ${
+                className={`rounded-xl border p-4 transition-colors duration-300 ${
                   resultHeroMode
                     ? "border-green-500/30 bg-zinc-900 shadow-[0_0_40px_rgba(34,197,94,0.08)] sm:p-7"
                     : "border-zinc-700 bg-zinc-800/80"
@@ -1441,32 +1446,15 @@ export default function AirportCalculator({
                 </div>
 
                 {ewrResultExperiment && (
-                  <div className="mt-5 border-t border-zinc-800 pt-4">
+                  <div className="mt-4 border-t border-zinc-800 pt-3">
                     <p className="text-sm leading-relaxed text-zinc-300">
                       {fmtDuration(factorMinutes(computedResult, "travel", computedResult.travelMinutes), locale)}
                       {arrivalMode === "transit" ? ` ${copy.transit}` : ` ${copy.drive}`}
                       {" · "}
                       {fmtDuration(factorMinutes(computedResult, "tsa_security", computedResult.securityMinutes), locale)} {copy.security}
-                    </p>
-                    <p className="mt-0.5 text-sm leading-relaxed text-zinc-400">
-                      {copy.arriveBy} {fmtTime(computedResult.arrivalTime, locale)}
                       {" · "}
-                      {arrivalMode === "parking"
-                        ? copy.parkingIncluded
-                        : arrivalMode === "transit"
-                          ? copy.transferIncluded
-                          : arrivalMode === "rideshare"
-                            ? copy.rideshareIncluded
-                            : copy.dropoffIncluded}
-                      {hasCheckedBag ? ` · ${copy.bagIncluded}` : ""}
+                      {copy.arriveBy} {fmtTime(computedResult.arrivalTime, locale)}
                     </p>
-                    <button
-                      type="button"
-                      onClick={openResultAdjustments}
-                      className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-green-400 underline underline-offset-4 transition-colors hover:text-green-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
-                    >
-                      {copy.adjustAssumptions}
-                    </button>
                   </div>
                 )}
 
@@ -1509,6 +1497,16 @@ export default function AirportCalculator({
                     startLabel: fmtTime(computedResult.leaveTime, locale),
                   }}
                 />
+
+                {ewrResultExperiment && (
+                  <button
+                    type="button"
+                    onClick={openResultAdjustments}
+                    className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-zinc-400 underline underline-offset-4 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+                  >
+                    {copy.adjustAssumptions}
+                  </button>
+                )}
 
                 {licensedSecurityEvidence && (
                   <section
@@ -1592,7 +1590,7 @@ export default function AirportCalculator({
 
             ) : isFetchingTravel ? (
               /* ── ESTIMATING ── */
-              <div className="rounded-xl border border-zinc-700 bg-zinc-800/80 p-5 transition-all duration-300">
+              <div className="rounded-xl border border-zinc-700 bg-zinc-800/80 p-5 transition-colors duration-300">
                 {departureTime && (
                   <p className="mb-2 text-xs text-zinc-500">
                     {copy.forFlight} {fmtDepartureTime(departureTime, locale)}

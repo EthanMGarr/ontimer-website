@@ -8,6 +8,7 @@ const stateDir = path.join(repoRoot, ".local-preview");
 const statePath = path.join(stateDir, "server.json");
 const logPath = path.join(stateDir, "server.log");
 const nextBin = path.join(repoRoot, "node_modules", "next", "dist", "bin", "next");
+const devOutputDir = path.join(repoRoot, ".next-dev");
 const port = 3010;
 const reviewPath = "/what-time-should-i-leave";
 const reviewUrl = `http://127.0.0.1:${port}${reviewPath}`;
@@ -29,6 +30,25 @@ function isRunning(pid) {
     return true;
   } catch {
     return false;
+  }
+}
+
+function isProcessGroupRunning(pid) {
+  try {
+    process.kill(-pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function signalProcessGroup(pid, signal) {
+  try {
+    process.kill(-pid, signal);
+    return true;
+  } catch (error) {
+    if (error?.code === "ESRCH") return false;
+    throw error;
   }
 }
 
@@ -58,11 +78,15 @@ async function stopManagedPreview({ quiet = false } = {}) {
     return;
   }
 
-  if (isRunning(state.pid)) {
-    process.kill(state.pid, "SIGTERM");
+  if (isRunning(state.pid) || isProcessGroupRunning(state.pid)) {
+    signalProcessGroup(state.pid, "SIGTERM");
     const deadline = Date.now() + 8_000;
-    while (isRunning(state.pid) && Date.now() < deadline) {
+    while (isProcessGroupRunning(state.pid) && Date.now() < deadline) {
       await new Promise((resolve) => setTimeout(resolve, 200));
+    }
+
+    if (isProcessGroupRunning(state.pid)) {
+      signalProcessGroup(state.pid, "SIGKILL");
     }
   }
 
@@ -83,6 +107,10 @@ async function startManagedPreview() {
   if (!existsSync(nextBin)) {
     throw new Error("Next.js is not installed. Run npm install before starting the preview.");
   }
+
+  // A review preview must not reuse font/chunk hashes from an interrupted dev
+  // server. The directory is development-only output; production uses .next.
+  rmSync(devOutputDir, { recursive: true, force: true });
 
   const logFd = openSync(logPath, "w");
   const child = spawn(process.execPath, [nextBin, "dev", "-p", String(port)], {

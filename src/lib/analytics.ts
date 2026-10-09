@@ -45,7 +45,9 @@ export function getDeviceType(): DeviceType {
 export type AnalyticsParams = Record<string, string | number>;
 
 const ATTRIBUTION_TOKEN_KEY = "ontimer_attribution_token";
+const ANALYTICS_SESSION_KEY = "ontimer_analytics_session_id";
 let fallbackAttributionToken: string | null = null;
+let fallbackSessionId: number | null = null;
 
 /**
  * Create the GA command queue before the remote library finishes loading.
@@ -90,6 +92,24 @@ function getAttributionToken(): string {
   return token;
 }
 
+function getAnalyticsSessionId(): number {
+  if (typeof window === "undefined") return Date.now();
+  try {
+    const existing = Number(window.sessionStorage.getItem(ANALYTICS_SESSION_KEY));
+    if (Number.isSafeInteger(existing) && existing > 0) return existing;
+  } catch {
+    // Storage can be unavailable in privacy-restricted browsing contexts.
+  }
+  if (fallbackSessionId) return fallbackSessionId;
+  fallbackSessionId = Date.now();
+  try {
+    window.sessionStorage.setItem(ANALYTICS_SESSION_KEY, String(fallbackSessionId));
+  } catch {
+    // The in-memory ID still keeps events in this page session together.
+  }
+  return fallbackSessionId;
+}
+
 function acquisitionParams(): AnalyticsParams {
   const search = new URLSearchParams(window.location.search);
   let source = search.get("utm_source") || "direct";
@@ -107,7 +127,24 @@ function acquisitionParams(): AnalyticsParams {
     search_query: search.get("utm_term") || "unavailable",
     content_language: localeForPathname(window.location.pathname),
     locale: localeForPathname(window.location.pathname),
+    session_id: getAnalyticsSessionId(),
   };
+}
+
+function sendFirstPartyEvent(eventName: string, params: AnalyticsParams): void {
+  const clientId = typeof params.attribution_token === "string"
+    ? params.attribution_token
+    : getAttributionToken();
+  void fetch("/api/analytics/events", {
+    method: "POST",
+    keepalive: true,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ event_name: eventName, client_id: clientId, params }),
+  }).then((response) => {
+    if (!response.ok) window.gtag("event", eventName, params);
+  }).catch(() => {
+    window.gtag("event", eventName, params);
+  });
 }
 
 export function fireEvent(eventName: string, params: AnalyticsParams = {}): void {
@@ -121,9 +158,9 @@ export function fireEvent(eventName: string, params: AnalyticsParams = {}): void
   const acquisition = acquisitionParams();
   const experiment = getCalculatorCtaExperimentAssignment(true);
   if (experiment && shouldTrackCalculatorExperimentAssignment()) {
-    window.gtag("event", "experiment_assignment", { ...acquisition, ...experiment });
+    sendFirstPartyEvent("experiment_assignment", { ...acquisition, ...experiment });
   }
-  window.gtag("event", eventName, { ...acquisition, ...params, ...(experiment ?? {}) });
+  sendFirstPartyEvent(eventName, { ...acquisition, ...params, ...(experiment ?? {}) });
 }
 
 function baseParams(location: string): AnalyticsParams {

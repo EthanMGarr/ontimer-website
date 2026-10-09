@@ -8,17 +8,16 @@ import {
   getAirportPickupPath,
   getAirportPickupProfile,
 } from "@/lib/airport-pickup-profiles";
-import { buildAirportSearchName } from "@/lib/airport-answer-seo";
+import {
+  buildAirportPickupHeading,
+  buildAirportSearchName,
+} from "@/lib/airport-answer-seo";
 import { getTravelLocation } from "@/lib/travel-locations";
 import "../../airport-pickup-time-calculator/pickup.css";
 import "../pickup-destination.css";
 
 interface AirportPickupPageProps {
   params: Promise<{ slug: string }>;
-}
-
-function indefiniteArticleForAirportCode(code: string) {
-  return code === "LAX" || code === "JFK" ? "a" : "an";
 }
 
 export const dynamicParams = false;
@@ -34,10 +33,9 @@ export async function generateMetadata({ params }: AirportPickupPageProps): Prom
   if (!profile || !location || location.kind !== "airport") {
     return { robots: { index: false, follow: false } };
   }
-  const pickupArticle = indefiniteArticleForAirportCode(profile.code);
   const searchName = buildAirportSearchName(location);
-  const title = `When Should I Leave to Pick Someone Up at ${searchName}?`;
-  const description = `Calculate when to leave for ${pickupArticle} ${profile.code} airport pickup using scheduled landing time, baggage, international arrival processing, your drive and where you plan to meet.`;
+  const title = `${buildAirportPickupHeading(location)} — Free Pickup Calculator`;
+  const description = `Calculate exactly when to leave for a pickup at ${searchName}. This free calculator uses scheduled landing time, baggage, international arrival processing, your drive and where you plan to meet.`;
   const url = `https://www.ontimer.app${getAirportPickupPath(slug)}`;
   return {
     title,
@@ -56,13 +54,14 @@ export default async function AirportPickupPage({ params }: AirportPickupPagePro
 
   const url = `https://www.ontimer.app${getAirportPickupPath(slug)}`;
   const related = airportPickupProfiles.filter((item) => item.slug !== slug).slice(0, 4);
-  const pickupArticle = indefiniteArticleForAirportCode(profile.code);
+  const searchName = buildAirportSearchName(location);
+  const heading = buildAirportPickupHeading(location);
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "WebApplication",
-        name: `${profile.code} Airport Pickup Time Calculator`,
+        name: heading,
         applicationCategory: "UtilitiesApplication",
         operatingSystem: "Web",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
@@ -80,8 +79,8 @@ export default async function AirportPickupPage({ params }: AirportPickupPagePro
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Airport calculators", item: "https://www.ontimer.app/airport-time-calculators" },
-          { "@type": "ListItem", position: 2, name: `${profile.code} airport pickup`, item: url },
+          { "@type": "ListItem", position: 1, name: "Airport pickup calculators", item: "https://www.ontimer.app/airport-pickup-calculators" },
+          { "@type": "ListItem", position: 2, name: `Pickup at ${searchName}`, item: url },
         ],
       },
     ],
@@ -93,12 +92,12 @@ export default async function AirportPickupPage({ params }: AirportPickupPagePro
       <header className="pickup-hero pickup-hero--destination">
         <div className="pickup-shell">
           <nav aria-label="Breadcrumb">
-            <Link href="/airport-time-calculators">Airport calculators</Link>
+            <Link href="/airport-pickup-calculators">Airport pickup calculators</Link>
             <span aria-hidden="true">/</span>
             <span aria-current="page">{profile.code} pickup</span>
           </nav>
           <p>Free {profile.code} pickup calculator</p>
-          <h1>When should I leave for {pickupArticle} {profile.code} airport pickup?</h1>
+          <h1>{heading}</h1>
           <p>Enter the landing time and where you’re driving from. Get a specific time to leave for this pickup.</p>
         </div>
       </header>
@@ -115,7 +114,7 @@ export default async function AirportPickupPage({ params }: AirportPickupPagePro
 
       <section className="pickup-destination-guide">
         <div className="pickup-shell">
-          <h2>The short answer for a {profile.code} pickup</h2>
+          <h2>The short answer for a pickup at {searchName}</h2>
           <p>{profile.directAnswer}</p>
 
           <h2>When the passenger may be ready</h2>
@@ -143,7 +142,12 @@ export default async function AirportPickupPage({ params }: AirportPickupPagePro
 
           <h2>More airport pickup calculators</h2>
           <div className="pickup-destination-links">
-            {related.map((item) => <Link key={item.slug} href={getAirportPickupPath(item.slug)}>{item.code} pickup calculator</Link>)}
+            {related.map((item) => {
+              const relatedLocation = getTravelLocation(item.slug);
+              if (!relatedLocation || relatedLocation.kind !== "airport") return null;
+              return <Link key={item.slug} href={getAirportPickupPath(item.slug)}>Pickup at {buildAirportSearchName(relatedLocation)}</Link>;
+            })}
+            <Link href="/airport-pickup-calculators">All airport pickup calculators</Link>
             <Link href="/airport-pickup-time-calculator">Any airport pickup</Link>
           </div>
         </div>

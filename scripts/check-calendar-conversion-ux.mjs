@@ -8,6 +8,9 @@ const calendarLinks = read("src/lib/calendar-links.ts");
 const airportPage = read("src/app/airport-time-to-leave-calculator/page.tsx");
 const spanishAirportPage = read("src/app/es/calculadora-cuando-salir-al-aeropuerto/page.tsx");
 const airportPrefill = read("src/components/airport/AirportCalculatorPlanPrefill.tsx");
+const generalLeaveCalculator = read("src/app/what-time-should-i-leave/LeaveTimeCalculator.tsx");
+const cruiseCalculator = read("src/app/cruise-time-to-leave/CruiseCalculator.tsx");
+const wakeUpCalculator = read("src/app/wake-up-time-calculator/WakeUpCalculator.tsx");
 const analytics = read("src/lib/analytics.ts");
 const experiment = read("src/lib/calculator-cta-experiment.ts");
 const callers = [
@@ -18,6 +21,14 @@ const callers = [
   "src/app/airport-pickup-time-calculator/AirportPickupCalculator.tsx",
   "src/app/events/[slug]/when-to-leave/EventLeaveCalculator.tsx",
 ];
+
+function assertSourceOrder(source, first, second, message) {
+  const firstIndex = source.indexOf(first);
+  const secondIndex = source.indexOf(second, firstIndex + first.length);
+  assert.notEqual(firstIndex, -1, `${message}: missing ${first}`);
+  assert.notEqual(secondIndex, -1, `${message}: missing ${second}`);
+  assert.ok(firstIndex < secondIndex, message);
+}
 
 assert.doesNotMatch(handoff, /exclusivePrimaryAction/, "shared acquisition cannot be gated behind calendar use");
 assert.match(handoff, /data-calendar-secondary-acquisition/, "shared result handoff needs a persistent secondary acquisition path");
@@ -45,6 +56,11 @@ assert.match(calendarLinks, /Never be late\\n\\nRecalculate Leave Time: \$\{reca
 assert.match(airportPage, /<Suspense[\s\S]*?<AirportCalculatorPlanPrefill/, "the generic airport page must isolate URL prefill behind Suspense");
 assert.match(spanishAirportPage, /<Suspense[\s\S]*?<AirportCalculatorPlanPrefill[\s\S]*locale="es"/, "the Spanish airport page must parse v1 URL state behind Suspense");
 assert.match(airportPrefill, /useSearchParams\(\)[\s\S]*?initialPlan=/, "the generic airport calculator must parse v1 URL state into initial fields");
+assertSourceOrder(generalLeaveCalculator, "<CalendarOnTimerHandoff", "copy.adjustAssumptions", "general leave-time adjustments must follow the conversion handoff");
+assertSourceOrder(airportCalculator, "<CalendarOnTimerHandoff", "copy.adjustAssumptions", "airport adjustments must follow the conversion handoff");
+assertSourceOrder(cruiseCalculator, "<CalendarOnTimerHandoff", "Adjust assumptions", "cruise adjustments must follow the conversion handoff");
+assert.match(wakeUpCalculator, /resultPanelRef\.current\?\.scrollIntoView/, "wake-up calculation must move the mobile viewport to the result");
+assertSourceOrder(wakeUpCalculator, "<CalendarOnTimerHandoff", "className=\"mt-4 space-y-3", "wake-up calculation details must follow the conversion handoff");
 
 for (const path of callers) {
   const source = read(path);

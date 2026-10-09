@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
-import AirportCalculator from "@/app/airport-time-to-leave-calculator/AirportCalculator";
 import AirportCalculatorPlanPrefill from "@/components/airport/AirportCalculatorPlanPrefill";
+import GenericAirportCalculator from "@/components/airport/GenericAirportCalculator";
 import { AppStoreButton } from "@/components/CTAButton";
 import type { AirportAutocompleteOption } from "@/lib/airport-autocomplete";
 import { localizedAlternates, spanishAirportSlugs } from "@/lib/i18n";
@@ -132,8 +132,7 @@ export default function SpanishAirportCalculatorPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <Suspense
             fallback={(
-              <AirportCalculator
-                genericRedesign
+              <GenericAirportCalculator
                 airportOptions={airportOptions}
                 locale="es"
                 planningJurisdiction="international"
@@ -144,7 +143,6 @@ export default function SpanishAirportCalculatorPage() {
             )}
           >
             <AirportCalculatorPlanPrefill
-              genericRedesign
               airportOptions={airportOptions}
               locale="es"
               planningJurisdiction="international"

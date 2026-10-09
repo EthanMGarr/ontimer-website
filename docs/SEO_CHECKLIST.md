@@ -38,6 +38,8 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Redirect destinations use the canonical `www.ontimer.app` hostname and avoid redirect chains.
 - [ ] Airport destinations use `/airport-time-to-leave/[slug]`.
 - [ ] Airport pickup destinations use `/airport-pickup/[slug]` only for allowlisted, fully reviewed pickup profiles; unsupported airports stay on the canonical generic pickup calculator.
+- [ ] Expand airport-pickup destinations in evidence-led, source-reviewed cohorts rather than automatically mirroring the full departure-airport catalog. Prioritize airport/query demand, require distinct operational value, and measure each cohort before approving the next one.
+- [ ] Every published airport-pickup cohort is linked from the canonical `/airport-pickup-calculators` directory, and that directory retains a visible path to the generic calculator for unsupported airports rather than generating thin destination pages.
 - [ ] Airport drop-off remains a state of the canonical airport departure page unless distinct search evidence justifies a separate route family; query-state URLs must not replace the base canonical.
 - [ ] Cruise terminals use `/cruise-time-to-leave/[slug]`.
 - [ ] Unknown destination slugs return 404; known legacy or misclassified URLs redirect to the correct canonical page.
@@ -61,13 +63,15 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Allow Google time to recrawl; a clean live audit does not immediately clear historical Search Console reports.
 - [ ] For title/description experiments, update `docs/SEO_CTR_EXPERIMENTS.md`; preserve a control cohort and compare query-level mobile CTR within the same average-position bands rather than relying on pagewide CTR.
 - [ ] Keep newly changed metadata stable until a settled recrawl and a useful measurement window exist; do not stack another metadata rewrite on an unresolved test.
+- [ ] For a new airport-pickup cohort, record indexing, page impressions, query mix, clicks, CTR, and average position by route after a useful 28–90 day window; compare against the generic pickup calculator and hold the next cohort if pages remain unindexed, duplicative, or unable to earn distinct demand.
 
 ## Calculator-First Search Intent
 
 - [ ] Every indexable advice page provides a prominent in-page bridge to the most relevant OnTimer calculator or scheduling tool; global navigation and footer links do not count.
 - [ ] When a visitor can complete the searched-for task with an OnTimer tool, present that tool before manual alternatives while still answering the underlying search intent accurately.
 - [ ] Lead calculator metadata and H1s with the question or outcome people search for. When the page is an interactive utility, explicitly name the free calculator in the title and repeat “free calculator” once, naturally, in the description because Google may truncate or rewrite either field independently.
-- [ ] Use the airport name travelers actually search for: preserve familiar code-first brands such as LAX, avoid code-only labels where the natural phrase is clearer, and include the IATA code once in parentheses when useful (for example, `Newark Airport (EWR)`).
+- [ ] Use one human-readable airport entity format across departure and pickup tools: `{recognizable airport name} ({IATA code})` (for example, `Newark Airport (EWR)` and `Las Vegas Airport (LAS)`). Do not use a bare code as the primary H1 entity, even for familiar codes such as LAX; the code may remain concise in secondary labels and calculator controls.
+- [ ] Keep airport intent distinct while sharing the entity format: departure H1s use `Find out exactly when to leave for {airport name} ({code})`; pickup H1s use `Find out exactly when to leave for a pickup at {airport name} ({code})`. Do not give both canonicals an identical heading.
 - [ ] Apply the same answer-led language to location-page metadata, directory titles, structured-data names, navigation labels, and internal-link anchors so the intent is consistent across the whole cluster.
 - [ ] Keep the calculator and its brief orientation in the first task area. Long-form SEO/GEO guidance belongs after the tool and must not delay the primary action.
 - [ ] Give a specific result before asking for conversion: result first, calendar handoff second, OnTimer alarm handoff third.

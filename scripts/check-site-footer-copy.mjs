@@ -18,7 +18,7 @@ assert.match(
   /\["Days Until Calculator", "\/days-until"\]/,
   "the site-wide footer must link to the published Days Until hub"
 );
-assert.match(footer, /\["Airport Pickup Time Calculator", "\/airport-pickup-time-calculator"\]/, "the footer must link to the airport pickup calculator");
+assert.match(footer, /\["Airport Pickup Calculators", "\/airport-pickup-calculators"\]/, "the footer must link to the airport pickup directory");
 
 const header = readFileSync("src/components/Homepage2Header.tsx", "utf8");
 assert.match(
@@ -26,7 +26,7 @@ assert.match(
   /href: "\/days-until", label: "Days Until Calculator"/,
   "the shared Tools menu must link to the published Days Until hub"
 );
-assert.match(header, /href: "\/airport-pickup-time-calculator", label: "Airport Pickup Time Calculator"/, "the Tools menu must link to the airport pickup calculator");
+assert.match(header, /href: "\/airport-pickup-calculators", label: "Airport Pickup Calculators"/, "the Tools menu must link to the airport pickup directory");
 assert.match(
   header,
   /<div className="hp2-mobile-tools"[^>]*>\s*<Link href="\/time-calculators"[^>]*>Browse all tools[\s\S]*?<\/Link>\s*\{toolGroups\.map/,

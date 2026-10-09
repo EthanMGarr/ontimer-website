@@ -1,5 +1,35 @@
 [
   {
+    "date": "2026-10-09",
+    "scope": "page-family",
+    "macrostructure": "Index-First / Reviewed Airport Index",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "practical, searchable, trust-first",
+    "enrichment": "none",
+    "brief": "Canonical directory for the first 12 airport-pickup calculators"
+  },
+  {
+    "date": "2026-10-08",
+    "scope": "page-family",
+    "macrostructure": "Task-first Workbench / Reviewed Destination Guide",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "practical, airport-specific, reassuring",
+    "enrichment": "reviewed local pickup guidance",
+    "brief": "Search-demand-led six-airport pickup expansion"
+  },
+  {
+    "date": "2026-10-08",
+    "scope": "page-family",
+    "macrostructure": "Task-first Conversion Workbench / Answer-first Handoff",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "direct, compact, conversion-focused",
+    "enrichment": "none",
+    "brief": "Generic airport mobile hydration repair and calculator result-order audit"
+  },
+  {
     "date": "2026-10-03",
     "scope": "page-family",
     "macrostructure": "Task-first Workbench / Compact Directory",

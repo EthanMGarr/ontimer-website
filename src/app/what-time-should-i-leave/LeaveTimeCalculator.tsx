@@ -968,21 +968,14 @@ export default function LeaveTimeCalculator({
               <p className="mt-0.5 text-6xl font-black leading-none text-green-500" aria-live="polite" aria-atomic="true">{fmtTime(result.leaveTime, locale)}</p>
               <p className="mt-1.5 text-sm text-zinc-400">{fmtDate(result.leaveTime, locale)}</p>
 
-              <div className="mt-5 border-t border-zinc-800 pt-4">
-                <p className="text-sm text-zinc-300">
+              <div className="mt-4 border-t border-zinc-800 pt-3">
+                <p className="text-sm leading-relaxed text-zinc-300">
                   {result.travelMinutes} min {copy.modes[result.travelMode]}
                   {result.travelSource === "google" ? ` · ${trafficLabel(result.trafficBasis, result.planningMode, locale)}` : ""}
-                </p>
-                <p className="mt-0.5 text-sm text-zinc-400">
-                  {[result.bufferMinutes > 0 ? `${result.bufferMinutes} min ${copy.buffer}` : null, result.prepMinutes > 0 ? `${result.prepMinutes} min ${purposeCopy.prepSummary}` : null].filter(Boolean).join(" · ") || copy.noExtraBuffer}
+                  {result.bufferMinutes > 0 ? ` · ${result.bufferMinutes} min ${copy.buffer}` : ""}
+                  {result.prepMinutes > 0 ? ` · ${result.prepMinutes} min ${purposeCopy.prepSummary}` : ""}
                 </p>
               </div>
-
-              {!hasPendingChanges && (
-                <button type="button" onClick={handleCustomize} className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-zinc-400 underline underline-offset-4 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500">
-                  {copy.adjustAssumptions}
-                </button>
-              )}
 
               {!hasPendingChanges && (
                 <CalendarOnTimerHandoff
@@ -1000,6 +993,12 @@ export default function LeaveTimeCalculator({
                   analyticsContext={{ planning_purpose: journeyPurpose }}
                   eventPreview={{ title: leaveCalendarEvent?.title ?? `${purposeCopy.eventPrefix} ${copy.destinationFallback}`, startLabel: fmtTime(result.leaveTime, locale) }}
                 />
+              )}
+
+              {!hasPendingChanges && (
+                <button type="button" onClick={handleCustomize} className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-zinc-400 underline underline-offset-4 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500">
+                  {copy.adjustAssumptions}
+                </button>
               )}
             </div>
           </div>

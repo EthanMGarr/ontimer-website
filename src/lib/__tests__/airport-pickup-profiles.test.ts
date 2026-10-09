@@ -8,8 +8,11 @@ import {
 } from "../airport-pickup-profiles";
 
 validateAirportPickupProfiles();
-assert.equal(airportPickupProfiles.length, 6);
-assert.deepEqual(airportPickupProfiles.map(({ code }) => code), ["LAX", "JFK", "EWR", "LGA", "ORD", "ATL"]);
+assert.equal(airportPickupProfiles.length, 12);
+assert.deepEqual(airportPickupProfiles.map(({ code }) => code), [
+  "LAX", "JFK", "EWR", "LGA", "ORD", "ATL",
+  "LAS", "IAD", "DEN", "BOS", "PDX", "DFW",
+]);
 
 for (const profile of airportPickupProfiles) {
   assert.equal(getAirportPickupProfile(profile.slug), profile);
@@ -18,6 +21,10 @@ for (const profile of airportPickupProfiles) {
   assert.ok(profile.directAnswer.length >= 120);
   assert.ok(profile.sources.every(({ url }) => url.startsWith("https://")));
   assert.ok(profile.faqs.length >= 3);
+  assert.ok(profile.pickupRules.length >= 3);
+  assert.ok(profile.waitingOptions.length >= 2);
+  assert.ok(profile.terminalConsiderations.length >= 2);
+  assert.ok(profile.groundAccessNotes.length >= 2);
 }
 
 assert.equal(isAirportPickupPilotSlug("not-a-pilot"), false);

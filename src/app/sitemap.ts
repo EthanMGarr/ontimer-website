@@ -169,6 +169,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/airport-pickup-calculators`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
     ...airportPickupProfiles.map(({ slug }) => ({
       url: `${baseUrl}${getAirportPickupPath(slug)}`,
       lastModified: new Date(),

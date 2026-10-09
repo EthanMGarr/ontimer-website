@@ -85,6 +85,10 @@ const deployableSource = deployableFiles.map((path) => readFileSync(path, "utf8"
 assert.equal(deployableSource.includes(legacyMeasurementId), false, "legacy ID must not exist in deployable source");
 assert.equal(deployableSource.includes(iosStreamId), false, "the website must not reuse the iOS stream ID");
 assert.equal(deployableSource.includes("NEXT_PUBLIC_GA_MEASUREMENT_ID"), false, "deployment must not override the web stream ID");
-assert.equal(deployableSource.match(/window\.gtag\("event", eventName/g)?.length, 1, "the central event dispatcher emits each requested custom event once");
+assert.equal(
+  deployableSource.match(/sendFirstPartyEvent\(eventName,/g)?.length,
+  1,
+  "the central event dispatcher relays each requested custom event once",
+);
 
 console.log("analytics cutover tests passed");

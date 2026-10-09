@@ -2,11 +2,11 @@
 
 import type { ComponentProps } from "react";
 import { useSearchParams } from "next/navigation";
-import AirportCalculator from "@/app/airport-time-to-leave-calculator/AirportCalculator";
+import GenericAirportCalculator from "@/components/airport/GenericAirportCalculator";
 import { parseAirportPlanLink } from "@/lib/airport-plan-link";
 
 type AirportCalculatorPlanPrefillProps = Omit<
-  ComponentProps<typeof AirportCalculator>,
+  ComponentProps<typeof GenericAirportCalculator>,
   "initialPlan"
 >;
 
@@ -15,7 +15,7 @@ export default function AirportCalculatorPlanPrefill(
 ) {
   const parsed = parseAirportPlanLink(useSearchParams());
   return (
-    <AirportCalculator
+    <GenericAirportCalculator
       {...props}
       initialPlan={parsed?.kind === "departure" ? parsed : undefined}
     />

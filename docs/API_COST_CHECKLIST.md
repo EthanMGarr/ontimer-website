@@ -4,6 +4,7 @@ Use this checklist whenever adding or changing a paid API integration.
 
 ## Application Controls
 
+- [ ] Public analytics relay routes accept only same-origin browser requests, validate bounded event/parameter names and values, apply rate limits before the upstream call, and never log the GA4 Measurement Protocol secret, client identifier, IP address, page query string, or event parameters.
 - [ ] Paid API keys remain server-side.
 - [ ] Public proxy routes reject requests without same-origin browser provenance.
 - [ ] Paid endpoints have per-IP and global rate limits before any upstream call.

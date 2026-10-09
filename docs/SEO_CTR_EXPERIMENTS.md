@@ -7,14 +7,14 @@ even when established queries improve.
 
 ## Current airport-page treatment
 
-On 2026-09-19 the airport and cruise destination-page templates moved to an explicit utility
-promise after rendered LAX review showed that the title, H1 and intro still read more like an
-answer page than a free calculator. Airport names now follow natural search usage—for example,
-`LAX` but `Newark Airport (EWR)`—and descriptions repeat “free calculator” once so the utility
-remains clear when Google truncates or rewrites either metadata field. The generic airport and
-airport-pickup calculators received the same treatment; the wake-up and general leave-time
-calculators already used explicit free-calculator language and remain comparison pages. Narrowly
-identified generic passages retain supported `data-nosnippet` controls.
+On 2026-10-09 the airport departure and pickup clusters moved to one human-readable entity format:
+`{recognizable airport name} ({IATA code})`. Primary departure headings now use `Find out exactly
+when to leave for {airport}`, while pickup headings preserve their distinct intent with `Find out
+exactly when to leave for a pickup at {airport}`. Metadata retains one natural “free calculator”
+label, descriptions retain the specific calculation factors, and secondary controls may still use
+the concise code. This replaces the earlier mixed treatment that used a bare `LAX` on some pages
+but `Newark Airport (EWR)` on others. The generic airport and airport-pickup calculators use the
+same outcome-led opening without inventing an airport entity.
 
 ## Cohorts
 
@@ -42,7 +42,7 @@ identified generic passages retain supported `data-nosnippet` controls.
 
 Make both the task and the free tool explicit while promising a concrete result:
 
-> Calculate exactly when to leave for LAX. This free calculator uses your flight, starting point,
+> Calculate exactly when to leave for Los Angeles International Airport (LAX). This free calculator uses your flight, starting point,
 > traffic, security, baggage and parking to give you a specific leave time.
 
 The shared treatment applies to all airport destination pages because their metadata and hero are

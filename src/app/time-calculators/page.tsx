@@ -5,6 +5,7 @@ import {
   cruiseLocations,
   DirectoryShell,
 } from "@/components/CalculatorDirectory";
+import { airportPickupProfiles } from "@/lib/airport-pickup-profiles";
 import { VENUE_PROFILES } from "@/lib/event-time-to-leave";
 
 export const metadata: Metadata = {
@@ -72,9 +73,10 @@ export default function TimeCalculatorsDirectory() {
                 count={5}
               />
               <CategoryLink
-                href="/airport-pickup-time-calculator"
-                label="Airport Pickup Time Calculator"
-                description="Estimate when an arriving passenger will be ready and when you should leave for pickup."
+                href="/airport-pickup-calculators"
+                label="Airport Pickup Calculators"
+                description="Choose a reviewed airport for local curb, waiting-lot, terminal and road guidance, or continue to the general pickup calculator."
+                count={airportPickupProfiles.length}
               />
               <CategoryLink
                 href="/wake-up-time-calculator"

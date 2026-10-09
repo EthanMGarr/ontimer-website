@@ -22,8 +22,8 @@
   --color-status-danger-ink: oklch(42% 0.17 25);
   --color-scrim: oklch(20% 0.036 244 / 0.26);
   --color-shadow: oklch(20% 0.036 244 / 0.12);
-  --font-display: var(--font-hp-display, var(--font-inter)), ui-sans-serif, sans-serif;
-  --font-body: var(--font-hp-body, var(--font-inter)), ui-sans-serif, sans-serif;
+  --font-display: var(--font-hp-display, var(--font-inter, ui-sans-serif)), sans-serif;
+  --font-body: var(--font-hp-body, var(--font-inter, ui-sans-serif)), sans-serif;
   --paper: var(--color-paper);
   --sky-50: var(--color-paper-2);
   --sky-100: var(--color-paper-3);

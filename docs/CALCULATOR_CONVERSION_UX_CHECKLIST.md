@@ -13,6 +13,7 @@ This is the release contract for OnTimer calculators. It protects the required i
 
 ## Entry-state rules
 
+- Keep loading and hydrated calculator structure identical. Shared UX invariants must live in a dedicated wrapper used by both Suspense branches, not in duplicated optional props. The generic airport calculator uses `GenericAirportCalculator`, which callers cannot disable or bypass without failing the release guardrails.
 - Use compact task context: one short eyebrow, one outcome-oriented heading, and only the date/time/location needed to plan.
 - Keep breadcrumbs out of the visual mobile task path.
 - Do not place detail grids, repeated metadata, full disclaimers, provider explanations, promotional panels, or supporting SEO copy before the primary input.
@@ -52,6 +53,8 @@ This is the release contract for OnTimer calculators. It protects the required i
 ## Verification
 
 - Run the calculator-specific source regression.
+- Assert that the loading fallback and hydrated calculator receive the same UX flags, then test the hydrated state rather than approving a fallback screenshot.
+- Run `npm run test:calculator-release-guardrails`. This suite is mandatory in GitHub CI and in `npm run vercel:check`; a failure blocks the repository production command.
 - Exercise the complete path at 320, 375, 414, and 768 px: entry → calculate → calendar action → return.
 - Confirm no horizontal overflow, no browser console errors, 44 px controls, readable focus states, and no hidden required content.
 - Record the verification in `docs/SITE_CHANGELOG.md`.

@@ -18,12 +18,13 @@ export interface AirportDirectoryGuide {
   href: string;
 }
 
-const genericCalculatorPath = "/airport-time-to-leave-calculator";
 const maxResults = 8;
 
-/** Opens the all-airport planner with only the airport filled in (plan link v1). */
-function genericCalculatorHref(code: string): string {
-  return `${genericCalculatorPath}?v=1&k=dep&a=${encodeURIComponent(code)}`;
+/** Opens the matching all-airport calculator with only the airport filled in. */
+function genericCalculatorHref(code: string, mode: "departure" | "pickup"): string {
+  return mode === "pickup"
+    ? `/airport-pickup-time-calculator?airport=${encodeURIComponent(code)}`
+    : `/airport-time-to-leave-calculator?v=1&k=dep&a=${encodeURIComponent(code)}`;
 }
 
 /**
@@ -32,7 +33,13 @@ function genericCalculatorHref(code: string): string {
  * (no paid autocomplete). Guides open their airport page; any other airport
  * opens the all-airport calculator with that airport prefilled.
  */
-export default function AirportDirectorySearch({ guides }: { guides: AirportDirectoryGuide[] }) {
+export default function AirportDirectorySearch({
+  guides,
+  mode = "departure",
+}: {
+  guides: AirportDirectoryGuide[];
+  mode?: "departure" | "pickup";
+}) {
   const router = useRouter();
   const inputId = useId();
   const listboxId = useId();
@@ -43,6 +50,7 @@ export default function AirportDirectorySearch({ guides }: { guides: AirportDire
   const [directoryOptions, setDirectoryOptions] = useState<AirportAutocompleteOption[]>([]);
   const [isDirectoryLoading, setIsDirectoryLoading] = useState(false);
   const directoryLoadStartedRef = useRef(false);
+  const isSearchPending = query !== deferredQuery;
 
   const guideOptions = useMemo<AirportAutocompleteOption[]>(
     () => guides.map((guide) => ({
@@ -91,7 +99,7 @@ export default function AirportDirectorySearch({ guides }: { guides: AirportDire
 
   function open(option: AirportAutocompleteOption) {
     setIsOpen(false);
-    router.push(option.detailPageHref ?? genericCalculatorHref(option.code));
+    router.push(option.detailPageHref ?? genericCalculatorHref(option.code, mode));
   }
 
   const showList = isOpen && query.trim().length > 0;
@@ -170,12 +178,15 @@ export default function AirportDirectorySearch({ guides }: { guides: AirportDire
                   <span>{option.city}</span>
                 </span>
                 <span className="site-airport-search__kind">
-                  {option.detailPageHref ? "Airport guide" : "Calculator"}
+                  {option.detailPageHref
+                    ? mode === "pickup" ? "Pickup guide" : "Airport guide"
+                    : "Calculator"}
                 </span>
               </button>
             )) : (
               <p className="site-airport-search__empty">
                 {isDirectoryLoading
+                  || isSearchPending
                   ? "Searching airports…"
                   : "No matching airport. Try the city or the 3-letter code."}
               </p>

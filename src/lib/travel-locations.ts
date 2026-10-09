@@ -49,8 +49,6 @@ interface TravelLocationBase {
   code: string;
   name: string;
   shortName: string;
-  /** Natural search-facing name; use only when shortName + code is not the phrase travelers use. */
-  searchName?: string;
   aliases?: string[];
   city: string;
   calculatorDestination: string;
@@ -622,7 +620,7 @@ const additionalAirportProfiles: AirportLocationProfile[] = [
     slug: "dallas-fort-worth-dfw",
     code: "DFW",
     name: "Dallas Fort Worth International Airport",
-    shortName: "DFW Airport",
+    shortName: "Dallas Fort Worth Airport",
     city: "Dallas-Fort Worth, Texas",
     terminalNames: ["Terminal A", "Terminal B", "Terminal C", "Terminal D", "Terminal E"],
     roadAccess: "North Texas tollways, International Parkway, airport entry plazas and terminal-loop traffic",
@@ -1955,7 +1953,6 @@ export const travelLocations: TravelLocationProfile[] = [
     code: "LAX",
     name: "Los Angeles International Airport",
     shortName: "Los Angeles International Airport",
-    searchName: "LAX",
     city: "Los Angeles, California",
     calculatorDestination: "Los Angeles International Airport",
     reviewedOn: "2026-06-28",

@@ -5,6 +5,7 @@ import { AppStoreCTA } from "@/components/CTAButton";
 import { indexableTravelLocations } from "@/lib/travel-locations";
 import type { AirportAutocompleteOption } from "@/lib/airport-autocomplete";
 import { localizedAlternates } from "@/lib/i18n";
+import { buildAirportSearchName } from "@/lib/airport-answer-seo";
 
 const indexableAirportLocations = indexableTravelLocations.filter(
   (location) => location.kind === "airport"
@@ -18,7 +19,7 @@ const curatedAirportOptions: AirportAutocompleteOption[] = indexableAirportLocat
     planningJurisdiction: location.airport.planningJurisdiction ?? "us",
     detailPageHref: `/airport-time-to-leave/${location.slug}`,
   }));
-import AirportCalculator from "./AirportCalculator";
+import GenericAirportCalculator from "@/components/airport/GenericAirportCalculator";
 import AirportCalculatorPlanPrefill from "@/components/airport/AirportCalculatorPlanPrefill";
 
 export const metadata: Metadata = {
@@ -29,16 +30,16 @@ export const metadata: Metadata = {
       "/es/calculadora-cuando-salir-al-aeropuerto",
     ),
   },
-  title: "When Should I Leave for the Airport? Free Calculator",
+  title: "Find out exactly when to leave for the airport — Free Calculator",
   description:
     "Calculate exactly when to leave for your flight. This free calculator uses your route, flight time, traffic, security, bags, parking and terminal access.",
   openGraph: {
-    title: "When Should I Leave for the Airport?",
+    title: "Find out exactly when to leave for the airport",
     description:
       "Calculate exactly when to leave for your flight. This free calculator uses your route, flight time, traffic, security, bags, parking and terminal access.",
   },
   twitter: {
-    title: "When Should I Leave for the Airport?",
+    title: "Find out exactly when to leave for the airport",
     description:
       "Calculate exactly when to leave for your flight. This free calculator uses your route, flight time, traffic, security, bags, parking and terminal access.",
   },
@@ -103,7 +104,7 @@ const faqJsonLd = {
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "When Should I Leave for the Airport?",
+  name: "Find out exactly when to leave for the airport",
   applicationCategory: "TravelApplication",
   operatingSystem: "Web",
   offers: {
@@ -131,7 +132,7 @@ const breadcrumbJsonLd = {
     {
       "@type": "ListItem",
       position: 3,
-      name: "When Should I Leave for the Airport?",
+      name: "Find out exactly when to leave for the airport",
       item: "https://www.ontimer.app/airport-time-to-leave-calculator",
     },
   ],
@@ -167,7 +168,7 @@ export default function AirportTimeToLeaveCalculator() {
               <span className="text-zinc-400">Tools</span>
             </li>
             <li aria-hidden="true">›</li>
-            <li className="text-zinc-300">When to Leave for the Airport</li>
+            <li className="text-zinc-300">Find out exactly when to leave for the airport</li>
           </ol>
         </div>
       </nav>
@@ -181,8 +182,8 @@ export default function AirportTimeToLeaveCalculator() {
             Free airport departure planner · No sign-up
           </p>
           <h1 className="min-w-0 text-3xl font-black tracking-tight text-white [overflow-wrap:anywhere] sm:text-5xl">
-            What time do I need to leave to{" "}
-            <span className="text-green-500">make my flight?</span>
+            Find out exactly when to leave for{" "}
+            <span className="text-green-500">the airport</span>
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:text-base">
             Enter your flight&apos;s departure time, starting point and airport. This free calculator
@@ -196,13 +197,14 @@ export default function AirportTimeToLeaveCalculator() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <Suspense
             fallback={(
-              <AirportCalculator
-                genericRedesign
+              <GenericAirportCalculator
                 airportOptions={curatedAirportOptions}
               />
             )}
           >
-            <AirportCalculatorPlanPrefill airportOptions={curatedAirportOptions} />
+            <AirportCalculatorPlanPrefill
+              airportOptions={curatedAirportOptions}
+            />
           </Suspense>
           <p className="mt-5 text-center text-sm text-zinc-400">
             This calculator is for realistic departure planning. For a fun take on risky airport
@@ -426,7 +428,7 @@ export default function AirportTimeToLeaveCalculator() {
       {/* ── RELATED LINKS ── */}
       <section className="border-t border-zinc-800 py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-2xl font-black text-white">When should I leave for my airport?</h2>
+          <h2 className="text-2xl font-black text-white">Find out exactly when to leave for your airport</h2>
           <p className="mt-3 text-zinc-400">
             Choose your airport for a personalized answer with local terminal, transfer, road,
             rail and airport-processing context.
@@ -440,7 +442,7 @@ export default function AirportTimeToLeaveCalculator() {
               >
                 <span className="block text-sm font-semibold text-green-500">{location.code}</span>
                 <span className="mt-1 block font-bold text-white">
-                  When to leave for {location.shortName}
+                  Find out exactly when to leave for {buildAirportSearchName(location)}
                 </span>
               </Link>
             ))}

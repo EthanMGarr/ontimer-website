@@ -120,6 +120,23 @@ function verifyAuthentication() {
   }
 }
 
+function verifyCalculatorReleaseGuardrails() {
+  console.log("Running calculator conversion release guardrails...");
+  const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+  const result = spawnSync(npmCommand, ["run", "test:calculator-release-guardrails"], {
+    cwd: repositoryRoot,
+    env: process.env,
+    stdio: "inherit",
+  });
+
+  if (result.error) {
+    fail(`could not start calculator release guardrails. ${result.error.message}`);
+  }
+  if ((result.status ?? 1) !== 0) {
+    fail("calculator conversion release guardrails failed; production deployment is blocked.");
+  }
+}
+
 const action = process.argv[2];
 const pinnedVersion = verifyPinnedCli();
 
@@ -137,6 +154,7 @@ if (action !== "check" && action !== "deploy-production") {
 }
 
 const projectName = verifyProjectLink();
+verifyCalculatorReleaseGuardrails();
 verifyAuthentication();
 console.log(
   `Vercel preflight passed: local CLI ${pinnedVersion}, linked project ${projectName}.`,

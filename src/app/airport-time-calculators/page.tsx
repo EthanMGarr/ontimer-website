@@ -8,9 +8,11 @@ import {
 import { getTravelLocationPath } from "@/lib/travel-locations";
 import { airportPickupProfiles, getAirportPickupPath } from "@/lib/airport-pickup-profiles";
 import AirportDirectorySearch from "@/components/airport/AirportDirectorySearch";
+import { buildAirportSearchName } from "@/lib/airport-answer-seo";
+import { getTravelLocation } from "@/lib/travel-locations";
 
 export const metadata: Metadata = {
-  title: "When Should I Leave for the Airport? Airport Guides",
+  title: "Find out exactly when to leave for your airport",
   description:
     "Choose your airport to find out what time to leave for your flight, with local route, parking, terminal, security and arrival guidance.",
   alternates: { canonical: "https://www.ontimer.app/airport-time-calculators" },
@@ -31,7 +33,7 @@ const airportGuides = airportLocations.map((airport) => ({
 const collectionJsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "When to Leave for the Airport: Airport Guides",
+  name: "Find out exactly when to leave for your airport",
   description:
     "A directory of airport-specific answers and leave-time calculators from OnTimer.",
   url: "https://www.ontimer.app/airport-time-calculators",
@@ -50,7 +52,7 @@ export default function AirportTimeCalculatorsDirectory() {
             <div>
               <p className="site-kicker">Airport guides &amp; calculators</p>
               <h1 className="site-title">
-                What time should you leave for your airport?
+                Find out exactly when to leave for your airport
               </h1>
               <p className="site-lede">
                 Choose your airport, enter your flight and route, and get a leave time
@@ -79,8 +81,8 @@ export default function AirportTimeCalculatorsDirectory() {
                       href={getTravelLocationPath(airport)}
                       className="site-location-link"
                     >
-                      <strong>{airport.shortName}</strong>
-                      <span>{airport.code} - {airport.city}</span>
+                      <strong>{buildAirportSearchName(airport)}</strong>
+                      <span>{airport.city}</span>
                     </Link>
                   ))}
                 </div>
@@ -114,14 +116,21 @@ export default function AirportTimeCalculatorsDirectory() {
           <h2 className="site-section-title">Airport pickup calculators</h2>
           <p className="site-note">Choose a reviewed airport for local curb, waiting-lot and terminal guidance, or use the generic pickup calculator for any airport.</p>
           <div className="site-featured-grid site-featured-grid--spaced">
-            {airportPickupProfiles.map((profile) => (
-              <Link key={profile.slug} href={getAirportPickupPath(profile.slug)} className="site-location-link">
-                <strong>{profile.code} pickup</strong>
-                <span>When to leave for the pickup</span>
-              </Link>
-            ))}
+            {airportPickupProfiles.map((profile) => {
+              const location = getTravelLocation(profile.slug);
+              if (!location || location.kind !== "airport") return null;
+              return (
+                <Link key={profile.slug} href={getAirportPickupPath(profile.slug)} className="site-location-link">
+                  <strong>Pickup at {buildAirportSearchName(location)}</strong>
+                  <span>Find out exactly when to leave</span>
+                </Link>
+              );
+            })}
           </div>
-          <p className="mt-6"><Link href="/airport-pickup-time-calculator" className="site-text-action">Calculate a pickup at any airport <span aria-hidden="true">→</span></Link></p>
+          <div className="site-actions">
+            <Link href="/airport-pickup-calculators" className="site-secondary-action">Browse all pickup calculators</Link>
+            <Link href="/airport-pickup-time-calculator" className="site-text-action">Calculate a pickup at any airport <span aria-hidden="true">→</span></Link>
+          </div>
         </div>
       </section>
     </div>

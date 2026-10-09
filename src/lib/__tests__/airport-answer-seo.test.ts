@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import {
   buildAirportAnswerApplicationName,
   buildAirportAnswerDescription,
+  buildAirportDepartureHeading,
+  buildAirportPickupHeading,
   buildAirportSnippetCandidate,
   buildAirportAnswerTitle,
   buildAirportSearchName,
@@ -15,9 +17,11 @@ const newark = {
 
 assert.equal(
   buildAirportAnswerTitle(newark),
-  "When Should I Leave for Newark Airport (EWR)? Free Calculator",
-  "airport titles should match the traveler question and make the free calculator explicit",
+  "Find out exactly when to leave for Newark Airport (EWR) — Free Calculator",
+  "airport titles should lead with the exact traveler outcome and a readable airport entity",
 );
+assert.equal(buildAirportDepartureHeading(newark), "Find out exactly when to leave for Newark Airport (EWR)");
+assert.equal(buildAirportPickupHeading(newark), "Find out exactly when to leave for a pickup at Newark Airport (EWR)");
 assert.equal(
   buildAirportAnswerDescription(newark),
   "Calculate exactly when to leave for Newark Airport (EWR). This free calculator uses your flight, starting point, traffic, security, baggage and parking to give you a specific leave time.",
@@ -29,7 +33,7 @@ assert.equal(
 );
 assert.equal(
   buildAirportAnswerApplicationName(newark),
-  "When Should I Leave for Newark Airport (EWR)? Free Calculator",
+  "Find out exactly when to leave for Newark Airport (EWR)",
 );
 assert.equal(buildAirportSearchName(newark), "Newark Airport (EWR)");
 
@@ -37,13 +41,12 @@ const lax = {
   shortName: "Los Angeles International Airport",
   code: "LAX",
   name: "Los Angeles International Airport",
-  searchName: "LAX",
 };
 
-assert.equal(buildAirportSearchName(lax), "LAX");
+assert.equal(buildAirportSearchName(lax), "Los Angeles International Airport (LAX)");
 assert.equal(
   buildAirportAnswerTitle(lax),
-  "When Should I Leave for LAX? Free Airport Calculator",
+  "Find out exactly when to leave for Los Angeles International Airport (LAX) — Free Calculator",
 );
 
 const dfw = {
@@ -52,11 +55,18 @@ const dfw = {
   name: "Dallas Fort Worth International Airport",
 };
 
-assert.equal(buildAirportSearchName(dfw), "DFW Airport");
+assert.equal(buildAirportSearchName(dfw), "DFW Airport (DFW)");
 assert.equal(
   buildAirportAnswerTitle(dfw),
-  "When Should I Leave for DFW Airport? Free Calculator",
-  "airport codes already present in the natural name should not be duplicated",
+  "Find out exactly when to leave for DFW Airport (DFW) — Free Calculator",
+  "airport codes should remain explicit in parentheses even when the familiar name contains the code",
 );
+
+const alreadyFormatted = {
+  shortName: "Newark Airport (EWR)",
+  code: "EWR",
+  name: "Newark Liberty International Airport",
+};
+assert.equal(buildAirportSearchName(alreadyFormatted), "Newark Airport (EWR)", "the shared formatter must not duplicate an existing code suffix");
 
 console.log("Airport answer-intent SEO tests passed.");

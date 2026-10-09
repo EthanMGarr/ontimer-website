@@ -149,7 +149,7 @@ export default function CalendarOnTimerHandoff({
       if (!acquisition) return;
       acquisition.scrollIntoView({
         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "center",
+        block: "start",
       });
       acquisition.focus({ preventScroll: true });
     });
@@ -286,7 +286,7 @@ export default function CalendarOnTimerHandoff({
         )}
       </div>
 
-      <div ref={acquisitionRef} tabIndex={-1} data-calendar-secondary-acquisition data-experiment-variant={experimentVariant} data-state={calendarOpened ? "post-calendar" : appPrimary ? "primary" : "available"} className={`mt-5 scroll-mt-24 outline-none ${
+      <div ref={acquisitionRef} tabIndex={-1} data-calendar-secondary-acquisition data-experiment-variant={experimentVariant} data-state={calendarOpened ? "post-calendar" : appPrimary ? "primary" : "available"} className={`mt-4 scroll-mt-28 outline-none ${
         calendarOpened
           ? "order-1 rounded-xl border border-green-500/30 bg-green-500/[0.06] p-5"
           : appPrimary

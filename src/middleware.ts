@@ -44,5 +44,21 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!_next/static|_next/image|favicon.ico|images|api).*)",
+  matcher: [
+    {
+      // Geo-classification only needs to run when the browser has no current
+      // region cookie. The cookie expires after 24 hours, so Vercel will
+      // periodically reclassify returning visitors without invoking
+      // middleware for every page view in between.
+      source: "/((?!_next/static|_next/image|favicon.ico|images|api).*)",
+      missing: [{ type: "cookie", key: "ontimer_region" }],
+    },
+    // These routes need their privacy headers on every response. The provider
+    // route also needs its preview-access check even when a region cookie is
+    // already present.
+    "/provider-medication-schedule/:path*",
+    "/caregiver-medication-schedule/:path*",
+    "/medication-schedule/:path*",
+    "/how-to-remember-medication-on-time/:path*",
+  ],
 };

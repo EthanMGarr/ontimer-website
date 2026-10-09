@@ -37,10 +37,12 @@ For implementation-only tasks (bug fixes, refactoring, infrastructure), BrandOS 
 - Every calendar-capable result must retain a visually subordinate OnTimer path before calendar use. Use “Get Automatic Alarms,” state plainly that “OnTimer is free,” and use adjacent microcopy for product proof rather than repeating “free” or saying “free to download”; do not require the calendar action before visitors can discover OnTimer.
 - After a calendar action, replace that focal slot with the OnTimer acquisition action. Do not make the returning user scroll past calculation detail to find it.
 - Follow `docs/CALCULATOR_CONVERSION_UX_CHECKLIST.md` for implementation and review. Run the relevant source regression plus rendered interaction checks at 320, 375, 414, and 768 px before handoff or deployment.
+- Never duplicate a required calculator UX mode across Suspense fallback and hydrated branches. Put the invariant in one shared wrapper, and keep `npm run test:calculator-release-guardrails` passing.
 
 ## Permanent Deployment Workflow
 
 - From the repository root, run `npm run vercel:check` before a release and `npm run deploy:prod` to publish production.
+- `npm run vercel:check` and `npm run deploy:prod` run the calculator conversion release guardrails automatically. Do not bypass a failed guardrail with a direct Vercel command.
 - These scripts invoke the exact Vercel CLI pinned in `package.json` by repository path, verify `.vercel/project.json` matches the OnTimer production target, and verify the saved login before any upload.
 - Never use `npx vercel@latest`, `npx -y vercel@latest`, a global `vercel`, or a newly downloaded CLI for this repository. Do not fall back to one if a release command fails.
 - If dependencies are missing or the pinned version does not match, run `npm ci`. If the project link is missing, run `npm run vercel:link`. If the saved login is actually invalid, run `npm run vercel:login`.

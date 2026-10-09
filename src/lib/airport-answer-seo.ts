@@ -2,19 +2,23 @@ export interface AirportAnswerSeoInput {
   shortName: string;
   code: string;
   name: string;
-  searchName?: string;
 }
 
-export function buildAirportSearchName({ shortName, code, searchName }: AirportAnswerSeoInput): string {
-  if (searchName) return searchName;
-  if (shortName.toLocaleUpperCase().includes(code.toLocaleUpperCase())) return shortName;
-  return `${shortName} (${code})`;
+export function buildAirportSearchName({ shortName, code }: AirportAnswerSeoInput): string {
+  const codeSuffix = new RegExp(`\\s*\\(${code}\\)\\s*$`, "i");
+  return `${shortName.replace(codeSuffix, "").trim()} (${code})`;
+}
+
+export function buildAirportDepartureHeading(input: AirportAnswerSeoInput): string {
+  return `Find out exactly when to leave for ${buildAirportSearchName(input)}`;
+}
+
+export function buildAirportPickupHeading(input: AirportAnswerSeoInput): string {
+  return `Find out exactly when to leave for a pickup at ${buildAirportSearchName(input)}`;
 }
 
 export function buildAirportAnswerTitle(input: AirportAnswerSeoInput): string {
-  const searchName = buildAirportSearchName(input);
-  const calculatorLabel = /airport/i.test(searchName) ? "Free Calculator" : "Free Airport Calculator";
-  return `When Should I Leave for ${searchName}? ${calculatorLabel}`;
+  return `${buildAirportDepartureHeading(input)} — Free Calculator`;
 }
 
 export function buildAirportAnswerDescription(input: AirportAnswerSeoInput): string {
@@ -28,5 +32,5 @@ export function buildAirportSnippetCandidate(input: AirportAnswerSeoInput): stri
 }
 
 export function buildAirportAnswerApplicationName(input: AirportAnswerSeoInput): string {
-  return buildAirportAnswerTitle(input);
+  return buildAirportDepartureHeading(input);
 }

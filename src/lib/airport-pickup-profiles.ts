@@ -29,6 +29,8 @@ export interface AirportPickupProfile {
 
 const reviewedOn = "2026-09-20";
 const reviewedLabel = "Reviewed September 20, 2026";
+const expansionReviewedOn = "2026-10-08";
+const expansionReviewedLabel = "Reviewed October 8, 2026";
 
 export const airportPickupProfiles: AirportPickupProfile[] = [
   {
@@ -319,6 +321,294 @@ export const airportPickupProfiles: AirportPickupProfile[] = [
       { label: "ATL official parking and Park and Wait Lot", url: "https://www.atl.com/parking/" },
     ],
   },
+  {
+    slug: "las-vegas-las",
+    code: "LAS",
+    directAnswer:
+      "For a Las Vegas Airport pickup, calculate for when the passenger reaches the correct Terminal 1 or Terminal 3 pickup area with their bags. Wait in the free Cell Phone Lot until they are ready, then allow extra time for Strip traffic and the airport connector tunnel roadwork scheduled through December 2026.",
+    readyTimeGuidance: {
+      domesticNoCheckedBag: "Add deplaning, any tram or concourse walk and the trip to the passenger-pickup level before expecting the traveler outside.",
+      domesticCheckedBag: "Wait for baggage claim to finish before the passenger sends the terminal and numbered pickup column.",
+      international: "Include immigration, baggage claim and customs before treating the passenger as ready at the Terminal 3 public pickup area.",
+    },
+    pickupRules: [
+      "Confirm Terminal 1 or Terminal 3 before entering the airport road system; the two terminals have separate pickup approaches.",
+      "Use the numbered columns in the passenger pickup area so the driver and passenger agree on one exact meeting point.",
+      "Terminal curbs are for active loading only. If the passenger is not outside, return to the Cell Phone Lot or use short-term parking.",
+    ],
+    waitingOptions: [
+      "LAS operates a free Cell Phone Lot on Kitty Hawk Way for drivers waiting for arriving passengers.",
+      "The airport currently lists daily Cell Phone Lot hours of 6:00 AM to 1:00 AM; outside those hours, check the current parking guidance before leaving.",
+    ],
+    terminalConsiderations: [
+      "Terminal 1 serves the A, B, C and some D gates, while Terminal 3 serves the E and some D gates; verify the airline's current arrival terminal rather than guessing from the gate letter.",
+      "Passengers may need a tram or a long concourse walk before reaching baggage claim, so a gate arrival is not a curb-ready time.",
+    ],
+    groundAccessNotes: [
+      "I-15, Paradise Road, Tropicana Avenue, resort traffic, conventions and Allegiant Stadium events can change the final drive materially.",
+      "LAS is warning of airport connector tunnel lane closures through December 2026, so review current road alerts before relying on the calculated leave time.",
+    ],
+    faqs: [
+      {
+        question: "Where can I wait for a pickup at LAS?",
+        answer: "Use the free Cell Phone Lot on Kitty Hawk Way while the passenger deplanes and collects bags. LAS currently lists the lot as open daily from 6:00 AM to 1:00 AM.",
+      },
+      {
+        question: "How should my passenger identify the LAS pickup spot?",
+        answer: "Ask for Terminal 1 or Terminal 3 plus the numbered pickup column after the passenger reaches the designated passenger-pickup area.",
+      },
+      {
+        question: "Does this calculator include Las Vegas event traffic?",
+        answer: "It estimates the road trip for the selected time, but it does not monitor conventions, stadium events or temporary tunnel closures. Check current traffic and airport alerts before leaving.",
+      },
+    ],
+    reviewedOn: expansionReviewedOn,
+    reviewedLabel: expansionReviewedLabel,
+    sources: [
+      { label: "LAS official passenger pickup guidance", url: "https://www.harryreidairport.com/passenger-drop-off-pick-up" },
+      { label: "LAS official parking guidance", url: "https://www.harryreidairport.com/Parking" },
+    ],
+  },
+  {
+    slug: "dulles-iad",
+    code: "IAD",
+    directAnswer:
+      "For a Dulles pickup, plan for the passenger to collect bags and reach the terminal curb before you leave the free Cell Phone Lot. Ask for the door number and whether they are on the arrivals or departures level, then include the long regional approach on the Dulles Access Road, Toll Road, Route 28 or I-495.",
+    readyTimeGuidance: {
+      domesticNoCheckedBag: "Allow for deplaning, concourse movement by AeroTrain or mobile lounge and the walk through the Main Terminal to the curb.",
+      domesticCheckedBag: "Add baggage-claim time and wait until the passenger has their bags before approaching the terminal roadway.",
+      international: "Include immigration, baggage claim and customs before the passenger can enter the public arrivals area and choose a pickup door.",
+    },
+    pickupRules: [
+      "Have the passenger call only after reaching the curb, then send the door number and the arrivals or departures level.",
+      "There is no waiting at the terminal curb; a longer stop can lead to a ticket or towing.",
+      "Use any open pickup space near the confirmed door rather than blocking a travel lane while searching for the passenger.",
+    ],
+    waitingOptions: [
+      "IAD's free Cell Phone Lot is on Autopilot Drive near Aviation Drive and the airport Marriott approach.",
+      "The airport limits the wait to one hour, requires the vehicle to remain attended and notes that the lot has no restroom facilities.",
+    ],
+    terminalConsiderations: [
+      "All passengers exit through the Main Terminal, but the time from aircraft to curb varies with the arrival concourse and whether AeroTrain or a mobile lounge is involved.",
+      "A door number and level are more useful for the final handoff than the airline name alone.",
+    ],
+    groundAccessNotes: [
+      "Dulles trips often involve long approaches on the Dulles Access Road, Dulles Toll Road, Route 28, I-495 and suburban arterials.",
+      "Treat the calculator result as the time to start the regional drive, then recheck the flight before leaving the Cell Phone Lot for the curb.",
+    ],
+    faqs: [
+      {
+        question: "Where is the Dulles Cell Phone Lot?",
+        answer: "It is on Autopilot Drive. Follow the SERVICES exit toward Aviation Drive, turn onto Autopilot Drive and follow airport signs to the free waiting lot.",
+      },
+      {
+        question: "How long can I wait in the IAD Cell Phone Lot?",
+        answer: "Dulles currently permits a free wait of up to one hour. The vehicle must remain attended, and the airport says the lot has no restroom facilities.",
+      },
+      {
+        question: "What should an arriving passenger send me at IAD?",
+        answer: "Ask for the terminal door number and whether they are waiting on the arrivals or departures level after they have collected every bag and reached the curb.",
+      },
+    ],
+    reviewedOn: expansionReviewedOn,
+    reviewedLabel: expansionReviewedLabel,
+    sources: [
+      { label: "Dulles official Cell Phone Lot guidance", url: "https://www.flydulles.com/cell-phone-lot" },
+      { label: "Dulles official parking information", url: "https://www.flydulles.com/parking-transportation/parking-information" },
+    ],
+  },
+  {
+    slug: "denver-den",
+    code: "DEN",
+    directAnswer:
+      "For a Denver Airport pickup, calculate for when the passenger reaches Jeppesen Terminal Level 4—not when the flight lands. Friends and family pickup uses both the east and west sides on Level 4, and the long Peña Boulevard approach means the passenger's side and door should be confirmed before you leave the waiting lot.",
+    readyTimeGuidance: {
+      domesticNoCheckedBag: "Add deplaning, the train or Concourse A bridge route, and the trip from Level 5 baggage claim down to Level 4.",
+      domesticCheckedBag: "Wait for baggage claim on Level 5 to finish before the passenger goes down to the Level 4 pickup curb.",
+      international: "Include immigration, baggage claim and customs before the passenger can reach the public side of Jeppesen Terminal and descend to Level 4.",
+    },
+    pickupRules: [
+      "Private friends-and-family pickup is on Jeppesen Terminal Level 4 on both the east and west sides.",
+      "Ask for east or west plus the nearest door after the passenger reaches Level 4; a door number without the side is incomplete.",
+      "Do not wait on the terminal roadway. Use the free Final Approach waiting lot until the passenger is ready.",
+    ],
+    waitingOptions: [
+      "DEN's Final Approach cell phone waiting lot is free and sits about three miles from Jeppesen Terminal on the north side of Peña Boulevard at 77th Avenue.",
+      "The airport is developing a new south-side waiting facility, so verify current signage before the drive rather than relying on an old map pin.",
+    ],
+    terminalConsiderations: [
+      "All friends-and-family pickups use Jeppesen Terminal, but the passenger still needs to choose the east or west Level 4 curb.",
+      "Passengers arriving at Concourses B or C must take the train to Jeppesen Terminal; Concourse A passengers may use the train or bridge route.",
+    ],
+    groundAccessNotes: [
+      "I-70, Peña Boulevard, winter weather and the unusually long final airport approach can all move the leave-time answer.",
+      "If weather or a Peña Boulevard incident is developing, add margin before starting the drive rather than trying to recover it at the terminal curb.",
+    ],
+    faqs: [
+      {
+        question: "Where do I pick up family or friends at DEN?",
+        answer: "Use Level 4 of Jeppesen Terminal. Pickup is available on both east and west sides at all doors, so ask the passenger for both the side and door.",
+      },
+      {
+        question: "Where can I wait for a Denver Airport pickup?",
+        answer: "Use the free Final Approach cell phone waiting lot, about three miles from Jeppesen Terminal along Peña Boulevard near 77th Avenue.",
+      },
+      {
+        question: "Why can a DEN passenger take time to reach pickup after landing?",
+        answer: "The passenger may need a concourse train or bridge route, baggage claim on Level 5 and then an elevator or escalator down to the Level 4 pickup curb.",
+      },
+    ],
+    reviewedOn: expansionReviewedOn,
+    reviewedLabel: expansionReviewedLabel,
+    sources: [
+      { label: "DEN official passenger pickup locations", url: "https://www.flydenver.com/parking-and-transportation/passenger-pickup/" },
+      { label: "DEN official parking and Final Approach guidance", url: "https://www.flydenver.com/parking-and-transportation/parking-lots/" },
+    ],
+  },
+  {
+    slug: "boston-bos",
+    code: "BOS",
+    directAnswer:
+      "For a Boston Logan pickup, calculate for when the passenger reaches the correct Terminal A, B, C or E passenger-pickup area with their bags. Use the free Cell Phone Lot for a short wait, then account for tunnel traffic, airport roadway construction and terminal-specific pickup routing before entering the curb system.",
+    readyTimeGuidance: {
+      domesticNoCheckedBag: "Add deplaning and the walk through the correct terminal to its signed passenger-pickup area.",
+      domesticCheckedBag: "Wait for baggage claim to finish before the passenger sends the terminal, door and pickup zone.",
+      international: "Include immigration, baggage claim and customs before the passenger reaches the public Terminal E pickup area.",
+    },
+    pickupRules: [
+      "Confirm Terminal A, B, C or E and follow current signs for private passenger pickup; airport construction can change the final route.",
+      "Ask the passenger for the terminal and nearest posted door or pickup-zone marker only after they reach the public side.",
+      "Use short-term parking if you plan to meet inside rather than trying to wait at the terminal curb.",
+    ],
+    waitingOptions: [
+      "Massport provides a free Cell Phone Lot for drivers waiting for an arriving passenger and currently limits the wait to 30 minutes.",
+      "Massport has announced a Cell Phone Lot move to 6 Tomahawk Drive, so follow current airport signs and construction notices rather than an older saved location.",
+    ],
+    terminalConsiderations: [
+      "Boston Logan has four terminals with separate roadway branches, so the terminal is essential even when the airport is close to downtown.",
+      "Terminal E handles many international arrivals, while construction or curb changes can alter the signed private-vehicle pickup path.",
+    ],
+    groundAccessNotes: [
+      "I-90, the Ted Williams Tunnel, Sumner Tunnel traffic, harbor crossings and downtown events can turn a short geographic trip into a variable drive.",
+      "Check Massport's roadway and construction updates before leaving, especially when a tunnel closure or terminal detour is active.",
+    ],
+    faqs: [
+      {
+        question: "Where can I wait for a pickup at Boston Logan?",
+        answer: "Use Massport's free Cell Phone Lot for a short wait. Massport currently lists a 30-minute maximum and has announced a relocation to 6 Tomahawk Drive, so follow current signs.",
+      },
+      {
+        question: "What should my passenger send me at BOS?",
+        answer: "Ask for Terminal A, B, C or E plus the nearest posted door or passenger-pickup marker after the passenger has collected every bag.",
+      },
+      {
+        question: "Does the BOS calculator account for tunnel closures?",
+        answer: "It estimates the road trip for the selected time, but it does not monitor a live tunnel closure or temporary airport detour. Check Massport roadway updates before leaving.",
+      },
+    ],
+    reviewedOn: expansionReviewedOn,
+    reviewedLabel: expansionReviewedLabel,
+    sources: [
+      { label: "Boston Logan official parking and Cell Phone Lot guidance", url: "https://www.massport.com/logan-airport/getting-to-logan/parking" },
+      { label: "Boston Logan roadway and construction updates", url: "https://www.massport.com/logan-airport/getting-to-logan/roadway-and-construction-updates" },
+    ],
+  },
+  {
+    slug: "portland-pdx",
+    code: "PDX",
+    directAnswer:
+      "For a Portland Airport pickup, calculate for when the passenger reaches the curb with every bag, then choose the upper or lower terminal roadway based on current congestion. PDX allows active pickup on either level and recommends the Cell Phone Waiting Lot instead of circling while the passenger is still inside.",
+    readyTimeGuidance: {
+      domesticNoCheckedBag: "Add deplaning and the walk through the main terminal before the passenger reaches the upper or lower pickup roadway.",
+      domesticCheckedBag: "Wait for baggage claim to finish and for every bag to be at the curb before entering the active-loading area.",
+      international: "Include immigration, baggage claim and customs before the passenger can reach the public terminal roadway.",
+    },
+    pickupRules: [
+      "Private pickup is allowed on both the upper and lower roadways in front of the terminal, but only while the passenger and luggage are ready to load.",
+      "The vehicle may not be left unattended at the curb.",
+      "Ask the passenger which level and door they chose; PDX notes that the upper roadway is often less congested for evening pickups.",
+    ],
+    waitingOptions: [
+      "Use the PDX Cell Phone Waiting Lot instead of circling when the passenger has not yet reached the curb.",
+      "If you need more time or plan to meet inside, use the parking garage directly across from the terminal and add the walk to the calculation.",
+    ],
+    terminalConsiderations: [
+      "PDX has one main terminal, so the most useful handoff detail is the upper or lower roadway plus the nearest door.",
+      "The rebuilt main terminal changed walking patterns, and ongoing airport work can still affect curb routing and the passenger's path from the concourse.",
+    ],
+    groundAccessNotes: [
+      "I-205, Airport Way, Columbia River bridge traffic, weather and airport construction can change the drive from Portland or Vancouver.",
+      "The lower roadway can become congested; coordinate the level before leaving the waiting lot rather than switching after entering the terminal loop.",
+    ],
+    faqs: [
+      {
+        question: "Can I pick someone up on the upper roadway at PDX?",
+        answer: "Yes. PDX permits active pickup on both upper and lower terminal roadways and notes that the upper roadway is often a useful evening alternative when the lower level is congested.",
+      },
+      {
+        question: "Can I wait at the PDX curb?",
+        answer: "No. The passenger and all luggage must be at the curb for active loading. Use the Cell Phone Waiting Lot if they are still inside.",
+      },
+      {
+        question: "What pickup detail should a PDX passenger send?",
+        answer: "Ask for upper or lower roadway plus the nearest door after the passenger has every bag and is standing at the curb.",
+      },
+    ],
+    reviewedOn: expansionReviewedOn,
+    reviewedLabel: expansionReviewedLabel,
+    sources: [
+      { label: "PDX official curbside pickup guidance", url: "https://www.flypdx.com/TravelTips" },
+      { label: "PDX official parking guidance", url: "https://www.flypdx.com/Parking" },
+    ],
+  },
+  {
+    slug: "dallas-fort-worth-dfw",
+    code: "DFW",
+    directAnswer:
+      "For a DFW pickup, calculate for when the passenger reaches the correct Terminal A, B, C, D or E baggage-claim exit, then work backward through International Parkway and the airport entry plaza. Use the north or south Cell Phone Lot until they call, because all terminal curbs are for active loading only.",
+    readyTimeGuidance: {
+      domesticNoCheckedBag: "Add deplaning and the walk to the baggage-claim level and correct terminal exit before expecting the passenger at the curb.",
+      domesticCheckedBag: "Wait for baggage claim to finish and have the passenger send the terminal plus the nearest exit door.",
+      international: "Include immigration, baggage claim and customs in Terminal D before the passenger can reach the public pickup curb.",
+    },
+    pickupRules: [
+      "Confirm Terminal A, B, C, D or E before entering International Parkway; correcting to another terminal can consume meaningful time.",
+      "All terminal curbs are for active loading and unloading only. Vehicles that are unattended or not loading may be fined.",
+      "If you need time to meet the passenger, DFW provides one-hour spaces in the first rows of Terminal Parking.",
+    ],
+    waitingOptions: [
+      "DFW operates free Cell Phone Lots at both the north and south ends of the airport, allowing a wait of up to two hours.",
+      "Both lots are open 24 hours, and the vehicle must remain attended; choose the lot that matches your regional approach and the passenger's terminal.",
+    ],
+    terminalConsiderations: [
+      "DFW's five terminals stretch along International Parkway, so the terminal and north-or-south approach matter before the final drive.",
+      "Skylink is inside security; it does not make a wrong curbside terminal choice quick for a driver waiting outside.",
+    ],
+    groundAccessNotes: [
+      "SH 183, SH 114, SH 121, I-635, International Parkway and entry-plaza traffic vary with the driver's Dallas, Fort Worth or northern-suburb approach.",
+      "DFW uses north and south entry plazas, and non-TollTag drivers should be prepared for contactless payment lanes rather than assuming a cash lane.",
+    ],
+    faqs: [
+      {
+        question: "Where can I wait for a DFW pickup?",
+        answer: "Use the free north or south Cell Phone Lot. DFW currently allows up to two hours, keeps both lots open 24/7 and requires the vehicle to remain attended.",
+      },
+      {
+        question: "Can I wait at a DFW terminal curb?",
+        answer: "No. Terminal curbs are for active loading only. Use a Cell Phone Lot or a one-hour Terminal Parking space until the passenger is ready.",
+      },
+      {
+        question: "Why should I confirm the DFW terminal before leaving?",
+        answer: "Terminals A through E are spread along International Parkway. A wrong terminal or wrong north-or-south approach can add a substantial correction to the pickup.",
+      },
+    ],
+    reviewedOn: expansionReviewedOn,
+    reviewedLabel: expansionReviewedLabel,
+    sources: [
+      { label: "DFW official pickup and driving directions", url: "https://www.dfwairport.com/explore/transportation/directions/" },
+      { label: "DFW official Cell Phone Lot guidance", url: "https://www.dfwairport.com/park/" },
+    ],
+  },
 ];
 
 const pickupProfilesBySlug = new Map(
@@ -346,6 +636,10 @@ export function validateAirportPickupProfiles(): void {
     if (codes.has(profile.code)) throw new Error(`Duplicate airport pickup code: ${profile.code}`);
     if (profile.sources.length < 2) throw new Error(`${profile.code} needs at least two pickup sources`);
     if (profile.faqs.length < 3) throw new Error(`${profile.code} needs at least three pickup FAQs`);
+    if (profile.pickupRules.length < 3) throw new Error(`${profile.code} needs at least three pickup rules`);
+    if (profile.waitingOptions.length < 2) throw new Error(`${profile.code} needs at least two waiting options`);
+    if (profile.terminalConsiderations.length < 2) throw new Error(`${profile.code} needs at least two terminal considerations`);
+    if (profile.groundAccessNotes.length < 2) throw new Error(`${profile.code} needs at least two ground-access notes`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(profile.reviewedOn)) throw new Error(`${profile.code} needs a valid review date`);
     if (profile.directAnswer.length < 120) throw new Error(`${profile.code} needs a substantive direct answer`);
     for (const source of profile.sources) {
