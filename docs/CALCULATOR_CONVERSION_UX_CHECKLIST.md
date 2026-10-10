@@ -39,6 +39,7 @@ This is the release contract for OnTimer calculators. It protects the required i
 
 - Use the app-primary experience for all non-Android calculator visitors; analytics consent controls measurement, not the user experience. Android visitors retain the established calendar/affiliate experience.
 - For measurable visits, fire `experiment_assignment` once per browser-tab session and attach `experiment_id`, `experiment_variant=app_primary`, and `assignment_method=full_rollout` to subsequent calculator events.
+- Attach `calculator_cta_eligibility=eligible_non_android` to eligible calculator events and `calculator_cta_eligibility=android_excluded` to intentionally unassigned Android calculator events; reconcile rollout coverage only against the eligible population.
 - Keep the development-only control override available for regression review, but never enable query overrides in production.
 - Use distinct App Store campaign tokens for treatment clicks. Report GA4 outbound intent and App Store Connect campaign outcomes separately; never label an outbound click as an install.
 - Change one primary variable at a time. The first test changes action hierarchy only; calendar collapsing or result gating requires a later experiment.

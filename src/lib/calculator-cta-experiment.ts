@@ -8,6 +8,8 @@ export interface CalculatorCtaExperimentAssignment {
   assignment_method: "full_rollout" | "preview_override";
 }
 
+export type CalculatorCtaEligibility = "eligible_non_android" | "android_excluded";
+
 const ASSIGNMENT_EVENT_KEY = `ontimer_experiment_assignment_sent_${CALCULATOR_CTA_EXPERIMENT_ID}`;
 let fallbackAssignmentEventSent = false;
 
@@ -25,6 +27,20 @@ export function isCalculatorExperimentPath(pathname: string): boolean {
 
 function isEligibleDevice(userAgent: string): boolean {
   return !/Android/i.test(userAgent);
+}
+
+/**
+ * Describe calculator-rollout eligibility even when no experiment assignment is
+ * returned. This keeps intentionally excluded Android traffic distinguishable
+ * from events that unexpectedly lose their rollout dimensions.
+ */
+export function getCalculatorCtaEligibility(): CalculatorCtaEligibility | null {
+  if (typeof window === "undefined" || !isCalculatorExperimentPath(window.location.pathname)) {
+    return null;
+  }
+  return isEligibleDevice(window.navigator.userAgent)
+    ? "eligible_non_android"
+    : "android_excluded";
 }
 
 /**

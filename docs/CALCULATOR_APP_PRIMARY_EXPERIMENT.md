@@ -31,6 +31,11 @@ Every calculator event in an eligible session receives:
 - `experiment_id=calculator_app_primary_v1`
 - `experiment_variant=app_primary`
 - `assignment_method=full_rollout`
+- `calculator_cta_eligibility=eligible_non_android`
+
+Android calculator events receive `calculator_cta_eligibility=android_excluded`
+without an experiment assignment. Do not treat those intentionally unassigned
+events as tracking loss when reconciling rollout coverage.
 
 GA4 receives `experiment_assignment` before the first variant-tagged calculator event in each browser-tab session.
 
@@ -58,6 +63,11 @@ App Store measurement:
 Use the registered event-scoped custom dimensions for `experiment_id`, `experiment_variant`, and `assignment_method`. Build a closed rollout funnel filtered to `experiment_id=calculator_app_primary_v1`, `experiment_variant=app_primary`, and `assignment_method=full_rollout`. Compare result-normalized outcomes with the fixed Sep 8–Oct 5 baseline and with equivalent weekday/trailing-28-day views.
 
 Confirm the rollout events populate every registered dimension and that the measured result volume reconciles with overall calculator traffic after accounting for consent. Missing dimensions or a material tracking discontinuity blocks the comparison.
+
+The first-party relay forwards the browser user agent to GA4 at the request level
+so standard operating-system and device dimensions remain available. Device
+attribution before this relay enrichment can be `(not set)` and must not be used
+to infer Android share.
 
 Local development can force either UI for QA with `?calculatorCtaVariant=control` or `?calculatorCtaVariant=app_primary`. The override is disabled in production builds.
 

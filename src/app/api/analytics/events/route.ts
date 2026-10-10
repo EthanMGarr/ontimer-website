@@ -62,7 +62,10 @@ export async function POST(request: NextRequest) {
       method: "POST",
       cache: "no-store",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(measurementProtocolPayload(event)),
+      body: JSON.stringify(measurementProtocolPayload(
+        event,
+        request.headers.get("user-agent"),
+      )),
     });
     if (!upstream.ok) {
       console.error("[analytics] GA4 Measurement Protocol rejected an event", {

@@ -21,13 +21,20 @@ assert.ok(event);
 assert.equal(event.event_name, "calculator_completed");
 assert.equal(event.params.ignored_object, undefined);
 
-const payload = measurementProtocolPayload(event);
+const payload = measurementProtocolPayload(
+  event,
+  "Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36",
+);
 assert.equal(payload.client_id, event.client_id);
+assert.equal(payload.user_agent, "Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36");
 assert.equal(payload.events[0].name, "calculator_completed");
 assert.equal(payload.events[0].params.experiment_variant, "app_primary");
 assert.equal(payload.events[0].params.session_id, 1791468000000);
 assert.equal(payload.events[0].params.engagement_time_msec, 1);
 assert.equal(payload.events[0].params.transport_source, "first_party");
+
+assert.equal(measurementProtocolPayload(event, null).user_agent, undefined);
+assert.equal(measurementProtocolPayload(event, "x".repeat(600)).user_agent?.length, 512);
 
 assert.equal(parseFirstPartyAnalyticsEvent({ event_name: "Bad Event", client_id: "12345678" }), null);
 assert.equal(parseFirstPartyAnalyticsEvent({ event_name: "calculator_completed", client_id: "short" }), null);

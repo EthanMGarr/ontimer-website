@@ -15,6 +15,7 @@ export interface FirstPartyAnalyticsEvent {
 
 export interface MeasurementProtocolPayload {
   client_id: string;
+  user_agent?: string;
   events: Array<{
     name: string;
     params: AnalyticsParams;
@@ -61,10 +62,12 @@ export function parseFirstPartyAnalyticsEvent(value: unknown): FirstPartyAnalyti
 
 export function measurementProtocolPayload(
   event: FirstPartyAnalyticsEvent,
+  userAgent?: string | null,
 ): MeasurementProtocolPayload {
   const sessionId = event.params.session_id;
   return {
     client_id: event.client_id,
+    ...(userAgent ? { user_agent: userAgent.slice(0, 512) } : {}),
     events: [{
       name: event.event_name,
       params: {

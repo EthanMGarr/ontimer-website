@@ -1,5 +1,6 @@
 import { isAnalyticsAllowed } from "@/lib/consent";
 import {
+  getCalculatorCtaEligibility,
   getCalculatorCtaExperimentAssignment,
   shouldTrackCalculatorExperimentAssignment,
 } from "@/lib/calculator-cta-experiment";
@@ -157,10 +158,23 @@ export function fireEvent(eventName: string, params: AnalyticsParams = {}): void
   if (!initializeAnalytics()) return;
   const acquisition = acquisitionParams();
   const experiment = getCalculatorCtaExperimentAssignment(true);
+  const calculatorEligibility = getCalculatorCtaEligibility();
+  const eligibilityParams: AnalyticsParams = calculatorEligibility
+    ? { calculator_cta_eligibility: calculatorEligibility }
+    : {};
   if (experiment && shouldTrackCalculatorExperimentAssignment()) {
-    sendFirstPartyEvent("experiment_assignment", { ...acquisition, ...experiment });
+    sendFirstPartyEvent("experiment_assignment", {
+      ...acquisition,
+      ...eligibilityParams,
+      ...experiment,
+    });
   }
-  sendFirstPartyEvent(eventName, { ...acquisition, ...params, ...(experiment ?? {}) });
+  sendFirstPartyEvent(eventName, {
+    ...acquisition,
+    ...params,
+    ...eligibilityParams,
+    ...(experiment ?? {}),
+  });
 }
 
 function baseParams(location: string): AnalyticsParams {
