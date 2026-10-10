@@ -51,7 +51,7 @@
 </head>
 <body>
     <h1>OnTimer Privacy Policy</h1>
-    <p class="update-date">Last Updated: October 2, 2026</p>
+    <p class="update-date">Last Updated: October 10, 2026</p>
 
     <h2>1. Introduction</h2>
     <p>Breakout Growth ("we," "our," or "us") operates OnTimer, including the ontimer.app website, mobile applications, calculators, planning tools, reminder tools, educational content, subscriptions, and related services (collectively, "OnTimer" or "the Service"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use OnTimer.</p>
@@ -72,7 +72,7 @@
     <h2>2. Information We Collect</h2>
 
     <h3>2.1 Calendar Data (Read-Only)</h3>
-    <p>When you connect Google Calendar, Apple Calendar, or Microsoft Outlook Calendar, OnTimer requests <strong>read-only access</strong> to the calendar information needed to display events, schedule reminders, deliver persistent notifications, calculate Time to Leave reminders, and allow you to select which calendars to monitor.</p>
+    <p>When you connect Google Calendar, Apple Calendar, or Microsoft Outlook Calendar, OnTimer requests <strong>read-only access</strong> to the calendar information needed to display events, schedule reminders, deliver persistent notifications, calculate Time to Leave reminders, recognize flights for Time to Fly airport alarms, and allow you to select which calendars to monitor.</p>
     <p>Google Calendar and Microsoft Outlook Calendar use OAuth authentication. Apple Calendar uses Apple's EventKit framework and iOS Calendar permissions instead of OAuth. In all cases, OnTimer's access is read-only: OnTimer cannot and does not create, edit, or delete your calendar events.</p>
     <table class="data-table">
         <tr>
@@ -92,12 +92,12 @@
         </tr>
         <tr>
             <td>Event descriptions</td>
-            <td>Display additional event details</td>
+            <td>Display additional event details and recognize flight details (airport codes, flight numbers, departure times) for Time to Fly. Booking confirmation codes are not stored.</td>
             <td>Stored locally on your device</td>
         </tr>
         <tr>
             <td>Event location</td>
-            <td>Display location information and support Time to Leave calculations</td>
+            <td>Display location information and support Time to Leave and Time to Fly calculations</td>
             <td>Stored locally on your device</td>
         </tr>
         <tr>
@@ -121,6 +121,7 @@
 
     <h3>2.2 Location Information</h3>
     <p>Time to Leave reminders may optionally use your current location together with an event location to estimate when you should leave. Precise location is used only if you grant location permission on your device. If you do not grant location permission, OnTimer may still display events and schedule non-location-based reminders, but location-aware Time to Leave features may be limited or unavailable.</p>
+    <p>Time to Fly airport alarms may use your current location together with the location of the departure airport (from a list of airports built into the app) to estimate when you should leave for a flight. Flight recognition happens on your device. If you do not grant location permission, Time to Fly uses an estimated drive time instead.</p>
     <p>We do not sell location information, and we do not use precise location for advertising.</p>
 
     <h3>2.3 Device Information</h3>
@@ -293,8 +294,8 @@
 
     <h3>5.8 Apple MapKit</h3>
     <ul>
-        <li><strong>Purpose:</strong> Calculate travel time and traffic-aware directions between your current location and an event's location for Time to Leave reminders</li>
-        <li><strong>Data shared:</strong> Your device coordinates and the event's location, sent to Apple's Maps service only when you use Time to Leave features with location permission granted</li>
+        <li><strong>Purpose:</strong> Calculate travel time and traffic-aware directions between your current location and an event's location for Time to Leave reminders, or the departure airport for Time to Fly airport alarms</li>
+        <li><strong>Data shared:</strong> Your device coordinates and the event's location or departure airport's location, sent to Apple's Maps service only when you use these features with location permission granted</li>
         <li><strong>Privacy policy:</strong> <a href="https://www.apple.com/legal/privacy/">https://www.apple.com/legal/privacy/</a></li>
     </ul>
 
@@ -418,7 +419,7 @@
     <p>Specifically:</p>
     <ul>
         <li>OnTimer only requests the minimum scopes necessary (read-only calendar access)</li>
-        <li>Information obtained from Google APIs is used solely to provide calendar event display, alarm, reminder, persistent notification, Time to Leave, and monitored-calendar selection functionality</li>
+        <li>Information obtained from Google APIs is used solely to provide calendar event display, alarm, reminder, persistent notification, Time to Leave, Time to Fly airport alarm, and monitored-calendar selection functionality</li>
         <li>We do not transfer calendar data to third parties except as necessary to provide the App's core functionality</li>
         <li>Calendar data is not used for serving advertisements</li>
         <li>Human access to calendar data is limited to debugging and support purposes only</li>
