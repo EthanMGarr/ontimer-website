@@ -4,6 +4,8 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+- 2026-10-10: Updated the Terms of Service (Last Updated October 10, 2026) with a Time to Fly airport alarms paragraph in Section 6: flight recognition limits, no flight-status/check-in/security/document tracking, free estimates set once, Premium updates depend on background activity, and the user remains responsible for arriving on time.
+
 - 2026-10-10: Updated the Privacy Policy (Last Updated October 10, 2026) for the iOS app's Time to Fly airport alarms: calendar purposes, the event description and location rows (flight recognition on device; confirmation codes not stored), Location Information, Apple MapKit (departure airport location), and the Google API Services Limited Use feature list.
 
 - 2026-10-10: Clarified calculator-rollout tracking coverage by adding an explicit `calculator_cta_eligibility` value to every calculator event, including `android_excluded` for the intentionally unassigned Android experience. The consent-aware first-party GA4 relay now forwards the request user agent through Measurement Protocol so GA4 can retain operating-system and device attribution instead of reporting relay traffic as unknown. Updated the experiment runbook and conversion checklist to prohibit comparing non-Android rollout counts against an all-device denominator. Verification: analytics and calculator-experiment unit tests, TypeScript validation, release guardrails, and the optimized production build.
