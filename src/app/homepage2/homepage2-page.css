@@ -267,6 +267,10 @@ body {
   margin: 0;
 }
 
+.hp2-stage-copy p + p {
+  margin-top: var(--space-md);
+}
+
 .hp2-stage > img,
 .hp2-pair img {
   border: 1px solid var(--line);
@@ -279,27 +283,24 @@ body {
 }
 
 .hp2-pair {
-  display: flex;
-  justify-content: center;
-  min-height: 32rem;
-  position: relative;
+  align-items: start;
+  display: grid;
+  gap: var(--space-sm);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-items: center;
 }
 
 .hp2-pair img {
-  position: absolute;
-  width: min(54%, 17rem);
+  position: static;
+  width: min(100%, 17rem);
 }
 
 .hp2-pair img:first-child {
-  left: 5%;
-  top: 0;
-  transform: rotate(-4deg);
+  transform: none;
 }
 
 .hp2-pair img:last-child {
-  bottom: 0;
-  right: 5%;
-  transform: rotate(4deg);
+  transform: none;
 }
 
 .hp2-control {
@@ -318,14 +319,28 @@ body {
   max-width: 65ch;
 }
 
-.hp2-control-grid > img {
+.hp2-control-pair {
+  align-items: start;
+  display: grid;
+  gap: var(--space-sm);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-items: center;
+}
+
+.hp2-control-pair img {
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   height: auto;
-  justify-self: center;
-  max-width: 27rem;
-  transform: rotate(2deg);
-  width: 88%;
+  position: static;
+  width: min(100%, 17rem);
+}
+
+.hp2-control-pair img:first-child {
+  transform: none;
+}
+
+.hp2-control-pair img:last-child {
+  transform: none;
 }
 
 .hp2-tool-grid {
@@ -388,6 +403,7 @@ body {
 
 .hp2-tool-card small {
   color: currentColor;
+  font-size: var(--text-base);
   line-height: 1.5;
   margin-top: var(--space-xs);
   opacity: 0.72;
@@ -491,6 +507,10 @@ body {
 }
 
 @media (min-width: 40rem) {
+  .hp2-pair img:first-child,
+  .hp2-control-pair img:first-child { transform: rotate(-2deg); }
+  .hp2-pair img:last-child,
+  .hp2-control-pair img:last-child { transform: rotate(2deg); }
   .hp2-tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hp2-final-card { grid-template-columns: auto 1fr; }
   .hp2-final-card .hp2-cta-wrap { grid-column: 2; }
@@ -504,7 +524,7 @@ body {
   .hp2-shot-main { animation-delay: 60ms; }
   .hp2-shot-float { animation-delay: 120ms; }
   .hp2-problem-grid, .hp2-faq-grid { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
-  .hp2-stage { gap: var(--space-3xl); grid-template-columns: repeat(2, minmax(0, 1fr)); min-height: 44rem; }
+  .hp2-stage { gap: var(--space-3xl); grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hp2-stage:nth-of-type(even) .hp2-stage-copy { order: 2; }
   .hp2-control-grid { grid-template-columns: minmax(0, 1fr) minmax(24rem, 0.8fr); }
   .hp2-tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

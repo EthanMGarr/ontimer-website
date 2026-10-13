@@ -94,3 +94,7 @@ Every public route shares the recognizable OnTimer header, footer, type, palette
 button voice, focus treatment, and spacing rhythm. Page families may vary their
 layout because acquisition, calculation, reading, and medication scheduling are
 different jobs.
+
+On the Home page, paired promotional screenshots stay side by side at every
+supported viewport. They may tilt slightly on wider screens, but must not overlap,
+obscure either embedded headline, or collapse into a long vertical stack on phones.

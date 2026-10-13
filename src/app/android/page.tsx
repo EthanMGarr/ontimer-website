@@ -53,7 +53,7 @@ export default function AndroidPage() {
               },
               {
                 title: "Full Customization",
-                desc: "Choose your lead times, which calendars to track, and snooze behavior.",
+                desc: "Choose your lead times, which calendars to track, and alarm behavior.",
               },
             ].map((feature, index) => (
               <div key={feature.title} className="site-feature-card">

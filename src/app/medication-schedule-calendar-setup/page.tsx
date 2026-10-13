@@ -127,7 +127,7 @@ export default function Page() {
           <div className="mt-6 space-y-4 text-lg text-zinc-400 leading-relaxed">
             <p>Calendar events give you structure. But the notification is still just a notification — easy to defer.</p>
             <p>If you find yourself seeing the reminder and still missing doses, the problem is the last 5 minutes. You need something that interrupts you, not just alerts you.</p>
-            <p>OnTimer turns your calendar events into persistent alarms that demand attention until you act.</p>
+            <p>OnTimer turns your calendar events into persistent alarms that stay on screen until you act.</p>
           </div>
           <div className="mt-8 flex flex-wrap gap-4 items-center">
             <Link href="/how-to-remember-medication-on-time" className="rounded-full border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-zinc-300 hover:border-zinc-500 hover:text-white transition-colors">

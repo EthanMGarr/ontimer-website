@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Bricolage_Grotesque, IBM_Plex_Sans } from "next/font/google";
 import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
 import { ANDROID_WAITLIST_URL, APP_STORE_URL } from "@/lib/constants";
+import { homepageFaqs, productFacts } from "@/lib/product-facts";
 import "./homepage2-page.css";
 
 const display = Bricolage_Grotesque({
@@ -22,52 +23,13 @@ const body = IBM_Plex_Sans({
 export const metadata: Metadata = {
   title: "Never Be Late Again | OnTimer Calendar Alarm App",
   description:
-    "OnTimer turns your iPhone calendar events into persistent alarms and time-to-leave alerts, so you know when to join, leave, or act.",
+    "OnTimer turns iPhone calendar events into persistent alarms with custom sounds, event controls, Early Warning, Time To Leave, and Time To Fly.",
   alternates: { canonical: "https://www.ontimer.app/" },
   robots: { index: false, follow: true },
 };
 
 const faqs = [
-  {
-    question: "What does OnTimer do?",
-    answer:
-      "OnTimer turns events from the calendars you already use into alarms on your iPhone. It helps you know when to join, leave, or act before the moment passes.",
-  },
-  {
-    question: "How is an OnTimer alarm different from a calendar notification?",
-    answer:
-      "Calendar notifications can appear once and disappear. OnTimer creates persistent, customizable alarms designed to get your attention when it is time to act.",
-  },
-  {
-    question: "What is a calendar alarm app?",
-    answer:
-      "A calendar alarm app uses events from your existing calendar to create alarms that demand a response. OnTimer adds that alarm layer without asking you to rebuild your schedule.",
-  },
-  {
-    question: "Which calendars work with OnTimer?",
-    answer:
-      "OnTimer connects with Apple Calendar, Google Calendar, and Outlook calendars through Microsoft 365. It works with your existing schedule, so there is nothing new to rebuild.",
-  },
-  {
-    question: "Does OnTimer know when I should leave?",
-    answer:
-      "Yes. Time-to-leave alerts can account for an event location, your travel method, and changing traffic conditions.",
-  },
-  {
-    question: "What is the Last 5 Minutes Problem?",
-    answer:
-      "The Last 5 Minutes Problem is the gap between knowing about an event and acting before it starts. OnTimer helps close that gap with alarms that remain in front of you until you respond.",
-  },
-  {
-    question: "Does OnTimer work with multiple calendars?",
-    answer:
-      "Yes. OnTimer can bring events from multiple Apple, Google, and Microsoft calendar connections into one automatic alarm system.",
-  },
-  {
-    question: "Is OnTimer free?",
-    answer:
-      "Yes. OnTimer is free to download and includes automatic calendar alarms for one calendar. An optional upgrade adds Time To Leave alerts, Early Warning alarms, multiple calendar connections, and more.",
-  },
+  ...homepageFaqs.map((faq) => ({ ...faq, link: undefined })),
   {
     question: "Is OnTimer available for Android?",
     answer:
@@ -104,7 +66,7 @@ const jsonLd = {
       applicationCategory: "ProductivityApplication",
       applicationSubCategory: "Calendar Alarm App",
       description:
-        "OnTimer turns iPhone calendar events into persistent alarms and time-to-leave alerts.",
+        "OnTimer turns iPhone calendar events into persistent alarms with custom sounds, event controls, Early Warning, Time To Leave, and Time To Fly.",
       url: "https://www.ontimer.app/",
       installUrl: APP_STORE_URL,
       sameAs: [APP_STORE_URL],
@@ -113,16 +75,16 @@ const jsonLd = {
       availableOnDevice: "iPhone",
       image: { "@id": "https://www.ontimer.app/#logo" },
       screenshot: [
-        "https://www.ontimer.app/images/homepage2/persistent-alarm.png",
+        "https://www.ontimer.app/images/homepage2/persistent-alarm-v4.png",
         "https://www.ontimer.app/images/homepage2/time-to-leave-alarm.png",
-        "https://www.ontimer.app/images/homepage2/calendar-connections.png",
+        "https://www.ontimer.app/images/homepage2/calendar-connections-v2.png",
         "https://www.ontimer.app/images/homepage2/early-warning.png",
       ],
       offers: {
         "@type": "Offer",
         price: "0",
         priceCurrency: "USD",
-        description: "Free to download with optional paid features.",
+        description: productFacts.pricing,
       },
     },
     {
@@ -182,8 +144,9 @@ export default function Homepage2() {
             <p className="hp2-kicker">Automatic calendar alarms</p>
             <h1 id="hp2-title">Never be late again.</h1>
             <p className="hp2-lede">
-              OnTimer turns your calendar events into alarms, so you know when
-              to join, when to leave, and when it is time to act.
+              OnTimer turns your calendar into automatic alarms that stay in
+              front of you until you respond—so you know when to join, leave,
+              or act.
             </p>
             <div className="hp2-hero-actions">
               <Homepage2DownloadCTA location="homepage_hero" />
@@ -200,10 +163,10 @@ export default function Homepage2() {
           <div className="hp2-hero-visual" aria-label="OnTimer alarm examples">
             <Image
               className="hp2-shot hp2-shot-main"
-              src="/images/homepage2/persistent-alarm.png"
+              src="/images/homepage2/persistent-alarm-v4.png"
               alt="OnTimer persistent meeting alarm on an iPhone"
-              width={1242}
-              height={2688}
+              width={853}
+              height={1844}
               sizes="(max-width: 639px) 42vw, (max-width: 959px) 18rem, 17rem"
               priority
             />
@@ -246,15 +209,15 @@ export default function Homepage2() {
             <div className="hp2-stage-copy">
               <h3>Connect the calendars you already use</h3>
               <p>
-                Bring Apple Calendar, Google Calendar, and Outlook calendars
-                together. Microsoft work and school accounts connect through Microsoft 365.
+                Bring Apple Calendar, Google Calendar, and Outlook Calendar
+                together, including work and school accounts.
               </p>
             </div>
             <Image
-              src="/images/homepage2/calendar-connections.png"
-              alt="OnTimer options for connecting Google, Microsoft 365, and Apple calendars"
-              width={1242}
-              height={2688}
+              src="/images/homepage2/calendar-connections-v2.png"
+              alt="OnTimer options for connecting Google, Outlook, and Apple calendars"
+              width={853}
+              height={1844}
               sizes="(max-width: 959px) 72vw, 19rem"
             />
           </article>
@@ -263,16 +226,17 @@ export default function Homepage2() {
             <div className="hp2-stage-copy">
               <h3>Turn important events into alarms</h3>
               <p>
-                Get an alarm that demands a response, plus an optional early
-                warning when you need time to wrap up.
+                OnTimer creates alarms automatically from your upcoming events.
+                Each alarm stays on screen until you dismiss it, and Early
+                Warning gives you time to wrap up before the main alarm.
               </p>
             </div>
             <div className="hp2-pair">
               <Image
-                src="/images/homepage2/persistent-alarm.png"
-                alt="A persistent OnTimer meeting alarm"
-                width={1242}
-                height={2688}
+                src="/images/homepage2/persistent-alarm-v4.png"
+                alt="OnTimer calendar alarm that stays on screen until dismissed"
+                width={853}
+                height={1844}
                 sizes="(max-width: 959px) 54vw, 17rem"
               />
               <Image
@@ -289,17 +253,30 @@ export default function Homepage2() {
             <div className="hp2-stage-copy">
               <h3>Know when it is really time to leave</h3>
               <p>
-                For events with a location, OnTimer can account for traffic and
-                how you travel. If the road changes, your timing changes too.
+                Time To Leave adjusts for traffic and how you travel.
+              </p>
+              <p>
+                Time To Fly finds flights in your calendar and works backward
+                from your trip to the airport and airline-recommended arrival
+                time. No extra flight entry required.
               </p>
             </div>
-            <Image
-              src="/images/homepage2/traffic-adjustments.png"
-              alt="OnTimer time-to-leave alerts based on traffic"
-              width={1242}
-              height={2688}
-              sizes="(max-width: 959px) 72vw, 19rem"
-            />
+            <div className="hp2-pair">
+              <Image
+                src="/images/homepage2/time-to-fly.png"
+                alt="OnTimer Time To Fly controls for a flight to Boston"
+                width={853}
+                height={1844}
+                sizes="(max-width: 959px) 54vw, 17rem"
+              />
+              <Image
+                src="/images/homepage2/traffic-adjustments.png"
+                alt="OnTimer Time To Leave automatically adjusts for traffic"
+                width={1242}
+                height={2688}
+                sizes="(max-width: 959px) 54vw, 17rem"
+              />
+            </div>
           </article>
         </div>
       </section>
@@ -310,18 +287,30 @@ export default function Homepage2() {
             <p className="hp2-kicker">Automatic does not mean rigid</p>
             <h2 id="control-title">Your schedule. Your rules.</h2>
             <p>
-              Choose recurring meetings, set business hours, pause alerts, and
-              decide how much warning each kind of event deserves.
+              Home-screen event cards let you turn each alarm on or off, choose
+              its sound, set an Early Warning, or open the original calendar
+              event. Prefer alarms off by default? Turn off both automatic-alarm
+              options in Recurring Meeting Manager, then tap the green bell only
+              on events you want armed.
             </p>
             <Homepage2DownloadCTA compact location="homepage_controls" />
           </div>
-          <Image
-            src="/images/homepage2/control-settings.png"
-            alt="OnTimer controls for travel alerts, recurring meetings, business hours, and pausing"
-            width={1242}
-            height={2688}
-            sizes="(max-width: 959px) 88vw, 27rem"
-          />
+          <div className="hp2-control-pair">
+            <Image
+              src="/images/homepage2/event-controls-v2.png"
+              alt="OnTimer Home-screen event card with alarm, sound, timing, Early Warning, and calendar controls"
+              width={853}
+              height={1844}
+              sizes="(max-width: 959px) 54vw, 17rem"
+            />
+            <Image
+              src="/images/homepage2/custom-sounds.png"
+              alt="OnTimer custom alarm sound picker"
+              width={853}
+              height={1844}
+              sizes="(max-width: 959px) 54vw, 17rem"
+            />
+          </div>
         </div>
       </section>
 
@@ -405,7 +394,7 @@ export default function Homepage2() {
           <div>
             <p className="hp2-kicker">One less thing to remember</p>
             <h2 id="final-title">Relax. You are on time.</h2>
-            <p>Turn the calendar you already trust into alarms you will not miss.</p>
+            <p>Turn the calendar you already trust into alarms that keep you on time.</p>
           </div>
           <Homepage2DownloadCTA location="homepage_final" />
         </div>

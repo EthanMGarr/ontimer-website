@@ -42,7 +42,7 @@ assert.match(handoff, /showAndroidAffiliate[\s\S]*effectiveAndroidAffiliateOffer
 assert.match(handoff, /calendarOpened \? copy\.getFree : copy\.getAlarms/, "iOS calendar return must lead to the OnTimer action");
 assert.match(handoff, /Get Automatic Alarms/, "the pre-calendar OnTimer action must lead with its benefit");
 assert.match(handoff, /OnTimer is free\. Turn calendar events into automatic alarms\./, "the shared English offer must state that OnTimer is free without qualifying the claim");
-assert.match(handoff, /Works with Google Calendar, Apple Calendar, and Microsoft 365\./, "the shared supporting line must provide compatibility proof instead of repeating price");
+assert.match(handoff, /Works with Google Calendar, Apple Calendar, and Outlook Calendar\./, "the shared supporting line must provide compatibility proof instead of repeating price");
 assert.match(handoff, /OnTimer es gratis\. Convierte los eventos de tu calendario en alarmas automáticas\./, "the shared Spanish offer must retain the same free-value disclosure");
 assert.doesNotMatch(handoff, /free to download|Free download on the App Store|se descarga gratis|Descarga gratis en App Store/, "calculator acquisition copy must not qualify or repeat the free claim");
 assert.doesNotMatch(airportCalculator, /locationCode === "EWR"[\s\S]*?buildAirportPlanLink/, "departure airport-plan links must not remain limited to EWR");
@@ -72,7 +72,7 @@ const until = read("src/app/days-until/UntilCalculator.tsx");
 assert.match(until, /data-calendar-secondary-acquisition/, "Days Until must offer OnTimer before calendar use");
 assert.match(until, /Get Automatic Alarms/, "Days Until must use the shared benefit-led secondary CTA");
 assert.match(until, /OnTimer is free\. Turn calendar events into automatic alarms\./, "Days Until must state that OnTimer is free without qualifying the claim");
-assert.match(until, /Works with Google Calendar, Apple Calendar, and Microsoft 365\./, "Days Until must use its supporting line for compatibility proof");
+assert.match(until, /Works with Google Calendar, Apple Calendar, and Outlook Calendar\./, "Days Until must use its supporting line for compatibility proof");
 assert.doesNotMatch(until, /free to download|Free download on the App Store/, "Days Until must not qualify or repeat the free claim");
 assert.match(until, /until-alarm-offer--result-primary/, "Days Until must participate in the app-primary treatment");
 assert.match(until, /result_app_primary_v1/, "Days Until must identify treatment CTA clicks");

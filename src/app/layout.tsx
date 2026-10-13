@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     template: "%s | OnTimer",
   },
   description:
-    "OnTimer is a calendar alarm app for iPhone. Connect Google Calendar, Apple Calendar, or Microsoft Outlook Calendar and every event gets a persistent alarm — not a notification that disappears. Free download.",
+    "OnTimer is a calendar alarm app for iPhone. Connect Google Calendar, Apple Calendar, or Outlook Calendar and turn events into persistent alarms that require a response. OnTimer is free.",
   keywords: [
     "OnTimer",
     "never be late",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     url: "https://www.ontimer.app",
     siteName: "OnTimer",
     description:
-      "OnTimer is a calendar alarm app for iPhone. Connect Google Calendar, Apple Calendar, or Microsoft Outlook Calendar and every event gets a persistent alarm — not a notification that disappears.",
+      "OnTimer is a calendar alarm app for iPhone. Connect Google Calendar, Apple Calendar, or Outlook Calendar and every event gets a persistent alarm — not a notification that disappears.",
     images: [
       {
         url: "/images/NeverBeLateAgain.png",
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     description:
-      "OnTimer is a calendar alarm app for iPhone. Connect Google Calendar, Apple Calendar, or Microsoft Outlook Calendar and every event gets a persistent alarm — not a notification that disappears.",
+      "OnTimer is a calendar alarm app for iPhone. Connect Google Calendar, Apple Calendar, or Outlook Calendar and every event gets a persistent alarm — not a notification that disappears.",
     images: ["/images/NeverBeLateAgain.png"],
   },
   robots: {

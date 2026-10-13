@@ -40,7 +40,7 @@ const faqItems = [
   {
     question: "What's the difference between a calendar notification and an alarm?",
     answer:
-      "A notification informs. An alarm interrupts. A calendar notification appears on your screen for a few seconds and disappears whether or not you act on it. A calendar alarm — like the one OnTimer fires — occupies your full screen, plays audio, and continues until you explicitly dismiss or snooze it. You cannot ignore it without making an active decision.",
+      "A notification informs. An alarm interrupts. A calendar notification appears on your screen for a few seconds and disappears whether or not you act on it. A calendar alarm — like the one OnTimer fires — occupies your full screen, plays audio, and continues until you explicitly dismiss it. It requires an active decision.",
   },
   {
     question: "What should I use instead of calendar notifications for important events?",
@@ -53,7 +53,7 @@ const faqItems = [
       "The average smartphone delivers dozens of notifications per day. Over time, the brain habituates — it classifies banner alerts as low-priority background noise and stops fully processing them. A calendar reminder looks identical to a news alert or social media notification. After enough exposure, your brain stops treating it as requiring immediate action.",
   },
   {
-    question: "Can I make calendar reminders impossible to miss on iPhone?",
+    question: "How can I make calendar reminders harder to miss on iPhone?",
     answer:
       "Not with standard calendar notifications — they're passive by design. The closest equivalent to an impossible-to-miss alert is an alarm: it continues making noise until you explicitly dismiss it. OnTimer turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms that fire automatically before each event and stay on screen until dismissed.",
   },
@@ -277,7 +277,7 @@ export default function Page() {
             </p>
             <p>
               The only alert that prevents active deferral is one that can&apos;t be passively ignored —
-              that continues demanding a response until you make an active decision to dismiss or snooze it.
+              that continues demanding a response until you make an active decision to dismiss it.
             </p>
           </div>
           <div className="mt-6">
@@ -334,7 +334,7 @@ export default function Page() {
             </p>
             <p>
               A phone alarm occupies your full screen, plays audio, and continues until you explicitly
-              dismiss or snooze it. It cannot be passively ignored — doing nothing has the same result as
+              dismiss it. It cannot disappear passively — doing nothing has the same result as
               when your morning alarm goes off. The sound keeps going.
             </p>
             <p>
@@ -344,7 +344,7 @@ export default function Page() {
             </p>
             <p>
               The same principle applies to calendar events. A persistent alarm before a meeting requires
-              you to make an active decision — dismiss or snooze — before it stops. That decision moment is
+              you to make an active decision to dismiss it before it stops. That decision moment is
               where the behavioral change happens.
             </p>
           </div>
@@ -372,7 +372,7 @@ export default function Page() {
               ["4–8 seconds on screen", "Stays until you act"],
               ["Can be missed without consequence", "Cannot be passively ignored"],
               ["Competes with all other alerts", "Takes over screen and audio"],
-              ["Easy to defer with no follow-up", "Forces a dismiss-or-snooze decision"],
+              ["Easy to defer with no follow-up", "Requires an explicit dismiss decision"],
               ["Blocked silently by Focus mode", "Can bypass Focus for critical events"],
               ["Designed to inform", "Designed to change behavior"],
             ].map(([left, right], i) => (
@@ -409,7 +409,7 @@ export default function Page() {
             {[
               "Occupies your full screen — not just a banner at the top",
               "Plays audio continuously, not just a brief chime",
-              "Requires an explicit dismiss or snooze action before it stops",
+              "Requires an explicit dismiss action before it stops",
               "Cannot be accidentally cleared by swiping away notification center",
               "Continues firing even if your phone is face-down or screen is off",
             ].map((item) => (
@@ -459,7 +459,7 @@ export default function Page() {
               },
               {
                 title: "Persistent — stays on screen until dismissed",
-                body: "The alarm doesn't disappear after 4 seconds. It stays on your screen and continues alerting until you actively dismiss or snooze it.",
+                body: "The alarm doesn't disappear after 4 seconds. It stays on your screen and continues alerting until you actively dismiss it.",
               },
               {
                 title: "Adjustable lead time",

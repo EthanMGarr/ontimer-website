@@ -126,7 +126,7 @@ const faqItems = [
       "A calendar alarm app connects to your existing calendar and fires persistent, interruptive alarms before each event, not passive notifications that disappear on their own.",
   },
   {
-    question: "Can you turn Google Calendar, Apple Calendar, or Microsoft Outlook Calendar events into alarms?",
+    question: "Can you turn Google Calendar, Apple Calendar, or Outlook Calendar events into alarms?",
     answer:
       "Not natively. Google Calendar, Apple Calendar, and Outlook Calendar send notifications. OnTimer connects to those calendars and turns events into persistent alarms on iPhone.",
   },
@@ -198,7 +198,7 @@ const homepageJsonLd = {
       "@id": "https://www.ontimer.app/#website",
       name: "OnTimer",
       url: "https://www.ontimer.app/",
-      description: "OnTimer is a calendar alarm app for iPhone that turns Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events into persistent alarms.",
+      description: "OnTimer is a calendar alarm app for iPhone that turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms.",
       publisher: { "@id": "https://www.ontimer.app/#organization" },
       about: { "@id": "https://www.ontimer.app/#app" },
     },

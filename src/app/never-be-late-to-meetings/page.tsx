@@ -80,7 +80,7 @@ const faqJsonLd = {
       name: "Is OnTimer free?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. OnTimer is free to download. The core alarm functionality — calendar sync, automatic alarms, and persistent alerts — is fully available at no cost. Time To Leave alerts (departure-time alerts based on travel time) are a paid feature.",
+        text: "OnTimer is free and includes automatic alarms for one calendar provider. Time To Fly can set an initial airport departure estimate on the free plan; OnTimer Pro can update it for traffic when background conditions allow. Pro also adds multiple calendar providers, Time To Leave, Early Warning, and additional controls.",
       },
     },
     {
@@ -490,7 +490,7 @@ export default function NeverBeLateToMeetingsPage() {
               },
               {
                 q: "Is OnTimer free?",
-                a: "Yes. OnTimer is free to download. The core alarm functionality — calendar sync, automatic alarms, and persistent alerts — is fully available at no cost. Time To Leave alerts (departure-time alerts based on travel time) are a paid feature.",
+                a: "OnTimer is free and includes automatic alarms for one calendar provider. Time To Fly can set an initial airport departure estimate on the free plan; OnTimer Pro can update it for traffic when background conditions allow. Pro also adds multiple calendar providers, Time To Leave, Early Warning, and additional controls.",
               },
               {
                 q: "Can I customize the alarm timing?",
@@ -534,7 +534,7 @@ export default function NeverBeLateToMeetingsPage() {
             <AndroidWaitlistButton size="lg" />
           </div>
           <p className="mt-3 text-xs text-zinc-400">
-            Free download · iOS 16+ · No subscription required
+            OnTimer is free · iPhone
           </p>
         </div>
       </section>

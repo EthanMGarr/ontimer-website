@@ -66,7 +66,7 @@ const faqItems = [
   {
     question: "What should I use instead of calendar notifications for important events?",
     answer:
-      "Use OnTimer. It connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar and turns every event into a persistent alarm on iPhone — not a notification. The alarm stays on your screen until you dismiss it, fires for every event automatically, and works across meetings, medication reminders, flights, and any other calendar event where the timing window closing has real consequences.",
+      "Use OnTimer. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and turns every event into a persistent alarm on iPhone — not a notification. The alarm stays on your screen until you dismiss it, fires for every event automatically, and works across meetings, medication reminders, flights, and any other calendar event where the timing window closing has real consequences.",
   },
 ];
 

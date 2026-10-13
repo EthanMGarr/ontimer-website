@@ -1,0 +1,34 @@
+# OnTimer
+
+OnTimer is an iPhone calendar alarm app. It turns events from Apple Calendar, Google Calendar, and Outlook Calendar into automatic alarms that stay on screen until dismissed.
+
+## Primary sources
+
+- Product overview: https://www.ontimer.app/
+- Features: https://www.ontimer.app/features
+- How alarms work on iPhone: https://www.ontimer.app/help/how-alarms-work
+- FAQ: https://www.ontimer.app/faq
+- Help center: https://www.ontimer.app/help
+- App comparisons: https://www.ontimer.app/compare
+- App Store: https://apps.apple.com/app/id6755317601
+- Privacy policy: https://www.ontimer.app/OnTimer_Privacy_Policy.html
+- Terms of service: https://www.ontimer.app/OnTimer_Terms_of_Service.html
+
+## Current product facts
+
+- OnTimer is available for iPhone.
+- It supports Apple Calendar, Google Calendar, and Outlook Calendar, including work and school accounts.
+- Alarms stay on screen until dismissed.
+- Users can choose alarm sounds and assign a sound to a specific event.
+- Home-screen event cards control alarm on or off, sound, Early Warning, and access to the original calendar event.
+- Early Warning provides a lighter heads-up before the main alarm.
+- Time To Leave can use an event location, travel time, and traffic.
+- Time To Fly automatically discovers flights in connected calendars and prepares an airport leave-time alarm using the trip to the airport and airline-recommended arrival time.
+- Time To Fly does not track flight status, delays, gates, terminals, check-in, security waits, or travel-document requirements.
+- On iOS 26.1 and later, High Alert can ring through Silent mode and Focus or Do Not Disturb when enabled and permitted by iOS.
+- Without High Alert, sound and delivery depend on iPhone notification, sound, and Focus settings.
+- OnTimer is free and includes automatic alarms for one calendar provider.
+- Time To Fly can set an initial airport departure estimate on the free plan. OnTimer Pro can update it for traffic when background conditions allow.
+- OnTimer Pro also adds multiple calendar providers, Time To Leave, Early Warning, and additional controls.
+
+Last reviewed: 2026-10-13

@@ -190,7 +190,7 @@ export default function StopMissingCalendarMeetings() {
           </h2>
           <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
             <p>
-              OnTimer connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar and creates loud, persistent
+              OnTimer connects to Google Calendar, Apple Calendar, and Outlook Calendar and creates loud, persistent
               alarms before scheduled meetings so they are harder to miss.
             </p>
             <p>

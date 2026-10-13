@@ -5,7 +5,7 @@ const footer = readFileSync("src/components/Homepage2Footer.tsx", "utf8");
 
 assert.match(
   footer,
-  /OnTimer is an iPhone calendar alarm app that turns events from Google Calendar,[\s\S]*Apple Calendar, and Microsoft 365 into automatic, persistent alarms/,
+  /OnTimer is an iPhone calendar alarm app that turns events from Google Calendar,[\s\S]*Apple Calendar, and Outlook Calendar into automatic, persistent alarms/,
   "the site-wide footer must retain a concrete product and platform description"
 );
 assert.doesNotMatch(

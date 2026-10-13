@@ -36,6 +36,7 @@ export default function Footer() {
                 { href: "/features",               label: "Features"            },
                 { href: "/how-it-works",           label: "How It Works"        },
                 { href: "/faq",                    label: "FAQ"                 },
+                { href: "/compare",                label: "Compare Apps"        },
                 { href: "/blog",                   label: "Blog"                },
                 { href: "/android",                label: "Android Waitlist"    },
                 { href: "/adhd-time-blindness-tools", label: "ADHD Time Blindness" },
@@ -150,6 +151,11 @@ export default function Footer() {
               <li>
                 <Link href="/help" className="text-sm text-zinc-400 transition-colors hover:text-white">
                   Help Center
+                </Link>
+              </li>
+              <li>
+                <Link href="/help/how-alarms-work" className="text-sm text-zinc-400 transition-colors hover:text-white">
+                  How OnTimer Alarms Work
                 </Link>
               </li>
               <li>

@@ -200,7 +200,7 @@ const troubleshootingSteps = [
     summary:
       "Use this as the last reset step. If a calendar account connection is stale or corrupted, reconnecting it can restore event sync and reminder behavior.",
     steps: [
-      "Confirm your calendar data is safely stored in iCloud, Google Calendar, Outlook, Microsoft 365, or Exchange before removing the account.",
+      "Confirm your calendar data is safely stored in iCloud, Google Calendar, Outlook Calendar, or Exchange before removing the account.",
       "Remove the affected account from the device or calendar app.",
       "Restart the phone.",
       "Add the account again.",
@@ -433,7 +433,7 @@ export default function CalendarNotificationsNotWorking() {
           </ul>
           <p className="mt-6 leading-relaxed text-zinc-400">
             For those cases, check the official help documentation for Apple Calendar, Google Calendar, or
-            Microsoft Outlook, especially if the issue started immediately after an operating system update,
+            Outlook, especially if the issue started immediately after an operating system update,
             account change, or calendar migration.
           </p>
         </div>

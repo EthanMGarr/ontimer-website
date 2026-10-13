@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "OnTimer's privacy policy for Google Calendar, Apple Calendar, and Microsoft Outlook Calendar support.",
+    "OnTimer's privacy policy for Google Calendar, Apple Calendar, and Outlook Calendar support.",
 };
 
 export default function PrivacyPage() {
@@ -23,7 +23,7 @@ export default function PrivacyPage() {
             OnTimer is built on a simple principle: your data is yours. We
             use calendar access only to provide alarms for your events, and we
             keep calendar access read-only across Google Calendar, Apple
-            Calendar, and Microsoft Outlook Calendar.
+            Calendar, and Outlook Calendar.
           </p>
 
           <h2>What We Collect</h2>
@@ -37,8 +37,8 @@ export default function PrivacyPage() {
           <h2>Calendar Access</h2>
           <p>
             OnTimer requests read-only access to the calendars you connect,
-            including Google Calendar, Apple Calendar, and Microsoft Outlook
-            Calendar. Google Calendar and Microsoft Outlook Calendar use secure account
+            including Google Calendar, Apple Calendar, and Outlook
+            Calendar. Google Calendar and Outlook Calendar use secure account
             connection flows; Apple Calendar uses iOS Calendar permission. This
             access is used solely to read event times and titles to set your
             alarms. OnTimer cannot modify your calendar events.
@@ -99,7 +99,7 @@ export default function PrivacyPage() {
           <h2>Third-Party Services</h2>
           <p>
             OnTimer integrates with calendar providers only to provide the
-            service: Google Calendar, Apple Calendar, and Microsoft Outlook
+            service: Google Calendar, Apple Calendar, and Outlook
             Calendar. OnTimer also uses Apple&apos;s MapKit to calculate
             travel time, as described above under Location Data. We do not
             use advertising networks or sell calendar or location data.

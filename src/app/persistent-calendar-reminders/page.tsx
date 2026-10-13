@@ -69,7 +69,7 @@ const softwareJsonLd = {
   applicationCategory: "ProductivityApplication",
   applicationSubCategory: "Calendar Alarm App",
   description:
-    "OnTimer is a calendar alarm app for iPhone that turns Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events into persistent alarms — alerts that stay on your screen until dismissed.",
+    "OnTimer is a calendar alarm app for iPhone that turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms — alerts that stay on your screen until dismissed.",
   url: "https://ontimer.app/persistent-calendar-reminders",
   keywords: "persistent calendar reminders, persistent calendar alarms, calendar alarm app, Google Calendar alarm, Outlook persistent reminder",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },

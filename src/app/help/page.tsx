@@ -12,6 +12,11 @@ export const metadata: Metadata = {
 
 const guides = [
   {
+    href: "/help/how-alarms-work",
+    title: "How OnTimer Alarms Work",
+    description: "Silent mode, Focus, High Alert, sounds, event controls, and alarms-off-by-default setup.",
+  },
+  {
     href: "/help/getting-the-most-out",
     title: "Get the Most Out of OnTimer",
     description: "Set up OnTimer so your calendar keeps you on time with less to manage.",

@@ -27,7 +27,7 @@ const directoryHtml = readFileSync(join(root, ".next", "server", "app", "time-ca
 if (directoryHtml.includes("Time Calculators | OnTimer | OnTimer")) throw new Error("time-calculators: duplicated brand in title");
 
 const calculatorSource = readFileSync(join(root, "src", "app", "days-until", "UntilCalculator.tsx"), "utf8");
-for (const expected of ["Choose an event", "Name your event", "until-custom-event", "Name your event to continue", "Choose a date to see your countdown", "Turn these into {label || \"event\"} alarms!", "OnTimer is free. Turn calendar events into automatic alarms", "data-calendar-secondary-acquisition", "Get Automatic Alarms", "Works with Google Calendar, Apple Calendar, and Microsoft 365."]) {
+for (const expected of ["Choose an event", "Name your event", "until-custom-event", "Name your event to continue", "Choose a date to see your countdown", "Turn these into {label || \"event\"} alarms!", "OnTimer is free. Turn calendar events into automatic alarms", "data-calendar-secondary-acquisition", "Get Automatic Alarms", "Works with Google Calendar, Apple Calendar, and Outlook Calendar."]) {
   if (!calculatorSource.includes(expected)) throw new Error(`post-calendar focal copy missing: ${expected}`);
 }
 if (!calculatorSource.includes('eventId === "custom"')) throw new Error("custom event name input must be conditional on the Something else choice");

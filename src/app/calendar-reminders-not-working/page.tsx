@@ -59,7 +59,7 @@ const faqItems = [
   {
     question: "Which calendar alarm app works with Google Calendar, Apple Calendar, and Outlook Calendar?",
     answer:
-      "OnTimer connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar, reads your upcoming events, and fires persistent alarms before meetings. Unlike calendar notifications, these alarms require active dismissal and stay on screen until you respond.",
+      "OnTimer connects to Google Calendar, Apple Calendar, and Outlook Calendar, reads your upcoming events, and fires persistent alarms before meetings. Unlike calendar notifications, these alarms require active dismissal and stay on screen until you respond.",
   },
 ];
 
@@ -89,7 +89,7 @@ export default function CalendarRemindersNotWorking() {
             name: "OnTimer",
             operatingSystem: "iOS",
             applicationCategory: "ProductivityApplication",
-            description: "Calendar alarm app that turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms you can't miss.",
+            description: "Calendar alarm app that turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms that require a response.",
             offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
             url: "https://www.ontimer.app",
           }),

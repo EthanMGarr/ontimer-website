@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
+import { productFacts } from "@/lib/product-facts";
 
 export const metadata: Metadata = {
   title: "Features | OnTimer Calendar Alarm App for iPhone",
   description:
-    "OnTimer is built around one job: making calendar events harder to miss. Connect your calendars and get loud, persistent alarms before every meeting.",
+    "Automatic calendar alarms with custom sounds, event-level controls, Early Warning, Time To Leave, and Time To Fly for iPhone.",
   alternates: { canonical: "https://www.ontimer.app/features" },
 };
 
@@ -16,79 +17,109 @@ const features = [
     eyebrow: "01 — Calendar Connection",
     headline: "Connect the calendars you actually use",
     description:
-      "OnTimer works with your existing calendar setup so you do not have to rebuild your schedule somewhere else. Connect Google Calendar, Apple Calendar, and Outlook Calendar, including multiple accounts, and OnTimer uses those events to prepare alarms.",
+      "OnTimer works with your existing calendar setup, so you do not have to rebuild your schedule somewhere else. Connect Google Calendar, Apple Calendar, and Outlook Calendar, including work and school accounts, and OnTimer uses those events to create alarms.",
     bullets: [
       "Works with Google Calendar, Apple Calendar, and Outlook Calendar",
       "Supports multiple calendar accounts",
       "Uses your existing event schedule",
       "No need to create separate reminders by hand",
     ],
-    image: "/images/ConnectsToCalendars.png",
+    image: "/images/homepage2/calendar-connections-v2.png",
     imageAlt: "OnTimer calendar connection screen",
     flip: false,
   },
   {
     number: "02",
     eyebrow: "02 — Automatic Event Alarms",
-    headline: "Prepare alarms automatically",
+    headline: "Turn calendar events into alarms automatically",
     description:
-      "Once OnTimer is connected, upcoming meetings, calls, and appointments can be turned into alarms automatically based on your settings.",
+      "Once OnTimer is connected, it automatically creates alarms for upcoming meetings, calls, and appointments based on your settings.",
     bullets: [
       "Alarms created from calendar events",
       "Adjustable lead times",
       "Updates when your schedule changes",
       "Less manual reminder setup",
     ],
-    image: "/images/AutomaticAlarms.png",
+    image: "/images/homepage2/persistent-alarm-v4.png",
     imageAlt: "OnTimer automatic alarms screen",
     flip: true,
   },
   {
     number: "03",
-    eyebrow: "03 — Persistent Alerts",
-    headline: "Get alerts that are harder to ignore",
+    eyebrow: "03 — Sounds and Persistent Alerts",
+    headline: "Give important events their own alarm sound",
     description:
-      "Standard calendar reminders are easy to miss. OnTimer is designed to create a louder, more persistent signal when it is time to pay attention.",
+      `${productFacts.alarmBehavior.persistent} ${productFacts.customSounds}`,
     bullets: [
-      "Loud, visible alerts",
-      "Persistent alarm behavior",
+      "Choose your default alarm sound",
+      "Assign a sound to a specific event",
+      "Stays active until dismissed",
       "Event details included in the alert",
-      "Better for high-consequence meetings and appointments",
     ],
-    image: "/images/CantMissAlerts.png",
-    imageAlt: "OnTimer persistent alerts screen",
+    image: "/images/homepage2/custom-sounds.png",
+    imageAlt: "OnTimer custom alarm sound picker",
     flip: false,
   },
   {
     number: "04",
-    eyebrow: "04 — Flexible Control",
-    headline: "Choose what should trigger alarms",
+    eyebrow: "04 — Event Cards",
+    headline: "Customize alarms for each event",
     description:
-      "Different schedules need different rules. OnTimer gives you control over timing and calendar behavior without making setup complicated.",
+      productFacts.eventControls.summary,
     bullets: [
-      "Choose alarm lead times",
-      "Control which calendars matter",
-      "Use business-hours filtering",
-      "Handle recurring events more cleanly",
+      "Tap the green bell to arm or disarm an event",
+      "Choose the event's alarm sound",
+      "Adjust its Early Warning",
+      "Open the original calendar event",
     ],
-    image: "/images/YoureInControl.png",
-    imageAlt: "OnTimer customization screen",
+    image: "/images/homepage2/event-controls-v2.png",
+    imageAlt: "OnTimer Home-screen event card controls",
     flip: true,
   },
   {
     number: "05",
-    eyebrow: "05 — Time To Leave",
-    headline: "Know when it is time to head out",
+    eyebrow: "05 — Early Warning",
+    headline: "Get a lighter heads-up before the main alarm",
     description:
-      "For calendar events with a location, Time To Leave can alert you when it is time to leave based on travel time and traffic. This is a paid feature.",
+      productFacts.earlyWarning,
     bullets: [
-      "Uses event location data",
-      "Factors in travel time and traffic",
+      "Start wrapping up before it is time to move",
+      "Choose a default warning time",
+      "Override the timing for a specific event",
+      "Premium feature",
+    ],
+    image: "/images/homepage2/early-warning.png",
+    imageAlt: "OnTimer Early Warning settings on iPhone",
+    flip: false,
+  },
+  {
+    number: "06",
+    eyebrow: "06 — Time To Leave",
+    headline: "Know when it is really time to head out",
+    description: productFacts.timeToLeave,
+    bullets: [
+      "Uses the location in your calendar event",
+      "Accounts for travel time and traffic",
       "Useful for appointments and in-person meetings",
       "Premium feature",
     ],
-    image: "/images/RelaxYourOnTime.png",
-    imageAlt: "OnTimer Time To Leave screen",
+    image: "/images/homepage2/traffic-adjustments.png",
+    imageAlt: "OnTimer traffic-aware Time To Leave settings",
+    flip: true,
+  },
+  {
+    number: "07",
+    eyebrow: "07 — Time To Fly",
+    headline: "Know when to leave for the airport",
+    description: productFacts.timeToFly,
+    bullets: [
+      "Automatically discovers flights in your calendar",
+      "Uses airline-recommended airport arrival time",
+      "Accounts for the trip to the airport",
+      "No separate flight entry in OnTimer",
+    ],
+    image: "/images/homepage2/time-to-fly.png",
+    imageAlt: "OnTimer Time To Fly controls for a flight on iPhone",
     flip: false,
   },
 ];
@@ -101,8 +132,8 @@ export default function FeaturesPage() {
           <p className="site-kicker">OnTimer features</p>
           <h1 className="site-title">Features built to help you show up on time</h1>
           <p className="site-lede">
-            OnTimer is built around one job: making calendar events harder to
-            miss.
+            One automatic system for knowing when to wrap up, join, leave, or
+            head to the airport.
           </p>
           <div className="site-actions site-actions--center">
             <Homepage2DownloadCTA location="features_hero" />
@@ -148,6 +179,7 @@ export default function FeaturesPage() {
                     height={2688}
                     sizes="(max-width: 959px) 72vw, 272px"
                     className="site-feature__screen"
+                    unoptimized={feature.number === "07"}
                   />
                 </div>
 
@@ -190,7 +222,7 @@ export default function FeaturesPage() {
 
       <section className="site-final">
         <div className="site-shell site-shell--reading">
-          <h2>Ready to stop missing meetings?</h2>
+          <h2>Ready for alarms that keep you on time?</h2>
           <p>
             Download OnTimer for free and get more reliable alerts from your
             calendar.

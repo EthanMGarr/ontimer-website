@@ -1,23 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
+import { productFacts } from "@/lib/product-facts";
 
 export const metadata: Metadata = {
   title: "Best Calendar Alarm App for iPhone Calendars",
   description:
-    "OnTimer turns Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events into persistent alarms you can't ignore. Never miss meetings, appointments, flights, or medication reminders again.",
+    "Compare calendar alarms and standard reminders. OnTimer adds persistent alarms, custom sounds, event controls, Early Warning, Time To Leave, and Time To Fly.",
   alternates: { canonical: "https://www.ontimer.app/best-calendar-alarm-app" },
   openGraph: {
     title: "Best Calendar Alarm App for iPhone Calendars",
     description:
-      "OnTimer turns Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events into persistent alarms you can't ignore. Never miss meetings, appointments, or medication reminders again.",
+      "Compare calendar alarms and standard reminders. OnTimer turns calendar events into persistent, customizable alarms that require a response.",
     url: "https://www.ontimer.app/best-calendar-alarm-app",
   },
   twitter: {
     card: "summary_large_image",
     title: "Best Calendar Alarm App for iPhone Calendars",
     description:
-      "OnTimer turns Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events into persistent alarms you can't ignore. Never miss meetings, appointments, or medication reminders again.",
+      "Compare calendar alarms and standard reminders. OnTimer turns calendar events into persistent, customizable alarms that require a response.",
   },
 };
 
@@ -28,7 +29,7 @@ const softwareJsonLd = {
   operatingSystem: "iOS",
   applicationCategory: "ProductivityApplication",
   description:
-    "OnTimer is a calendar alarm app for iPhone that turns Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events into persistent alarms — alerts that stay on your screen until dismissed.",
+    "OnTimer is a calendar alarm app for iPhone that turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms — alerts that stay on your screen until dismissed.",
   url: "https://ontimer.app/best-calendar-alarm-app",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   author: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
@@ -38,7 +39,7 @@ const faqItems = [
   {
     question: "What is the best calendar alarm app for iPhone?",
     answer:
-      "OnTimer is designed specifically to be a calendar alarm app for iPhone. It connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar and turns every event into a persistent alarm — not a passive notification. The alarm stays on your screen until you dismiss it, which is the key difference from standard calendar reminders.",
+      "OnTimer is designed specifically to be a calendar alarm app for iPhone. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and turns every event into a persistent alarm — not a passive notification. The alarm stays on your screen until you dismiss it, which is the key difference from standard calendar reminders.",
   },
   {
     question: "Can I get persistent alarms for Google Calendar events on iPhone?",
@@ -46,9 +47,9 @@ const faqItems = [
       "Not natively — Google Calendar only sends push notifications that disappear after a few seconds. OnTimer connects to Google Calendar and turns every event into a persistent alarm that stays on your screen until you actively dismiss it.",
   },
   {
-    question: "Can I get calendar alarms for Microsoft Outlook Calendar on iPhone?",
+    question: "Can I get calendar alarms for Outlook Calendar on iPhone?",
     answer:
-      "Microsoft Outlook Calendar's native iPhone reminders are push notifications, not alarms. OnTimer connects to Outlook Calendar and fires persistent alarms for every calendar event — they don't disappear until you dismiss them.",
+      "Outlook Calendar's native iPhone reminders are push notifications, not alarms. OnTimer connects to Outlook Calendar and fires persistent alarms for every calendar event — they don't disappear until you dismiss them.",
   },
   {
     question: "What is the difference between a calendar notification and a calendar alarm?",
@@ -68,7 +69,7 @@ const faqItems = [
   {
     question: "Is OnTimer free?",
     answer:
-      "OnTimer is free to download. The core calendar alarm functionality — persistent alarms for all your calendar events — is free. Time To Leave alerts, which calculate when to leave based on travel time and traffic, are a paid feature.",
+      productFacts.pricing,
   },
 ];
 
@@ -100,12 +101,14 @@ const comparisonRows = [
   { feature: "Alert type", standard: "Push notification", ontimer: "Persistent alarm" },
   { feature: "Disappears automatically", standard: "Yes (seconds)", ontimer: "No — stays until dismissed" },
   { feature: "Works when phone face-down", standard: "Often missed", ontimer: "Alarm fires regardless" },
-  { feature: "Overrides silent mode", standard: "No", ontimer: "Optional (critical events)" },
+  { feature: "Silent mode and Focus", standard: "Depends on iPhone settings", ontimer: "High Alert can ring through on iOS 26.1+ when enabled and permitted" },
   { feature: "Requires active dismissal", standard: "No", ontimer: "Yes" },
   { feature: "Google Calendar support", standard: "Notifications only", ontimer: "Persistent alarms" },
   { feature: "Apple Calendar support", standard: "Notifications only", ontimer: "Persistent alarms" },
-  { feature: "Outlook Calendar / Microsoft 365", standard: "Notifications only", ontimer: "Persistent alarms" },
+  { feature: "Outlook Calendar", standard: "Notifications only", ontimer: "Persistent alarms" },
   { feature: "Time To Leave alerts", standard: "Not available", ontimer: "Available (paid feature)" },
+  { feature: "Time To Fly", standard: "Not available", ontimer: "Automatically discovers flights and prepares a leave-time alarm" },
+  { feature: "Per-event sound", standard: "Varies by calendar app", ontimer: "Choose a sound for a specific event" },
 ];
 
 const whoCards = [
@@ -153,12 +156,12 @@ export default function Page() {
           <p className="mt-5 text-lg text-zinc-400 leading-relaxed">
             Google Calendar, Apple Calendar, and Outlook Calendar send notifications. They do not send persistent alarms.
             OnTimer is a free iPhone app that fixes this — it connects to your calendar and turns
-            every event into a persistent alarm you can&rsquo;t swipe away and forget.
+            calendar events into alarms that stay on screen until you dismiss them.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <AppStoreCTA location="best_alarm_app_hero" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
+          <p className="mt-3 text-xs text-zinc-500">OnTimer is free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
@@ -170,7 +173,7 @@ export default function Page() {
             <p className="text-zinc-200 leading-relaxed">
               <strong className="text-white">OnTimer is a free iPhone app that turns Google Calendar, Apple Calendar, and Outlook Calendar events into alarms requiring acknowledgment.</strong>{" "}
               Unlike standard calendar notifications — which disappear automatically, whether or not you act — OnTimer alarms
-              stay on your screen until you respond. It works with Google Calendar, Apple Calendar, Microsoft 365, and
+              stay on your screen until you respond. It works with Google Calendar, Apple Calendar, Outlook Calendar, and
               Outlook Calendar, and fires alarms for every event automatically with no per-event setup.
               For a full breakdown of what this category of app does, see{" "}
               <Link href="/calendar-alarm-app" className="text-green-500 hover:text-green-400">
@@ -255,8 +258,8 @@ export default function Page() {
               <ul className="space-y-2 text-sm text-zinc-400">
                 <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5">✓</span>Stays on screen until you dismiss it</li>
                 <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5">✓</span>Active response required to clear</li>
-                <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5">✓</span>Interrupts regardless of what you&rsquo;re doing</li>
-                <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5">✓</span>Works during deep focus and context switching</li>
+                <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5">✓</span>Built to break through the noise</li>
+                <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5">✓</span>Customizable by event</li>
                 <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5">✓</span>Designed to interrupt, not inform</li>
               </ul>
             </div>
@@ -335,7 +338,11 @@ export default function Page() {
                 "Works with Outlook Calendar",
                 "Multiple accounts supported simultaneously",
                 "Persistent alarms that stay until dismissed",
+                "Custom sounds, including event-specific sounds",
+                "Home-screen controls for each event",
+                "Optional Early Warning before the main alarm",
                 "Optional Time To Leave alerts based on travel time",
+                "Time To Fly for flights discovered in your calendar",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2 text-sm">
                   <span className="text-green-500 mt-0.5 flex-shrink-0">✓</span>
@@ -347,7 +354,7 @@ export default function Page() {
           <div className="mt-8">
             <AppStoreCTA location="best_alarm_app_features" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free download · iPhone</p>
+          <p className="mt-3 text-xs text-zinc-500">OnTimer is free · iPhone</p>
         </div>
       </section>
 
@@ -386,6 +393,7 @@ export default function Page() {
               { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Notifications Fail" },
               { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
               { href: "/adhd-time-blindness-tools", label: "ADHD Time Blindness Tools" },
+              { href: "/compare", label: "Compare OnTimer with other calendar and reminder apps" },
             ].map(({ href, label }) => (
               <li key={href}>
                 <Link href={href} className="text-green-500 hover:text-green-400 transition-colors text-sm">{label} →</Link>

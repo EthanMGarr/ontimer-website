@@ -28,7 +28,7 @@ const faqItems = [
   {
     question: "Does OnTimer work with Zoom meetings?",
     answer:
-      "Yes. OnTimer reads Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events — including meetings with Zoom, Google Meet, or Teams links — and fires a persistent alarm before each one. No manual setup required; every calendar event is covered automatically.",
+      "Yes. OnTimer reads Google Calendar, Apple Calendar, and Outlook Calendar events — including meetings with Zoom, Google Meet, or Teams links — and fires a persistent alarm before each one. No manual setup required; every calendar event is covered automatically.",
   },
 ];
 

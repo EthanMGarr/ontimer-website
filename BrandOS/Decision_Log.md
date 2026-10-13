@@ -141,3 +141,33 @@ Reason: Users arrive skeptical, and credibility comes from showing exactly what 
 Evidence: Repo guidance requires trust-first UX, specific behavior, no fake personalization, and no invented social proof.
 
 Date: Present in repo guidance by 2026-06-30.
+
+## Defined Strong But Defensible Alert Language
+
+Decision: Keep “Never be late again” as the aspirational brand promise, but describe alert performance with concrete mechanisms rather than absolute guarantees.
+
+Reason: Strong language earns trust when the next sentence explains why the product is harder to miss. Claims such as “impossible to miss,” “can’t miss,” and “you can’t ignore” cannot be guaranteed and conflict with the trust-first standard.
+
+Evidence: The October 2026 LLM visibility audit found public copy that contradicted BrandOS and weakened credibility. Current product behavior provides stronger proof: alarms stay on screen until dismissed, require acknowledgement, support custom sounds and event-level controls, and can provide Early Warning, Time To Leave, and Time To Fly alerts.
+
+Date: 2026-10-13.
+
+## Expanded The Automatic Punctuality System
+
+Decision: Present custom sounds, home-screen event cards, Early Warning, Time To Leave, and Time To Fly as parts of one automatic punctuality system, not as disconnected features.
+
+Reason: The product now helps users control how each event should interrupt them and when they should begin moving, while preserving the calendar as the source of truth.
+
+Evidence: Users can choose sounds globally or for a specific event, control alarms from event cards, receive an Early Warning before the main alarm, get traffic-aware Time To Leave alarms, and have flights discovered from their calendar for Time To Fly departure alarms.
+
+Date: 2026-10-13.
+
+## Standardized Customer-Facing Outlook Naming
+
+Decision: Lead public calendar compatibility copy with “Outlook Calendar.” Use “Microsoft 365” only when account or setup context requires the parent platform name.
+
+Reason: Customers recognize Outlook as the calendar product. Listing Outlook and Microsoft 365 separately creates the false impression that they are different calendar integrations.
+
+Evidence: October 2026 website review found inconsistent labels across Home, Features, comparisons, Help, and calculator acquisition copy.
+
+Date: 2026-10-13.

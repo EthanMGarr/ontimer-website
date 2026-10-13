@@ -4,20 +4,20 @@ import Homepage from "@/app/homepage2/page";
 export const metadata: Metadata = {
   title: { absolute: "OnTimer Calendar Alarm App for iPhone | Never Be Late Again" },
   description:
-    "OnTimer turns Google Calendar, Apple Calendar, and Microsoft Outlook events into persistent iPhone alarms and Time To Leave alerts, so you know when to join, leave, or act.",
+    "OnTimer turns Apple, Google, and Outlook calendar events into persistent iPhone alarms with custom sounds, event controls, Early Warning, Time To Leave, and Time To Fly.",
   alternates: { canonical: "https://www.ontimer.app/" },
   openGraph: {
     title: "OnTimer Calendar Alarm App for iPhone | Never Be Late Again",
     description:
-      "Turn your existing calendar events into persistent alarms and Time To Leave alerts with OnTimer for iPhone.",
+      "Turn calendar events into persistent alarms with custom sounds, event controls, Early Warning, Time To Leave, and Time To Fly.",
     url: "https://www.ontimer.app/",
     siteName: "OnTimer",
     type: "website",
     images: [
       {
-        url: "https://www.ontimer.app/images/homepage2/persistent-alarm.png",
-        width: 1242,
-        height: 2688,
+        url: "https://www.ontimer.app/images/homepage2/persistent-alarm-v2.png",
+        width: 853,
+        height: 1844,
         alt: "OnTimer persistent calendar alarm on iPhone",
       },
     ],
@@ -26,8 +26,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "OnTimer Calendar Alarm App for iPhone | Never Be Late Again",
     description:
-      "Turn your existing calendar events into persistent alarms and Time To Leave alerts with OnTimer for iPhone.",
-    images: ["https://www.ontimer.app/images/homepage2/persistent-alarm.png"],
+      "Turn calendar events into persistent alarms with custom sounds, event controls, Early Warning, Time To Leave, and Time To Fly.",
+    images: ["https://www.ontimer.app/images/homepage2/persistent-alarm-v2.png"],
   },
 };
 

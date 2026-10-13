@@ -65,6 +65,21 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Keep newly changed metadata stable until a settled recrawl and a useful measurement window exist; do not stack another metadata rewrite on an unresolved test.
 - [ ] For a new airport-pickup cohort, record indexing, page impressions, query mix, clicks, CTR, and average position by route after a useful 28–90 day window; compare against the generic pickup calculator and hold the next cohort if pages remain unindexed, duplicative, or unable to earn distinct demand.
 
+## Answer-Engine and LLM Discoverability
+
+- [ ] Keep one verified product-facts source for supported iOS versions, calendar providers, free and paid limits, alert modes, Silent/Focus behavior, permissions, privacy, and any AlarmKit implementation. Reconcile the website, help center, App Store, and structured data when any fact changes.
+- [ ] Lead customer-facing compatibility lists with “Outlook Calendar.” Use “Microsoft 365” only when account or setup context requires the platform name; never present the two as separate calendar integrations.
+- [ ] Do not publish absolute reliability claims such as “impossible to miss” or “can't miss.” Use the BrandOS language “harder to miss,” “persistent,” and “requires acknowledgment.”
+- [ ] Comparison pages state a review date, link to first-party sources for every competitor, distinguish “not described publicly” from “not available,” and explain which workflow each product fits instead of declaring an unsupported universal winner.
+- [ ] Recheck comparison sources at least quarterly and whenever a named competitor announces an alert, calendar, platform, pricing, or travel-time change.
+- [ ] Test outcome intent and mechanism intent separately: “help me stay on time” is not the same retrieval task as “turn calendar events into alarms.”
+- [ ] For consumer-assistant audits, use fresh non-personalized sessions where possible, record search on/off, provider/model, locale, date, exact prompt, citations, competitors, and transcript evidence. Do not treat a provider error or authentication block as a zero-visibility result.
+- [ ] Run each benchmark prompt repeatedly before interpreting changes; one stochastic response is an observation, not a trend.
+- [ ] Review answer-engine citations for factual accuracy and source diversity. Crawler activity proves access, not recommendation, and AI referral traffic proves a visit, not the wording or rank of the answer.
+- [ ] Reuse the canonical homepage `Organization` and `SoftwareApplication` entity identifiers in page-level structured data and normalize schema URLs to `https://www.ontimer.app`.
+- [ ] Treat `llms.txt` as an optional product map, not a ranking mechanism. Do not prioritize it over crawlability, consistent product facts, strong direct-answer pages, and independent corroboration.
+- [ ] Re-run the prompt benchmark after material App Store, compatibility, pricing, alert-behavior, or positioning changes and at least monthly while answer-engine visibility is an active acquisition objective.
+
 ## Calculator-First Search Intent
 
 - [ ] Every indexable advice page provides a prominent in-page bridge to the most relevant OnTimer calculator or scheduling tool; global navigation and footer links do not count.

@@ -52,7 +52,7 @@ const faqItems = [
   {
     question: "Which calendars can I use?",
     answer:
-      "The schedule downloads as a standard calendar file that can be imported into Apple Calendar, Google Calendar, Microsoft Outlook, and other compatible calendar apps.",
+      "The schedule downloads as a standard calendar file that can be imported into Apple Calendar, Google Calendar, Outlook, and other compatible calendar apps.",
   },
   {
     question: "Does this tool decide when or how much medication to take?",

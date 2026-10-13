@@ -6,6 +6,7 @@ import { localizedAlternates, spanishAirportSlugs } from "@/lib/i18n";
 import { UNTIL_EVENTS } from "@/lib/until";
 import { airportPickupProfiles, getAirportPickupPath } from "@/lib/airport-pickup-profiles";
 import { REVIEWED_EVENT_FIXTURES, VENUE_PROFILES, isEventIndexable } from "@/lib/event-time-to-leave";
+import { comparisons } from "@/lib/comparisons";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.ontimer.app";
@@ -375,6 +376,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const helpPaths = [
     "/help",
+    "/help/how-alarms-work",
     "/help/getting-the-most-out",
     "/help/troubleshooting",
   ];
@@ -383,6 +385,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.6,
+  }));
+
+  const comparisonRoutes: MetadataRoute.Sitemap = ["/compare", ...comparisons.map(({ slug }) => `/compare/${slug}`)].map((path) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
   }));
 
   const locationRoutes = getDestinationSitemapRoutes(baseUrl);
@@ -426,5 +435,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       })),
   ];
 
-  return [...staticRoutes, ...supportingContentRoutes, ...helpRoutes, ...locationRoutes, ...spanishAirportRoutes, ...medicationTimingRoutes, ...eventRoutes, ...blogRoutes];
+  return [...staticRoutes, ...supportingContentRoutes, ...helpRoutes, ...comparisonRoutes, ...locationRoutes, ...spanishAirportRoutes, ...medicationTimingRoutes, ...eventRoutes, ...blogRoutes];
 }

@@ -56,7 +56,7 @@ const faqItems = [
   {
     question: "Is OnTimer a reminder app?",
     answer:
-      "OnTimer is a calendar alarm app, not a general reminder app. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and fires persistent alarms before events — not passive notifications. If you need reminders for calendar events, appointments, or meetings that you genuinely cannot miss, OnTimer is designed for that use case.",
+      "OnTimer is a calendar alarm app, not a general reminder app. It connects to Google Calendar, Apple Calendar, and Outlook Calendar and fires persistent alarms before events — not passive notifications. If you need stronger reminders for calendar events, appointments, or meetings, OnTimer is designed for that use case.",
   },
 ];
 
@@ -115,7 +115,7 @@ const appComparisons = [
     name: "OnTimer",
     repeating: "Set lead time per event; fires before every calendar event",
     persistent: "Yes — stays on screen until dismissed",
-    verdict: "Best for calendar-based events you can't miss",
+    verdict: "Best for calendar events that need a stronger signal",
   },
 ];
 
@@ -417,7 +417,7 @@ export default function BestReminderAppForFrequentRemindersPage() {
               <Link href="/" className="text-green-500 hover:text-green-400">
                 OnTimer
               </Link>{" "}
-              is built for this. It connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar,
+              is built for this. It connects to Google Calendar, Apple Calendar, and Outlook Calendar,
               reads your upcoming events, and fires a persistent alarm — not a
               notification — at a configurable lead time before each one.
             </p>

@@ -33,7 +33,7 @@ This is the release contract for OnTimer calculators. It protects the required i
 - Put provider attribution, current-status detail, and alerts after the calendar and OnTimer handoff; changing live values must not appear in search-result snippets. Translate raw provider or operations codes into concise customer language, and reserve warning colors for conditions that require a clear user action.
 - The calendar action must have a 44 px minimum target and an unwrapped primary label.
 - During the `calculator_app_primary_v1` measured rollout, non-Android visitors see OnTimer as the primary result action with calendar retained as a clearly labeled secondary one-result action. Never hide the calculated answer or either path.
-- Use the benefit-led CTA “Get Automatic Alarms” before calendar use and state plainly, “OnTimer is free.” Never qualify the claim as “free to download,” and do not repeat “free” in the supporting line. Use that line for product proof instead: “Works with Google Calendar, Apple Calendar, and Microsoft 365.”
+- Use the benefit-led CTA “Get Automatic Alarms” before calendar use and state plainly, “OnTimer is free.” Never qualify the claim as “free to download,” and do not repeat “free” in the supporting line. Use that line for product proof instead: “Works with Google Calendar, Apple Calendar, and Outlook Calendar.”
 
 ## Rollout rules
 

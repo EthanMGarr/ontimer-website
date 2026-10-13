@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
+import { productFacts } from "@/lib/product-facts";
 
 const faqJsonLd = {
   "@context": "https://schema.org",
@@ -29,7 +30,7 @@ const faqJsonLd = {
       name: "How do I turn Outlook calendar events into alarms on iPhone?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Microsoft Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Outlook Calendar and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
+        text: "Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Outlook Calendar and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
       },
     },
     {
@@ -53,7 +54,7 @@ const faqJsonLd = {
       name: "What does 'persistent alarm' mean?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "A persistent alarm stays on your screen and continues alerting until you actively dismiss or snooze it — unlike a standard notification, which disappears after a few seconds whether or not you acted. OnTimer fires persistent alarms for every calendar event, requiring explicit acknowledgment before they stop.",
+        text: "A persistent alarm stays on your screen and continues alerting until you actively dismiss it — unlike a standard notification, which disappears after a few seconds whether or not you acted. OnTimer fires persistent alarms for calendar events, requiring explicit acknowledgment before they stop.",
       },
     },
     {
@@ -61,7 +62,7 @@ const faqJsonLd = {
       name: "Is OnTimer free?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. OnTimer is free to download. Some advanced features, including Time To Leave alerts, are paid features.",
+        text: productFacts.pricing,
       },
     },
     {
@@ -90,10 +91,10 @@ const faqJsonLd = {
     },
     {
       "@type": "Question",
-      name: "Does OnTimer work with Microsoft Outlook Calendar?",
+      name: "Does OnTimer work with Outlook Calendar?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. OnTimer works with Microsoft Outlook Calendar.",
+        text: "Yes. OnTimer works with Outlook Calendar.",
       },
     },
     {
@@ -110,6 +111,34 @@ const faqJsonLd = {
       acceptedAnswer: {
         "@type": "Answer",
         text: "Yes. For events with a location, Time To Leave can alert you when it is time to leave based on travel time and traffic. Time To Leave is a paid feature.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can I choose which calendar events get alarms?",
+      acceptedAnswer: { "@type": "Answer", text: productFacts.eventControls.alarmsOffByDefault },
+    },
+    {
+      "@type": "Question",
+      name: "Can I choose a different alarm sound for one event?",
+      acceptedAnswer: { "@type": "Answer", text: productFacts.customSounds },
+    },
+    {
+      "@type": "Question",
+      name: "What is Early Warning?",
+      acceptedAnswer: { "@type": "Answer", text: productFacts.earlyWarning },
+    },
+    {
+      "@type": "Question",
+      name: "What is Time To Fly?",
+      acceptedAnswer: { "@type": "Answer", text: productFacts.timeToFly },
+    },
+    {
+      "@type": "Question",
+      name: "Can OnTimer ring through Silent mode or Focus?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `${productFacts.alarmBehavior.highAlert} ${productFacts.alarmBehavior.standard}`,
       },
     },
     {
@@ -203,7 +232,7 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
   {
     question: "How do I turn Outlook calendar events into alarms on iPhone?",
     answer:
-      "Microsoft Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Outlook Calendar and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
+      "Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Outlook Calendar and fires persistent alarms for every scheduled event — they don't disappear until you dismiss them. Multiple Outlook accounts are supported.",
   },
   {
     question: "What is the difference between a calendar notification and a calendar alarm?",
@@ -211,7 +240,7 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
       <>
         A notification informs you — it appears briefly and disappears whether or not you act on it.
         An alarm interrupts you — it stays on screen and requires a response before it stops. Google
-        Google Calendar, Apple Calendar, and Outlook Calendar send notifications.{" "}
+        Calendar, Apple Calendar, and Outlook Calendar send notifications.{" "}
         <Link href="/calendar-notifications-vs-alarms" className="text-green-500 hover:text-green-400 transition-colors">
           OnTimer turns those calendar events into alarms
         </Link>.
@@ -238,7 +267,7 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
     answer: (
       <>
         A persistent alarm stays on your screen and continues alerting until you actively dismiss or
-        snooze it — unlike a standard notification, which disappears after a few seconds whether or not
+        dismiss it — unlike a standard notification, which disappears after a few seconds whether or not
         you acted. OnTimer fires{" "}
         <Link href="/persistent-calendar-reminders" className="text-green-500 hover:text-green-400 transition-colors">
           persistent alarms for every calendar event
@@ -249,8 +278,7 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
   },
   {
     question: "Is OnTimer free?",
-    answer:
-      "Yes. OnTimer is free to download. Some advanced features, including Time To Leave alerts, are paid features.",
+    answer: productFacts.pricing,
   },
   {
     question: "What does OnTimer do?",
@@ -267,8 +295,8 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
     answer: "Yes. OnTimer works with Google Calendar.",
   },
   {
-    question: "Does OnTimer work with Microsoft Outlook Calendar?",
-    answer: "Yes. OnTimer works with Microsoft Outlook Calendar.",
+    question: "Does OnTimer work with Outlook Calendar?",
+    answer: "Yes. OnTimer works with Outlook Calendar.",
   },
   {
     question: "Does OnTimer support multiple calendars?",
@@ -278,6 +306,33 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
     question: "Can OnTimer remind me when it is time to leave?",
     answer:
       "Yes. For events with a location, Time To Leave can alert you when it is time to leave based on travel time and traffic. Time To Leave is a paid feature.",
+  },
+  {
+    question: "Can I choose which calendar events get alarms?",
+    answer: productFacts.eventControls.alarmsOffByDefault,
+  },
+  {
+    question: "Can I choose a different alarm sound for one event?",
+    answer: productFacts.customSounds,
+  },
+  {
+    question: "What is Early Warning?",
+    answer: productFacts.earlyWarning,
+  },
+  {
+    question: "What is Time To Fly?",
+    answer: productFacts.timeToFly,
+  },
+  {
+    question: "Can OnTimer ring through Silent mode or Focus?",
+    answer: (
+      <>
+        {productFacts.alarmBehavior.highAlert} {productFacts.alarmBehavior.standard}{" "}
+        <Link href="/help/how-alarms-work" className="text-green-500 hover:text-green-400 transition-colors">
+          See the current setup details
+        </Link>.
+      </>
+    ),
   },
   {
     question: "Who is OnTimer best for?",

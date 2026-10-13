@@ -344,7 +344,7 @@ export default function AdhdTimeBlindnessTools() {
               <Link href="/" className="text-green-500 hover:text-green-400">
                 OnTimer
               </Link>{" "}
-              connects to Google Calendar, Apple Calendar, and Microsoft Outlook Calendar and turns every
+              connects to Google Calendar, Apple Calendar, and Outlook Calendar and turns every
               calendar event into a persistent alarm.
             </p>
           </div>

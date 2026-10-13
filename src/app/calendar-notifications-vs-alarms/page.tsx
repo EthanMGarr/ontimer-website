@@ -258,7 +258,7 @@ export default function Page() {
               </p>
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-              <p className="font-semibold text-white mb-2">Microsoft Outlook Calendar / Microsoft 365</p>
+              <p className="font-semibold text-white mb-2">Outlook Calendar</p>
               <p className="text-sm text-zinc-400 leading-relaxed">
                 Same behavior on iPhone. Outlook&apos;s mobile reminders are push notifications delivered
                 through iOS. They disappear automatically. There is no built-in mechanism to make them

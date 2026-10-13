@@ -5,7 +5,7 @@ import { AppStoreCTA } from "@/components/CTAButton";
 export const metadata: Metadata = {
   title: "Turn Calendar Events Into Real Alarms",
   description:
-    "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google Calendar, Apple Calendar, or Outlook Calendar events into persistent alarms that are impossible to miss.",
+    "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn Google Calendar, Apple Calendar, or Outlook events into persistent alarms that require a response.",
   alternates: { canonical: "https://www.ontimer.app/turn-calendar-events-into-alarms" },
   openGraph: {
     title: "Turn Calendar Events Into Real Alarms",
@@ -29,7 +29,7 @@ const softwareJsonLd = {
   applicationCategory: "ProductivityApplication",
   applicationSubCategory: "Calendar Alarm App",
   description:
-    "OnTimer turns Google Calendar, Apple Calendar, and Microsoft Outlook Calendar events into persistent alarms on iPhone — not notifications that disappear.",
+    "OnTimer turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms on iPhone — not notifications that disappear.",
   url: "https://ontimer.app/turn-calendar-events-into-alarms",
   keywords: "turn calendar events into alarms, Google Calendar alarm, Apple Calendar alarm, Outlook Calendar alarm, calendar alarm app, persistent calendar alarms, meeting alarm iPhone",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
@@ -140,7 +140,7 @@ export default function Page() {
             "@context": "https://schema.org",
             "@type": "Article",
             headline: "How to Turn Calendar Events Into Real Alarms",
-            description: "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google Calendar, Apple Calendar, or Outlook Calendar events into persistent alarms that are impossible to miss.",
+            description: "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn Google Calendar, Apple Calendar, or Outlook events into persistent alarms that require a response.",
             author: { "@type": "Organization", name: "OnTimer" },
             publisher: { "@type": "Organization", name: "OnTimer" },
             datePublished: "2026-04-01",
@@ -284,7 +284,7 @@ export default function Page() {
             </p>
           </div>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {["Outlook Calendar", "Microsoft 365", "Multiple accounts"].map((item) => (
+            {["Outlook Calendar", "Work and school accounts", "Multiple accounts"].map((item) => (
               <div key={item} className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-medium text-zinc-300">
                 ✓ {item}
               </div>
@@ -337,7 +337,7 @@ export default function Page() {
           <div className="mt-8">
             <AppStoreCTA location="turn_events_into_alarms_how_it_works" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free download · Works with Google Calendar · Apple Calendar · Outlook Calendar</p>
+          <p className="mt-3 text-xs text-zinc-500">OnTimer is free · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 

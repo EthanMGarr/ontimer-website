@@ -61,7 +61,7 @@ export default function MeetingReminderApp() {
             name: "OnTimer",
             operatingSystem: "iOS",
             applicationCategory: "ProductivityApplication",
-            description: "Meeting reminder app that turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms you can't miss.",
+            description: "Meeting reminder app that turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms that require a response.",
             offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
             url: "https://www.ontimer.app",
           }),
@@ -177,7 +177,7 @@ export default function MeetingReminderApp() {
             {[
               {
                 title: "Stays on screen until dismissed",
-                body: "The alarm doesn't disappear after 4 seconds. It remains on your screen, plays audio, and requires an explicit dismiss or snooze before it stops. You can't passively ignore it.",
+                body: "The alarm doesn't disappear after 4 seconds. It remains on your screen, plays audio, and requires an explicit dismiss before it stops.",
               },
               {
                 title: "Fires automatically for every meeting",

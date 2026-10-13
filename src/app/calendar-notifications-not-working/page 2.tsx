@@ -47,7 +47,7 @@ const faqItems = [
   {
     question: "What's the difference between a calendar notification and a persistent alarm?",
     answer:
-      "A notification fires once, appears briefly, and disappears. It requires you to see it and act on it in the same instant. A persistent alarm stays on your screen, plays audio continuously, and requires an explicit dismiss or snooze before it stops — the same behavior as your morning alarm. For time-critical events, persistent alarms are the reliable option.",
+      "A notification fires once, appears briefly, and disappears. It requires you to see it and act on it in the same instant. A persistent alarm stays on your screen, plays audio continuously, and requires an explicit dismiss before it stops — the same behavior as your morning alarm. For time-critical events, persistent alarms are the reliable option.",
   },
   {
     question: "Do calendar reminders fail even with correct settings?",
@@ -403,7 +403,7 @@ export default function CalendarNotificationsNotWorking() {
             </p>
             <p>
               <strong className="text-white">Persistent alarms work differently.</strong> They occupy your
-              full screen, play audio continuously, and don&apos;t stop until you dismiss or snooze them.
+              full screen, play audio continuously, and don&apos;t stop until you dismiss them.
               You can&apos;t passively ignore them — you have to make an active decision. That forced
               decision is what actually gets you out the door.
             </p>
@@ -471,9 +471,9 @@ export default function CalendarNotificationsNotWorking() {
             How OnTimer Adds a Persistent Alarm Layer
           </h2>
           <p className="mt-6 text-zinc-400 leading-relaxed">
-            OnTimer connects directly to your Google Calendar and Microsoft 365 / Outlook and fires a
+            OnTimer connects directly to your Google Calendar and Outlook Calendar and fires a
             persistent alarm before each event — not a notification that disappears. Unlike passive calendar
-            alerts, OnTimer is designed to demand attention rather than request it.
+            alerts, OnTimer is designed to stay in front of you until you respond.
           </p>
           <p className="mt-4 text-zinc-400 leading-relaxed">
             This is especially useful for professionals with back-to-back schedules, remote workers who
@@ -486,7 +486,7 @@ export default function CalendarNotificationsNotWorking() {
           <div className="mt-8">
             <AppStoreCTA location="calendar_notifications_not_working_solution" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Microsoft 365 / Outlook</p>
+          <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar &amp; Outlook Calendar</p>
         </div>
       </section>
 
@@ -549,7 +549,7 @@ export default function CalendarNotificationsNotWorking() {
           <div className="mt-8">
             <AppStoreCTA location="calendar_notifications_not_working_final_cta" />
           </div>
-          <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar &amp; Microsoft Outlook</p>
+          <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar &amp; Outlook</p>
         </div>
       </section>
     </>

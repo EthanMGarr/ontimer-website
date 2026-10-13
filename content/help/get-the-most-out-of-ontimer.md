@@ -26,7 +26,9 @@ Also check:
 
 and make sure OnTimer is enabled.
 
-**One more thing worth setting up:** if you use Do Not Disturb, Sleep, Work, or another Focus, add OnTimer to that Focus's Allowed Apps (**Settings → Focus → [your Focus] → Apps**) so your alarms can still get through while everything else stays quiet. And keep in mind — like almost every app, OnTimer can't make sound while your iPhone's Ring/Silent switch is set to silent (it'll still vibrate). Keep it set to Ring if you want to hear your alarms. See our [Help & Troubleshooting guide](/help/troubleshooting) for the full walkthrough.
+**One more thing worth setting up:** if you use Do Not Disturb, Sleep, Work, or another Focus, add OnTimer to that Focus's Allowed Apps (**Settings → Focus → [your Focus] → Apps**) so your alarms can still get through while everything else stays quiet.
+
+On iOS 26.1 and later, **High Alert** can ring through Silent mode and Focus or Do Not Disturb when it is enabled and iOS permissions allow it. Without High Alert, sound and delivery still depend on your iPhone's notification, sound, and Focus settings. See [How OnTimer alarms work on iPhone](/help/how-alarms-work) for the current behavior and [Help & Troubleshooting](/help/troubleshooting) for setup steps.
 
 Once that's done, you shouldn't have to think much about OnTimer. That's the point.
 
@@ -83,13 +85,26 @@ It can be a reminder to finish what you're doing, grab your things, or start wra
 
 You can choose a default Early Warning time or customize it for a specific event.
 
-## 🎯 6. Customize important events
+## ✈️ 6. Let Time To Fly find your flights
+
+With **Time To Fly**, OnTimer automatically discovers flights already on your calendar. You do not have to enter the flight again in OnTimer.
+
+OnTimer works backward from the airline-recommended airport arrival time and the trip to the airport to set a leave-time alarm. Keep the flight details in your calendar accurate so OnTimer can recognize the trip and prepare the right timing.
+
+## 🎯 7. Control each event from its Home-screen card
 
 Your normal settings should work for most of your calendar.
 
 But some events matter more.
 
-Tap an upcoming event in OnTimer to see exactly how OnTimer plans to alert you. You can also adjust the alarm timing for that event — and, for Pro users, its Early Warning timing — without changing your defaults for everything else.
+Each upcoming event has a card on the OnTimer Home screen. From there you can:
+
+- Turn the main alarm on or off
+- Choose the sound for that event
+- Set or adjust its Early Warning
+- Open the original event in your calendar
+
+You can change one important event without changing your defaults for everything else.
 
 Big interview tomorrow?
 
@@ -99,7 +114,18 @@ Routine meeting?
 
 Leave your normal settings alone.
 
-## 📍 7. Make your calendar events better
+## 🔕 8. Prefer alarms off by default? Start with a quiet calendar
+
+If you want to decide which events get alarms instead of arming everything automatically:
+
+1. Open **Settings** in OnTimer.
+2. Open **Recurring Meeting Manager**.
+3. Turn off both automatic-alarm options.
+4. Return to the Home screen and tap the **green bell** on any event card you want to arm.
+
+This gives you an opt-in workflow: alarms stay off by default, and you choose the events that need a stronger signal.
+
+## 📍 9. Make your calendar events better
 
 The better the information in your calendar, the more OnTimer can do for you.
 
@@ -117,7 +143,7 @@ You don't need OnTimer Pro to benefit from OnTimer.
 
 The free version gives you automatic OnTimer alarms for a calendar provider so you can stop relying on easy-to-miss calendar notifications.
 
-Pro adds features for people who want OnTimer to do more, including multiple calendar providers, Time to Leave, Early Warning, and additional controls.
+Time To Fly can set an initial airport departure estimate on the free plan. Pro can update it for traffic when background conditions allow, and also adds multiple calendar providers, Time To Leave, Early Warning, and additional controls.
 
 Use what helps you.
 

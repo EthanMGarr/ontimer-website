@@ -381,7 +381,7 @@ export default function AirportTimeToLeaveCalculator() {
           </p>
           <ul className="mt-8 space-y-3">
             {[
-              "Uses your existing Google, Apple, or Microsoft calendar",
+              "Uses your existing Google, Apple, or Outlook calendar",
               "Creates Time To Leave alarms automatically",
               "Persistent alarms require acknowledgement",
               "Works for flights, meetings, appointments, and other location-based events",

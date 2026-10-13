@@ -17,7 +17,7 @@ export function Homepage2Footer() {
         <Image src="/images/homepage2/ontimer-wordmark.png" alt="OnTimer" width={238} height={158} sizes="208px" />
         <p>
           OnTimer is an iPhone calendar alarm app that turns events from Google Calendar,
-          Apple Calendar, and Microsoft 365 into automatic, persistent alarms, so you know
+          Apple Calendar, and Outlook Calendar into automatic, persistent alarms, so you know
           when to join, leave, or act.
         </p>
       </div>

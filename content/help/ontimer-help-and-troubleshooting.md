@@ -47,7 +47,7 @@ Even with notifications allowed, two other iPhone settings can still keep OnTime
 
 If you use more than one Focus, repeat this for each one you turn on — the allow list is separate per Focus. You can also turn on that Focus's own **Time Sensitive Notifications** switch, and make sure OnTimer's own is on too, in **Settings → Notifications → OnTimer**. Either one lets OnTimer through.
 
-**Your Ring/Silent switch is set to silent.** OnTimer's alarms won't make sound — the same as almost every app's notifications. Only Apple's built-in Clock app can sound through that switch. You should still feel it vibrate, as long as **Settings → Sounds & Haptics → Haptics** isn't set to "Never Play" or "Don't Play in Silent Mode." Keep your iPhone set to Ring if you want to hear your alarms, and use the Focus setting above to keep everything else quiet.
+**Your Ring/Silent switch is set to silent.** On iOS 26.1 and later, OnTimer's **High Alert** can ring through Silent mode and Focus or Do Not Disturb when High Alert is enabled and iOS permissions allow it. Without High Alert, sound and delivery still depend on your iPhone's notification, sound, and Focus settings. If you expect sound, confirm the event is using High Alert or keep your iPhone set to Ring. See [How OnTimer alarms work on iPhone](/help/how-alarms-work) for the current behavior.
 
 ### 3. Make sure Background App Refresh is enabled
 
@@ -68,6 +68,17 @@ Open OnTimer and find the upcoming event.
 Tap the event to see its details and confirm that OnTimer shows **Alerting** as on for that event.
 
 If something doesn't look right, opening OnTimer also gives the app a chance to refresh your latest calendar events.
+
+## 🔕 I want alarms off by default and will choose events myself
+
+You can use OnTimer as an opt-in alarm system:
+
+1. Open **Settings** in OnTimer.
+2. Open **Recurring Meeting Manager**.
+3. Turn off both automatic-alarm options.
+4. Return to the Home screen and tap the **green bell** on each event card you want to arm.
+
+The event card also lets you choose its sound, adjust Early Warning, or open the event in your calendar.
 
 ## 🆕 I just created or moved an event and it doesn't have an alarm yet
 
@@ -132,6 +143,25 @@ Check that:
 
 Remember that traffic and travel conditions can change, so leave yourself some extra time when being late really matters.
 
+## ✈️ Time To Fly did not find my flight
+
+Time To Fly discovers flights from your connected calendars; you do not add the flight separately in OnTimer.
+
+Check that:
+
+- The flight is present in a calendar connected to OnTimer
+- The calendar event includes recognizable flight details
+- The departure date and time are correct
+- OnTimer has refreshed since the event was added or changed
+
+Open OnTimer to refresh the calendar, then check the event card again. Time To Fly uses airline-recommended airport arrival time and the trip to the airport to prepare the leave-time alarm, so accurate calendar details matter.
+
+Time To Fly does not track flight status, delays, gates, terminals, check-in or bag-drop deadlines, security waits, or travel-document requirements. Always confirm current airline and airport information.
+
+## 🔊 How do I change an alarm sound?
+
+You can choose a default alarm sound in OnTimer Settings. To make one event sound different, open that event's Home-screen card and choose its sound there. The event-specific choice applies only to that event.
+
 ## 🔔 What is Early Warning?
 
 **Early Warning is an OnTimer Pro feature** that gives you a lighter heads-up before your main OnTimer alarm.
@@ -150,7 +180,7 @@ You can set your default Early Warning timing in Settings and override it for in
 
 Probably not.
 
-OnTimer Free gives you the core OnTimer experience with one calendar provider. Some additional features, including **Time to Leave, Early Warning, and multiple calendar providers**, require OnTimer Pro.
+OnTimer Free gives you the core OnTimer experience with one calendar provider. Time To Fly can set an initial airport departure estimate on the free plan; Pro can update it for traffic when background conditions allow. Additional features, including **Time To Leave, Early Warning, multiple calendar providers, and additional controls**, require OnTimer Pro.
 
 You can explore Pro settings inside the app to see what they do before deciding whether they're useful to you.
 
