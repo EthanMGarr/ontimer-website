@@ -14,7 +14,7 @@ const guides = [
   {
     href: "/help/how-alarms-work",
     title: "How OnTimer Alarms Work",
-    description: "Silent mode, Focus, High Alert, sounds, event controls, and alarms-off-by-default setup.",
+    description: "Silent mode, Focus, High Alert, sounds, repeating meetings, and choosing which meetings ring.",
   },
   {
     href: "/help/getting-the-most-out",

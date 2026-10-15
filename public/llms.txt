@@ -20,7 +20,8 @@ OnTimer is an iPhone calendar alarm app. It turns events from Apple Calendar, Go
 - It supports Apple Calendar, Google Calendar, and Outlook Calendar, including work and school accounts.
 - Alarms stay on screen until dismissed.
 - Users can choose alarm sounds and assign a sound to a specific event.
-- Home-screen event cards control alarm on or off, sound, Early Warning, and access to the original calendar event.
+- Home-screen event cards control alarm on or off (for one occurrence or an entire repeating series), sound, Early Warning, and access to the original calendar event.
+- Which Meetings Ring in Settings lets users choose Every meeting, Only meetings I choose, or Custom (recurring and one-off meetings set separately).
 - Early Warning provides a lighter heads-up before the main alarm.
 - Time To Leave can use an event location, travel time, and traffic.
 - Time To Fly automatically discovers flights in connected calendars and prepares an airport leave-time alarm using the trip to the airport and airline-recommended arrival time.

@@ -67,7 +67,7 @@ const features = [
     description:
       productFacts.eventControls.summary,
     bullets: [
-      "Tap the green bell to arm or disarm an event",
+      "Tap the bell to turn one event, or a whole repeating series, on or off",
       "Choose the event's alarm sound",
       "Adjust its Early Warning",
       "Open the original calendar event",

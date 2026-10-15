@@ -33,7 +33,10 @@
 - Early Warning
 - Event cards
 - Per-event controls
-- Tap the green bell
+- Tap the bell
+- Which Meetings Ring
+- Only meetings I choose
+- This event or the whole series
 - Reliable
 - Harder to miss
 - Built to break through the noise

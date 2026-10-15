@@ -120,6 +120,11 @@ const faqJsonLd = {
     },
     {
       "@type": "Question",
+      name: "Can I turn off alarms for a repeating meeting?",
+      acceptedAnswer: { "@type": "Answer", text: productFacts.eventControls.repeatingMeetings },
+    },
+    {
+      "@type": "Question",
       name: "Can I choose a different alarm sound for one event?",
       acceptedAnswer: { "@type": "Answer", text: productFacts.customSounds },
     },
@@ -310,6 +315,10 @@ const faqs: { question: string; answer: React.ReactNode }[] = [
   {
     question: "Can I choose which calendar events get alarms?",
     answer: productFacts.eventControls.alarmsOffByDefault,
+  },
+  {
+    question: "Can I turn off alarms for a repeating meeting?",
+    answer: productFacts.eventControls.repeatingMeetings,
   },
   {
     question: "Can I choose a different alarm sound for one event?",

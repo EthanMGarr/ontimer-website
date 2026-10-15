@@ -100,6 +100,7 @@ But some events matter more.
 Each upcoming event has a card on the OnTimer Home screen. From there you can:
 
 - Turn the main alarm on or off
+- Turn off a repeating meeting once, or for the whole series
 - Choose the sound for that event
 - Set or adjust its Early Warning
 - Open the original event in your calendar
@@ -114,14 +115,15 @@ Routine meeting?
 
 Leave your normal settings alone.
 
-## 🔕 8. Prefer alarms off by default? Start with a quiet calendar
+## 🔕 8. Prefer alarms off by default? Choose "Only meetings I choose"
 
 If you want to decide which events get alarms instead of arming everything automatically:
 
 1. Open **Settings** in OnTimer.
-2. Open **Recurring Meeting Manager**.
-3. Turn off both automatic-alarm options.
-4. Return to the Home screen and tap the **green bell** on any event card you want to arm.
+2. Open **Which Meetings Ring**.
+3. Choose **Only meetings I choose**.
+4. Return to the Home screen and tap the gray bell on any meeting you want to ring. It turns green.
+5. For a repeating meeting, choose **All Events in This Series** to have it ring every time.
 
 This gives you an opt-in workflow: alarms stay off by default, and you choose the events that need a stronger signal.
 

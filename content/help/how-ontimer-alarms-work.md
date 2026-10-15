@@ -6,7 +6,7 @@ OnTimer turns events from Apple Calendar, Google Calendar, and Outlook Calendar 
 
 Unlike a passive calendar notification, an OnTimer alarm stays on screen until you dismiss it. You can choose the sound, adjust an individual event, add an Early Warning, and use Time To Leave or Time To Fly when the moment depends on travel.
 
-This page describes current product behavior. Last reviewed: **October 13, 2026**.
+This page describes current product behavior. Last reviewed: **RELEASE_DATE**.
 
 ## What happens when an alarm fires
 
@@ -38,22 +38,26 @@ Choose a default alarm sound in OnTimer Settings. When a particular event needs 
 
 Each upcoming event card gives you fine-grained control. You can:
 
-- Turn its alarm on or off
+- Turn its alarm on or off, for this event or, for a repeating meeting, the whole series
 - Choose its alarm sound
 - Set or adjust Early Warning
 - Open the original event in your calendar
 
-## Start with alarms off by default
+## Repeating meetings
 
-If you want to choose every event that gets an alarm:
+When you tap the bell on a repeating meeting, OnTimer asks whether the change is for **This Event Only** or **All Events in This Series**. Turn a whole series off once and it stays off every week. Skip a single occurrence without touching the rest.
 
-1. Open **Settings** in OnTimer.
-2. Open **Recurring Meeting Manager**.
-3. Turn off both automatic-alarm options.
-4. Return to the Home screen.
-5. Tap the **green bell** on each event card you want to arm.
+The event card shows the current setting, such as **Off for all events in this series** or **On for this event only**. To undo a series setting, open **Settings → Which Meetings Ring** and tap **Reset** next to it.
 
-That makes OnTimer opt-in: alarms remain off by default until you choose an event.
+## Choose which meetings ring
+
+Open **Settings → Which Meetings Ring** to choose a default:
+
+- **Every meeting** (the default): every meeting rings unless you turn off its bell.
+- **Only meetings I choose**: nothing rings until you tap a meeting's bell on the Home screen. The Home screen reminds you that this mode is on.
+- **Custom**: choose recurring and one-off meetings separately.
+
+In every mode, tapping a meeting's bell overrides the default for that meeting.
 
 ## Early Warning, Time To Leave, and Time To Fly
 
@@ -75,7 +79,7 @@ Open OnTimer and confirm:
 
 - OnTimer is not paused
 - The event appears on the Home screen
-- Its green bell is on
+- Its bell is green (a gray bell means it is off or not chosen to ring)
 - The event uses the alarm type and sound you expect
 - Notifications and Background App Refresh are enabled
 - High Alert is enabled when you expect it to ring through Silent mode or Focus

@@ -67,6 +67,8 @@ Open OnTimer and find the upcoming event.
 
 Tap the event to see its details and confirm that OnTimer shows **Alerting** as on for that event.
 
+If the card says **Off for all events in this series**, the whole repeating series was turned off from a bell. Tap **Alerting** to turn it back on, or reset it in **Settings → Which Meetings Ring**.
+
 If something doesn't look right, opening OnTimer also gives the app a chance to refresh your latest calendar events.
 
 ## 🔕 I want alarms off by default and will choose events myself
@@ -74,11 +76,21 @@ If something doesn't look right, opening OnTimer also gives the app a chance to 
 You can use OnTimer as an opt-in alarm system:
 
 1. Open **Settings** in OnTimer.
-2. Open **Recurring Meeting Manager**.
-3. Turn off both automatic-alarm options.
-4. Return to the Home screen and tap the **green bell** on each event card you want to arm.
+2. Open **Which Meetings Ring**.
+3. Choose **Only meetings I choose**.
+4. Return to the Home screen. Every bell is gray. Tap the bell on each meeting you want to ring, and it turns green.
+5. For a repeating meeting, choose **This Event Only** or **All Events in This Series**.
 
 The event card also lets you choose its sound, adjust Early Warning, or open the event in your calendar.
+
+## 🔁 A repeating meeting keeps setting off alarms
+
+Tap the meeting's bell on the Home screen, or open its event card and tap **Alerting**, then choose:
+
+- **All Events in This Series** to stop alarms for every future occurrence
+- **This Event Only** to skip just this one
+
+To undo a series setting, open **Settings → Which Meetings Ring** and tap **Reset** next to the meeting under **Repeating events you changed**.
 
 ## 🆕 I just created or moved an event and it doesn't have an alarm yet
 

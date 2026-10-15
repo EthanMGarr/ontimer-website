@@ -289,9 +289,10 @@ export default function Homepage2() {
             <p>
               Home-screen event cards let you turn each alarm on or off, choose
               its sound, set an Early Warning, or open the original calendar
-              event. Prefer alarms off by default? Turn off both automatic-alarm
-              options in Recurring Meeting Manager, then tap the green bell only
-              on events you want armed.
+              event. Repeating meeting you don't need? Turn it off once or for
+              the whole series. Prefer alarms off by default? Choose Only
+              meetings I choose in Which Meetings Ring, then tap the bell on
+              the meetings you want.
             </p>
             <Homepage2DownloadCTA compact location="homepage_controls" />
           </div>

@@ -1,4 +1,4 @@
-export const PRODUCT_FACTS_VERSION = "2026-10-13";
+export const PRODUCT_FACTS_VERSION = "RELEASE_DATE";
 
 export const productFacts = {
   positioning: {
@@ -21,7 +21,9 @@ export const productFacts = {
     summary:
       "Home-screen event cards provide controls for whether an event should alarm, which sound it should use, its Early Warning, and opening the original calendar event.",
     alarmsOffByDefault:
-      "To start with alarms off, open Recurring Meeting Manager in Settings and turn off both automatic-alarm options. Then tap the green bell on any event card you want to arm.",
+      "Yes. In Settings, open Which Meetings Ring and choose Only meetings I choose. Then tap the bell on any meeting you want to ring. For a repeating meeting, you can turn on one event or the whole series.",
+    repeatingMeetings:
+      "Yes. Tap the meeting's bell, or Alerting on its event card, and choose This Event Only or All Events in This Series. To undo a series setting, open Which Meetings Ring in Settings and tap Reset.",
   },
   customSounds:
     "Choose an alarm sound and assign a different sound to a specific event when it needs a distinct signal.",
@@ -55,6 +57,10 @@ export const homepageFaqs = [
   {
     question: "Can I choose which events get alarms?",
     answer: productFacts.eventControls.alarmsOffByDefault,
+  },
+  {
+    question: "Can I turn off alarms for a repeating meeting?",
+    answer: productFacts.eventControls.repeatingMeetings,
   },
   {
     question: "Can I choose different alarm sounds?",

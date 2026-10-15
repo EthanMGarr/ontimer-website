@@ -18,8 +18,8 @@ const requiredByFile = {
     "High Alert",
   ],
   "content/help/how-ontimer-alarms-work.md": [
-    "Recurring Meeting Manager",
-    "green bell",
+    "Which Meetings Ring",
+    "All Events in This Series",
     "iOS 26.1",
     "Time To Fly",
   ],
@@ -66,6 +66,8 @@ const forbidden = [
   /professionals can['’]t miss/i,
   /dismiss(?:ed)? or snooze/i,
   /snooze behavior/i,
+  /Recurring Meeting Manager/,  // renamed to Which Meetings Ring in the iOS app
+  /RELEASE_DATE/,  // placeholder: replace with the app release date before deploying
 ];
 
 for (const path of publicFiles) {
