@@ -6,7 +6,7 @@ OnTimer turns events from Apple Calendar, Google Calendar, and Outlook Calendar 
 
 Unlike a passive calendar notification, an OnTimer alarm stays on screen until you dismiss it. You can choose the sound, adjust an individual event, add an Early Warning, and use Time To Leave or Time To Fly when the moment depends on travel.
 
-This page describes current product behavior. Last reviewed: **RELEASE_DATE**.
+This page describes current product behavior. Last reviewed: **October 16, 2026**.
 
 ## What happens when an alarm fires
 

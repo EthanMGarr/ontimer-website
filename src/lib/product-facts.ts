@@ -1,4 +1,4 @@
-export const PRODUCT_FACTS_VERSION = "RELEASE_DATE";
+export const PRODUCT_FACTS_VERSION = "2026-10-16";
 
 export const productFacts = {
   positioning: {
