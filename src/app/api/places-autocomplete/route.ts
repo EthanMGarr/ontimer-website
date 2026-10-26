@@ -60,7 +60,11 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = req.nextUrl;
   const input = (searchParams.get("input") ?? "").trim();
-  const types = searchParams.get("types") ?? "geocode";
+  const types = searchParams.get("types") ?? "place";
+  const requestedLanguage = searchParams.get("language") ?? "en";
+  const languageCode = /^[a-z]{2,3}(?:-[A-Za-z]{2})?$/.test(requestedLanguage)
+    ? requestedLanguage
+    : "en";
 
   if (types === "airport" || types === "cruise-terminal") {
     const query = input.toLowerCase();
@@ -144,7 +148,8 @@ export async function GET(req: NextRequest) {
         } else {
           console.error("[places-autocomplete] request_failed", record);
         }
-      } : undefined
+      } : undefined,
+      languageCode
     );
 
     return NextResponse.json({ predictions });

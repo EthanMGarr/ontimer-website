@@ -62,7 +62,7 @@ This is the release contract for OnTimer calculators. It protects the required i
 
 ## Calendar-capable calculator inventory
 
-The shared handoff covers general Time To Leave, Airport Time To Leave, Cruise Time To Leave, Wake Up Time, Airport Pickup, and event-specific Time To Leave. Days Until has a purpose-built calendar handoff and must follow the same secondary-acquisition rule.
+The shared handoff covers general Time To Leave, Airport Time To Leave, Cruise Time To Leave, Wake Up Time, Airport Pickup, and event-specific Time To Leave. Days Until has a purpose-built handoff and must preserve the same app-primary hierarchy with a clearly labeled one-result calendar alternative.
 
 Run `npm run test:calendar-conversion:ux` whenever any of these result experiences changes.
 

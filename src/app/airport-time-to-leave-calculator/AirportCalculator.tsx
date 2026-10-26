@@ -90,7 +90,7 @@ const airportCopy = {
     adjustFlight: "Adjust flight details", enterFlight: "Enter flight details", editTrip: "Edit Trip", yourTrip: "Your Trip",
     flightDate: "Flight date", flightDeparts: "Flight departs at", flightType: "Flight type", domestic: "Domestic", international: "International",
     recommendedArrival: "Recommended airport arrival", beforeFlight: "before the flight", startingPointHelp: "Enter your starting location or use your current location so we can estimate the trip.",
-    route: "Route", leavingFrom: "Leaving from", addressCity: "Your address or city", departureAirport: "Departure airport",
+    route: "Route", leavingFrom: "Leaving from", addressCity: "Address, neighborhood, or place", departureAirport: "Departure airport",
     airportPlaceholder: "Departure airport name or IATA code", airportExample: "e.g. JFK, LAX, Newark",
     calculating: "Calculating leave time...", update: "Update Leave Time", show: "Show My Leave Time", calculate: "Calculate leave time",
     addAirport: "Add your airport to calculate.",
@@ -102,7 +102,7 @@ const airportCopy = {
     automaticInstead: "Use automatic estimate instead", recommendedBuffer: "Use recommended buffer", adjustBuffer: "Adjust airport arrival buffer",
     recommendedPlaceholder: "Recommended", adjustSecurity: "Adjust security time manually", customSecurity: "Custom security time", auto: "Auto", estimatedInstead: "Use estimated time instead",
     customBufferMinutes: "Custom airport arrival time in minutes", customBufferHelp: "Enter the total time you want between reaching the airport and your flight departure.",
-    forFlight: "For your", flight: "flight", leaveBy: "Leave by", drive: "drive", security: "security", arriveBy: "Arrive by",
+    forFlight: "For your", flight: "flight", leaveBy: "Leave by", drive: "drive", security: "security allowance", arriveBy: "Arrive by",
     parkingIncluded: "Parking included", transferIncluded: "Terminal transfer included", rideshareIncluded: "Rideshare access included", dropoffIncluded: "Drop-off access included", bagIncluded: "Bag drop included",
     alarmHeading: "Don’t be late. Turn this into an alarm.", alarmBody: "OnTimer automatically sets alarms for your calendar events",
     hideDetails: "Hide calculation details", howCalculated: "How we calculated your leave time", arriveAirport: "Arrive at airport by", requirement: "verify airline and airport requirements before leaving.",
@@ -120,7 +120,7 @@ const airportCopy = {
     adjustFlight: "Modificar datos del vuelo", enterFlight: "Introduce los datos del vuelo", editTrip: "Editar viaje", yourTrip: "Tu viaje",
     flightDate: "Fecha del vuelo", flightDeparts: "El vuelo sale a las", flightType: "Tipo de vuelo", domestic: "Nacional", international: "Internacional",
     recommendedArrival: "Llegada recomendada al aeropuerto", beforeFlight: "antes del vuelo", startingPointHelp: "Indica tu punto de partida o usa tu ubicación actual para calcular el trayecto.",
-    route: "Trayecto", leavingFrom: "Sales desde", addressCity: "Tu dirección o ciudad", departureAirport: "Aeropuerto de salida",
+    route: "Trayecto", leavingFrom: "Sales desde", addressCity: "Dirección, barrio o lugar", departureAirport: "Aeropuerto de salida",
     airportPlaceholder: "Nombre o código IATA del aeropuerto de salida", airportExample: "p. ej., MAD, MEX, SCL",
     calculating: "Calculando la hora de salida…", update: "Actualizar hora de salida", show: "Mostrar mi hora de salida", calculate: "Calcular hora de salida",
     addAirport: "Añade tu aeropuerto para calcular.",
@@ -132,7 +132,7 @@ const airportCopy = {
     automaticInstead: "Usar el cálculo automático", recommendedBuffer: "Usar el margen recomendado", adjustBuffer: "Ajustar el margen de llegada",
     recommendedPlaceholder: "Recomendado", adjustSecurity: "Ajustar manualmente el tiempo de seguridad", customSecurity: "Tiempo de seguridad personalizado", auto: "Automático", estimatedInstead: "Usar el tiempo estimado",
     customBufferMinutes: "Tiempo personalizado de llegada al aeropuerto en minutos", customBufferHelp: "Indica el tiempo total que quieres entre llegar al aeropuerto y la salida del vuelo.",
-    forFlight: "Para tu vuelo", flight: "", leaveBy: "Sal a más tardar a las", drive: "en coche", security: "de seguridad", arriveBy: "Llega antes de las",
+    forFlight: "Para tu vuelo", flight: "", leaveBy: "Sal a más tardar a las", drive: "en coche", security: "de margen de seguridad", arriveBy: "Llega antes de las",
     parkingIncluded: "Aparcamiento incluido", transferIncluded: "Traslado a la terminal incluido", rideshareIncluded: "Acceso en VTC / taxi incluido", dropoffIncluded: "Acceso a la terminal incluido", bagIncluded: "Facturación de equipaje incluida",
     alarmHeading: "No llegues tarde. Convierte este evento en una alarma.", alarmBody: "OnTimer configura alarmas automáticamente para los eventos de tu calendario",
     hideDetails: "Ocultar detalles del cálculo", howCalculated: "Cómo calculamos tu hora de salida", arriveAirport: "Llega al aeropuerto antes de las", requirement: "comprueba los requisitos de la aerolínea y el aeropuerto antes de salir.",
@@ -656,10 +656,9 @@ export default function AirportCalculator({
     setCurrentLocation(null);
   }
 
-  function handleCurrentLocationChange(coordinates: string | null) {
+  function handleCurrentLocationChange(coordinates: string | null, displayLabel?: string) {
     setCurrentLocation(coordinates);
-    if (coordinates) setOrigin(copy.currentLocation);
-    else if (origin === copy.currentLocation) setOrigin("");
+    setOrigin(coordinates ? displayLabel ?? copy.currentLocation : "");
   }
   const manualDriveMinutes = parseInt(manualTravelMinutes, 10);
   const hasManualDriveTime = !isNaN(manualDriveMinutes) && manualDriveMinutes >= 0;
@@ -809,7 +808,7 @@ export default function AirportCalculator({
     if (!computedResult || locale !== "es") return computedResult?.factors ?? [];
     const labels: Record<string, { label: string; explanation?: string; sourceLabel?: string }> = {
       travel: { label: "Tiempo de viaje", explanation: "Trayecto desde tu punto de partida hasta el aeropuerto." },
-      tsa_security: { label: "Control de seguridad", explanation: "Tiempo estimado para pasar el control de seguridad." },
+      tsa_security: { label: "Margen de seguridad", explanation: "Margen conservador incluido en el plan; la espera prevista puede ser menor." },
       airport_buffer: { label: "Tiempo en el aeropuerto", explanation: "Facturación, acceso y recorrido hasta la puerta de embarque." },
     };
     return computedResult.factors.map((factor) => ({
@@ -1113,7 +1112,7 @@ export default function AirportCalculator({
                     onChange={handleOriginChange}
                     placeholder={copy.addressCity}
                     inputClassName={inputClass}
-                    ariaDescribedBy="airport-origin-help"
+                    ariaDescribedBy={currentLocation === null ? "airport-origin-help" : undefined}
                     onResolutionChange={setIsResolvingOrigin}
                   />
                   <CurrentLocationControl
@@ -1121,9 +1120,11 @@ export default function AirportCalculator({
                     onLocationChange={handleCurrentLocationChange}
                     locale={locale}
                   />
-                  <p id="airport-origin-help" className="mt-1.5 text-xs leading-relaxed text-zinc-400">
-                    {copy.startingPointHelp}
-                  </p>
+                  {currentLocation === null && (
+                    <p id="airport-origin-help" className="mt-1.5 text-xs leading-relaxed text-zinc-400">
+                      {copy.startingPointHelp}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <FieldLabel>{copy.departureAirport}</FieldLabel>
@@ -1508,30 +1509,27 @@ export default function AirportCalculator({
                   </button>
                 )}
 
-                {licensedSecurityEvidence && (
+                {securityIntelligence && (
                   <section
                     className="mt-3 border-t border-zinc-800 pt-3"
-                    aria-label={locale === "es" ? "Estimación de seguridad actual" : "Current security estimate"}
+                    aria-label={locale === "es" ? "Planificación de seguridad" : "Security planning"}
                   >
-                    <div className="flex items-baseline justify-between gap-3 text-sm">
-                      <p className="font-semibold text-zinc-300">
-                        {locale === "es" ? "Seguridad ahora" : "Security now"}
-                      </p>
-                      <p className="shrink-0 font-bold text-zinc-100">
-                        {Math.round(licensedSecurityEvidence.minutes)} min
-                      </p>
-                    </div>
+                    <p className="text-sm font-semibold text-zinc-200">{locale === "es" ? "Planificación de seguridad" : "Security planning"}</p>
                     <p className="mt-1 text-xs leading-relaxed text-zinc-400">
                       {locale === "es"
-                        ? `A tu llegada: ~${securityIntelligence?.predictedWaitAtArrival.minutes ?? computedResult.securityMinutes} min · ${computedResult.securityMinutes} min incluidos${hasPreCheck && openPrecheckCount > 0 ? ` · ${openPrecheckCount} PreCheck abierto${openPrecheckCount === 1 ? "" : "s"}` : ""}`
-                        : `At arrival: ~${securityIntelligence?.predictedWaitAtArrival.minutes ?? computedResult.securityMinutes} min · ${computedResult.securityMinutes} min included${hasPreCheck && openPrecheckCount > 0 ? ` · ${openPrecheckCount} PreCheck checkpoint${openPrecheckCount === 1 ? "" : "s"} open` : ""}`}
+                        ? `Espera prevista al llegar: ~${securityIntelligence.predictedWaitAtArrival.minutes} min · Margen conservador incluido: ${securityIntelligence.recommendedSecurityAllowance.minutes} min${hasPreCheck && openPrecheckCount > 0 ? ` · ${openPrecheckCount} PreCheck abierto${openPrecheckCount === 1 ? "" : "s"}` : ""}`
+                        : `Expected wait at arrival: ~${securityIntelligence.predictedWaitAtArrival.minutes} min · Conservative allowance included: ${securityIntelligence.recommendedSecurityAllowance.minutes} min${hasPreCheck && openPrecheckCount > 0 ? ` · ${openPrecheckCount} PreCheck checkpoint${openPrecheckCount === 1 ? "" : "s"} open` : ""}`}
                     </p>
                     <p className="mt-1 text-xs leading-relaxed text-zinc-500">
-                      {locale === "es"
-                        ? "Fuente: TSAWaitTimes.com · estimación externa para todo el aeropuerto, no una medición oficial de la TSA."
-                        : "Source: TSAWaitTimes.com · third-party airport-wide estimate, not an official TSA measurement."}
+                      {licensedSecurityEvidence
+                        ? (locale === "es"
+                          ? "Fuente: TSAWaitTimes.com · estimación externa para todo el aeropuerto, no una medición oficial de la TSA."
+                          : "Source: TSAWaitTimes.com · third-party airport-wide estimate, not an official TSA measurement.")
+                        : (locale === "es"
+                          ? "Estimación de planificación según el tipo de vuelo y la hora prevista de llegada; no son datos en tiempo real de la fila del aeropuerto."
+                          : "Planning estimate based on flight type and expected arrival time; this is not live airport queue data.")}
                     </p>
-                    {licensedSecurityEvidence.faaAlerts?.[0] && (
+                    {licensedSecurityEvidence?.faaAlerts?.[0] && (
                       <p className="mt-2 text-xs leading-relaxed text-zinc-400">
                         <span className="font-semibold text-zinc-300">{locale === "es" ? "Actualización del aeropuerto" : "Airport update"}:</span>{" "}
                         {formatAirportAlert(licensedSecurityEvidence.faaAlerts[0].summary, locale)}

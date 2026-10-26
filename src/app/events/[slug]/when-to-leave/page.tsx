@@ -8,6 +8,7 @@ import {
   eventLifecycle,
   isEventIndexable,
   isEventTimeUsable,
+  eventContextLabel,
   type EventRecord,
 } from "@/lib/event-time-to-leave";
 import { getTicketmasterEventById } from "@/lib/ticketmaster-events";
@@ -111,6 +112,7 @@ export default async function EventWhenToLeavePage({ params }: EventPageProps) {
               <h1>
                 When should I leave for <span>{event.title}</span>?
               </h1>
+              <p className="event-task__descriptor">{eventContextLabel(event)}</p>
               <p className="event-task__schedule">
                 <strong>{eventDate} at {eventTime}</strong><span aria-hidden="true"> · </span>{venue.name}
               </p>

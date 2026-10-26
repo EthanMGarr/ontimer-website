@@ -292,10 +292,9 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
     setCurrentLocation(null);
   }
 
-  function handleCurrentLocationChange(coordinates: string | null) {
+  function handleCurrentLocationChange(coordinates: string | null, displayLabel?: string) {
     setCurrentLocation(coordinates);
-    if (coordinates) setOrigin(copy.currentLocation);
-    else if (origin === copy.currentLocation) setOrigin("");
+    setOrigin(coordinates ? displayLabel ?? copy.currentLocation : "");
   }
 
   async function handleCalculate() {

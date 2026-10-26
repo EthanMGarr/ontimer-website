@@ -327,10 +327,9 @@ export default function AirportTheoryCalculator() {
     setCurrentLocation(null);
   }
 
-  function handleCurrentLocationChange(coordinates: string | null) {
+  function handleCurrentLocationChange(coordinates: string | null, displayLabel?: string) {
     setCurrentLocation(coordinates);
-    if (coordinates) setOrigin("Current location");
-    else if (origin === "Current location") setOrigin("");
+    setOrigin(coordinates ? displayLabel ?? "Current location found" : "");
   }
 
   // ── Read shared URL params on mount ──────────────────────────────────────────

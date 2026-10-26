@@ -7,6 +7,7 @@ const eventComponent = readFileSync("src/app/events/[slug]/when-to-leave/EventLe
 const page = readFileSync("src/app/what-time-should-i-leave/page.tsx", "utf8");
 const handoff = readFileSync("src/components/leave-time/CalendarOnTimerHandoff.tsx", "utf8");
 const currentLocationControl = readFileSync("src/components/CurrentLocationControl.tsx", "utf8");
+const reverseGeocodeRoute = readFileSync("src/app/api/reverse-geocode/route.ts", "utf8");
 const placeAutocomplete = readFileSync("src/components/PlaceAutocomplete.tsx", "utf8");
 const autocompleteLibrary = readFileSync("src/lib/places-autocomplete.ts", "utf8");
 const globalStyles = readFileSync("src/app/globals.css", "utf8");
@@ -48,7 +49,15 @@ assert.doesNotMatch(component, /<SwapIcon \/> \{copy\.swap\}/, "swap must not co
 assert.match(component, /className="mt-1 inline-flex min-h-11[^"]*">?/, "the general current-location action must sit close to its field without shrinking its touch target");
 assert.match(currentLocationControl, /!active && \(/, "shared calculator location actions must disappear after success");
 assert.match(currentLocationControl, /className="mt-1 inline-flex min-h-11[^"]*">?/, "shared current-location actions must sit close to their fields without shrinking their touch targets");
-assert.match(currentLocationControl, /className="sr-only" role="status"/, "shared location success must remain available to assistive technology");
+assert.match(currentLocationControl, /role="status"/, "shared location success must remain available to assistive technology");
+assert.match(currentLocationControl, /found: "Current location found"/, "shared location success must use a simple consumer-facing field label");
+assert.doesNotMatch(currentLocationControl, /Approximate accuracy|formatLocationAccuracy|copy\.using/, "shared location success must not expose technical accuracy or a redundant status line");
+assert.match(currentLocationControl, /fetch\("\/api\/reverse-geocode"/, "current location must resolve to one consumer-readable address");
+assert.match(currentLocationControl, /onLocationChange\(coordinates, displayLabel\)/, "routing coordinates and the readable address must be retained separately");
+assert.match(reverseGeocodeRoute, /guardGoogleApiRequest\(request, REVERSE_GEOCODE_RATE_LIMIT\)/, "reverse geocoding must retain same-origin and rate-limit guards");
+assert.match(reverseGeocodeRoute, /Cache-Control": "private, no-store"/, "precise location responses must never be cached");
+assert.match(reverseGeocodeRoute, /isValidCoordinatePair\(latitude, longitude\)/, "reverse geocoding must validate coordinate bounds before calling Google");
+assert.match(component, /currentLocation: "Current location found"/, "the general calculator must put confirmation in the field itself");
 assert.match(placeAutocomplete, /isPaste \? AUTOCOMPLETE_PASTE_DEBOUNCE_MS : AUTOCOMPLETE_TYPING_DEBOUNCE_MS/, "address autocomplete must use the reviewed typing and paste delays");
 assert.match(placeAutocomplete, /inputType === "insertReplacementText"/, "address autocomplete must recognize iOS Contact AutoFill replacement events");
 assert.match(placeAutocomplete, /val\.length - previousValue\.length > 1/, "address autocomplete must recognize bulk address insertion even when the browser omits a specific AutoFill input type");

@@ -62,7 +62,10 @@ async function healthCheck() {
   }
 }
 
-async function waitForHealth(timeoutMs = 45_000) {
+// A cold development compile for this 250+ route app can exceed 45 seconds on
+// otherwise healthy machines. Keep polling the required rendered route long
+// enough to distinguish a slow first compile from a broken preview.
+async function waitForHealth(timeoutMs = 180_000) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     if (await healthCheck()) return true;

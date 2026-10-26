@@ -10,6 +10,7 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] Paid endpoints have per-IP and global rate limits before any upstream call.
 - [ ] Inputs have strict minimum, maximum, and enum validation.
 - [ ] User actions make at most one paid upstream request unless a retry is explicitly cost-justified.
+- [ ] Current-location address display uses one guarded reverse-geocoding request per explicit user action, keeps exact coordinates as the routing source, does not cache or log the coordinates/address, and falls back without retrying when no address is available.
 - [ ] Autocomplete uses a responsive trailing debounce, starts only after four meaningful characters while the field is focused and actively edited, gives pasted complete addresses a slightly longer pause, cancels stale requests immediately on every edit, shows pending feedback, and avoids Place Details calls unless needed.
 - [ ] Known structured destinations such as airports, cruise terminals, and curated event venues use the local catalog before paid autocomplete or destination geocoding.
 - [ ] Shared address inputs preserve and complete a pending iOS Contact AutoFill or pasted-address lookup when the visitor leaves the field or taps Calculate; calculator submission waits for that one lookup instead of routing an unresolved fragment or issuing a duplicate request.
@@ -44,6 +45,8 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] During the five-venue pilot, review provider usage and failures after deployment, after the first full six-hour refresh window, and weekly thereafter. Escalate repeated failures, unexpected request growth, or remaining quota below the operating threshold chosen by the account owner.
 
 ## Google Cloud Controls
+
+Production website Maps credential ownership: Vercel production uses `GOOGLE_MAPS_API_KEY` from Google Cloud project `ontimer-timetofly-calculator` (`320232498812`). The key is restricted to Directions API, Places API (New), Routes API, and Geocoding API. Do not add another Maps service without repeating this checklist and reviewing the restriction.
 
 - [ ] Restrict the API key to only the required APIs.
 - [ ] Set low daily or per-minute quotas independently for Places API (New) and Routes API.

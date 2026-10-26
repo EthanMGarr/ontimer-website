@@ -26,6 +26,7 @@ async function main() {
   assert.equal(shouldRequestPaidAutocomplete("PortMiami", "cruise-terminal"), true);
   assert.equal(shouldRequestPaidAutocomplete("BWI", "place"), false);
   assert.equal(includedPrimaryTypesFor("not-a-google-type"), null);
+  assert.deepEqual(includedPrimaryTypesFor("place"), []);
   assert.deepEqual(includedPrimaryTypesFor("geocode"), ["geocode"]);
 
   let capturedUrl = "";
@@ -75,6 +76,16 @@ async function main() {
   assert.equal(healthReports.length, 1);
   assert.equal(healthReports[0]?.outcome, "succeeded");
   assert.equal(healthReports[0]?.predictionCount, 1);
+  assert.equal(body.languageCode, "en");
+  assert.deepEqual(body.includedPrimaryTypes, ["geocode"]);
+
+  let allPlacesBody: Record<string, unknown> = {};
+  await requestAutocomplete("Centro Andino", [], "server-key", async (_url, init) => {
+    allPlacesBody = JSON.parse(String(init?.body)) as Record<string, unknown>;
+    return new Response(JSON.stringify({ suggestions: [] }), { status: 200 });
+  }, undefined, "es");
+  assert.equal(allPlacesBody.languageCode, "es");
+  assert.equal(allPlacesBody.includedPrimaryTypes, undefined);
 
   const originalConsoleError = console.error;
   const errorLogs: string[] = [];

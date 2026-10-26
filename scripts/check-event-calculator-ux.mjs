@@ -6,6 +6,7 @@ const component = readFileSync("src/app/events/[slug]/when-to-leave/EventLeaveCa
 const styles = readFileSync("src/app/events/[slug]/when-to-leave/event-leave.css", "utf8");
 const guidance = readFileSync("docs/CALCULATOR_CONVERSION_UX_CHECKLIST.md", "utf8");
 const sitemap = readFileSync("src/app/sitemap.ts", "utf8");
+const provider = readFileSync("src/lib/ticketmaster-events.ts", "utf8");
 
 assert.ok(
   page.indexOf("event-task__context") < page.indexOf("<EventLeaveCalculator"),
@@ -17,6 +18,10 @@ assert.ok(
 );
 assert.doesNotMatch(page, /sm:grid-cols-2 lg:grid-cols-4/, "the repeated pre-task event detail grid must not return");
 assert.doesNotMatch(page, /Always confirm the event date, start time, venue, and entry information/, "the full disclaimer must not displace the primary input");
+assert.match(page, /event-task__descriptor.*eventContextLabel\(event\)/, "ambiguous event names must get a plain-language descriptor");
+assert.match(provider, /if \(category === "other"\) return null;/, "unreviewed miscellaneous provider inventory must not be auto-published");
+assert.match(component, /<CurrentLocationControl/, "event calculators must offer the same simple current-location action as other route calculators");
+assert.match(component, /origin: currentLocation \?\? origin\.trim\(\)/, "event routing must use coordinates after current location is found");
 
 const resultStart = component.indexOf('data-event-result');
 const summary = component.indexOf('event-result__summary', resultStart);

@@ -36,7 +36,11 @@ interface TicketmasterEvent {
   images?: Array<{ url?: string; width?: number; height?: number; ratio?: string }>;
   promoter?: { name?: string };
   sales?: { public?: { startDateTime?: string } };
-  classifications?: Array<{ segment?: { name?: string } }>;
+  classifications?: Array<{
+    segment?: { name?: string };
+    genre?: { name?: string };
+    subGenre?: { name?: string };
+  }>;
   _embedded?: {
     venues?: TicketmasterVenue[];
     attractions?: Array<{ name?: string; url?: string }>;
@@ -75,6 +79,12 @@ function eventCategory(name?: string): EventCategory {
   if (value === "music") return "concert";
   if (value === "sports") return "sports";
   return "other";
+}
+
+function usefulClassification(value?: string): string | undefined {
+  const trimmed = value?.trim();
+  if (!trimmed || /^(?:undefined|miscellaneous|other)$/i.test(trimmed)) return undefined;
+  return trimmed;
 }
 
 function eventImages(images: TicketmasterEvent["images"]): string[] {
@@ -144,7 +154,18 @@ function normalizeEvent(raw: TicketmasterEvent, venueProfile: VenueProfile, chec
   const startDateTime = flags?.dateTime;
   if (!id || !title || !startDateTime || isAncillaryEventListingTitle(title)) return null;
   const localDate = flags.localDate || eventLocalDateIso(startDateTime, venue?.timezone || venueProfile.timezone);
-  const category = eventCategory(raw.classifications?.[0]?.segment?.name);
+  const classification = raw.classifications?.[0];
+  const category = eventCategory(classification?.segment?.name);
+  // Only surface event categories that this travel-planning experience can
+  // explain clearly. Theater, expos, and miscellaneous inventory need a
+  // reviewed taxonomy before receiving indexable pages.
+  if (category === "other") return null;
+  const genre = usefulClassification(classification?.genre?.name);
+  const subGenre = usefulClassification(classification?.subGenre?.name);
+  const contextBase = subGenre || genre;
+  const contextLabel = contextBase
+    ? `${contextBase}${category === "concert" && !/concert$/i.test(contextBase) ? " concert" : ""}`
+    : category === "sports" ? "Sports event" : "Concert";
   const imageUrls = eventImages(raw.images);
   const performers = (raw._embedded?.attractions || [])
     .map((attraction) => ({
@@ -159,6 +180,7 @@ function normalizeEvent(raw: TicketmasterEvent, venueProfile: VenueProfile, chec
     id: `ticketmaster-${id}`,
     slug: eventSlug(title, venue?.name || venueProfile.name, localDate, id),
     title,
+    contextLabel,
     category,
     venueId: venueProfile.id,
     startDateTime,

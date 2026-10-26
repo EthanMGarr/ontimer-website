@@ -6,7 +6,7 @@ import type { SiteLocale } from "@/lib/i18n";
 
 interface CurrentLocationControlProps {
   active: boolean;
-  onLocationChange: (coordinates: string | null) => void;
+  onLocationChange: (coordinates: string | null, displayLabel?: string) => void;
   locale?: SiteLocale;
 }
 
@@ -20,13 +20,13 @@ export default function CurrentLocationControl({
     denied: "No pudimos acceder a tu ubicación. Permite el acceso o escribe una dirección.",
     finding: "Buscando tu ubicación…",
     use: "Usar mi ubicación actual",
-    added: "Ubicación actual añadida.",
+    found: "Ubicación actual encontrada",
   } : {
     unavailable: "Current location is not available in this browser. Enter an address instead.",
     denied: "We couldn’t access your location. Allow location access or enter an address.",
     finding: "Finding your location…",
     use: "Use my current location",
-    added: "Current location added.",
+    found: "Current location found",
   };
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -42,8 +42,29 @@ export default function CurrentLocationControl({
     setStatus("loading");
     setError(null);
     navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        onLocationChange(`${coords.latitude},${coords.longitude}`);
+      async ({ coords }) => {
+        const coordinates = `${coords.latitude},${coords.longitude}`;
+        let displayLabel = copy.found;
+
+        try {
+          const response = await fetch("/api/reverse-geocode", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+              language: locale,
+            }),
+          });
+          if (response.ok) {
+            const data = (await response.json()) as { address?: string | null };
+            if (data.address?.trim()) displayLabel = data.address.trim();
+          }
+        } catch {
+          // Exact coordinates still work for routing when no address is available.
+        }
+
+        onLocationChange(coordinates, displayLabel);
         setStatus("idle");
         fireEvent("current_location_used", {
           page_path: window.location.pathname,
@@ -78,9 +99,7 @@ export default function CurrentLocationControl({
         </p>
       )}
       {active && !error && (
-        <p className="sr-only" role="status">
-          {copy.added}
-        </p>
+        <p className="sr-only" role="status">{copy.found}</p>
       )}
     </>
   );

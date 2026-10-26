@@ -1,4 +1,4 @@
-import type { EventRecord, VenueProfile } from "./event-time-to-leave";
+import { eventContextLabel, type EventRecord, type VenueProfile } from "./event-time-to-leave";
 
 function eventStatusUrl(status: EventRecord["status"]): string {
   if (status === "cancelled") return "https://schema.org/EventCancelled";
@@ -8,7 +8,7 @@ function eventStatusUrl(status: EventRecord["status"]): string {
 }
 
 export function eventPageDescription(event: EventRecord, venue: VenueProfile): string {
-  return `Going to ${event.title} at ${venue.name}? Calculate when to leave using route time, venue arrival guidance, parking or transit, and timing buffers.`;
+  return `${eventContextLabel(event)}: ${event.title} at ${venue.name}. Calculate when to leave using route time, venue arrival guidance, parking or transit, and timing buffers.`;
 }
 
 export function buildEventStructuredData(event: EventRecord, venue: VenueProfile, canonical: string) {

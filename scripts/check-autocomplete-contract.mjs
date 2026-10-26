@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 
 const autocomplete = readFileSync("src/components/PlaceAutocomplete.tsx", "utf8");
 const travelRoute = readFileSync("src/app/api/travel-time/route.ts", "utf8");
+const placesRoute = readFileSync("src/app/api/places-autocomplete/route.ts", "utf8");
 
 assert.match(
   autocomplete,
@@ -24,6 +25,9 @@ assert.match(
   /code === "invalid_location" \? 422 : 502/,
   "invalid locations must have a stable response distinct from provider outages"
 );
+assert.match(autocomplete, /types = "place"/, "general location fields must include businesses and landmarks by default");
+assert.match(autocomplete, /language: locale/, "place results must follow the visitor's language");
+assert.match(placesRoute, /types = searchParams\.get\("types"\) \?\? "place"/, "the proxy must preserve the all-place default");
 
 const consumers = [
   "src/app/airport-pickup-time-calculator/AirportPickupCalculator.tsx",

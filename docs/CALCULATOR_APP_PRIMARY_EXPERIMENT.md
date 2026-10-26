@@ -1,5 +1,7 @@
 # Calculator App-Primary Measured Rollout
 
+> Current authority: this rollout and `docs/CALCULATOR_CONVERSION_UX_CHECKLIST.md` supersede calendar-first sequencing described in older project plans, completion reports, and changelog entries. Do not use those historical descriptions to demote the app-primary result action.
+
 ## Decision
 
 Run the app-primary result at 100% and evaluate it against the completed historical baseline.

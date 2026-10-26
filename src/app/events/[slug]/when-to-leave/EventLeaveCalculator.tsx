@@ -3,6 +3,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
+import CurrentLocationControl from "@/components/CurrentLocationControl";
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
 import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 import { buildIcsCalendarDataUri } from "@/lib/calendar-links";
@@ -99,6 +100,7 @@ function inputKey(origin: string, mode: EventTravelMode, preference: ArrivalPref
 
 export default function EventLeaveCalculator({ event, venue }: { event: EventRecord; venue: VenueProfile }) {
   const [origin, setOrigin] = useState("");
+  const [currentLocation, setCurrentLocation] = useState<string | null>(null);
   const [travelMode, setTravelMode] = useState<EventTravelMode>("DRIVE");
   const [preference, setPreference] = useState<ArrivalPreference>("comfortable");
   const [manualMinutes, setManualMinutes] = useState("");
@@ -117,6 +119,16 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
     () => event.endDateTime ? new Date(event.endDateTime) : new Date(eventStart.getTime() + 3 * 60 * 60_000),
     [event.endDateTime, eventStart],
   );
+
+  function handleOriginChange(value: string) {
+    setOrigin(value);
+    setCurrentLocation(null);
+  }
+
+  function handleCurrentLocationChange(coordinates: string | null, displayLabel?: string) {
+    setCurrentLocation(coordinates);
+    setOrigin(coordinates ? displayLabel ?? "Current location found" : "");
+  }
 
   async function handleSubmit(submission: React.FormEvent<HTMLFormElement>) {
     submission.preventDefault();
@@ -151,7 +163,7 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
       } else {
         const provisionalDeparture = provisionalDepartureFor(event, venue, preference, travelMode);
         const params = new URLSearchParams({
-          origin: origin.trim(),
+          origin: currentLocation ?? origin.trim(),
           destination,
           departureTime: Math.floor(provisionalDeparture.getTime() / 1000).toString(),
           travelMode,
@@ -225,10 +237,14 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
             <PlaceAutocomplete
               id="event-origin"
               value={origin}
-              onChange={setOrigin}
+              onChange={handleOriginChange}
               placeholder="Address, neighborhood, or place"
               inputClassName="event-calc__input"
               onResolutionChange={setIsResolvingOrigin}
+            />
+            <CurrentLocationControl
+              active={currentLocation !== null}
+              onLocationChange={handleCurrentLocationChange}
             />
             <p className="event-calc__helper">Used only to estimate this trip. It is not added to the event page.</p>
           </div>

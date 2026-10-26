@@ -53,7 +53,7 @@ const calculatorCopy = {
     none: "None", minutes: "minutes",
     scheduledRoute: "scheduled route", estimated: "estimated", expectedTraffic: "expected traffic", liveTraffic: "live traffic",
     locationUnavailable: "Current location is not available in this browser. Enter an address instead.",
-    currentLocation: "Current location", locationAdded: "Current location added.",
+    currentLocation: "Current location found", locationAdded: "Current location found.",
     locationDenied: "We couldn’t access your location. Allow location access or enter an address.",
     automaticUnavailable: "Automatic travel time is unavailable for this route. Use Timing options above to enter travel time manually, or try a fuller address.",
     startingLocationNeeded: "Add a starting location for automatic travel time, or enter minutes manually in timing assumptions.",
@@ -83,7 +83,7 @@ const calculatorCopy = {
     none: "Ninguno", minutes: "minutos",
     scheduledRoute: "ruta programada", estimated: "estimado", expectedTraffic: "tráfico previsto", liveTraffic: "tráfico en tiempo real",
     locationUnavailable: "Tu ubicación actual no está disponible en este navegador. Escribe una dirección.",
-    currentLocation: "Ubicación actual", locationAdded: "Ubicación actual añadida.",
+    currentLocation: "Ubicación actual encontrada", locationAdded: "Ubicación actual encontrada.",
     locationDenied: "No pudimos acceder a tu ubicación. Permite el acceso o escribe una dirección.",
     automaticUnavailable: "No se pudo calcular automáticamente el tiempo para esta ruta. Usa Opciones de tiempo arriba para indicar el viaje manualmente o prueba con una dirección más completa.",
     startingLocationNeeded: "Añade un punto de partida para calcular el viaje automáticamente o indica los minutos en los ajustes.",
@@ -571,7 +571,8 @@ export default function LeaveTimeCalculator({
     setLocationMessage(null);
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        setCurrentLocation(`${coords.latitude},${coords.longitude}`);
+        const coordinates = `${coords.latitude},${coords.longitude}`;
+        setCurrentLocation(coordinates);
         setOrigin(copy.currentLocation);
         setOriginPlace(null);
         setLocationStatus("success");
@@ -817,7 +818,7 @@ export default function LeaveTimeCalculator({
                 </p>
               )}
               {locationStatus === "success" && (
-                <p className="sr-only" role="status">{copy.locationAdded}</p>
+                <p className="sr-only" role="status">{locationMessage}</p>
               )}
             </div>
 

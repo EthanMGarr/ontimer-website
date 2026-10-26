@@ -96,7 +96,7 @@ export default function PlaceAutocomplete({
   inputClassName = "",
   id,
   ariaDescribedBy,
-  types = "geocode",
+  types = "place",
   includeAirports = false,
   provider = "google",
   locale = "en",
@@ -289,7 +289,7 @@ export default function PlaceAutocomplete({
       const controller = new AbortController();
       requestRef.current = controller;
       const endpoint = provider === "mapbox" ? "/api/mapbox-search" : "/api/places-autocomplete";
-      const googleParams = new URLSearchParams({ input, types });
+      const googleParams = new URLSearchParams({ input, types, language: locale });
       const res = await fetch(provider === "mapbox" ? endpoint : `${endpoint}?${googleParams}`, {
         method: provider === "mapbox" ? "POST" : "GET",
         signal: controller.signal,

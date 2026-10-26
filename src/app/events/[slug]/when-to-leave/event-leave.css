@@ -25,6 +25,7 @@
 }
 
 .event-task__context h1 span { color: var(--blue-700); }
+.event-task__descriptor { color: var(--ink); font-size: var(--text-base); font-weight: 700; line-height: 1.4; margin: var(--space-sm) 0 0; }
 .event-task__schedule { color: var(--ink-muted); font-size: var(--text-sm); line-height: 1.45; margin: var(--space-sm) 0 0; }
 .event-task__schedule strong { color: var(--ink); }
 .event-task__verification { color: var(--ink-soft); font-size: var(--text-xs); line-height: 1.45; margin: var(--space-xs) 0 0; }

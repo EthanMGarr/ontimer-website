@@ -140,15 +140,15 @@ const securityRule: TimingRule<AirportPlanningContext> = {
   calculate(context) {
     return {
       key: "tsa_security",
-      label: context.securityLabel ?? "Airport security",
+      label: `${context.securityLabel ?? "Airport security"} allowance`,
       minutes: resolveSecurityMinutes(context),
       explanation: context.useSecurityOverride
-        ? "Uses your manual security wait."
-        : "Airport security estimate for this flight type.",
+        ? "Uses the security allowance you entered manually."
+        : "Conservative planning allowance; the expected wait may be shorter.",
       source: context.useSecurityOverride ? "override" : "estimate",
       sourceLabel: context.useSecurityOverride
         ? "manual"
-        : context.securitySourceLabel ?? "security estimate",
+        : context.securitySourceLabel ?? "recommended allowance",
       ruleKey: "airport.tsa-security",
       priority: 20,
     };

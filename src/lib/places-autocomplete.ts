@@ -67,6 +67,7 @@ export function shouldRequestPaidAutocomplete(
 // These are the only legacy values used or intentionally supported by the
 // component interface. `address` has no New API collection equivalent.
 const PERMITTED_TYPES: Readonly<Record<string, readonly string[]>> = {
+  place: [],
   geocode: ["geocode"],
   establishment: ["establishment"],
   address: ["street_address"],
@@ -102,7 +103,8 @@ export async function requestAutocomplete(
   includedPrimaryTypes: readonly string[],
   apiKey: string,
   fetcher: typeof fetch = fetch,
-  reportHealth?: (health: AutocompleteRequestHealth) => void
+  reportHealth?: (health: AutocompleteRequestHealth) => void,
+  languageCode = "en"
 ): Promise<AutocompletePrediction[]> {
   const startedAt = Date.now();
   try {
@@ -117,8 +119,8 @@ export async function requestAutocomplete(
         },
         body: JSON.stringify({
           input,
-          languageCode: "en",
-          includedPrimaryTypes,
+          languageCode,
+          ...(includedPrimaryTypes.length > 0 ? { includedPrimaryTypes } : {}),
         }),
         cache: "no-store",
       }

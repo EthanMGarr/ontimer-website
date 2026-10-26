@@ -36,6 +36,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Event structured data includes source-backed recommended fields when available (description, image, performer, organizer, offers, and endDate). Missing optional data is preferable to inferring an end time, price, availability, performer identity, or organizer that the source does not establish.
 - [ ] Redirects are permanent only when the destination is genuinely canonical.
 - [ ] Redirect destinations use the canonical `www.ontimer.app` hostname and avoid redirect chains.
+- [ ] For malformed literal URLs reported by Search Console, first confirm no internal source emits them, then use an exact-path redirect only when the canonical destination is unambiguous; never add a broad wildcard to hide unrelated 404s.
 - [ ] Airport destinations use `/airport-time-to-leave/[slug]`.
 - [ ] Airport pickup destinations use `/airport-pickup/[slug]` only for allowlisted, fully reviewed pickup profiles; unsupported airports stay on the canonical generic pickup calculator.
 - [ ] Expand airport-pickup destinations in evidence-led, source-reviewed cohorts rather than automatically mirroring the full departure-airport catalog. Prioritize airport/query demand, require distinct operational value, and measure each cohort before approving the next one.
@@ -89,7 +90,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Keep airport intent distinct while sharing the entity format: departure H1s use `Find out exactly when to leave for {airport name} ({code})`; pickup H1s use `Find out exactly when to leave for a pickup at {airport name} ({code})`. Do not give both canonicals an identical heading.
 - [ ] Apply the same answer-led language to location-page metadata, directory titles, structured-data names, navigation labels, and internal-link anchors so the intent is consistent across the whole cluster.
 - [ ] Keep the calculator and its brief orientation in the first task area. Long-form SEO/GEO guidance belongs after the tool and must not delay the primary action.
-- [ ] Give a specific result before asking for conversion: result first, calendar handoff second, OnTimer alarm handoff third.
+- [ ] Give a specific result before asking for conversion. For eligible non-Android calculator visitors, keep the established app-primary hierarchy: result first, “Get Automatic Alarms” as the primary action, and the one-result calendar handoff as the clearly labeled secondary alternative. Android retains the established calendar/affiliate experience.
 - [ ] Remove repeated keyword sections that restate the same answer without adding a distinct decision, example, or planning factor.
 - [ ] Explain where a planning answer can vary, identify what the traveler must verify, show the review date, and link to relevant primary sources without implying that a planning estimate is a guarantee.
 - [ ] Measure the full answer funnel separately: calculator start, personalized answer generated, calendar handoff, post-calendar alarm CTA view, and App Store outbound click. Include intent cluster and location code where available.

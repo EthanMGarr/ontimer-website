@@ -52,6 +52,10 @@ assert.match(
   /<CalendarOnTimerHandoff[\s\S]*?\/>[\s\S]*?copy\.adjustAssumptions/,
   "optional result adjustments must follow the conversion handoff",
 );
+assert.match(calculator, /Expected wait at arrival:/, "security results must label the predicted queue wait");
+assert.match(calculator, /Conservative allowance included:/, "security results must distinguish the planning allowance");
+assert.match(calculator, /not live airport queue data/, "fallback security estimates must not imply live airport data");
+assert.match(calculator, /addressCity: "Address, neighborhood, or place"/, "the origin field must invite landmark and business search");
 assert.doesNotMatch(
   `${page}\n${calculator}\n${destinationPlanner}\n${spanishGeneric}\n${spanishAirport}`,
   /genericCalculatorPilot/,
@@ -82,9 +86,10 @@ assert.match(
 );
 assert.match(
   calculator,
-  /id="airport-origin"[\s\S]*?ariaDescribedBy="airport-origin-help"/,
-  "the shared starting-location helper must be attached to the input",
+  /id="airport-origin"[\s\S]*?ariaDescribedBy=\{currentLocation === null \? "airport-origin-help" : undefined\}/,
+  "the starting-location helper must be attached only until current location is found",
 );
+assert.match(calculator, /\{currentLocation === null && \([\s\S]*?copy\.startingPointHelp/, "the redundant starting-location instruction must disappear after geolocation succeeds");
 assert.doesNotMatch(
   calculator,
   /copy\.addOrigin/,

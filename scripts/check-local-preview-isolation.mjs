@@ -14,6 +14,7 @@ const checks = [
   [packageJson.scripts["preview:status"] === "node scripts/local-preview.mjs status", "managed preview status command exists"],
   [previewScript.includes(reviewRoute()), "preview health check uses the calculator review route"],
   [previewScript.includes('body.includes("Internal Server Error")'), "health check rejects Next.js error pages"],
+  [previewScript.includes('waitForHealth(timeoutMs = 180_000)'), "cold preview compilation receives a practical health window"],
   [previewScript.includes('process.kill(-pid, signal)'), "preview stop signals the detached process group"],
   [previewScript.includes('process.kill(-pid, 0)'), "preview stop checks the detached process group"],
   [previewScript.includes('process.kill(pid, 0)'), "preview status checks the recorded launcher process"],

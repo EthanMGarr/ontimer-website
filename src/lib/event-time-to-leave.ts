@@ -24,6 +24,7 @@ export interface EventRecord {
   slug: string;
   title: string;
   subtitle?: string;
+  contextLabel?: string;
   category: EventCategory;
   venueId: string;
   startDateTime: string;
@@ -285,6 +286,15 @@ export function isAncillaryEventListingTitle(title: string): boolean {
     /^(?:parking|prepaid parking)\b/,
     /\b(?:arena|center|garden|stadium|field) tours?\b/,
   ].some((pattern) => pattern.test(normalized));
+}
+
+/** A short, plain-language answer to “what is this event?” for ambiguous titles. */
+export function eventContextLabel(event: EventRecord): string {
+  if (event.contextLabel?.trim()) return event.contextLabel.trim();
+  if (event.subtitle?.trim()) return event.subtitle.trim();
+  if (event.category === "sports") return "Sports event";
+  if (event.category === "concert") return "Concert";
+  return "Live event";
 }
 
 function eventIdentityTitle(event: EventRecord): string {

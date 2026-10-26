@@ -151,11 +151,10 @@ export default function AirportPickupCalculator({
   function noteStarted() { if (!started.current) { started.current = true; trackCalculatorStarted("airport_pickup", analyticsContext); } }
   function resetResult() { setCalendarProvider(null); setError(""); }
   function handleOriginChange(value: string) { noteStarted(); setOrigin(value); setCurrentLocation(null); resetResult(); }
-  function handleCurrentLocationChange(coordinates: string | null) {
+  function handleCurrentLocationChange(coordinates: string | null, displayLabel?: string) {
     noteStarted();
     setCurrentLocation(coordinates);
-    if (coordinates) setOrigin("Current location");
-    else if (origin === "Current location") setOrigin("");
+    setOrigin(coordinates ? displayLabel ?? "Current location found" : "");
     resetResult();
   }
 

@@ -89,6 +89,13 @@ const createNextConfig = (phase: string): NextConfig => ({
         destination: "/time-calculators",
         permanent: true,
       },
+      {
+        // Search Console observed this literal malformed URL. Keep the repair
+        // exact so valid paths containing other characters are unaffected.
+        source: "/$",
+        destination: "/",
+        permanent: true,
+      },
     ];
   },
 });
