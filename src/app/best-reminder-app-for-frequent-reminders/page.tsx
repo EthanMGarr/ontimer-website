@@ -46,7 +46,7 @@ const faqItems = [
   {
     question: "Do persistent reminders work on iPhone in the background?",
     answer:
-      "Yes, with caveats. iOS Notification scheduled alerts will fire even when the app is in the background — but they can be blocked by Do Not Disturb, Focus modes, or notification settings. True alarm-style interruption typically requires the app to have notification permissions set to time-sensitive or critical alert level. OnTimer requests these permissions during setup so alerts cut through Focus modes.",
+      "Yes, with caveats. On iOS 26.1 and later, OnTimer's High Alert uses Apple's AlarmKit and can ring through Silent mode and Focus or Do Not Disturb when enabled and permitted. Without High Alert, sound and delivery depend on the iPhone's notification, sound, and Focus settings.",
   },
   {
     question: "What's the best reminder app for people with ADHD?",
@@ -432,7 +432,7 @@ export default function BestReminderAppForFrequentRemindersPage() {
               "Fires before every calendar event automatically — no manual setup per event",
               "Connects to Google Calendar, Apple Calendar, and Outlook Calendar",
               "Configurable lead time — set how early you want to be interrupted",
-              "Works through Focus modes with time-sensitive alert permissions",
+              "High Alert can ring through Silent and Focus on iOS 26.1+ when enabled and permitted",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 text-zinc-300">
                 <span className="mt-1 flex-shrink-0 text-green-500">✓</span>

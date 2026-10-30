@@ -1,7 +1,7 @@
 import { getSortedPosts } from "@/lib/blog";
 
 export async function GET() {
-  const baseUrl = "https://ontimer.app";
+  const baseUrl = "https://www.ontimer.app";
   const posts = getSortedPosts();
 
   const rssItems = posts

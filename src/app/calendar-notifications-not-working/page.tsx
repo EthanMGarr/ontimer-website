@@ -262,7 +262,7 @@ const articleJsonLd = {
   description:
     "A step-by-step troubleshooting guide for missing, delayed, or silent calendar notifications on Google Calendar, Apple Calendar, and Outlook Calendar.",
   author: { "@type": "Organization", name: "OnTimer" },
-  publisher: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
+  publisher: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
   url: "https://www.ontimer.app/calendar-notifications-not-working",
   mainEntityOfPage: "https://www.ontimer.app/calendar-notifications-not-working",
 };
@@ -281,12 +281,12 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://ontimer.app" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
     {
       "@type": "ListItem",
       position: 2,
       name: "Calendar Notifications Not Working",
-      item: "https://ontimer.app/calendar-notifications-not-working",
+      item: "https://www.ontimer.app/calendar-notifications-not-working",
     },
   ],
 };

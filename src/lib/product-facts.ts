@@ -1,4 +1,4 @@
-export const PRODUCT_FACTS_VERSION = "2026-10-16";
+export const PRODUCT_FACTS_VERSION = "2026-10-30";
 
 export const productFacts = {
   positioning: {
@@ -13,7 +13,7 @@ export const productFacts = {
     persistent:
       "OnTimer alarms stay on screen until you dismiss them.",
     highAlert:
-      "On iOS 26.1 and later, High Alert can ring through Silent mode and Focus or Do Not Disturb when it is enabled and iOS permissions allow it.",
+      "On iOS 26.1 and later, High Alert uses Apple's AlarmKit and can ring through Silent mode and Focus or Do Not Disturb when it is enabled and iOS permissions allow it.",
     standard:
       "Without High Alert, sound and delivery still depend on the iPhone's notification, sound, and Focus settings.",
   },

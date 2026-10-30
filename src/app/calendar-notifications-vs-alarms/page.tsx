@@ -63,12 +63,12 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://ontimer.app" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
     {
       "@type": "ListItem",
       position: 2,
       name: "Calendar Notifications vs Alarms",
-      item: "https://ontimer.app/calendar-notifications-vs-alarms",
+      item: "https://www.ontimer.app/calendar-notifications-vs-alarms",
     },
   ],
 };
@@ -79,7 +79,7 @@ const fullComparison = [
   { dimension: "Can be ignored without interaction", notification: true, alarm: false },
   { dimension: "Stays on lock screen", notification: false, alarm: true },
   { dimension: "Competes with other alerts", notification: true, alarm: false },
-  { dimension: "Overrides Focus/Do Not Disturb", notification: false, alarm: true },
+  { dimension: "High Alert can ring through Focus on iOS 26.1+ when enabled and permitted", notification: false, alarm: true },
   { dimension: "Works during deep focus", notification: false, alarm: true },
   { dimension: "Native to calendar apps", notification: true, alarm: false },
 ];

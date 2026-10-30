@@ -41,7 +41,7 @@ const timeBlindnessTools = [
   {
     name: "Alarm-based calendar apps",
     description:
-      "Apps that turn calendar events into persistent alarms — not just notifications — so meetings can't be ignored. The alarm requires a response; it doesn't wait for you to notice it.",
+      "Apps that turn calendar events into persistent alarms — not just notifications — so meetings are harder to miss. The alarm requires a response instead of disappearing on its own.",
   },
   {
     name: "External cues",
@@ -256,7 +256,7 @@ export default function AdhdTimeBlindnessTools() {
           </p>
           <p className="mt-3 text-zinc-400 leading-relaxed">
             The most effective tools share one trait: they make time visible or
-            impossible to ignore.
+            harder to overlook.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {timeBlindnessTools.map((tool) => (

@@ -19,9 +19,11 @@ No phone alert can guarantee that a person will notice or act. OnTimer is design
 
 ## Silent mode, Focus, and High Alert
 
+On iOS 26.1 and later, OnTimer's High Alert uses Apple's AlarmKit. OnTimer still supports earlier iOS versions, where High Alert is unavailable and alert behavior depends on notification, sound, and Focus settings.
+
 | Situation | What to expect |
 | --- | --- |
-| iOS 26.1 or later with High Alert enabled and permitted | High Alert can ring through Silent mode and Focus or Do Not Disturb. |
+| iOS 26.1 or later with High Alert enabled and permitted | AlarmKit-powered High Alert can ring through Silent mode and Focus or Do Not Disturb. |
 | High Alert is not enabled or available | Sound and delivery depend on the iPhone's notification, sound, and Focus settings. |
 | OnTimer notifications are disabled | OnTimer cannot deliver the expected alarm. Enable notifications in iPhone Settings. |
 | OnTimer is paused | Event alarms remain paused until you resume them in OnTimer. |

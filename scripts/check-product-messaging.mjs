@@ -61,6 +61,9 @@ publicFiles.push("public/llms.txt");
 
 const forbidden = [
   /impossible to miss/i,
+  /impossible to ignore/i,
+  /can(?:not|['’]t) be (?:passively )?ignored/i,
+  /doesn['’]t tolerate being ignored/i,
   /you can['’]t ignore/i,
   /alarms? (?:that )?(?:you )?can['’]t miss/i,
   /professionals can['’]t miss/i,

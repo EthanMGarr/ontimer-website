@@ -69,6 +69,7 @@ Use this checklist for every production change involving pages, routes, metadata
 ## Answer-Engine and LLM Discoverability
 
 - [ ] Keep one verified product-facts source for supported iOS versions, calendar providers, free and paid limits, alert modes, Silent/Focus behavior, permissions, privacy, and any AlarmKit implementation. Reconcile the website, help center, App Store, and structured data when any fact changes.
+- [ ] When a newer iOS framework is conditionally available, state both the supported-version behavior and the older-version fallback. A lower minimum iOS version does not prove that the current app cannot use a newer framework behind an availability check.
 - [ ] Lead customer-facing compatibility lists with “Outlook Calendar.” Use “Microsoft 365” only when account or setup context requires the platform name; never present the two as separate calendar integrations.
 - [ ] Do not publish absolute reliability claims such as “impossible to miss” or “can't miss.” Use the BrandOS language “harder to miss,” “persistent,” and “requires acknowledgment.”
 - [ ] Comparison pages state a review date, link to first-party sources for every competitor, distinguish “not described publicly” from “not available,” and explain which workflow each product fits instead of declaring an unsupported universal winner.

@@ -28,8 +28,8 @@ const articleJsonLd = {
   description:
     "The Last 5 Minutes Problem is the gap between knowing about something and actually acting on it in time. Most reminders fail because notifications require attention, while alarms interrupt you and force action.",
   url: "https://www.ontimer.app/last-5-minutes-problem",
-  author: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
-  publisher: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
+  author: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
+  publisher: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
   datePublished: "2026-04-01",
   dateModified: "2026-06-01",
   mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/last-5-minutes-problem" },
@@ -67,7 +67,7 @@ const faqItems = [
   {
     question: "How do persistent calendar alarms solve the Last 5 Minutes Problem?",
     answer:
-      "Persistent alarms can't be ignored the same way a notification can. They stay on your screen until you dismiss them. They interrupt what you're doing instead of appearing in the background. For high-stakes moments — meetings, flights, medication, appointments — the interruption is the point.",
+      "Persistent alarms are harder to miss than passive notifications because they stay on your screen until you dismiss them. For high-stakes moments — meetings, flights, medication, appointments — that required response is the point.",
   },
   {
     question: "What apps help with the Last 5 Minutes Problem?",
@@ -95,12 +95,12 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://ontimer.app" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
     {
       "@type": "ListItem",
       position: 2,
       name: "The Last 5 Minutes Problem",
-      item: "https://ontimer.app/last-5-minutes-problem",
+      item: "https://www.ontimer.app/last-5-minutes-problem",
     },
   ],
 };

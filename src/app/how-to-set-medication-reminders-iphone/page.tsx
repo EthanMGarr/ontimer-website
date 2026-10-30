@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "How to Set Medication Reminders on iPhone",
     description:
-      "Step-by-step guide to setting up medication reminders on iPhone — plus how to make them impossible to ignore.",
+      "Step-by-step guide to setting up medication reminders on iPhone — plus how to make them harder to miss.",
   },
 };
 

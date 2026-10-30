@@ -185,8 +185,8 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               {[
-                { href: "https://ontimer.app/OnTimer_Privacy_Policy.html",   label: "Privacy Policy"   },
-                { href: "https://ontimer.app/OnTimer_Terms_of_Service.html", label: "Terms of Service" },
+                { href: "https://www.ontimer.app/OnTimer_Privacy_Policy.html",   label: "Privacy Policy"   },
+                { href: "https://www.ontimer.app/OnTimer_Terms_of_Service.html", label: "Terms of Service" },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <a

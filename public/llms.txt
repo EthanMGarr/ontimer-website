@@ -26,10 +26,10 @@ OnTimer is an iPhone calendar alarm app. It turns events from Apple Calendar, Go
 - Time To Leave can use an event location, travel time, and traffic.
 - Time To Fly automatically discovers flights in connected calendars and prepares an airport leave-time alarm using the trip to the airport and airline-recommended arrival time.
 - Time To Fly does not track flight status, delays, gates, terminals, check-in, security waits, or travel-document requirements.
-- On iOS 26.1 and later, High Alert can ring through Silent mode and Focus or Do Not Disturb when enabled and permitted by iOS.
+- On iOS 26.1 and later, High Alert uses Apple's AlarmKit and can ring through Silent mode and Focus or Do Not Disturb when enabled and permitted by iOS.
 - Without High Alert, sound and delivery depend on iPhone notification, sound, and Focus settings.
 - OnTimer is free and includes automatic alarms for one calendar provider.
 - Time To Fly can set an initial airport departure estimate on the free plan. OnTimer Pro can update it for traffic when background conditions allow.
 - OnTimer Pro also adds multiple calendar providers, Time To Leave, Early Warning, and additional controls.
 
-Last reviewed: 2026-10-13
+Last reviewed: 2026-10-30

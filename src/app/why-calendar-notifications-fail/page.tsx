@@ -66,7 +66,7 @@ const articleJsonLd = {
   description:
     "You set the reminder. You still missed the meeting. Calendar notifications fail because they're passive — they inform without interrupting. Here's the full breakdown and what to use instead.",
   author: { "@type": "Organization", name: "OnTimer" },
-  publisher: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
+  publisher: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
   url: "https://www.ontimer.app/why-calendar-notifications-fail",
   mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/why-calendar-notifications-fail" },
   datePublished: "2026-04-01",
@@ -87,12 +87,12 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://ontimer.app" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
     {
       "@type": "ListItem",
       position: 2,
       name: "Why Calendar Reminders Get Missed",
-      item: "https://ontimer.app/why-calendar-notifications-fail",
+      item: "https://www.ontimer.app/why-calendar-notifications-fail",
     },
   ],
 };
@@ -387,10 +387,10 @@ export default function Page() {
               ["Fires once and disappears", "Continues until explicitly dismissed"],
               ["Passive — no response required", "Interruptive — demands a response"],
               ["4–8 seconds on screen", "Stays until you act"],
-              ["Can be missed without consequence", "Cannot be passively ignored"],
+              ["Can be missed without interaction", "Requires an explicit dismiss decision"],
               ["Competes with all other alerts", "Takes over screen and audio"],
               ["Easy to defer with no follow-up", "Requires an explicit dismiss decision"],
-              ["Blocked silently by Focus mode", "Can bypass Focus for critical events"],
+              ["Can be blocked by Focus mode", "High Alert can ring through Focus on iOS 26.1+ when enabled and permitted"],
               ["Designed to inform", "Designed to change behavior"],
             ].map(([left, right], i) => (
               <div key={i} className="grid grid-cols-2 border-b border-zinc-800 last:border-0">

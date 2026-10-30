@@ -427,7 +427,7 @@ export default function AirportTheoryCalculator() {
     const modeSlug   = AGGRESSION_TO_MODE[result.aggression];
     const leaveStr   = fmtTime(result.leaveTime).replace(/\s/g, "").toLowerCase();
     const successNum = level.successRate.replace(/[^0-9]/g, "");
-    const url  = `https://ontimer.app/airport-theory-calculator?mode=${modeSlug}&leave=${encodeURIComponent(leaveStr)}&success=${successNum}`;
+    const url  = `https://www.ontimer.app/airport-theory-calculator?mode=${modeSlug}&leave=${encodeURIComponent(leaveStr)}&success=${successNum}`;
     const text = `According to this, you'd make your flight only ${level.successRate} of the time ${level.emoji}\nYou're in *${level.label} mode*.\n\nTry it yourself:\n${url}`;
     try {
       if (navigator.share) {

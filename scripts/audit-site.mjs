@@ -4,12 +4,21 @@ const publicOrigin = "https://www.ontimer.app";
 const publicHostname = new URL(publicOrigin).hostname;
 
 async function fetchPage(url, options = {}) {
-  return fetch(url, {
-    redirect: "manual",
-    signal: AbortSignal.timeout(20_000),
-    headers: { "user-agent": "OnTimer-Site-Audit/1.0" },
-    ...options,
-  });
+  let lastError;
+  for (const timeoutMs of [20_000, 45_000]) {
+    try {
+      return await fetch(url, {
+        redirect: "manual",
+        signal: AbortSignal.timeout(timeoutMs),
+        headers: { "user-agent": "OnTimer-Site-Audit/1.0" },
+        ...options,
+      });
+    } catch (error) {
+      lastError = error;
+      if (!(error instanceof Error) || (error.name !== "TimeoutError" && error.name !== "AbortError")) throw error;
+    }
+  }
+  throw lastError;
 }
 
 async function mapLimit(items, limit, worker) {

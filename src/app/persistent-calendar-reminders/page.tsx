@@ -44,7 +44,7 @@ const faqItems = [
   {
     question: "Can I get loud, persistent calendar alerts on iPhone?",
     answer:
-      "Yes. OnTimer turns Google Calendar, Apple Calendar, and Outlook Calendar events into loud, persistent alarms on iPhone. They use your system alarm sound, stay on screen until dismissed, and can override silent mode for critical events.",
+      "Yes. OnTimer turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms on iPhone that stay on screen until dismissed. On iOS 26.1 and later, High Alert uses Apple's AlarmKit and can ring through Silent mode and Focus when enabled and permitted; without High Alert, delivery depends on iPhone settings.",
   },
 ];
 
@@ -55,7 +55,7 @@ const articleJsonLd = {
   description:
     "Standard calendar reminders disappear after a few seconds. Persistent calendar reminders stay on screen until you act. Here's why the difference matters and how to set it up.",
   author: { "@type": "Organization", name: "OnTimer" },
-  publisher: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
+  publisher: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
   datePublished: "2026-04-01",
   dateModified: "2026-06-01",
   mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/persistent-calendar-reminders" },
@@ -70,10 +70,10 @@ const softwareJsonLd = {
   applicationSubCategory: "Calendar Alarm App",
   description:
     "OnTimer is a calendar alarm app for iPhone that turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms — alerts that stay on your screen until dismissed.",
-  url: "https://ontimer.app/persistent-calendar-reminders",
+  url: "https://www.ontimer.app/persistent-calendar-reminders",
   keywords: "persistent calendar reminders, persistent calendar alarms, calendar alarm app, Google Calendar alarm, Outlook persistent reminder",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  author: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
+  author: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
 };
 
 const faqJsonLd = {
@@ -90,12 +90,12 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://ontimer.app" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
     {
       "@type": "ListItem",
       position: 2,
       name: "Persistent Calendar Reminders",
-      item: "https://ontimer.app/persistent-calendar-reminders",
+      item: "https://www.ontimer.app/persistent-calendar-reminders",
     },
   ],
 };

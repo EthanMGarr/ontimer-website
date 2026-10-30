@@ -28,8 +28,8 @@ const articleJsonLd = {
   description:
     "Most notifications fail because they require attention at exactly the moment people are distracted. Persistent alarms interrupt regardless of what you are doing — and that difference determines whether you make it to the meeting, catch the flight, or take the medication on time.",
   url: "https://www.ontimer.app/why-notifications-fail",
-  author: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
-  publisher: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
+  author: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
+  publisher: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
 };
 
 const faqItems = [
@@ -56,12 +56,12 @@ const faqItems = [
   {
     question: "How do persistent alarms work differently from notifications?",
     answer:
-      "Persistent alarms require an active response before they stop. They stay on your screen, they continue sounding, and they don't tolerate being ignored. This creates an unavoidable interruption — which is exactly what's needed in the final minutes before a meeting, a flight departure, or a medication dose. OnTimer uses this mechanism for every calendar event it monitors.",
+      "Persistent alarms require an active response before they stop. They stay on your screen and continue alerting until dismissed. This creates a stronger interruption than a passive notification in the final minutes before a meeting, a flight departure, or a medication dose.",
   },
   {
     question: "Does this apply to ADHD and time blindness?",
     answer:
-      "Yes, and more acutely. For people with ADHD or time blindness, hyperfocus makes the passage of time nearly invisible. A notification that appeared 12 minutes ago might feel like it appeared 2 minutes ago. A persistent alarm that is still demanding dismissal 12 minutes later makes the time gap impossible to ignore in the same way.",
+      "Yes, and more acutely. For people with ADHD or time blindness, hyperfocus can make the passage of time difficult to register. A persistent alarm that still requires dismissal provides a stronger transition cue than a notification that has already disappeared.",
   },
   {
     question: "What should I use instead of calendar notifications for important events?",
@@ -84,12 +84,12 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://ontimer.app" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
     {
       "@type": "ListItem",
       position: 2,
       name: "Why Notifications Fail",
-      item: "https://ontimer.app/why-notifications-fail",
+      item: "https://www.ontimer.app/why-notifications-fail",
     },
   ],
 };
