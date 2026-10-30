@@ -600,6 +600,13 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
                 postCalendarBody={isSpanish ? "OnTimer configura alarmas automáticamente para los eventos de tu calendario" : "OnTimer automatically sets alarms for your calendar events"}
                 appLocation="wakeup_calculator_result"
                 locale={locale}
+                alarmTime={fmtTime(result.arrivalTime, locale)}
+                alarmHeading={isSpanish
+                  ? `Recibe una alarma de verdad antes de tu llegada de las ${fmtTime(result.arrivalTime, locale)}.`
+                  : `Get a real alarm before your ${fmtTime(result.arrivalTime, locale)} arrival.`}
+                alarmPostCalendarHeading={isSpanish
+                  ? `Haz que suene antes de tu llegada de las ${fmtTime(result.arrivalTime, locale)}.`
+                  : `Make your ${fmtTime(result.arrivalTime, locale)} arrival ring.`}
                 eventPreview={{
                   title: arrivalCalendarEvent?.title ?? (isSpanish ? "Llegar al destino" : "Arrive at destination"),
                   startLabel: fmtTime(result.arrivalTime, locale),

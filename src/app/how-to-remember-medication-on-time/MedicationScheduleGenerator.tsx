@@ -33,6 +33,7 @@ import {
 } from "@/lib/medication-schedule";
 import { generateProviderMedicationICS, handoffProviderMedicationICS } from "@/lib/provider-medication-calendar";
 import { trackMedicationCalendarExportHandedOff, trackMedicationCalendarExportStarted, trackMedicationScheduleGenerated } from "@/lib/analytics";
+import AlarmPreview from "@/components/leave-time/AlarmPreview";
 
 type Frequency = MedicationFrequency;
 type Duration = 7 | 10 | 14 | 30 | "custom";
@@ -456,10 +457,15 @@ export default function MedicationScheduleGenerator() {
               <div className={`rounded-xl border border-green-500/30 bg-green-500/[0.07] p-5 ${
                 downloaded ? "order-1 lg:order-2" : "order-2"
               }`}>
-                <p className="text-lg font-black text-white">Get an alarm for every dose.</p>
-                <p className="mt-1.5 text-sm leading-relaxed text-zinc-300">
-                  OnTimer turns this schedule into automatic alarms.
-                </p>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-lg font-black text-white">Get an alarm for every dose.</p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-zinc-300">
+                      OnTimer turns this schedule into automatic alarms.
+                    </p>
+                  </div>
+                  <AlarmPreview time={times[0] ? formatMedicationTime(times[0]) : undefined} title={medName.trim() || "Medication"} />
+                </div>
                 <div className="mt-4">
                   <AppStoreButton
                     size="lg"

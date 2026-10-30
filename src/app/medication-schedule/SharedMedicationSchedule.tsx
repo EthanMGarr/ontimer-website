@@ -13,6 +13,7 @@ import { changedDoseTimeIndexes, scheduleDurationLabel, scheduleFromHash, type S
 import { generateProviderMedicationICS, handoffProviderMedicationICS } from "@/lib/provider-medication-calendar";
 import MedicationScheduleGenerator from "@/app/how-to-remember-medication-on-time/MedicationScheduleGenerator";
 import { trackMedicationCalendarExportHandedOff, trackMedicationCalendarExportStarted, type MedicationAudience } from "@/lib/analytics";
+import AlarmPreview from "@/components/leave-time/AlarmPreview";
 
 export default function SharedMedicationSchedule() {
   const [schedule, setSchedule] = useState<Schedule | null>(null);
@@ -166,8 +167,13 @@ export default function SharedMedicationSchedule() {
           </div>
 
           <div ref={onTimerRef} tabIndex={-1} className={`rounded-xl border border-green-500/30 bg-green-500/[0.07] p-5 outline-none focus-visible:ring-2 focus-visible:ring-green-400 ${downloaded ? "order-1 lg:order-2" : "order-2"}`}>
-            <p className="text-lg font-black text-white">Get an alarm for every dose.</p>
-            <p className="mt-1.5 text-sm leading-relaxed text-zinc-300">OnTimer turns this schedule into automatic alarms.</p>
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-lg font-black text-white">Get an alarm for every dose.</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-zinc-300">OnTimer turns this schedule into automatic alarms.</p>
+              </div>
+              <AlarmPreview time={schedule.times[0] ? formatMedicationTime(schedule.times[0].time) : undefined} title={schedule.medication} />
+            </div>
             <div className="mt-4"><AppStoreButton size="lg" className="w-full justify-center whitespace-nowrap" location={downloaded ? "shared_medication_after_export" : "shared_medication_schedule"} label="Get OnTimer Free" analyticsContext={{ medication_audience: schedule.senderRole || "patient" }} /><p className="mt-2 text-[11px] text-zinc-500">Download on the App Store</p></div>
           </div>
 

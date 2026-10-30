@@ -39,6 +39,7 @@ import {
   isInvalidTravelTimeLocation,
   readTravelTimeResponse,
 } from "@/lib/travel-time-errors";
+import AlarmPreview from "@/components/leave-time/AlarmPreview";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -763,10 +764,15 @@ function ResultPanel({ result, onShare, shareStatus }: {
           </div>
         ) : (
           <>
-            <p className="text-sm font-semibold text-zinc-300">After you get the safe recommendation</p>
-            <p className="mb-4 mt-1 text-xs leading-relaxed text-zinc-500">
-              Put that real leave time on your calendar, then use OnTimer to make the moment harder to miss.
-            </p>
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-zinc-300">Get a real alarm for the safe leave time</p>
+                <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+                  Put that real leave time on your calendar, then use OnTimer to make the moment harder to miss.
+                </p>
+              </div>
+              <AlarmPreview title="Leave for the airport" />
+            </div>
             <AppStoreButton size="sm" label="Get OnTimer Free" location="airport_theory_result" />
           </>
         )}

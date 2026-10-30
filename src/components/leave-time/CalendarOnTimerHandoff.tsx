@@ -63,6 +63,13 @@ interface CalendarOnTimerHandoffProps {
   leaveTimeLabel?: string;
   /** Replaces the generic leave-time offer body, e.g. with the airport-specific Time To Fly pitch. */
   leaveAlarmBody?: string;
+  /**
+   * For results whose calendar event is not a leave time (an arrival or an event start):
+   * the time shown in the alarm preview and the headlines that name it.
+   */
+  alarmTime?: string;
+  alarmHeading?: string;
+  alarmPostCalendarHeading?: string;
   locale?: SiteLocale;
 }
 
@@ -118,19 +125,24 @@ export default function CalendarOnTimerHandoff({
   eventPreview,
   leaveTimeLabel,
   leaveAlarmBody,
+  alarmTime,
+  alarmHeading,
+  alarmPostCalendarHeading,
   locale = "en",
 }: CalendarOnTimerHandoffProps) {
   const copy = handoffCopy[locale];
   const effectiveAlternateCalendarLabel = alternateCalendarLabel ?? copy.alternate;
   const effectiveReadyHeading = readyHeading ?? copy.ready;
   const effectiveOpenedItemLabel = openedItemLabel ?? copy.item;
-  const effectivePostCalendarHeading = leaveTimeLabel
-    ? copy.leavePostCalendarHeading(leaveTimeLabel)
-    : postCalendarHeading ?? copy.alarmHeading;
-  const leaveOfferBody = leaveAlarmBody ?? copy.leaveAlarmBody;
-  const effectivePostCalendarBody = leaveTimeLabel ? leaveOfferBody : postCalendarBody ?? copy.alarmBody;
-  const resultAlarmHeading = leaveTimeLabel ? copy.leaveAlarmHeading(leaveTimeLabel) : copy.alarmHeading;
-  const resultAlarmBody = leaveTimeLabel ? leaveOfferBody : copy.alarmBody;
+  const previewTime = leaveTimeLabel ?? alarmTime;
+  const namedOffer = previewTime !== undefined;
+  const namedOfferBody = leaveAlarmBody ?? copy.leaveAlarmBody;
+  const effectivePostCalendarHeading = alarmPostCalendarHeading
+    ?? (leaveTimeLabel ? copy.leavePostCalendarHeading(leaveTimeLabel) : postCalendarHeading ?? copy.alarmHeading);
+  const effectivePostCalendarBody = namedOffer ? namedOfferBody : postCalendarBody ?? copy.alarmBody;
+  const resultAlarmHeading = alarmHeading
+    ?? (leaveTimeLabel ? copy.leaveAlarmHeading(leaveTimeLabel) : copy.alarmHeading);
+  const resultAlarmBody = namedOffer ? namedOfferBody : copy.alarmBody;
   const [isAndroidDevice, setIsAndroidDevice] = useState<boolean | null>(null);
   const [experimentVariant, setExperimentVariant] = useState<CalculatorCtaVariant>("control");
   const affiliateRef = useRef<HTMLAnchorElement>(null);
@@ -322,7 +334,7 @@ export default function CalendarOnTimerHandoff({
           </p>
           {!showAndroidAffiliate && (
             <div className="col-start-2 row-start-1 sm:row-span-2">
-              <AlarmPreview time={leaveTimeLabel} title={eventPreview?.title} locale={locale} />
+              <AlarmPreview time={previewTime} title={eventPreview?.title} locale={locale} />
             </div>
           )}
           <p className={`mt-1.5 text-sm leading-relaxed text-zinc-400 ${showAndroidAffiliate ? "col-span-2" : "col-span-2 sm:col-span-1"}`}>

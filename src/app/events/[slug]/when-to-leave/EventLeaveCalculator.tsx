@@ -341,6 +341,9 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
                 postCalendarHeading="Now make sure you leave on time."
                 postCalendarBody="OnTimer turns this calendar event into an automatic alarm."
                 appLocation="event_time_to_leave_after_calendar"
+                alarmTime={formatEventTime(eventStart, event.timezone)}
+                alarmHeading={`Get a real alarm before the ${formatEventTime(eventStart, event.timezone)} start.`}
+                alarmPostCalendarHeading={`Now make the ${formatEventTime(eventStart, event.timezone)} start ring.`}
                 analyticsContext={{ event_id: event.id, event_category: event.category, venue_id: venue.id }}
                 eventPreview={{ title: calendarEvent.title, startLabel: `${formatEventDate(event.startDateTime, event.timezone)} at ${formatEventTime(eventStart, event.timezone)}` }}
               />

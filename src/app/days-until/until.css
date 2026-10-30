@@ -82,6 +82,9 @@
 .until-secondary-offer .until-app-caption { color: var(--blue-100); }
 .until-alarm-offer .until-app-caption { color: var(--ink-soft); }
 .until-alarm-offer--result-primary { margin-bottom: var(--space-lg); }
+/* Headline beside the alarm preview; body text spans the full width below. */
+.until-offer-copy { align-items: start; column-gap: var(--space-md); display: grid; grid-template-columns: minmax(0, 1fr) auto; min-width: 0; }
+.until-offer-copy > p { grid-column: 1 / -1; }
 .until-calendar-secondary { border-top: 1px solid var(--navy-900); padding-top: var(--space-lg); }
 .until-calendar-secondary h2 { color: var(--blue-100); font-size: var(--text-md); }
 .until-copy { background: var(--sky-100); border-block: 1px solid var(--until-line); padding-block: clamp(4rem, 9vw, 7rem); }

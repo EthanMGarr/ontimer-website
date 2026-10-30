@@ -10,6 +10,7 @@ import {
 } from "@/lib/calculator-cta-experiment";
 import { CONSENT_EVENT, isAnalyticsAllowed } from "@/lib/consent";
 import { calculateUntil, COUNTDOWN_OPTIONS, formatDateInput, getCountdownOption } from "@/lib/until";
+import AlarmPreview from "@/components/leave-time/AlarmPreview";
 
 type Props = { initialDate?: string; initialLabel?: string; initialNow?: string; eventSlug?: string; answerFirst?: boolean };
 const MILESTONES = [30, 10, 1];
@@ -197,11 +198,11 @@ export default function UntilCalculator({ initialDate, initialLabel = "", initia
           <div className="until-target">{target ? formatTargetDate(dateValue) : emptyTargetLabel}</div>
           {result ? <div className="until-calendar-step">
             {calendarHandoff ? <aside ref={alarmOfferRef} tabIndex={-1} className="until-alarm-offer" aria-live="polite">
-              <div><h2>Turn these into {label || "event"} alarms!</h2><p>OnTimer is free. Turn calendar events into automatic alarms, so you’re never late.</p></div>
+              <div className="until-offer-copy"><h2>Turn these into {label || "event"} alarms!</h2><AlarmPreview title={label || "Event"} /><p>OnTimer is free. Turn calendar events into automatic alarms, so you’re never late.</p></div>
               <div><a className="until-app-button" href={postCalendarAppStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_after_calendar", { calculator_type: "days_until", cta_variant: "post_calendar_automatic_alert", event_slug: eventSlug, calendar_provider: calendarHandoff })}>Get OnTimer</a><p className="until-app-caption">Works with Google Calendar, Apple Calendar, and Outlook Calendar.</p></div>
             </aside> : <>
               {appPrimary ? <aside className="until-alarm-offer until-alarm-offer--result-primary" data-calendar-secondary-acquisition data-experiment-variant={experimentVariant}>
-                <div><h2>Don’t stop at the countdown.</h2><p>OnTimer is free. Turn calendar events into automatic alarms, so you’re never late.</p></div>
+                <div className="until-offer-copy"><h2>Don’t stop at the countdown.</h2><AlarmPreview title={label || "Event"} /><p>OnTimer is free. Turn calendar events into automatic alarms, so you’re never late.</p></div>
                 <div><a ref={resultAppCtaRef} className="until-app-button" href={resultAppStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_result", { calculator_type: "days_until", cta_variant: resultCtaVariant, event_slug: eventSlug })}>Get Automatic Alarms</a><p className="until-app-caption">Works with Google Calendar, Apple Calendar, and Outlook Calendar.</p></div>
               </aside> : null}
               <div className={appPrimary ? "until-calendar-secondary" : undefined} data-calendar-action data-experiment-variant={experimentVariant}>
@@ -215,7 +216,7 @@ export default function UntilCalculator({ initialDate, initialLabel = "", initia
               <p className="until-note">The first option creates a calendar file for Apple Calendar or Outlook. Google Calendar can import it on a computer.</p>
               </div>
               {!appPrimary ? <aside className="until-secondary-offer" data-calendar-secondary-acquisition data-experiment-variant={experimentVariant}>
-                <div><h3>Prefer automatic alarms?</h3><p>OnTimer is free. Turn calendar events into automatic alarms.</p></div>
+                <div className="until-offer-copy"><h3>Prefer automatic alarms?</h3><AlarmPreview title={label || "Event"} /><p>OnTimer is free. Turn calendar events into automatic alarms.</p></div>
                 <div><a ref={resultAppCtaRef} className="until-app-button" href={resultAppStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackAppStoreClick("days_until_result", { calculator_type: "days_until", cta_variant: resultCtaVariant, event_slug: eventSlug })}>Get Automatic Alarms</a><p className="until-app-caption">Works with Google Calendar, Apple Calendar, and Outlook Calendar.</p></div>
               </aside> : null}
             </>}
