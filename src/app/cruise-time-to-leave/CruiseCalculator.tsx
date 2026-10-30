@@ -652,6 +652,7 @@ export default function CruiseCalculator({
                 postCalendarHeading="Don’t be late. Turn this into an alarm."
                 postCalendarBody="OnTimer automatically sets alarms for your calendar events"
                 appLocation={locationCode ? `cruise_${locationCode.toLowerCase()}_result` : "cruise_calculator_inline"}
+                leaveTimeLabel={fmtTime(computedResult.leaveAt)}
                 analyticsContext={locationCode ? { location_code: locationCode } : {}}
                 eventPreview={{
                   title: terminal ? `Leave for ${terminal.split(",")[0]}` : "Leave for cruise terminal",

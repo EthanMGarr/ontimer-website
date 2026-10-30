@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { APP_STORE_URL } from "@/lib/constants";
+import { appStoreQrUrl } from "@/lib/app-store-links";
 import { trackQRCodeVisible, trackQRCodeClick } from "@/lib/analytics";
 
 interface AppStoreQRPopoverProps {
@@ -95,7 +96,7 @@ export function AppStoreQRPopover({
             >
               <QRCodeSVG
                 title="Scan to download OnTimer from the App Store"
-                value={appStoreUrl}
+                value={appStoreUrl === APP_STORE_URL ? appStoreQrUrl({ location }) : appStoreUrl}
                 size={128}
                 bgColor="#ffffff"
                 fgColor="#000000"

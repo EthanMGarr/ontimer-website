@@ -48,6 +48,17 @@ export function appStoreCampaignUrl(
   return url.toString();
 }
 
+/**
+ * QR scans arrive at the App Store without a web referrer, so every website QR code
+ * carries its own campaign token to keep desktop-to-phone installs attributable.
+ */
+export function appStoreQrUrl(context: AppStoreLinkContext): string {
+  const family = calculatorFamily(context);
+  return family
+    ? appStoreCampaignUrl(`web_qr_${family}`)
+    : appStoreCampaignUrl("web_qr_site", APP_STORE_URL);
+}
+
 export function appStoreUrlFor(context: AppStoreLinkContext): {
   url: string;
   campaignToken: string | null;

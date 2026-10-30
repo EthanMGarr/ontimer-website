@@ -1481,6 +1481,7 @@ export default function AirportCalculator({
                   postCalendarBody={copy.alarmBody}
                   locale={locale}
                   appLocation={locationCode ? `airport_${locationCode.toLowerCase()}_result` : "airport_calculator_inline"}
+                  leaveTimeLabel={fmtTime(computedResult.leaveTime, locale)}
                   analyticsContext={{
                     intent_cluster: "airport_when_to_leave",
                     ...(locationCode ? { location_code: locationCode } : {}),

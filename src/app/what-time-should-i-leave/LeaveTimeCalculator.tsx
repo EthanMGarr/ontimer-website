@@ -991,6 +991,7 @@ export default function LeaveTimeCalculator({
                   postCalendarBody={copy.alarmBody}
                   locale={locale}
                   appLocation="leave_calculator_result"
+                  leaveTimeLabel={fmtTime(result.leaveTime, locale)}
                   analyticsContext={{ planning_purpose: journeyPurpose }}
                   eventPreview={{ title: leaveCalendarEvent?.title ?? `${purposeCopy.eventPrefix} ${copy.destinationFallback}`, startLabel: fmtTime(result.leaveTime, locale) }}
                 />

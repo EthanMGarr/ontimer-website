@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {
+import { appStoreQrUrl,
   APP_STORE_PROVIDER_TOKEN,
   appStoreCampaignToken,
   appStoreCampaignUrl,
@@ -48,5 +48,11 @@ assert.equal(smartBannerUrl.searchParams.get("pt"), APP_STORE_PROVIDER_TOKEN);
 assert.equal(smartBannerUrl.searchParams.get("ct"), "web_smart_banner");
 assert.equal(smartBannerUrl.searchParams.get("mt"), "8");
 assert.equal(appStoreUrlFor({ location: "footer" }).campaignToken, null);
+
+const siteQrUrl = new URL(appStoreQrUrl({ location: "homepage_hero" }));
+assert.equal(siteQrUrl.searchParams.get("ct"), "web_qr_site");
+assert.equal(siteQrUrl.searchParams.get("pt"), APP_STORE_PROVIDER_TOKEN);
+assert.equal(new URL(appStoreQrUrl({ location: "airport_lax_result" })).searchParams.get("ct"), "web_qr_airport");
+assert.equal(new URL(appStoreQrUrl({ location: "leave_calculator_result" })).searchParams.get("ct"), "web_qr_leave");
 
 console.log("App Store campaign link tests passed.");

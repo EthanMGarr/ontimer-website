@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { appStoreUrlFor } from "@/lib/app-store-links";
+import { appStoreQrUrl, appStoreUrlFor } from "@/lib/app-store-links";
 import {
   trackAppStoreClick,
   trackQRCodeVisible,
@@ -78,7 +78,7 @@ export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
             >
               <QRCodeSVG
                 title="Scan to download OnTimer from the App Store"
-                value={appStoreLink.url}
+                value={appStoreQrUrl({ location })}
                 size={128}
                 bgColor="#ffffff"
                 fgColor="#000000"

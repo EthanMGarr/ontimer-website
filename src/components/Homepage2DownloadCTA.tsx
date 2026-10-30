@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { ANDROID_WAITLIST_URL, APP_STORE_URL } from "@/lib/constants";
+import { appStoreQrUrl } from "@/lib/app-store-links";
 import { trackAndroidWaitlistClick, trackAppStoreClick, trackQRCodeClick, trackQRCodeVisible } from "@/lib/analytics";
 
 type DeviceMode = "unknown" | "desktop" | "android" | "ios";
@@ -57,7 +58,7 @@ export function Homepage2DownloadCTA({ location, compact = false }: { location: 
       {open ? (
         <div className="hp2-qr" id={popoverId} role="dialog" aria-label="Download OnTimer on iPhone">
           <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="hp2-qr__code" aria-label="Open the OnTimer App Store listing" onClick={() => trackQRCodeClick(location)}>
-            <QRCodeSVG title="Scan to download OnTimer from the App Store" value={APP_STORE_URL} size={144} level="M" includeMargin />
+            <QRCodeSVG title="Scan to download OnTimer from the App Store" value={appStoreQrUrl({ location })} size={144} level="M" includeMargin />
           </a>
           <div><strong>Scan with your iPhone</strong><span>Or open the App Store listing directly.</span></div>
         </div>

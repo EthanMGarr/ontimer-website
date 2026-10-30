@@ -2,6 +2,7 @@
 
 // Hallmark pre-emit critique: palette 5 · hierarchy 5 · error prevention 4 · simplicity 5 · responsiveness 5 · visual consistency 5.
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
@@ -58,6 +59,8 @@ interface CalendarOnTimerHandoffProps {
     title: string;
     startLabel: string;
   };
+  /** The calculated leave time; when present the alarm offer names it instead of using generic copy. */
+  leaveTimeLabel?: string;
   locale?: SiteLocale;
 }
 
@@ -73,6 +76,10 @@ const handoffCopy = {
     android: "OnTimer for Android is coming — join the waitlist", help: "Need help adding the calendar file?",
     helpBody: "Open the downloaded .ics file, choose your calendar, then confirm the event.", again: "Download the file again",
     googleInstead: "Use Google Calendar instead",
+    leaveAlarmHeading: (time: string) => `Get a real alarm for your ${time} leave time.`,
+    leavePostCalendarHeading: (time: string) => `Make your ${time} leave time ring.`,
+    leaveAlarmBody: "OnTimer turns calendar events into alarms that ring and stay on screen until you stop them. Free for iPhone.",
+    alarmImageAlt: "OnTimer alarm on iPhone with a slide to stop control",
   },
   es: {
     alternate: "O usa Outlook, Apple Calendar u otro calendario", ready: "Guarda esta hora de salida en tu calendario.", item: "evento",
@@ -85,6 +92,10 @@ const handoffCopy = {
     android: "OnTimer para Android está en camino — únete a la lista", help: "¿Necesitas ayuda para añadir el archivo?",
     helpBody: "Abre el archivo .ics descargado, elige tu calendario y confirma el evento.", again: "Descargar el archivo otra vez",
     googleInstead: "Usar Google Calendar",
+    leaveAlarmHeading: (time: string) => `Recibe una alarma de verdad para salir a las ${time}.`,
+    leavePostCalendarHeading: (time: string) => `Haz que suene tu hora de salida de las ${time}.`,
+    leaveAlarmBody: "OnTimer convierte los eventos de tu calendario en alarmas que suenan y se quedan en pantalla hasta que las detienes. Gratis para iPhone.",
+    alarmImageAlt: "Alarma de OnTimer en iPhone con control para deslizar y detener",
   },
 } as const;
 
@@ -105,14 +116,19 @@ export default function CalendarOnTimerHandoff({
   analyticsContext = {},
   androidAffiliateOffer,
   eventPreview,
+  leaveTimeLabel,
   locale = "en",
 }: CalendarOnTimerHandoffProps) {
   const copy = handoffCopy[locale];
   const effectiveAlternateCalendarLabel = alternateCalendarLabel ?? copy.alternate;
   const effectiveReadyHeading = readyHeading ?? copy.ready;
   const effectiveOpenedItemLabel = openedItemLabel ?? copy.item;
-  const effectivePostCalendarHeading = postCalendarHeading ?? copy.alarmHeading;
-  const effectivePostCalendarBody = postCalendarBody ?? copy.alarmBody;
+  const effectivePostCalendarHeading = leaveTimeLabel
+    ? copy.leavePostCalendarHeading(leaveTimeLabel)
+    : postCalendarHeading ?? copy.alarmHeading;
+  const effectivePostCalendarBody = leaveTimeLabel ? copy.leaveAlarmBody : postCalendarBody ?? copy.alarmBody;
+  const resultAlarmHeading = leaveTimeLabel ? copy.leaveAlarmHeading(leaveTimeLabel) : copy.alarmHeading;
+  const resultAlarmBody = leaveTimeLabel ? copy.leaveAlarmBody : copy.alarmBody;
   const [isAndroidDevice, setIsAndroidDevice] = useState<boolean | null>(null);
   const [experimentVariant, setExperimentVariant] = useState<CalculatorCtaVariant>("control");
   const affiliateRef = useRef<HTMLAnchorElement>(null);
@@ -293,19 +309,32 @@ export default function CalendarOnTimerHandoff({
             ? "order-1 rounded-xl border border-green-500/40 bg-green-500/[0.07] p-5"
             : "order-2 border-t border-zinc-800 pt-5"
       }`}>
-        <p className="text-base font-bold text-white">
-          {showAndroidAffiliate
-            ? effectiveAndroidAffiliateOffer.heading
-            : calendarOpened
-              ? effectivePostCalendarHeading
-              : copy.alarmHeading}
-        </p>
+        <div className="flex items-start gap-3">
+          <p className="min-w-0 flex-1 text-base font-bold text-white">
+            {showAndroidAffiliate
+              ? effectiveAndroidAffiliateOffer.heading
+              : calendarOpened
+                ? effectivePostCalendarHeading
+                : resultAlarmHeading}
+          </p>
+          {!showAndroidAffiliate && (
+            <Image
+              data-alarm-preview
+              src="/images/homepage2/alarm-card-thumb.png"
+              alt={copy.alarmImageAlt}
+              width={320}
+              height={274}
+              sizes="4.5rem"
+              className="h-auto w-[4.5rem] shrink-0 rounded-lg"
+            />
+          )}
+        </div>
         <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
           {showAndroidAffiliate
             ? effectiveAndroidAffiliateOffer.body
             : calendarOpened
               ? effectivePostCalendarBody
-              : copy.alarmBody}
+              : resultAlarmBody}
         </p>
         <div className="mt-4">
           {showAndroidAffiliate ? (

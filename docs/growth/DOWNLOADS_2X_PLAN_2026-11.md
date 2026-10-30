@@ -46,7 +46,7 @@ web-referrer downloads moving in the same direction.
 
 ## Priorities, ranked by expected downloads
 
-### 1. Calculator result → install (biggest lever: ~4,000 result users / 28 days)
+### 1. Calculator result → install (biggest lever: ~4,000 result users / 28 days) — first change shipped Oct 30
 
 Calculators bring about 85% of search clicks. The app-primary rollout (Oct 6) already puts
 “Get Automatic Alarms” next to the answer. The September baseline was about 1% of
@@ -99,7 +99,7 @@ troubleshooting page.
   family) and a sleep-cycle mode. Competing results answer bedtime/sleep-cycle math that
   this calculator doesn't. Validate with the query export before building.
 
-### 6. Desktop QR handoff (1,980 desktop users / 28 days, unmeasured)
+### 6. Desktop QR handoff (1,980 desktop users / 28 days) — campaign tokens shipped Oct 30
 
 The QR goes straight to the App Store, so scans can't be counted. Point the QR at an
 Apple campaign link (`ct=web_qr_<location>`) so App Store Connect attributes those
