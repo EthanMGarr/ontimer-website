@@ -6,6 +6,7 @@ const component = readFileSync("src/app/events/[slug]/when-to-leave/EventLeaveCa
 const styles = readFileSync("src/app/events/[slug]/when-to-leave/event-leave.css", "utf8");
 const guidance = readFileSync("docs/CALCULATOR_CONVERSION_UX_CHECKLIST.md", "utf8");
 const sitemap = readFileSync("src/app/sitemap.ts", "utf8");
+const venuePage = readFileSync("src/app/venues/[slug]/time-to-leave/page.tsx", "utf8");
 const provider = readFileSync("src/lib/ticketmaster-events.ts", "utf8");
 
 assert.ok(
@@ -46,7 +47,8 @@ assert.match(component, /postCalendarHeading="Now make sure you leave on time\."
 assert.match(page, /robots: isEventIndexable\(event\) \? \{ index: true, follow: true \}/, "usable future event pages must be indexable");
 assert.match(sitemap, /REVIEWED_EVENT_FIXTURES/, "reviewed event pages must enter the sitemap");
 assert.match(sitemap, /VENUE_PROFILES/, "stable reviewed venue hubs must enter the sitemap");
-assert.match(sitemap, /redirectingVenueSlugs/, "provider-backed venue hubs that currently redirect must stay out of the sitemap");
+assert.doesNotMatch(venuePage, /events\.length === 1[^\n]*redirect/, "single-event venue hubs must remain stable indexable pages");
+assert.doesNotMatch(sitemap, /redirectingVenueSlugs/, "all stable reviewed venue hubs must remain in the sitemap");
 assert.match(styles, /Task-first Conversion Workbench/, "the page must retain its locked Hallmark structure");
 assert.match(guidance, /input → answer → action conversion sequence/, "the durable checklist must state the rollout-aware conversion sequence");
 assert.match(guidance, /non-Android visitors see OnTimer as the primary result action/, "the durable checklist must preserve the measured rollout hierarchy");

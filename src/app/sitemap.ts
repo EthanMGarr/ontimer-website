@@ -10,10 +10,6 @@ import { comparisons } from "@/lib/comparisons";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.ontimer.app";
-  // These provider-backed hubs currently resolve to one event and therefore
-  // redirect to that event. Keep redirecting URLs out of the sitemap while
-  // retaining their normal crawlable links from the venue directory.
-  const redirectingVenueSlugs = new Set(["yankee-stadium", "citi-field"]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -423,14 +419,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const eventRoutes: MetadataRoute.Sitemap = [
-    ...VENUE_PROFILES
-      .filter((venue) => !redirectingVenueSlugs.has(venue.slug))
-      .map((venue) => ({
+    ...VENUE_PROFILES.map((venue) => ({
       url: `${baseUrl}/venues/${venue.slug}/time-to-leave`,
       lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 0.8,
-      })),
+    })),
     ...REVIEWED_EVENT_FIXTURES
       .filter((event) => isEventIndexable(event))
       .map((event) => ({

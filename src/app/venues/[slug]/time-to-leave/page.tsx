@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
   REVIEWED_EVENT_FIXTURES,
   VENUE_PROFILES,
@@ -71,7 +71,6 @@ export default async function VenueTimeToLeavePage({ params }: VenuePageProps) {
   }
   const reviewedEvents = REVIEWED_EVENT_FIXTURES.filter((event) => event.venueId === venue.id);
   const events = mergeUpcomingEvents(reviewedEvents, providerEvents);
-  if (events.length === 1) redirect(`/events/${events[0].slug}/when-to-leave`);
 
   const canonical = canonicalFor(venue);
   const placeJsonLd = {
