@@ -5,6 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
 import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
+import { fetchNearestAddress } from "@/components/CurrentLocationControl";
 import PlaceAutocomplete, { type SelectedAutocompletePlace } from "@/components/PlaceAutocomplete";
 import {
   fireEvent,
@@ -570,10 +571,11 @@ export default function LeaveTimeCalculator({
     setLocationStatus("loading");
     setLocationMessage(null);
     navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
+      async ({ coords }) => {
         const coordinates = `${coords.latitude},${coords.longitude}`;
+        const address = await fetchNearestAddress(coords.latitude, coords.longitude, locale);
         setCurrentLocation(coordinates);
-        setOrigin(copy.currentLocation);
+        setOrigin(address ?? copy.currentLocation);
         setOriginPlace(null);
         setLocationStatus("success");
         setLocationMessage(copy.locationAdded);

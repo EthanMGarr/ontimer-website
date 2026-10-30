@@ -58,6 +58,8 @@ assert.match(reverseGeocodeRoute, /guardGoogleApiRequest\(request, REVERSE_GEOCO
 assert.match(reverseGeocodeRoute, /Cache-Control": "private, no-store"/, "precise location responses must never be cached");
 assert.match(reverseGeocodeRoute, /isValidCoordinatePair\(latitude, longitude\)/, "reverse geocoding must validate coordinate bounds before calling Google");
 assert.match(component, /currentLocation: "Current location found"/, "the general calculator must put confirmation in the field itself");
+assert.match(component, /fetchNearestAddress\(coords\.latitude, coords\.longitude, locale\)/, "the general calculator must show the nearest readable address, not only a generic current-location label");
+assert.match(component, /setOrigin\(address \?\? copy\.currentLocation\)/, "the general calculator must fall back to the generic label only when no address is available");
 assert.match(placeAutocomplete, /isPaste \? AUTOCOMPLETE_PASTE_DEBOUNCE_MS : AUTOCOMPLETE_TYPING_DEBOUNCE_MS/, "address autocomplete must use the reviewed typing and paste delays");
 assert.match(placeAutocomplete, /inputType === "insertReplacementText"/, "address autocomplete must recognize iOS Contact AutoFill replacement events");
 assert.match(placeAutocomplete, /val\.length - previousValue\.length > 1/, "address autocomplete must recognize bulk address insertion even when the browser omits a specific AutoFill input type");

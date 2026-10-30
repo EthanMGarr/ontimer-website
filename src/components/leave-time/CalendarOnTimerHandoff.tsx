@@ -2,10 +2,10 @@
 
 // Hallmark pre-emit critique: palette 5 · hierarchy 5 · error prevention 4 · simplicity 5 · responsiveness 5 · visual consistency 5.
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AppStoreButton } from "@/components/CTAButton";
+import AlarmPreview from "@/components/leave-time/AlarmPreview";
 import {
   trackAffiliateOfferClick,
   trackAffiliateOfferViewed,
@@ -79,7 +79,6 @@ const handoffCopy = {
     leaveAlarmHeading: (time: string) => `Get a real alarm for your ${time} leave time.`,
     leavePostCalendarHeading: (time: string) => `Make your ${time} leave time ring.`,
     leaveAlarmBody: "OnTimer turns calendar events into alarms that ring and stay on screen until you stop them. Free for iPhone.",
-    alarmImageAlt: "OnTimer alarm on iPhone with a slide to stop control",
   },
   es: {
     alternate: "O usa Outlook, Apple Calendar u otro calendario", ready: "Guarda esta hora de salida en tu calendario.", item: "evento",
@@ -95,7 +94,6 @@ const handoffCopy = {
     leaveAlarmHeading: (time: string) => `Recibe una alarma de verdad para salir a las ${time}.`,
     leavePostCalendarHeading: (time: string) => `Haz que suene tu hora de salida de las ${time}.`,
     leaveAlarmBody: "OnTimer convierte los eventos de tu calendario en alarmas que suenan y se quedan en pantalla hasta que las detienes. Gratis para iPhone.",
-    alarmImageAlt: "Alarma de OnTimer en iPhone con control para deslizar y detener",
   },
 } as const;
 
@@ -309,8 +307,9 @@ export default function CalendarOnTimerHandoff({
             ? "order-1 rounded-xl border border-green-500/40 bg-green-500/[0.07] p-5"
             : "order-2 border-t border-zinc-800 pt-5"
       }`}>
-        <div className="flex items-start gap-3">
-          <p className="min-w-0 flex-1 text-base font-bold text-white">
+        {/* Phones: headline beside the alarm, body full width. Wider: alarm beside both. */}
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3">
+          <p className="col-start-1 row-start-1 text-base font-bold text-white">
             {showAndroidAffiliate
               ? effectiveAndroidAffiliateOffer.heading
               : calendarOpened
@@ -318,24 +317,18 @@ export default function CalendarOnTimerHandoff({
                 : resultAlarmHeading}
           </p>
           {!showAndroidAffiliate && (
-            <Image
-              data-alarm-preview
-              src="/images/homepage2/alarm-card-thumb.png"
-              alt={copy.alarmImageAlt}
-              width={320}
-              height={274}
-              sizes="4.5rem"
-              className="h-auto w-[4.5rem] shrink-0 rounded-lg"
-            />
+            <div className="col-start-2 row-start-1 sm:row-span-2">
+              <AlarmPreview time={leaveTimeLabel} title={eventPreview?.title} locale={locale} />
+            </div>
           )}
+          <p className={`mt-1.5 text-sm leading-relaxed text-zinc-400 ${showAndroidAffiliate ? "col-span-2" : "col-span-2 sm:col-span-1"}`}>
+            {showAndroidAffiliate
+              ? effectiveAndroidAffiliateOffer.body
+              : calendarOpened
+                ? effectivePostCalendarBody
+                : resultAlarmBody}
+          </p>
         </div>
-        <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
-          {showAndroidAffiliate
-            ? effectiveAndroidAffiliateOffer.body
-            : calendarOpened
-              ? effectivePostCalendarBody
-              : resultAlarmBody}
-        </p>
         <div className="mt-4">
           {showAndroidAffiliate ? (
             <div data-nosnippet>

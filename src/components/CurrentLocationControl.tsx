@@ -10,6 +10,29 @@ interface CurrentLocationControlProps {
   locale?: SiteLocale;
 }
 
+/**
+ * Looks up a readable address for the visitor's coordinates. Returns null when the
+ * guarded lookup is unavailable; exact coordinates still work for routing.
+ */
+export async function fetchNearestAddress(
+  latitude: number,
+  longitude: number,
+  locale: SiteLocale = "en",
+): Promise<string | null> {
+  try {
+    const response = await fetch("/api/reverse-geocode", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ latitude, longitude, language: locale }),
+    });
+    if (!response.ok) return null;
+    const data = (await response.json()) as { address?: string | null };
+    return data.address?.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
 export default function CurrentLocationControl({
   active,
   onLocationChange,
@@ -44,26 +67,7 @@ export default function CurrentLocationControl({
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
         const coordinates = `${coords.latitude},${coords.longitude}`;
-        let displayLabel = copy.found;
-
-        try {
-          const response = await fetch("/api/reverse-geocode", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              latitude: coords.latitude,
-              longitude: coords.longitude,
-              language: locale,
-            }),
-          });
-          if (response.ok) {
-            const data = (await response.json()) as { address?: string | null };
-            if (data.address?.trim()) displayLabel = data.address.trim();
-          }
-        } catch {
-          // Exact coordinates still work for routing when no address is available.
-        }
-
+        const displayLabel = (await fetchNearestAddress(coords.latitude, coords.longitude, locale)) ?? copy.found;
         onLocationChange(coordinates, displayLabel);
         setStatus("idle");
         fireEvent("current_location_used", {
