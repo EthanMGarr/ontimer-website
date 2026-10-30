@@ -105,6 +105,7 @@ const airportCopy = {
     forFlight: "For your", flight: "flight", leaveBy: "Leave by", drive: "drive", security: "security allowance", arriveBy: "Arrive by",
     parkingIncluded: "Parking included", transferIncluded: "Terminal transfer included", rideshareIncluded: "Rideshare access included", dropoffIncluded: "Drop-off access included", bagIncluded: "Bag drop included",
     alarmHeading: "Don’t be late. Turn this into an alarm.", alarmBody: "OnTimer automatically sets alarms for your calendar events",
+    timeToFlyOffer: "Flight already on your calendar? OnTimer’s Time To Fly finds it and sets your leave-for-the-airport alarm automatically. Free for iPhone.",
     hideDetails: "Hide calculation details", howCalculated: "How we calculated your leave time", arriveAirport: "Arrive at airport by", requirement: "verify airline and airport requirements before leaving.",
     calculatingShort: "calculating…", estimateExpected: "Estimating expected traffic for your trip time", fetchingLive: "Fetching live traffic for your route", airportBuffer: "Airport buffer",
     calendarDetails: ONTIMER_CALENDAR_DESCRIPTION,
@@ -135,6 +136,7 @@ const airportCopy = {
     forFlight: "Para tu vuelo", flight: "", leaveBy: "Sal a más tardar a las", drive: "en coche", security: "de margen de seguridad", arriveBy: "Llega antes de las",
     parkingIncluded: "Aparcamiento incluido", transferIncluded: "Traslado a la terminal incluido", rideshareIncluded: "Acceso en VTC / taxi incluido", dropoffIncluded: "Acceso a la terminal incluido", bagIncluded: "Facturación de equipaje incluida",
     alarmHeading: "No llegues tarde. Convierte este evento en una alarma.", alarmBody: "OnTimer configura alarmas automáticamente para los eventos de tu calendario",
+    timeToFlyOffer: "¿Ya tienes el vuelo en tu calendario? Time To Fly de OnTimer lo detecta y configura automáticamente la alarma para salir al aeropuerto. Gratis para iPhone.",
     hideDetails: "Ocultar detalles del cálculo", howCalculated: "Cómo calculamos tu hora de salida", arriveAirport: "Llega al aeropuerto antes de las", requirement: "comprueba los requisitos de la aerolínea y el aeropuerto antes de salir.",
     calculatingShort: "calculando…", estimateExpected: "Calculando el tráfico previsto para tu viaje", fetchingLive: "Consultando el tráfico de tu ruta", airportBuffer: "Margen para el aeropuerto",
     calendarDetails: "Creado con OnTimer. Recibe alarmas automáticas para los eventos de tu calendario: https://www.ontimer.app",
@@ -1482,6 +1484,7 @@ export default function AirportCalculator({
                   locale={locale}
                   appLocation={locationCode ? `airport_${locationCode.toLowerCase()}_result` : "airport_calculator_inline"}
                   leaveTimeLabel={fmtTime(computedResult.leaveTime, locale)}
+                  leaveAlarmBody={copy.timeToFlyOffer}
                   analyticsContext={{
                     intent_cluster: "airport_when_to_leave",
                     ...(locationCode ? { location_code: locationCode } : {}),

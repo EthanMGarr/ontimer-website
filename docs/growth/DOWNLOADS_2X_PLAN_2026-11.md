@@ -61,7 +61,7 @@ total website click-throughs.
   beside “Get Automatic Alarms”, and make the line specific to the result (“OnTimer can
   ring at 7:42 when it's time to leave”), stated as the Pro Time To Leave/Time To Fly
   capability it is. Keep the guardrail order (answer → evidence → adjust → action).
-- **Week 2:** Airport results: lead with Time To Fly (“finds flights in your calendar
+- **Shipped Oct 30:** Airport results: lead with Time To Fly (“finds flights in your calendar
   and sets the leave-time alarm automatically”). Initial estimate is free.
 
 ### 2. `/calendar-notifications-not-working` CTR + conversion (shipped Oct 30)

@@ -61,6 +61,8 @@ interface CalendarOnTimerHandoffProps {
   };
   /** The calculated leave time; when present the alarm offer names it instead of using generic copy. */
   leaveTimeLabel?: string;
+  /** Replaces the generic leave-time offer body, e.g. with the airport-specific Time To Fly pitch. */
+  leaveAlarmBody?: string;
   locale?: SiteLocale;
 }
 
@@ -115,6 +117,7 @@ export default function CalendarOnTimerHandoff({
   androidAffiliateOffer,
   eventPreview,
   leaveTimeLabel,
+  leaveAlarmBody,
   locale = "en",
 }: CalendarOnTimerHandoffProps) {
   const copy = handoffCopy[locale];
@@ -124,9 +127,10 @@ export default function CalendarOnTimerHandoff({
   const effectivePostCalendarHeading = leaveTimeLabel
     ? copy.leavePostCalendarHeading(leaveTimeLabel)
     : postCalendarHeading ?? copy.alarmHeading;
-  const effectivePostCalendarBody = leaveTimeLabel ? copy.leaveAlarmBody : postCalendarBody ?? copy.alarmBody;
+  const leaveOfferBody = leaveAlarmBody ?? copy.leaveAlarmBody;
+  const effectivePostCalendarBody = leaveTimeLabel ? leaveOfferBody : postCalendarBody ?? copy.alarmBody;
   const resultAlarmHeading = leaveTimeLabel ? copy.leaveAlarmHeading(leaveTimeLabel) : copy.alarmHeading;
-  const resultAlarmBody = leaveTimeLabel ? copy.leaveAlarmBody : copy.alarmBody;
+  const resultAlarmBody = leaveTimeLabel ? leaveOfferBody : copy.alarmBody;
   const [isAndroidDevice, setIsAndroidDevice] = useState<boolean | null>(null);
   const [experimentVariant, setExperimentVariant] = useState<CalculatorCtaVariant>("control");
   const affiliateRef = useRef<HTMLAnchorElement>(null);
