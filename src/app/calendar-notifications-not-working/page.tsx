@@ -1,24 +1,25 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
-  title: "Calendar Notifications Not Working? 10 Fixes for iPhone, Google & Apple Calendar",
+  title: "iPhone Calendar Alerts Not Working? 10 Fixes That Work",
   description:
-    "Calendar notifications not working? Learn how to fix missing, delayed, or silent reminders on Google Calendar, Apple Calendar, and Outlook Calendar with this step-by-step troubleshooting guide.",
+    "Not getting calendar alerts on your iPhone? Check these three settings first — Allow Notifications, Focus and Scheduled Summary — then work through 7 more fixes for Apple, Google and Outlook Calendar.",
   alternates: { canonical: "https://www.ontimer.app/calendar-notifications-not-working" },
   openGraph: {
-    title: "Calendar Notifications Not Working? 10 Fixes for iPhone, Google & Apple Calendar",
+    title: "iPhone Calendar Alerts Not Working? 10 Fixes That Work",
     description:
-      "Fix missing, delayed, or silent calendar reminders on Google Calendar, Apple Calendar, and Outlook Calendar with this step-by-step troubleshooting guide.",
+      "Not getting calendar alerts on your iPhone? Check Allow Notifications, Focus and Scheduled Summary first, then 7 more fixes for Apple, Google and Outlook Calendar.",
     url: "https://www.ontimer.app/calendar-notifications-not-working",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Calendar Notifications Not Working? 10 Fixes",
+    title: "iPhone Calendar Alerts Not Working? 10 Fixes That Work",
     description:
-      "Calendar notifications not working? Fix missing, delayed, or silent reminders on Google Calendar, Apple Calendar, and Outlook Calendar.",
+      "Not getting calendar alerts on your iPhone? Check Allow Notifications, Focus and Scheduled Summary first, then 7 more fixes.",
   },
 };
 
@@ -257,7 +258,7 @@ const faqItems = [
 const articleJsonLd = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Calendar Notifications Not Working? 10 Things to Check",
+  headline: "iPhone Calendar Alerts Not Working? 10 Fixes That Work",
   description:
     "A step-by-step troubleshooting guide for missing, delayed, or silent calendar notifications on Google Calendar, Apple Calendar, and Outlook Calendar.",
   author: { "@type": "Organization", name: "OnTimer" },
@@ -297,39 +298,63 @@ export default function CalendarNotificationsNotWorking() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden pb-16 pt-20 md:pt-28">
+      {/* Hero: the three settings that cause most failures, answered first */}
+      <section className="relative overflow-hidden pb-12 pt-8 sm:pb-16 sm:pt-16 md:pt-20">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.15),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <nav className="mb-6 text-sm text-zinc-500">
+          <nav className="mb-4 text-sm text-zinc-500">
             <Link href="/" className="transition-colors hover:text-zinc-300">Home</Link>
             <span className="mx-2">›</span>
             <span className="text-zinc-300">Calendar Notifications Not Working</span>
           </nav>
-          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            Google Calendar · Apple Calendar · Outlook Calendar
-          </p>
-          <h1 className="text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl">
-            Calendar Notifications Not Working?
+          <h1 className="text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl">
+            iPhone Calendar Alerts Not Working?
             <br />
-            <span className="text-green-500">Here&apos;s How to Fix Them</span>
+            <span className="text-green-500">Check These 3 Settings First</span>
           </h1>
-          <p className="mt-5 text-lg leading-relaxed text-zinc-400">
-            If your calendar notifications aren&apos;t working, the problem is usually one of a few common
-            issues: notification permissions, Focus Mode, Scheduled Notification Summary, missing event
-            reminders, calendar sync problems, Background App Refresh, or battery restrictions. Work through
-            the checklist below. Most problems can be fixed in just a few minutes.
+          <p className="mt-4 text-lg leading-relaxed text-zinc-300">
+            Most missing calendar alerts come from one of three iPhone settings. Each takes under a minute
+            to check. If those are fine, the full 10-step guide below covers Apple, Google and Outlook Calendar.
           </p>
-        </div>
-      </section>
-
-      {/* Intro */}
-      <section className="border-t border-zinc-800 py-10">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <p className="text-base leading-relaxed text-zinc-400">
-            The most common causes are disabled notifications, Focus Mode or Do Not Disturb, Scheduled
-            Notification Summary, missing event reminders, default alert settings, calendar sync problems,
-            Background App Refresh, and battery restrictions.
+          <ol className="mt-6 space-y-3">
+            {[
+              {
+                href: "#notifications-enabled",
+                title: "Notifications are allowed",
+                path: "Settings → Notifications → Calendar (or Google Calendar / Outlook) → Allow Notifications on",
+              },
+              {
+                href: "#focus-mode",
+                title: "Focus isn't blocking them",
+                path: "Settings → Focus → each Focus → Apps → add your calendar app",
+              },
+              {
+                href: "#scheduled-summary",
+                title: "They aren't held for a summary",
+                path: "Settings → Notifications → Scheduled Summary → remove your calendar app",
+              },
+            ].map((item, index) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="flex gap-4 rounded-xl border border-zinc-800 bg-zinc-950/70 p-4 transition-colors hover:border-green-500/50"
+                >
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-500 text-sm font-black text-black">
+                    {index + 1}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-bold text-white">{item.title}</span>
+                    <span className="mt-1 block text-sm leading-relaxed text-zinc-400">{item.path}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-5 text-sm leading-relaxed text-zinc-500">
+            Alerts working but you still miss them?{" "}
+            <Link href="#ontimer" className="font-medium text-green-500 hover:text-green-400">
+              That&apos;s a different problem →
+            </Link>
           </p>
         </div>
       </section>
@@ -440,16 +465,15 @@ export default function CalendarNotificationsNotWorking() {
       </section>
 
       {/* OnTimer transition */}
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
+      <section id="ontimer" className="scroll-mt-24 border-t border-zinc-800 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <p className="text-sm font-semibold uppercase tracking-widest text-green-500">After troubleshooting</p>
           <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Everything working again?
+            Alerts working, but you still miss them?
           </h2>
           <div className="mt-6 space-y-4 leading-relaxed text-zinc-400">
-            <p>Great.</p>
             <p>
-              Native calendar notifications are designed to appear once and then disappear. If you see them at
+              A working calendar alert is still a banner that shows up once and disappears. If you see it at
               the right moment, that can be enough.
             </p>
             <p>
@@ -465,6 +489,16 @@ export default function CalendarNotificationsNotWorking() {
               The goal isn&apos;t to fix broken notifications. It&apos;s to make sure you never miss an important
               event once they&apos;re working correctly.
             </p>
+          </div>
+          <div className="mx-auto mt-8 w-44 sm:w-52">
+            <Image
+              src="/images/homepage2/persistent-alarm-v4.png"
+              alt="OnTimer full-screen calendar alarm that stays on screen until you slide to stop"
+              width={853}
+              height={1844}
+              sizes="(max-width: 639px) 11rem, 13rem"
+              className="h-auto w-full rounded-3xl border border-zinc-800"
+            />
           </div>
           <div className="mt-8">
             <AppStoreCTA location="calendar_notifications_not_working_solution" />

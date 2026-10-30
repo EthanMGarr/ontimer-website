@@ -9,13 +9,13 @@ export const metadata: Metadata = {
     canonical: "https://www.ontimer.app/wake-up-time-calculator",
     ...localizedAlternates("/wake-up-time-calculator", "/es/calculadora-hora-de-despertar"),
   },
-  title: "Wake-Up Time Calculator — What Time Should I Set My Alarm?",
+  title: "What Time Should I Set My Alarm? Wake-Up Time Calculator",
   description:
-    "Calculate what time to wake up based on your arrival time, travel time, and how long you need to get ready. Free wake-up time calculator.",
+    "Enter when you need to be there. Get the exact time to set your alarm, counting back your travel time, get-ready time and a buffer. Free, no sign-up.",
   openGraph: {
-    title: "Wake-Up Time Calculator — What Time Should I Set My Alarm?",
+    title: "What Time Should I Set My Alarm? Wake-Up Time Calculator",
     description:
-      "Calculate what time to wake up based on your arrival time, travel time, and how long you need to get ready.",
+      "Enter when you need to be there. Get the exact time to set your alarm, counting back your travel time, get-ready time and a buffer.",
     locale: "en_US",
     alternateLocale: ["es_ES"],
   },

@@ -23,7 +23,12 @@ same outcome-led opening without inventing an airport entity.
 2. Generic airport treatment: `/airport-time-to-leave-calculator`
 3. Cruise destination-page treatment: all `/cruise-time-to-leave/[slug]` pages
 4. Airport-pickup treatment: `/airport-pickup-time-calculator`
-5. Unchanged comparisons: `/wake-up-time-calculator` and `/what-time-should-i-leave`
+5. Unchanged comparison: `/what-time-should-i-leave`
+6. Calendar-problem treatment (2026-10-30): `/calendar-notifications-not-working` retitled to
+   “iPhone Calendar Alerts Not Working? 10 Fixes That Work”; `/why-calendar-notifications-fail`
+   retitled to “Why You Miss Calendar Reminders (Even When They Work)”
+7. Wake-up treatment (2026-10-30): `/wake-up-time-calculator` retitled to “What Time Should I Set
+   My Alarm? Wake-Up Time Calculator”. It is no longer an unchanged comparison.
 
 ## Measurement
 
@@ -47,7 +52,7 @@ Make both the task and the free tool explicit while promising a concrete result:
 
 The shared treatment applies to all airport destination pages because their metadata and hero are
 generated from one template. Evaluate LAX, EWR, LGA, ORD and ATL as the primary reporting cohort;
-use the unchanged wake-up and general leave-time calculators only as directional comparisons
+use the unchanged general leave-time calculator only as a directional comparison
 rather than strict controls because their intent and result-page composition differ. Report the
 cruise and airport-pickup cohorts separately rather than pooling them with flight-departure pages.
 

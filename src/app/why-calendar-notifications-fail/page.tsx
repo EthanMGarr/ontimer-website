@@ -5,19 +5,19 @@ import { WhyNotificationsFailGraphic } from "@/components/WhyNotificationsFailGr
 
 export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/why-calendar-notifications-fail" },
-  title: "Why Calendar Notifications Fail (And What Actually Works)",
+  title: "Why You Miss Calendar Reminders (Even When They Work)",
   description:
-    "You set the reminder. You still missed the meeting. Calendar notifications fail because they're passive — they inform without interrupting. Here's the full breakdown and what to use instead.",
+    "Not getting calendar alerts at all? That's a settings fix. Getting them and still running late? That's how notifications are designed. Here's how to tell which problem you have and fix it.",
   openGraph: {
-    title: "Why Calendar Notifications Fail (And What Actually Works)",
+    title: "Why You Miss Calendar Reminders (Even When They Work)",
     description:
-      "You set the reminder. You still missed the meeting. Calendar notifications fail because they're passive — they inform without interrupting.",
+      "Not getting calendar alerts at all is a settings fix. Getting them and still running late is a design problem. Here's how to fix both.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Why Calendar Notifications Fail (And What Actually Works)",
+    title: "Why You Miss Calendar Reminders (Even When They Work)",
     description:
-      "You set the reminder. You still missed the meeting. Calendar notifications fail because they're passive — they inform without interrupting.",
+      "Not getting calendar alerts at all is a settings fix. Getting them and still running late is a design problem. Here's how to fix both.",
   },
 };
 
@@ -62,7 +62,7 @@ const faqItems = [
 const articleJsonLd = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Why Calendar Notifications Fail (And What Actually Works)",
+  headline: "Why You Miss Calendar Reminders (Even When They Work)",
   description:
     "You set the reminder. You still missed the meeting. Calendar notifications fail because they're passive — they inform without interrupting. Here's the full breakdown and what to use instead.",
   author: { "@type": "Organization", name: "OnTimer" },
@@ -91,7 +91,7 @@ const breadcrumbJsonLd = {
     {
       "@type": "ListItem",
       position: 2,
-      name: "Why Calendar Notifications Fail",
+      name: "Why Calendar Reminders Get Missed",
       item: "https://ontimer.app/why-calendar-notifications-fail",
     },
   ],
@@ -104,32 +104,49 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden pb-16 pt-20 md:pt-28">
+      {/* Hero: route the visitor to the problem they actually have */}
+      <section className="relative overflow-hidden pb-12 pt-8 sm:pb-16 sm:pt-16 md:pt-20">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <nav className="mb-6 text-sm text-zinc-500">
+          <nav className="mb-4 text-sm text-zinc-500">
             <Link href="/" className="hover:text-zinc-300 transition-colors">Home</Link>
             <span className="mx-2">›</span>
-            <span className="text-zinc-300">Why Calendar Notifications Fail</span>
+            <span className="text-zinc-300">Why Calendar Reminders Get Missed</span>
           </nav>
-          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            Google Calendar · Apple Calendar · Outlook Calendar
-          </p>
-          <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl leading-tight">
-            Why Calendar Notifications Fail
-            <br />
-            <span className="text-green-500">(And What Actually Works)</span>
+          <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl leading-tight">
+            Missing calendar reminders? There are two different problems.
           </h1>
-          <p className="mt-5 text-lg text-zinc-400 leading-relaxed">
-            You set the reminder. You might have even seen it. You still missed the meeting.
-            You&apos;re not imagining it — this is how calendar notifications are designed to behave.
-            Here&apos;s why the design fails you, and what to use instead.
+          <p className="mt-4 text-lg text-zinc-300 leading-relaxed">
+            Pick the one that sounds like you. They have different fixes.
           </p>
-          <div className="mt-8 flex flex-wrap gap-4 items-center">
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <Link
+              href="/calendar-notifications-not-working"
+              className="group rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5 transition-colors hover:border-green-500/50"
+            >
+              <p className="text-sm font-semibold uppercase tracking-widest text-zinc-400">Problem 1</p>
+              <p className="mt-2 text-lg font-bold text-white">My alerts don&apos;t show up at all</p>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+                Usually a setting: notifications off, Focus, or Scheduled Summary. Fixable in minutes.
+              </p>
+              <p className="mt-3 text-sm font-medium text-green-500 group-hover:text-green-400">Fix my settings →</p>
+            </Link>
+            <a
+              href="#seen-and-missed"
+              className="group rounded-2xl border border-green-500/40 bg-green-500/5 p-5 transition-colors hover:border-green-500"
+            >
+              <p className="text-sm font-semibold uppercase tracking-widest text-green-500">Problem 2</p>
+              <p className="mt-2 text-lg font-bold text-white">They show up, and I&apos;m still late</p>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+                Nothing is broken. A banner that disappears is easy to see and ignore. You need an alarm.
+              </p>
+              <p className="mt-3 text-sm font-medium text-green-500 group-hover:text-green-400">Show me why →</p>
+            </a>
+          </div>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
             <AppStoreCTA location="why_calendar_notifications_fail_hero" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">Works with Google Calendar · Apple Calendar · Outlook Calendar</p>
+          <p className="mt-3 text-xs text-zinc-500">OnTimer turns your calendar events into alarms · Free for iPhone</p>
         </div>
       </section>
 
@@ -163,7 +180,7 @@ export default function Page() {
       </section>
 
       {/* You Saw It. You Still Missed It. */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
+      <section id="seen-and-missed" className="scroll-mt-24 border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             You Saw the Reminder. You Still Missed It.

@@ -1,23 +1,25 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { AppStoreCTA } from "@/components/CTAButton";
+import { AndroidWaitlistButton, AppStoreCTA } from "@/components/CTAButton";
 
 export const metadata: Metadata = {
   title: "Turn Calendar Events Into Real Alarms",
   description:
-    "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn Google Calendar, Apple Calendar, or Outlook events into persistent alarms that require a response.",
+    "Google, Apple and Outlook calendars only send notifications. Here's how to make every calendar event ring like an alarm on iPhone — automatically, with no per-event setup.",
   alternates: { canonical: "https://www.ontimer.app/turn-calendar-events-into-alarms" },
   openGraph: {
     title: "Turn Calendar Events Into Real Alarms",
     description:
-      "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google Calendar, Apple Calendar, or Outlook Calendar events into persistent alarms.",
+      "Calendar apps only send notifications. Make every Google, Apple or Outlook calendar event ring like an alarm on iPhone — automatically.",
     url: "https://www.ontimer.app/turn-calendar-events-into-alarms",
+    images: [{ url: "https://www.ontimer.app/images/homepage2/persistent-alarm-v4.png", width: 853, height: 1844 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Turn Calendar Events Into Real Alarms",
     description:
-      "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn your Google Calendar, Apple Calendar, or Outlook Calendar events into persistent alarms.",
+      "Calendar apps only send notifications. Make every Google, Apple or Outlook calendar event ring like an alarm on iPhone — automatically.",
   },
 };
 
@@ -29,11 +31,11 @@ const softwareJsonLd = {
   applicationCategory: "ProductivityApplication",
   applicationSubCategory: "Calendar Alarm App",
   description:
-    "OnTimer turns Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms on iPhone — not notifications that disappear.",
-  url: "https://ontimer.app/turn-calendar-events-into-alarms",
-  keywords: "turn calendar events into alarms, Google Calendar alarm, Apple Calendar alarm, Outlook Calendar alarm, calendar alarm app, persistent calendar alarms, meeting alarm iPhone",
+    "OnTimer turns Google Calendar, Apple Calendar, and Outlook Calendar events into alarms on iPhone that stay on screen until you stop them.",
+  url: "https://www.ontimer.app/turn-calendar-events-into-alarms",
+  screenshot: "https://www.ontimer.app/images/homepage2/persistent-alarm-v4.png",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  author: { "@type": "Organization", name: "OnTimer", url: "https://ontimer.app" },
+  author: { "@type": "Organization", name: "OnTimer", url: "https://www.ontimer.app" },
 };
 
 const howToJsonLd = {
@@ -41,56 +43,56 @@ const howToJsonLd = {
   "@type": "HowTo",
   name: "How to Turn Calendar Events Into Alarms on iPhone",
   description:
-    "Turn Google Calendar, Apple Calendar, and Outlook Calendar events into persistent alarms on iPhone using OnTimer.",
+    "Make Google Calendar, Apple Calendar, and Outlook Calendar events ring like alarms on iPhone using OnTimer.",
   step: [
     {
       "@type": "HowToStep",
-      name: "Download OnTimer",
-      text: "Download OnTimer free from the App Store. It is available for iPhone and requires iOS.",
+      name: "Install OnTimer and connect your calendar",
+      text: "Install OnTimer free from the App Store and connect Google Calendar, Outlook Calendar, or Apple Calendar. Access is read-only; OnTimer never changes your events.",
     },
     {
       "@type": "HowToStep",
-      name: "Connect your calendar",
-      text: "Link Google Calendar, Apple Calendar, or Outlook Calendar. OnTimer reads your calendar — it never stores your credentials.",
+      name: "Let OnTimer create the alarms",
+      text: "OnTimer reads your upcoming events and schedules an alarm for each one automatically. There is nothing to set up per event.",
     },
     {
       "@type": "HowToStep",
-      name: "Set your lead time",
-      text: "Choose how many minutes before each event you want the alarm to fire — 5, 10, 15, or 30 minutes.",
-    },
-    {
-      "@type": "HowToStep",
-      name: "Receive persistent alarms automatically",
-      text: "Before each calendar event, OnTimer fires a persistent alarm on your iPhone that stays on screen until you dismiss it. No per-event setup required.",
+      name: "Adjust any event",
+      text: "Open an event to change how many minutes before it rings, pick a different sound, or turn its alarm off.",
     },
   ],
 };
 
 const faqItems = [
   {
-    question: "Can you turn Google Calendar events into alarms?",
+    question: "Can you add an alarm to a Google Calendar event?",
     answer:
-      "Not natively — Google Calendar only sends push notifications, which disappear automatically. OnTimer connects to Google Calendar and turns every event into a persistent alarm that stays on your screen until you dismiss it.",
+      "Not inside Google Calendar. Its reminders are notifications: a banner and a sound that disappear on their own. On iPhone, OnTimer connects to Google Calendar and makes each event ring as an alarm that stays on screen until you slide to stop it.",
+  },
+  {
+    question: "Can you set an alarm for an Apple Calendar event on iPhone?",
+    answer:
+      "Apple Calendar's Alert setting sends a notification, not an alarm. The only built-in workaround is to create a separate Clock alarm for every event by hand and update it whenever the meeting moves. OnTimer does that automatically from your calendar.",
   },
   {
     question: "Can you turn Outlook calendar events into alarms on iPhone?",
     answer:
-      "Outlook Calendar's built-in reminders are notifications, not alarms. OnTimer connects to Outlook Calendar and fires persistent alarms for every scheduled event, replacing dismissible notifications with interruptions that demand a response.",
+      "Outlook's reminders are notifications too. OnTimer connects to Outlook Calendar, including work and school accounts, and turns upcoming events into alarms.",
+  },
+  {
+    question: "Is OnTimer free?",
+    answer:
+      "Yes. OnTimer is free and includes automatic alarms for one calendar provider. OnTimer Pro adds multiple calendar providers, Time To Leave, Early Warning, and additional controls.",
+  },
+  {
+    question: "Does OnTimer work on Android?",
+    answer:
+      "Not yet. OnTimer is available for iPhone. Android users can join the waitlist to hear when it launches.",
   },
   {
     question: "What is the difference between a calendar notification and a calendar alarm?",
     answer:
-      "A notification informs you — it appears briefly and disappears whether you act or not. An alarm interrupts you — it stays active and demands acknowledgment before it stops. For meetings that matter, you want alarm behavior, not notification behavior.",
-  },
-  {
-    question: "Why do I miss meetings even when I have calendar reminders set?",
-    answer:
-      "Because calendar reminders are notifications, not alarms. They're easy to dismiss accidentally, they disappear on their own, and they compete with dozens of other notifications. If you're in deep work or hyperfocused, they fade into the background without registering.",
-  },
-  {
-    question: "Does OnTimer work with Google Calendar, Apple Calendar, and Outlook Calendar?",
-    answer:
-      "Yes. OnTimer connects to Google Calendar, Apple Calendar, and Outlook Calendar. Multiple calendars are supported.",
+      "A notification appears briefly and disappears whether you act or not. An alarm keeps sounding and stays on screen until you stop it. For meetings that matter, you want alarm behavior.",
   },
 ];
 
@@ -108,22 +110,71 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://ontimer.app" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.ontimer.app" },
     {
       "@type": "ListItem",
       position: 2,
       name: "Turn Calendar Events Into Alarms",
-      item: "https://ontimer.app/turn-calendar-events-into-alarms",
+      item: "https://www.ontimer.app/turn-calendar-events-into-alarms",
     },
   ],
 };
 
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "How to Turn Calendar Events Into Real Alarms",
+  description:
+    "Google, Apple and Outlook calendars only send notifications. Here's how to make every calendar event ring like an alarm on iPhone.",
+  author: { "@type": "Organization", name: "OnTimer" },
+  publisher: { "@type": "Organization", name: "OnTimer" },
+  datePublished: "2026-04-01",
+  dateModified: "2026-10-30",
+  mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/turn-calendar-events-into-alarms" },
+};
+
+const nativeOptions = [
+  {
+    calendar: "Google Calendar",
+    native: "Notification only. Banner and sound, then it's gone.",
+  },
+  {
+    calendar: "Apple Calendar",
+    native: "“Alert” is a notification. A real alarm means a separate Clock alarm you set by hand.",
+  },
+  {
+    calendar: "Outlook Calendar",
+    native: "Reminder notification. Same banner, same tray.",
+  },
+];
+
 const comparisonRows = [
-  ["Appears briefly, then disappears", "Stays on screen until dismissed"],
-  ["Easy to miss in notification tray", "Interrupts whatever you're doing"],
-  ["No action required to clear it", "Requires you to actively dismiss it"],
-  ["Competes with texts, emails, social", "Takes priority over other alerts"],
-  ["Built for awareness", "Built for action"],
+  ["Banner for a few seconds", "Full-screen alarm until you slide to stop"],
+  ["Same sound as every other app", "Alarm sound you choose, per event if you want"],
+  ["Lands in the tray with texts and email", "Interrupts whatever you're doing"],
+  ["Easy to swipe away without reading", "Takes a deliberate slide to stop"],
+  ["One reminder per event, set by hand", "Every event gets an alarm automatically"],
+];
+
+const steps = [
+  {
+    title: "Connect your calendar",
+    body: "Google, Outlook, or Apple Calendar. Read-only — OnTimer never changes your events. Takes about a minute.",
+    image: "/images/homepage2/calendar-connections-v2.png",
+    alt: "OnTimer screen for connecting Google, Outlook, and Apple calendars",
+  },
+  {
+    title: "Every event gets an alarm",
+    body: "OnTimer reads what's coming up and schedules an alarm for each event. Meeting moved? The alarm moves with it.",
+    image: "/images/homepage2/persistent-alarm-v4.png",
+    alt: "OnTimer full-screen alarm for a 9:00 job interview with a slide to stop control",
+  },
+  {
+    title: "Tune the ones that matter",
+    body: "Pick how many minutes before an event it rings, give it its own sound, or switch a meeting's alarm off.",
+    image: "/images/homepage2/event-controls-v2.png",
+    alt: "OnTimer event screen with alarm timing, sound, and Early Warning controls",
+  },
 ];
 
 export default function Page() {
@@ -133,262 +184,180 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Article",
-            headline: "How to Turn Calendar Events Into Real Alarms",
-            description: "Calendar notifications disappear. Real alarms interrupt you. Learn how to turn Google Calendar, Apple Calendar, or Outlook events into persistent alarms that require a response.",
-            author: { "@type": "Organization", name: "OnTimer" },
-            publisher: { "@type": "Organization", name: "OnTimer" },
-            datePublished: "2026-04-01",
-            dateModified: "2026-05-11",
-            mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.ontimer.app/turn-calendar-events-into-alarms" },
-          }),
-        }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden pb-16 pt-20 md:pt-28">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <nav className="mb-6 text-sm text-zinc-500">
-            <Link href="/" className="hover:text-zinc-300 transition-colors">Home</Link>
-            <span className="mx-2">›</span>
-            <span className="text-zinc-300">Turn Calendar Events Into Alarms</span>
-          </nav>
-          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-500">
-            Calendar alarm app for Google Calendar, Apple Calendar, and Outlook Calendar
-          </p>
-          <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl leading-tight">
-            How to Turn Calendar Events Into Real Alarms
-          </h1>
-          <p className="mt-5 text-lg text-zinc-400 leading-relaxed">
-            Google Calendar, Apple Calendar, and Outlook Calendar send notifications. Notifications disappear.
-            Real alarms interrupt you and stay on screen until you act. OnTimer turns
-            every event in your calendar into an alarm — automatically.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4 items-center">
-            <AppStoreCTA location="turn_events_into_alarms_hero" />
-          </div>
-          <p className="mt-3 text-xs text-zinc-500">
-            Works with Google Calendar · Apple Calendar · Outlook Calendar
-          </p>
-        </div>
-      </section>
-
-      {/* Direct Answer Block */}
-      <section className="border-t border-zinc-800 py-12">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-6">
-            <p className="text-sm font-semibold uppercase tracking-widest text-green-500 mb-3">Direct Answer</p>
-            <p className="text-zinc-200 leading-relaxed">
-              <strong className="text-white">To turn calendar events into real alarms:</strong> use OnTimer. It connects
-              to Google Calendar, Apple Calendar, or Outlook Calendar, detects every upcoming event, and fires an interruptive alarm before
-              each one — not a notification that disappears, but an alert that stays on your screen and demands a
-              response before it stops. No manual setup per meeting. Your calendar is the source of truth.
+      {/* Hero: answer, proof image, and install action in the first viewport */}
+      <section className="relative overflow-hidden pb-12 pt-8 sm:pb-16 sm:pt-16 md:pt-20">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.14),transparent)]" />
+        <div className="relative mx-auto grid max-w-5xl items-center gap-8 px-4 sm:px-6 md:grid-cols-[1fr_18rem] md:gap-12">
+          <div className="min-w-0">
+            <nav className="mb-4 text-sm text-zinc-500">
+              <Link href="/" className="transition-colors hover:text-zinc-300">Home</Link>
+              <span className="mx-2">›</span>
+              <span className="text-zinc-300">Turn Calendar Events Into Alarms</span>
+            </nav>
+            <h1 className="text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl">
+              Turn Calendar Events Into Real Alarms
+            </h1>
+            <p className="mt-4 text-lg leading-relaxed text-zinc-300">
+              Your calendar sends a banner that disappears. OnTimer makes each event ring like an alarm
+              clock — full screen, sound and vibration — until you slide to stop it.
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Calendar Notifications Aren't Alarms */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Why Calendar Notifications Aren&apos;t Alarms
-          </h2>
-          <div className="mt-6 space-y-4 text-lg text-zinc-400 leading-relaxed">
-            <p>
-              Google Calendar, Apple Calendar, and Outlook Calendar send notifications. Those alerts
-              appear in your notification tray, compete with hundreds of other alerts, and vanish
-              after a few seconds whether you saw them or not.
-            </p>
-            <p>
-              This is fine for casual reminders. It is not reliable for meetings where showing up
-              on time actually matters.
-            </p>
-            <p>
-              The problem isn&apos;t that you forgot the meeting. The problem is that the alert
-              fired and nothing forced you to act on it.{" "}
-              <strong className="text-white">Notifications inform. They don&apos;t interrupt.</strong>
-            </p>
-          </div>
-          <div className="mt-6">
-            <Link
-              href="/why-calendar-notifications-fail"
-              className="text-green-500 hover:text-green-400 transition-colors text-sm font-medium"
-            >
-              Why calendar notifications fail — the full breakdown →
-            </Link>
-          </div>
-
-          <div className="mt-10 overflow-hidden rounded-2xl border border-zinc-800">
-            <div className="grid grid-cols-2 border-b border-zinc-800 bg-zinc-900">
-              <div className="px-6 py-4 text-sm font-semibold text-zinc-400">Calendar Notification</div>
-              <div className="border-l border-zinc-800 px-6 py-4 text-sm font-semibold text-green-500">Calendar Alarm (OnTimer)</div>
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              <AppStoreCTA location="turn_events_into_alarms_hero" />
             </div>
-            {comparisonRows.map(([left, right], i) => (
-              <div key={i} className="grid grid-cols-2 border-b border-zinc-800 last:border-0">
-                <div className="px-6 py-4 text-sm text-zinc-400">{left}</div>
-                <div className="border-l border-zinc-800 px-6 py-4 text-sm font-medium text-white">{right}</div>
+            <p className="mt-3 text-sm text-zinc-500">
+              Free for iPhone · Google Calendar · Apple Calendar · Outlook Calendar
+            </p>
+          </div>
+          <div className="mx-auto w-44 sm:w-56 md:w-full">
+            <Image
+              src="/images/homepage2/persistent-alarm-v4.png"
+              alt="OnTimer full-screen alarm for a 9:00 job interview with a slide to stop control"
+              width={853}
+              height={1844}
+              sizes="(max-width: 639px) 11rem, (max-width: 767px) 14rem, 18rem"
+              className="h-auto w-full rounded-3xl border border-zinc-800 shadow-2xl shadow-green-950/30"
+              priority
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* What your calendar can do on its own */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-14 sm:py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-2xl font-black tracking-tight text-white sm:text-4xl">
+            Can you add an alarm to a calendar event?
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-zinc-300">
+            <strong className="text-white">Not with the calendar app alone.</strong> Google, Apple and
+            Outlook calendars can only send notifications. Here&apos;s what each one gives you:
+          </p>
+          <div className="mt-6 space-y-3">
+            {nativeOptions.map(({ calendar, native }) => (
+              <div key={calendar} className="rounded-xl border border-zinc-800 bg-zinc-950/70 p-4">
+                <p className="text-sm font-bold text-white">{calendar}</p>
+                <p className="mt-1 text-sm leading-relaxed text-zinc-400">{native}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-6 leading-relaxed text-zinc-400">
+            The manual fix is to set a separate iPhone Clock alarm for every meeting — and remember to change
+            it every time the meeting moves. OnTimer does that part for you, straight from your calendar.
+          </p>
+        </div>
+      </section>
+
+      {/* Notification vs alarm */}
+      <section className="border-t border-zinc-800 py-14 sm:py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-2xl font-black tracking-tight text-white sm:text-4xl">
+            A notification tells you. An alarm makes you stop.
+          </h2>
+          <p className="mt-4 leading-relaxed text-zinc-400">
+            Most missed meetings aren&apos;t forgotten. The reminder showed up while you were finishing an email,
+            you thought &ldquo;two more minutes,&rdquo; and it was gone.
+          </p>
+          <div className="mt-8 overflow-hidden rounded-2xl border border-zinc-800">
+            <div className="grid grid-cols-2 border-b border-zinc-800 bg-zinc-900">
+              <div className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-zinc-400 sm:px-6 sm:text-sm">Calendar notification</div>
+              <div className="border-l border-zinc-800 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-green-500 sm:px-6 sm:text-sm">OnTimer alarm</div>
+            </div>
+            {comparisonRows.map(([left, right]) => (
+              <div key={left} className="grid grid-cols-2 border-b border-zinc-800 last:border-0">
+                <div className="min-w-0 px-4 py-3 text-sm text-zinc-400 sm:px-6 sm:py-4">{left}</div>
+                <div className="min-w-0 border-l border-zinc-800 px-4 py-3 text-sm font-medium text-white sm:px-6 sm:py-4">{right}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Calendar Provider Support */}
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Works With Google Calendar, Apple Calendar, and Outlook Calendar
+      {/* How it works, with real screens */}
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-14 sm:py-20">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <h2 className="text-2xl font-black tracking-tight text-white sm:text-4xl">
+            How OnTimer turns your events into alarms
           </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
-            <p>
-              OnTimer connects directly to Google Calendar, Apple Calendar, and Outlook Calendar.
-              Every event you have scheduled across connected calendars gets an alarm.
-            </p>
-            <p>
-              You don&apos;t create new events. You don&apos;t configure reminders. Your calendar
-              stays exactly as it is. OnTimer runs alongside it and fires the alarm at the right time.
-            </p>
-          </div>
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {["Google Calendar", "Apple Calendar", "Outlook Calendar"].map((item) => (
-              <div key={item} className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-medium text-zinc-300">
-                ✓ {item}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Multiple Calendar Support */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Works Across Multiple Calendars
-          </h2>
-          <div className="mt-6 space-y-4 text-zinc-400 leading-relaxed">
-            <p>
-              If your work schedule lives in Outlook Calendar — Teams meetings, client calls, internal standups —
-              OnTimer picks those up and fires alarms for them. If your personal schedule lives in
-              Google Calendar or Apple Calendar, those events are covered too.
-            </p>
-            <p>
-              For people juggling work and personal calendars, OnTimer consolidates them into a single
-              alarm system. You see one set of alarms across all your events.
-            </p>
-          </div>
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {["Outlook Calendar", "Work and school accounts", "Multiple accounts"].map((item) => (
-              <div key={item} className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-medium text-zinc-300">
-                ✓ {item}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            How OnTimer Turns Events Into Alarms
-          </h2>
-          <div className="mt-8 space-y-6">
-            {[
-              {
-                n: 1,
-                title: "Connect your calendars",
-                body: "Link Google Calendar, Apple Calendar, Outlook Calendar, or a mix of calendars. Takes under a minute. OAuth — OnTimer never stores your credentials.",
-              },
-              {
-                n: 2,
-                title: "OnTimer monitors your schedule",
-                body: "In the background, OnTimer reads your upcoming events and schedules alarms for each one, based on your lead time preference.",
-              },
-              {
-                n: 3,
-                title: "A persistent alarm fires before each event",
-                body: "When it's time, an alarm appears on your screen. It does not disappear automatically. It stays until you dismiss it.",
-              },
-            ].map(({ n, title, body }) => (
-              <div key={n} className="flex gap-6">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-green-500 text-sm font-black text-black">
-                  {n}
+          <p className="mt-4 max-w-2xl leading-relaxed text-zinc-400">
+            Set it up once. After that you keep using your calendar exactly as you do now.
+          </p>
+          <ol className="mt-10 grid gap-10 md:grid-cols-3 md:gap-8">
+            {steps.map((step, index) => (
+              <li key={step.title} className="flex flex-col">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-500 text-sm font-black text-black">
+                    {index + 1}
+                  </span>
+                  <h3 className="text-lg font-bold text-white">{step.title}</h3>
                 </div>
-                <div>
-                  <h3 className="font-bold text-white">{title}</h3>
-                  <p className="mt-1 text-zinc-400 leading-relaxed">{body}</p>
+                <p className="mt-3 leading-relaxed text-zinc-400">{step.body}</p>
+                <div className="mx-auto mt-5 w-48 md:w-full">
+                  <Image
+                    src={step.image}
+                    alt={step.alt}
+                    width={853}
+                    height={1844}
+                    sizes="(max-width: 767px) 12rem, 18rem"
+                    className="h-auto w-full rounded-3xl border border-zinc-800"
+                  />
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
-          <div className="mt-10 rounded-xl border border-zinc-800 bg-zinc-900/60 p-6">
-            <p className="text-sm text-zinc-300 leading-relaxed">
-              No manual setup per meeting. No reminder configuration. Your calendar is the source of
-              truth — OnTimer reads it, and turns every event into an alarm.
-            </p>
-          </div>
-          <div className="mt-8">
+          </ol>
+          <div className="mt-12 flex flex-col items-center text-center">
             <AppStoreCTA location="turn_events_into_alarms_how_it_works" />
+            <p className="mt-3 text-sm text-zinc-500">Free · Works with the calendar you already use</p>
           </div>
-          <p className="mt-3 text-xs text-zinc-500">OnTimer is free · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
       </section>
 
-      {/* Who Benefits */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
+      {/* What's free */}
+      <section className="border-t border-zinc-800 py-14 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Who This Is For
-          </h2>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            {[
-              {
-                title: "People who miss meetings despite reminders",
-                body: "If you've seen a notification and still missed the meeting, the problem is the notification — not you. Alarms fix this.",
-              },
-              {
-                title: "Remote workers without office cues",
-                body: "Without hallway conversations or room bookings, there's nothing physical to remind you a meeting is starting. Alarms fill that gap.",
-              },
-              {
-                title: "People with ADHD or time blindness",
-                body: "Passive notifications don't break through hyperfocus. A persistent alarm that demands dismissal is a categorically different signal.",
-              },
-              {
-                title: "Multi-calendar users",
-                body: "If your schedule spans Google Calendar, Apple Calendar, and Outlook Calendar, OnTimer consolidates them into one alarm system so nothing slips through.",
-              },
-            ].map(({ title, body }) => (
-              <div key={title} className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-                <h3 className="font-bold text-white">{title}</h3>
-                <p className="mt-2 text-sm text-zinc-400 leading-relaxed">{body}</p>
-              </div>
-            ))}
+          <h2 className="text-2xl font-black tracking-tight text-white sm:text-4xl">What you get for free</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border border-green-500/30 bg-green-500/5 p-6">
+              <p className="text-sm font-semibold uppercase tracking-widest text-green-500">Free</p>
+              <ul className="mt-3 space-y-2 text-sm leading-relaxed text-zinc-300">
+                <li>Automatic alarms for every event on one calendar provider</li>
+                <li>Alarms that stay on screen until you stop them</li>
+                <li>Google Calendar, Outlook Calendar, or Apple Calendar</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+              <p className="text-sm font-semibold uppercase tracking-widest text-zinc-400">OnTimer Pro</p>
+              <ul className="mt-3 space-y-2 text-sm leading-relaxed text-zinc-300">
+                <li>Work and personal calendars together</li>
+                <li>Early Warning heads-up before the main alarm</li>
+                <li>Time To Leave alarms that account for travel and traffic</li>
+              </ul>
+            </div>
+          </div>
+          <p className="mt-6 text-sm leading-relaxed text-zinc-500">
+            On Android? OnTimer is iPhone-only for now.
+          </p>
+          <div className="mt-3">
+            <AndroidWaitlistButton size="md" location="turn_events_into_alarms_android" />
           </div>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="border-t border-zinc-800 py-16 sm:py-20">
+      <section className="border-t border-zinc-800 bg-zinc-900/50 py-14 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Frequently Asked Questions
+          <h2 className="text-2xl font-black tracking-tight text-white sm:text-4xl">
+            Calendar alarm questions
           </h2>
           <div className="mt-8 space-y-4">
             {faqItems.map((item) => (
               <details key={item.question} className="group rounded-xl border border-zinc-800 bg-zinc-900">
                 <summary className="flex cursor-pointer items-center justify-between p-5 text-sm font-semibold text-white">
                   {item.question}
-                  <span className="ml-4 shrink-0 text-zinc-500 group-open:rotate-180 transition-transform">▾</span>
+                  <span className="ml-4 shrink-0 text-zinc-500 transition-transform group-open:rotate-180">▾</span>
                 </summary>
-                <p className="px-5 pb-5 text-sm text-zinc-400 leading-relaxed">{item.answer}</p>
+                <p className="px-5 pb-5 text-sm leading-relaxed text-zinc-400">{item.answer}</p>
               </details>
             ))}
           </div>
@@ -396,24 +365,19 @@ export default function Page() {
       </section>
 
       {/* Related */}
-      <section className="border-t border-zinc-800 bg-zinc-900/50 py-16 sm:py-20">
+      <section className="border-t border-zinc-800 py-14 sm:py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-xl font-black tracking-tight text-white">Related Guides</h2>
+          <h2 className="text-xl font-black tracking-tight text-white">Related guides</h2>
           <ul className="mt-6 space-y-3">
             {[
-              { href: "/why-calendar-notifications-fail", label: "Why Calendar Notifications Fail (And What Actually Works)" },
-              { href: "/calendar-notifications-not-working", label: "Calendar Notifications Not Working? Why Reminders Fail — and What Fixes It" },
-              { href: "/why-notifications-fail", label: "Why Notifications Fail (And Persistent Alarms Work Better)" },
-              { href: "/last-5-minutes-problem", label: "The Last 5 Minutes Problem: Why Notifications Fail" },
-              { href: "/persistent-calendar-reminders", label: "How to Make Calendar Reminders Persistent" },
-              { href: "/best-calendar-alarm-app", label: "Best Calendar Alarm App for iPhone Calendars" },
-              { href: "/calendar-notifications-vs-alarms", label: "Calendar Notifications vs Alarms: Why Most Reminders Fail" },
-              { href: "/why-calendar-reminders-fail", label: "Why Calendar Reminders Fail" },
-              { href: "/how-to-never-miss-a-meeting", label: "How to Never Miss a Meeting Again" },
-              { href: "/adhd-time-blindness-tools", label: "ADHD Time Blindness Tools" },
+              { href: "/calendar-notifications-not-working", label: "iPhone calendar alerts not working? 10 fixes" },
+              { href: "/persistent-calendar-reminders", label: "How to make calendar reminders persistent" },
+              { href: "/best-calendar-alarm-app", label: "Best calendar alarm app for iPhone" },
+              { href: "/why-calendar-notifications-fail", label: "Why calendar notifications get missed, even when they work" },
+              { href: "/adhd-time-blindness-tools", label: "ADHD time blindness tools" },
             ].map(({ href, label }) => (
               <li key={href}>
-                <Link href={href} className="text-green-500 hover:text-green-400 transition-colors text-sm">{label} →</Link>
+                <Link href={href} className="text-sm text-green-500 transition-colors hover:text-green-400">{label} →</Link>
               </li>
             ))}
           </ul>
@@ -421,16 +385,16 @@ export default function Page() {
       </section>
 
       {/* Final CTA */}
-      <section className="relative overflow-hidden border-t border-zinc-800 py-24">
+      <section className="relative overflow-hidden border-t border-zinc-800 py-20 sm:py-24">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-2xl px-4 text-center sm:px-6">
-          <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
-            Turn your calendar into an alarm system.
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
+            Your next meeting could ring instead of buzz.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            Free for iPhone. Works with Google Calendar, Apple Calendar, and Outlook Calendar.
+            Free for iPhone. Connect your calendar once and every event gets an alarm.
           </p>
-          <div className="mt-8">
+          <div className="mt-8 flex justify-center">
             <AppStoreCTA location="turn_events_into_alarms_final_cta" />
           </div>
         </div>
