@@ -53,9 +53,10 @@ Calculators bring about 85% of search clicks. The app-primary rollout (Oct 6) al
 result users clicking through to OnTimer. Moving that to 4–5% alone roughly doubles
 total website click-throughs.
 
-- **Week 1:** Measure first. Confirm `location` is registered as an event-scoped
-  custom dimension in GA4 so `app_store_click` can be split by calculator and
-  placement. Without it, we can't tell which surface is working.
+- **Week 1 (done Oct 30):** Registered the event parameter `button_location` as the
+  event-scoped GA4 custom dimension “Button location”, so `app_store_click` can be
+  split by placement (it only populates from Oct 30 onward; earlier events are not
+  backfilled).
 - **Week 1–2:** Show the product in the result offer: add the full-screen alarm screenshot
   beside “Get Automatic Alarms”, and make the line specific to the result (“OnTimer can
   ring at 7:42 when it's time to leave”), stated as the Pro Time To Leave/Time To Fly
