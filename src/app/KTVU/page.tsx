@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Bricolage_Grotesque, IBM_Plex_Sans } from "next/font/google";
-import { KTVUAirportActions, KTVUAppStoreAction } from "./KTVUActions";
+import { KTVUAirportActions, KTVUAppStoreAction, KTVUToolActions } from "./KTVUActions";
 import "./ktvu.css";
 
 const display = Bricolage_Grotesque({
@@ -108,6 +108,13 @@ export default function KTVULandingPage() {
               airport departure estimate. OnTimer Pro can update it when
               traffic changes.
             </p>
+            <figure className="ktvu-review">
+              <div className="ktvu-review-stars" aria-label="Five out of five stars">★★★★★</div>
+              <blockquote>
+                “A smart, well-designed app I didn&apos;t know I needed but now use every day.”
+              </blockquote>
+              <figcaption>D Becker, App Store review</figcaption>
+            </figure>
             <KTVUAppStoreAction />
           </div>
 
@@ -122,6 +129,20 @@ export default function KTVULandingPage() {
               priority
             />
           </div>
+        </div>
+      </section>
+
+      <section className="ktvu-tools" aria-labelledby="ktvu-tools-title">
+        <div className="ktvu-shell ktvu-tools-layout">
+          <div className="ktvu-section-heading">
+            <p className="ktvu-kicker">More ways to be on time</p>
+            <h2 id="ktvu-tools-title">Plan the rest of the trip, too.</h2>
+            <p>
+              OnTimer has free calculators for airport pickups, cruises and
+              everyday trips, so you can work backward from when you need to be there.
+            </p>
+          </div>
+          <KTVUToolActions />
         </div>
       </section>
 

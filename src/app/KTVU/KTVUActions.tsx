@@ -31,6 +31,29 @@ const airports = [
 
 const appStoreUrl = appStoreCampaignUrl("ktvu_holiday_tv", APP_STORE_URL);
 
+const tools = [
+  {
+    title: "Picking someone up?",
+    description: "Plan when to leave for an airport pickup.",
+    href: `/airport-pickup-time-calculator?${campaignQuery}&utm_content=airport_pickup`,
+  },
+  {
+    title: "Going somewhere else?",
+    description: "Calculate when to leave for any destination.",
+    href: `/what-time-should-i-leave?${campaignQuery}&utm_content=general_leave_time`,
+  },
+  {
+    title: "Taking a cruise?",
+    description: "Work backward from your cruise departure.",
+    href: `/cruise-terminal-time-calculators?${campaignQuery}&utm_content=cruise_calculators`,
+  },
+  {
+    title: "Explore every free calculator",
+    description: "Find the right timing tool for your next plan.",
+    href: `/time-calculators?${campaignQuery}&utm_content=all_calculators`,
+  },
+] as const;
+
 function AppleMark() {
   return (
     <svg viewBox="0 0 814 1000" aria-hidden="true">
@@ -110,6 +133,32 @@ export function KTVUAppStoreAction() {
         />
         <span>Scan with your iPhone</span>
       </a>
+    </div>
+  );
+}
+
+export function KTVUToolActions() {
+  return (
+    <div className="ktvu-tool-grid" aria-label="More free OnTimer tools">
+      {tools.map((tool) => (
+        <a
+          className="ktvu-tool-card"
+          href={tool.href}
+          key={tool.title}
+          onClick={() =>
+            fireEvent("ktvu_tool_click", {
+              tool: tool.title,
+              campaign: "holiday_travel_2026",
+            })
+          }
+        >
+          <span>
+            <strong>{tool.title}</strong>
+            <small>{tool.description}</small>
+          </span>
+          <span className="ktvu-tool-arrow" aria-hidden="true">→</span>
+        </a>
+      ))}
     </div>
   );
 }

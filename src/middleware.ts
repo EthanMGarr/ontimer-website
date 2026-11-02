@@ -18,6 +18,12 @@ function isAuthorizedMedicationPreview(request: NextRequest): boolean {
 }
 
 export function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname === "/ktvu") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/KTVU";
+    return NextResponse.redirect(url, 308);
+  }
+
   if (PRIVATE_MEDICATION_ROUTES.has(request.nextUrl.pathname) && !isAuthorizedMedicationPreview(request)) {
     const accessUrl = new URL("/medication-preview-access", request.url);
     accessUrl.searchParams.set("next", request.nextUrl.pathname);
@@ -60,5 +66,8 @@ export const config = {
     "/caregiver-medication-schedule/:path*",
     "/medication-schedule/:path*",
     "/how-to-remember-medication-on-time/:path*",
+    // Preserve the public campaign URL even when a returning visitor already
+    // has the geo-classification cookie used by the first matcher.
+    "/ktvu",
   ],
 };
