@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Bricolage_Grotesque, IBM_Plex_Sans } from "next/font/google";
-import { KTVUAirportActions, KTVUAppStoreAction, KTVUToolActions } from "./KTVUActions";
+import {
+  KTVUAirportActions,
+  KTVUAppStoreAction,
+  KTVUHeroAppStoreAction,
+  KTVUToolActions,
+} from "./KTVUActions";
 import "./ktvu.css";
 
 const display = Bricolage_Grotesque({
@@ -61,6 +66,13 @@ export default function KTVULandingPage() {
               tell you when to walk out the door. Choose your Bay Area airport
               for a free, personalized leave-time calculation.
             </p>
+            <div className="ktvu-hero-app">
+              <div>
+                <strong>Want your iPhone to tell you when it&apos;s time to leave?</strong>
+                <span>Get OnTimer free and turn your leave time into an alarm.</span>
+              </div>
+              <KTVUHeroAppStoreAction />
+            </div>
           </div>
 
           <KTVUAirportActions />

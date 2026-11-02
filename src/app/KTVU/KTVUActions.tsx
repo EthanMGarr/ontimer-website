@@ -89,6 +89,26 @@ export function KTVUAirportActions() {
   );
 }
 
+export function KTVUHeroAppStoreAction() {
+  return (
+    <a
+      className="ktvu-hero-app-button"
+      href={appStoreUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() =>
+        trackAppStoreClick("ktvu_hero", {
+          campaign: "holiday_travel_2026",
+          cta_variant: "ktvu_above_fold",
+        })
+      }
+    >
+      <AppleMark />
+      <span>Download free for iPhone</span>
+    </a>
+  );
+}
+
 export function KTVUAppStoreAction() {
   return (
     <div className="ktvu-download-actions">

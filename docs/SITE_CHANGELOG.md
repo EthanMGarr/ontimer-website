@@ -4,7 +4,7 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
-- 2026-11-02: Expanded the focused `/KTVU` holiday-travel landing page with verified App Store social proof and tracked paths to the airport-pickup, general leave-time, cruise, and complete calculator directories. Added a permanent lowercase `/ktvu` redirect so the television-friendly URL works regardless of capitalization.
+- 2026-11-02: Expanded the focused `/KTVU` holiday-travel landing page with an above-the-fold free iPhone download path, verified App Store social proof, and tracked paths to the airport-pickup, general leave-time, cruise, and complete calculator directories. Added a permanent lowercase `/ktvu` redirect so the television-friendly URL works regardless of capitalization.
 
 - 2026-11-01: Added a focused `/KTVU` holiday-travel landing page for the scheduled KTVU interview. The page gives Bay Area viewers immediate tracked paths to the SFO, OAK, and SJC leave-time calculators, a KTVU-attributed App Store handoff and QR code, and concise Time To Fly product context without implying a KTVU endorsement. Verification: TypeScript, optimized production build, route metadata and responsive rendered review at 320, 375, 390, 414, 768, and desktop widths.
 
