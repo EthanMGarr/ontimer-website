@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   description:
     "Free Bay Area airport calculators for SFO, OAK and SJC, plus OnTimer Time To Fly alarms for iPhone.",
   alternates: { canonical: "https://www.ontimer.app/KTVU" },
+  itunes: null,
   robots: { index: false, follow: true },
   openGraph: {
     title: "What time do I actually need to leave for the airport?",
@@ -60,30 +61,30 @@ export default function KTVULandingPage() {
         <div className="ktvu-shell">
           <div className="ktvu-hero-copy">
             <p className="ktvu-kicker">Welcome, KTVU viewers</p>
-            <h1 id="ktvu-title">What time do I actually need to leave for the airport?</h1>
+            <h1 id="ktvu-title">When should I leave for the airport?</h1>
             <p className="ktvu-lede">
-              The familiar two-hour rule tells you when to arrive. It does not
-              tell you when to walk out the door. Choose your Bay Area airport
-              for a free, personalized leave-time calculation.
+              Choose SFO, OAK or SJC for a free, personalized leave-time
+              calculation based on your trip to the airport.
             </p>
-            <div className="ktvu-hero-app">
-              <div>
-                <strong>Want your iPhone to tell you when it&apos;s time to leave?</strong>
-                <span>Get OnTimer free and turn your leave time into an alarm.</span>
-              </div>
-              <KTVUHeroAppStoreAction />
-            </div>
           </div>
 
           <KTVUAirportActions />
 
           <p className="ktvu-calculator-note">
-            Free calculators. No account required. Need another airport?{" "}
+            Flying somewhere else?{" "}
             <Link href="/airport-time-to-leave-calculator?utm_source=ktvu&utm_medium=tv&utm_campaign=holiday_travel_2026&utm_content=all_airports">
               Browse all airports
             </Link>
             .
           </p>
+
+          <div className="ktvu-hero-app">
+            <div>
+              <strong>Want your iPhone to tell you when it&apos;s time to leave?</strong>
+              <span>Get OnTimer free and turn your leave time into an alarm.</span>
+            </div>
+            <KTVUHeroAppStoreAction />
+          </div>
         </div>
       </section>
 

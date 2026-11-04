@@ -14,6 +14,7 @@ for (const requiredPath of [ktvuPagePath, ktvuActionsPath, ktvuStylesPath]) {
 
 const page = readFileSync(ktvuPagePath, "utf8");
 const actions = readFileSync(ktvuActionsPath, "utf8");
+const styles = readFileSync(ktvuStylesPath, "utf8");
 const middleware = readFileSync(middlewarePath, "utf8");
 
 assert.match(
@@ -22,6 +23,18 @@ assert.match(
   "KTVU must keep its uppercase canonical URL",
 );
 assert.match(page, /export default function KTVULandingPage\(\)/, "KTVU must export its landing page");
+assert.match(page, /itunes:\s*null/, "KTVU must suppress the app banner before its calculator choices");
+assert.ok(
+  page.indexOf("<KTVUAirportActions />") < page.indexOf('className="ktvu-hero-app"'),
+  "KTVU airport calculators must precede the app-download card",
+);
+assert.match(page, /Flying somewhere else\?/, "KTVU must offer the all-airports escape hatch");
+assert.match(actions, /Calculate for \{airport\.code\}/, "KTVU must expose compact airport CTAs on mobile");
+assert.match(
+  styles,
+  /\.ktvu-airport-mobile-label\s*\{[\s\S]*?white-space:\s*nowrap/,
+  "KTVU mobile airport CTAs must remain single-line",
+);
 assert.match(actions, /utm_source=ktvu/, "KTVU actions must retain campaign attribution");
 assert.match(
   middleware,
@@ -33,4 +46,4 @@ assert.ok(
   "lowercase /ktvu must remain in the unconditional middleware matcher",
 );
 
-console.log("Critical campaign route regression passed (8 checks).");
+console.log("Critical campaign route regression passed (13 checks).");

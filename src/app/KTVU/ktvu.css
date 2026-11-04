@@ -1,3 +1,5 @@
+/* Hallmark · genre: modern-minimal · macrostructure: Task-first Conversion Workbench · design-system: design.md · theme: design.md locked · enrichment: existing product screenshot · nav/footer: shared site chrome · contrast: pass (40–41) · slop: pass (42–49) · mobile: pass (34, 49, 50–57) */
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 */
 .ktvu-page {
   --ktvu-ink: var(--navy-950);
   --ktvu-muted: var(--ink-muted);
@@ -38,7 +40,7 @@
     radial-gradient(circle at 88% 8%, var(--blue-100), transparent 30rem),
     linear-gradient(180deg, var(--paper), var(--sky-50));
   border-bottom: 1px solid var(--line);
-  padding-block: clamp(3.5rem, 9vw, 7rem) clamp(3.5rem, 8vw, 6rem);
+  padding-block: var(--space-lg) var(--space-xl);
 }
 
 .ktvu-hero-copy {
@@ -56,10 +58,12 @@
 
 .ktvu-hero h1 {
   color: var(--ktvu-ink);
-  font-size: clamp(2.65rem, 7.5vw, 5.9rem);
-  line-height: 0.94;
+  font-size: clamp(2.25rem, 10vw, 3rem);
+  line-height: 1;
   margin: 0;
   max-width: 13ch;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .ktvu-lede {
@@ -117,6 +121,8 @@
   min-height: 3rem;
   padding: 0.65rem 0.9rem;
   text-decoration: none;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .ktvu-hero-app-button:hover {
@@ -132,26 +138,56 @@
 
 .ktvu-airport-grid {
   display: grid;
-  gap: 1rem;
-  margin-top: clamp(2.5rem, 6vw, 4rem);
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
 }
 
 .ktvu-airport-card {
-  background: color-mix(in oklch, var(--paper) 94%, var(--blue-100));
-  border: 1px solid var(--line-strong);
-  border-radius: 1.35rem;
-  color: var(--ktvu-ink);
-  display: grid;
-  min-height: 14.5rem;
-  padding: 1.35rem;
+  align-items: center;
+  background: var(--navy-950);
+  border: 1px solid var(--navy-950);
+  border-radius: var(--radius-md);
+  color: var(--paper);
+  display: flex;
+  justify-content: space-between;
+  min-height: 3.5rem;
+  padding: var(--space-sm) var(--space-md);
   text-decoration: none;
-  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out),
+    box-shadow var(--dur-short) var(--ease-out),
+    transform var(--dur-short) var(--ease-out);
 }
 
 .ktvu-airport-card:hover {
-  border-color: var(--blue-400);
+  background: var(--ktvu-blue-dark);
+  border-color: var(--ktvu-blue-dark);
   box-shadow: var(--shadow-md);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
+}
+
+.ktvu-airport-card:active {
+  transform: translateY(1px);
+}
+
+.ktvu-airport-mobile-label {
+  align-items: center;
+  display: flex;
+  font-family: var(--font-ktvu-display), var(--font-display);
+  font-size: 1rem;
+  font-weight: 650;
+  justify-content: space-between;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.ktvu-airport-code,
+.ktvu-airport-name,
+.ktvu-airport-detail,
+.ktvu-airport-link {
+  display: none;
 }
 
 .ktvu-airport-code {
@@ -190,7 +226,7 @@
   color: var(--ink-soft);
   font-size: 0.9rem;
   line-height: 1.6;
-  margin: 1.25rem 0 0;
+  margin: var(--space-md) 0 0;
 }
 
 .ktvu-calculator-note a {
@@ -508,9 +544,54 @@
 }
 
 @media (min-width: 640px) {
+  .ktvu-hero {
+    padding-block: clamp(3.5rem, 9vw, 7rem) clamp(3.5rem, 8vw, 6rem);
+  }
+
+  .ktvu-hero h1 {
+    font-size: clamp(3.5rem, 7.5vw, 5.9rem);
+    line-height: 0.94;
+  }
+
+  .ktvu-hero-app-button {
+    width: auto;
+  }
+
   .ktvu-airport-grid,
   .ktvu-factor-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ktvu-airport-grid {
+    gap: 1rem;
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .ktvu-airport-card {
+    background: color-mix(in oklch, var(--paper) 94%, var(--blue-100));
+    border-color: var(--line-strong);
+    border-radius: 1.35rem;
+    color: var(--ktvu-ink);
+    display: grid;
+    min-height: 14.5rem;
+    padding: 1.35rem;
+  }
+
+  .ktvu-airport-card:hover {
+    background: color-mix(in oklch, var(--paper) 94%, var(--blue-100));
+    border-color: var(--blue-400);
+    transform: translateY(-3px);
+  }
+
+  .ktvu-airport-mobile-label {
+    display: none;
+  }
+
+  .ktvu-airport-code,
+  .ktvu-airport-name,
+  .ktvu-airport-detail,
+  .ktvu-airport-link {
+    display: block;
   }
 
   .ktvu-factor-grid {
@@ -529,13 +610,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (max-width: 479px) {
-  .ktvu-hero-app-button {
-    justify-content: center;
-    width: 100%;
-  }
-}
-
 @media (min-width: 860px) {
   .ktvu-app-grid {
     grid-template-columns: minmax(0, 1.1fr) minmax(19rem, 0.9fr);

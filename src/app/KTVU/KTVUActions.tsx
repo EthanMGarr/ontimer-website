@@ -76,6 +76,9 @@ export function KTVUAirportActions() {
             })
           }
         >
+          <span className="ktvu-airport-mobile-label">
+            Calculate for {airport.code} <span aria-hidden="true">→</span>
+          </span>
           <span className="ktvu-airport-code">{airport.code}</span>
           <span className="ktvu-airport-name">{airport.name}</span>
           <span className="ktvu-airport-detail">{airport.detail}</span>
