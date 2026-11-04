@@ -18,6 +18,14 @@ function isAuthorizedMedicationPreview(request: NextRequest): boolean {
 }
 
 export function middleware(request: NextRequest) {
+  // The public KTVU campaign URL was promoted with uppercase branding. Keep
+  // the lowercase spelling usable without changing the canonical URL.
+  if (request.nextUrl.pathname === "/ktvu") {
+    const canonicalUrl = request.nextUrl.clone();
+    canonicalUrl.pathname = "/KTVU";
+    return NextResponse.redirect(canonicalUrl, 308);
+  }
+
   if (PRIVATE_MEDICATION_ROUTES.has(request.nextUrl.pathname) && !isAuthorizedMedicationPreview(request)) {
     const accessUrl = new URL("/medication-preview-access", request.url);
     accessUrl.searchParams.set("next", request.nextUrl.pathname);
@@ -60,5 +68,7 @@ export const config = {
     "/caregiver-medication-schedule/:path*",
     "/medication-schedule/:path*",
     "/how-to-remember-medication-on-time/:path*",
+    // This must run even after the geo-classification cookie is present.
+    "/ktvu",
   ],
 };

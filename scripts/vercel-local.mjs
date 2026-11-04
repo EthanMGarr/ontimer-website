@@ -137,6 +137,23 @@ function verifyCalculatorReleaseGuardrails() {
   }
 }
 
+function verifyCriticalRoutes() {
+  console.log("Running critical public-route guardrails...");
+  const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+  const result = spawnSync(npmCommand, ["run", "test:critical-routes"], {
+    cwd: repositoryRoot,
+    env: process.env,
+    stdio: "inherit",
+  });
+
+  if (result.error) {
+    fail(`could not start critical route guardrails. ${result.error.message}`);
+  }
+  if ((result.status ?? 1) !== 0) {
+    fail("critical public-route guardrails failed; production deployment is blocked.");
+  }
+}
+
 const action = process.argv[2];
 const pinnedVersion = verifyPinnedCli();
 
@@ -155,6 +172,7 @@ if (action !== "check" && action !== "deploy-production") {
 
 const projectName = verifyProjectLink();
 verifyCalculatorReleaseGuardrails();
+verifyCriticalRoutes();
 verifyAuthentication();
 console.log(
   `Vercel preflight passed: local CLI ${pinnedVersion}, linked project ${projectName}.`,

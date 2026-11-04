@@ -61,6 +61,7 @@
     "test:consent": "tsc --module commonjs --target es2022 --moduleResolution node --outDir /tmp/ontimer-consent-tests --skipLibCheck --esModuleInterop --noEmit false src/lib/medication-route-privacy.ts src/lib/consent-policy.ts src/lib/__tests__/consent-policy.test.ts && node /tmp/ontimer-consent-tests/__tests__/consent-policy.test.js",
     "test:analytics": "tsc --module commonjs --target es2022 --moduleResolution node --outDir /tmp/ontimer-analytics-tests --skipLibCheck --esModuleInterop --noEmit false src/lib/analytics-config.ts src/lib/analytics-measurement-protocol.ts src/lib/__tests__/analytics-config.test.ts src/lib/__tests__/analytics-measurement-protocol.test.ts && node /tmp/ontimer-analytics-tests/__tests__/analytics-config.test.js && node /tmp/ontimer-analytics-tests/__tests__/analytics-measurement-protocol.test.js",
     "test:middleware-compute": "node scripts/check-middleware-compute.mjs",
+    "test:critical-routes": "node scripts/check-critical-campaign-routes.mjs",
     "audit:site": "node scripts/audit-site.mjs",
     "build:widget": "vite build --config vite.widget.config.ts"
   },

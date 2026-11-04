@@ -1,0 +1,565 @@
+.ktvu-page {
+  --ktvu-ink: var(--navy-950);
+  --ktvu-muted: var(--ink-muted);
+  --ktvu-blue: var(--blue-700);
+  --ktvu-blue-dark: var(--blue-800);
+  background: var(--paper);
+  color: var(--ktvu-ink);
+  font-family: var(--font-ktvu-body), var(--font-body);
+}
+
+.ktvu-page *,
+.ktvu-page *::before,
+.ktvu-page *::after {
+  box-sizing: border-box;
+}
+
+.ktvu-page h1,
+.ktvu-page h2,
+.ktvu-page h3 {
+  font-family: var(--font-ktvu-display), var(--font-display);
+  letter-spacing: -0.045em;
+}
+
+.ktvu-page a:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+}
+
+.ktvu-shell {
+  margin-inline: auto;
+  max-width: 76rem;
+  padding-inline: var(--page-gutter);
+  width: 100%;
+}
+
+.ktvu-hero {
+  background:
+    radial-gradient(circle at 88% 8%, var(--blue-100), transparent 30rem),
+    linear-gradient(180deg, var(--paper), var(--sky-50));
+  border-bottom: 1px solid var(--line);
+  padding-block: clamp(3.5rem, 9vw, 7rem) clamp(3.5rem, 8vw, 6rem);
+}
+
+.ktvu-hero-copy {
+  max-width: 59rem;
+}
+
+.ktvu-kicker {
+  color: var(--ktvu-blue);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+}
+
+.ktvu-hero h1 {
+  color: var(--ktvu-ink);
+  font-size: clamp(2.65rem, 7.5vw, 5.9rem);
+  line-height: 0.94;
+  margin: 0;
+  max-width: 13ch;
+}
+
+.ktvu-lede {
+  color: var(--ktvu-muted);
+  font-size: clamp(1.08rem, 2.4vw, 1.45rem);
+  line-height: 1.55;
+  margin: 1.5rem 0 0;
+  max-width: 62ch;
+}
+
+.ktvu-hero-app {
+  align-items: center;
+  background: color-mix(in oklch, var(--paper) 90%, var(--blue-100));
+  border: 1px solid var(--line-strong);
+  border-radius: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  max-width: 47rem;
+  padding: 1rem;
+}
+
+.ktvu-hero-app > div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.ktvu-hero-app strong {
+  color: var(--ktvu-ink);
+  font-family: var(--font-ktvu-display), var(--font-display);
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.ktvu-hero-app > div > span {
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.ktvu-hero-app-button {
+  align-items: center;
+  background: var(--navy-950);
+  border: 1px solid var(--navy-950);
+  border-radius: 0.75rem;
+  color: var(--paper);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.88rem;
+  font-weight: 600;
+  gap: 0.55rem;
+  min-height: 3rem;
+  padding: 0.65rem 0.9rem;
+  text-decoration: none;
+}
+
+.ktvu-hero-app-button:hover {
+  background: var(--blue-800);
+  border-color: var(--blue-800);
+}
+
+.ktvu-hero-app-button svg {
+  fill: currentColor;
+  height: 1.35rem;
+  width: 1.1rem;
+}
+
+.ktvu-airport-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+
+.ktvu-airport-card {
+  background: color-mix(in oklch, var(--paper) 94%, var(--blue-100));
+  border: 1px solid var(--line-strong);
+  border-radius: 1.35rem;
+  color: var(--ktvu-ink);
+  display: grid;
+  min-height: 14.5rem;
+  padding: 1.35rem;
+  text-decoration: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.ktvu-airport-card:hover {
+  border-color: var(--blue-400);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.ktvu-airport-code {
+  color: var(--ktvu-blue);
+  font-family: var(--font-ktvu-display), var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.6rem);
+  font-weight: 650;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.ktvu-airport-name {
+  align-self: end;
+  font-size: 1.04rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-top: 1.5rem;
+}
+
+.ktvu-airport-detail {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  line-height: 1.4;
+  margin-top: 0.3rem;
+}
+
+.ktvu-airport-link {
+  align-self: end;
+  color: var(--ktvu-blue);
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin-top: 1.2rem;
+}
+
+.ktvu-calculator-note {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 1.25rem 0 0;
+}
+
+.ktvu-calculator-note a {
+  color: var(--ktvu-blue);
+  font-weight: 600;
+  text-underline-offset: 0.2em;
+}
+
+.ktvu-factors {
+  background: var(--navy-950);
+  color: var(--paper);
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+.ktvu-factors .ktvu-kicker {
+  color: var(--blue-300);
+}
+
+.ktvu-section-heading {
+  max-width: 52rem;
+}
+
+.ktvu-section-heading h2,
+.ktvu-app h2 {
+  font-size: clamp(2.25rem, 5.5vw, 4.6rem);
+  line-height: 0.98;
+  margin: 0;
+}
+
+.ktvu-factors h2,
+.ktvu-factors h3 {
+  color: var(--paper);
+}
+
+.ktvu-factor-grid {
+  display: grid;
+  gap: 1px;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.ktvu-factor-grid article {
+  border-top: 1px solid color-mix(in oklch, var(--paper) 18%, transparent);
+  padding-block: 1.4rem;
+}
+
+.ktvu-factor-grid article > span {
+  color: var(--blue-300);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.ktvu-factor-grid h3 {
+  font-size: 1.55rem;
+  margin: 0.45rem 0 0;
+}
+
+.ktvu-factor-grid p {
+  color: var(--blue-100);
+  line-height: 1.55;
+  margin: 0.4rem 0 0;
+}
+
+.ktvu-app {
+  background: var(--paper);
+  padding-block: clamp(4rem, 9vw, 8rem);
+}
+
+.ktvu-app-grid {
+  align-items: center;
+  display: grid;
+  gap: clamp(3rem, 8vw, 7rem);
+}
+
+.ktvu-app-copy {
+  max-width: 42rem;
+}
+
+.ktvu-app h2 {
+  color: var(--ktvu-ink);
+  max-width: 12ch;
+}
+
+.ktvu-app-copy > p:not(.ktvu-kicker) {
+  color: var(--ktvu-muted);
+  font-size: 1.08rem;
+  line-height: 1.65;
+  margin: 1.35rem 0 0;
+}
+
+.ktvu-app-copy .ktvu-free-note {
+  color: var(--ink-soft);
+  font-size: 0.93rem;
+}
+
+.ktvu-review {
+  border-left: 3px solid var(--blue-400);
+  margin: 1.8rem 0 0;
+  padding: 0.15rem 0 0.15rem 1rem;
+}
+
+.ktvu-review-stars {
+  color: var(--blue-700);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+}
+
+.ktvu-review blockquote {
+  color: var(--ktvu-ink);
+  font-family: var(--font-ktvu-display), var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.45;
+  margin: 0.45rem 0 0;
+  max-width: 33rem;
+}
+
+.ktvu-review figcaption {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  margin-top: 0.45rem;
+}
+
+.ktvu-download-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.ktvu-app-store-button {
+  align-items: center;
+  background: var(--navy-950);
+  border: 1px solid var(--navy-950);
+  border-radius: 0.85rem;
+  color: var(--paper);
+  display: inline-flex;
+  gap: 0.75rem;
+  min-height: 4.1rem;
+  padding: 0.65rem 1.15rem;
+  text-decoration: none;
+}
+
+.ktvu-app-store-button:hover {
+  background: var(--blue-800);
+  border-color: var(--blue-800);
+}
+
+.ktvu-app-store-button svg {
+  fill: currentColor;
+  height: 2rem;
+  width: 1.65rem;
+}
+
+.ktvu-app-store-button span {
+  display: grid;
+  font-family: var(--font-ktvu-display), var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.ktvu-app-store-button small {
+  font-family: var(--font-ktvu-body), var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.ktvu-app-qr {
+  align-items: center;
+  color: var(--ink-soft);
+  display: none;
+  font-size: 0.78rem;
+  gap: 0.7rem;
+  text-decoration: none;
+}
+
+.ktvu-app-qr svg {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  height: 6rem;
+  width: 6rem;
+}
+
+.ktvu-app-visual {
+  display: grid;
+  justify-items: center;
+  min-height: 31rem;
+  position: relative;
+}
+
+.ktvu-visual-ring {
+  background: var(--blue-100);
+  border-radius: 50%;
+  height: min(82vw, 28rem);
+  position: absolute;
+  top: 7%;
+  width: min(82vw, 28rem);
+}
+
+.ktvu-app-visual img {
+  border: 1px solid var(--line-strong);
+  border-radius: 2rem;
+  box-shadow: var(--shadow-lg);
+  height: auto;
+  max-width: 19rem;
+  position: relative;
+  transform: rotate(2deg);
+  width: min(68vw, 19rem);
+}
+
+.ktvu-tools {
+  background: var(--sky-50);
+  border-top: 1px solid var(--line);
+  padding-block: clamp(4rem, 8vw, 6.5rem);
+}
+
+.ktvu-tools-layout {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.ktvu-tools h2 {
+  color: var(--ktvu-ink);
+  font-size: clamp(2.25rem, 5.5vw, 4.2rem);
+  line-height: 0.98;
+  margin: 0;
+  max-width: 11ch;
+}
+
+.ktvu-tools .ktvu-section-heading > p:last-child {
+  color: var(--ktvu-muted);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  margin: 1.25rem 0 0;
+  max-width: 38rem;
+}
+
+.ktvu-tool-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.ktvu-tool-card {
+  align-items: center;
+  background: var(--paper);
+  border: 1px solid var(--line-strong);
+  border-radius: 1rem;
+  color: var(--ktvu-ink);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  min-height: 7.2rem;
+  padding: 1.2rem;
+  text-decoration: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.ktvu-tool-card:hover {
+  border-color: var(--blue-400);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+.ktvu-tool-card > span:first-child {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.ktvu-tool-card strong {
+  font-family: var(--font-ktvu-display), var(--font-display);
+  font-size: 1.08rem;
+  letter-spacing: -0.02em;
+}
+
+.ktvu-tool-card small {
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.ktvu-tool-arrow {
+  color: var(--ktvu-blue);
+  flex: 0 0 auto;
+  font-size: 1.35rem;
+}
+
+.ktvu-closing {
+  background: var(--blue-100);
+  border-top: 1px solid var(--line);
+  padding-block: clamp(2.5rem, 6vw, 4rem);
+  text-align: center;
+}
+
+.ktvu-closing p,
+.ktvu-closing strong {
+  display: block;
+  margin: 0;
+}
+
+.ktvu-closing p {
+  color: var(--ktvu-muted);
+  font-size: 1rem;
+}
+
+.ktvu-closing strong {
+  color: var(--ktvu-ink);
+  font-family: var(--font-ktvu-display), var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3.1rem);
+  letter-spacing: -0.04em;
+  margin-top: 0.35rem;
+}
+
+@media (min-width: 640px) {
+  .ktvu-airport-grid,
+  .ktvu-factor-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ktvu-factor-grid {
+    gap: 2rem;
+  }
+
+  .ktvu-factor-grid article {
+    padding-block: 1.6rem 0;
+  }
+
+  .ktvu-app-qr {
+    display: flex;
+  }
+
+  .ktvu-tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 479px) {
+  .ktvu-hero-app-button {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (min-width: 860px) {
+  .ktvu-app-grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(19rem, 0.9fr);
+  }
+
+  .ktvu-app-visual {
+    order: 2;
+  }
+
+  .ktvu-tools-layout {
+    align-items: start;
+    grid-template-columns: minmax(0, 0.75fr) minmax(30rem, 1.25fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ktvu-airport-card,
+  .ktvu-hero-app-button,
+  .ktvu-tool-card {
+    transition: none;
+  }
+
+  .ktvu-airport-card:hover,
+  .ktvu-tool-card:hover {
+    transform: none;
+  }
+}
