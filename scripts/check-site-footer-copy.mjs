@@ -19,6 +19,7 @@ assert.match(
   "the site-wide footer must link to the published Days Until hub"
 );
 assert.match(footer, /\["Airport Pickup Calculators", "\/airport-pickup-calculators"\]/, "the footer must link to the airport pickup directory");
+assert.match(footer, /\["Press", "\/press"\]/, "the site-wide footer must link to the press page");
 
 const header = readFileSync("src/components/Homepage2Header.tsx", "utf8");
 assert.match(

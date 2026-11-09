@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-11-09",
+    "scope": "page",
+    "macrostructure": "Quote-Led",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "editorial, source-backed, press-ready",
+    "enrichment": "source-linked KTVU story artwork",
+    "brief": "OnTimer press coverage and media-inquiry page"
+  },
+  {
     "date": "2026-11-07",
     "scope": "page",
     "macrostructure": "Narrative Workflow",

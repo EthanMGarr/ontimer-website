@@ -10,6 +10,10 @@ const homepagePath = path.join(root, "src", "app", "homepage2", "page.tsx");
 const announcementPath = path.join(root, "src", "components", "KTVUAnnouncementBar.tsx");
 const announcementStylesPath = path.join(root, "src", "components", "KTVUAnnouncementBar.module.css");
 const middlewarePath = path.join(root, "src", "middleware.ts");
+const pressPagePath = path.join(root, "src", "app", "press", "page.tsx");
+const pressStylesPath = path.join(root, "src", "app", "press", "press.css");
+const sitemapPath = path.join(root, "src", "app", "sitemap.ts");
+const footerPath = path.join(root, "src", "components", "Homepage2Footer.tsx");
 
 for (const requiredPath of [
   ktvuPagePath,
@@ -18,6 +22,8 @@ for (const requiredPath of [
   homepagePath,
   announcementPath,
   announcementStylesPath,
+  pressPagePath,
+  pressStylesPath,
 ]) {
   assert.ok(existsSync(requiredPath), `critical KTVU route asset is missing: ${requiredPath}`);
 }
@@ -29,6 +35,9 @@ const homepage = readFileSync(homepagePath, "utf8");
 const announcement = readFileSync(announcementPath, "utf8");
 const announcementStyles = readFileSync(announcementStylesPath, "utf8");
 const middleware = readFileSync(middlewarePath, "utf8");
+const pressPage = readFileSync(pressPagePath, "utf8");
+const sitemap = readFileSync(sitemapPath, "utf8");
+const footer = readFileSync(footerPath, "utf8");
 
 assert.match(
   page,
@@ -78,4 +87,17 @@ assert.doesNotMatch(
   "homepage announcement must remain in normal document flow",
 );
 
-console.log("Critical campaign route regression passed (17 checks).");
+assert.match(
+  pressPage,
+  /alternates:\s*\{\s*canonical:\s*"https:\/\/www\.ontimer\.app\/press"\s*\}/,
+  "press page must keep a self-referencing canonical URL",
+);
+assert.match(pressPage, /robots:\s*\{[\s\S]*?index:\s*true,[\s\S]*?follow:\s*true/, "press page must remain indexable");
+assert.match(pressPage, /https:\/\/www\.ktvu\.com\/video\/fmc-c62rzvs90bao7eq2/, "press page must link to the original KTVU story");
+assert.match(pressPage, /Interested in doing a story\?/, "press page must retain the media-inquiry prompt");
+assert.match(pressPage, /mailto:support@ontimer\.app/, "press page must link media inquiries to OnTimer support");
+assert.match(pressPage, /"@type": "VideoObject"/, "press page must identify the source-backed video in structured data");
+assert.match(sitemap, /url: `\$\{baseUrl\}\/press`/, "press page must remain in the XML sitemap");
+assert.match(footer, /\["Press", "\/press"\]/, "the shared English footer must link to the press page");
+
+console.log("Critical public-route regression passed (25 checks).");

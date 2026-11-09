@@ -1,9 +1,9 @@
 {
-  "scannedAt": "2026-11-04",
+  "scannedAt": "2026-11-09",
   "framework": "Next.js 15 App Router",
   "fontStack": "Bricolage Grotesque display and IBM Plex Sans body through the existing CSS variables",
   "palette": "tokens.css light blue-tinted paper, navy ink, restrained OnTimer blue, and green only for meaningful success",
   "motion": "motion-cut; no dedicated motion library",
   "spacing": "tokens.css named four-point spacing scale",
-  "preserve": ["framework", "locked design.md system", "shared public-site chrome", "task-first calculator workbench", "input → answer → OnTimer → calendar alternative conversion sequence"]
+  "preserve": ["framework", "locked design.md system", "shared public-site chrome", "content-page reading patterns", "task-first calculator workbench", "input → answer → OnTimer → calendar alternative conversion sequence"]
 }
