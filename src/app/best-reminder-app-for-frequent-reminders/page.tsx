@@ -114,8 +114,8 @@ const appComparisons = [
   {
     name: "OnTimer",
     repeating: "Set lead time per event; fires before every calendar event",
-    persistent: "Yes — stays on screen until dismissed",
-    verdict: "Best for calendar events that need a stronger signal",
+    persistent: "Yes — stays until you respond; High Alerts can be snoozed",
+    verdict: "Best for calendar events that need a stronger signal and optional snooze",
   },
 ];
 
@@ -422,13 +422,14 @@ export default function BestReminderAppForFrequentRemindersPage() {
               notification — at a configurable lead time before each one.
             </p>
             <p>
-              The alarm stays on screen until you dismiss it. It doesn&apos;t wait for
-              you to notice it. That distinction is the whole point.
+              The alarm stays on screen until you respond. When a High Alert rings,
+              you can dismiss it or choose one of your enabled snooze times.
             </p>
           </div>
           <ul className="mt-8 space-y-3">
             {[
-              "Persistent alarm that stays on screen until dismissed — not a notification",
+              "Persistent alarm that stays on screen until you respond — not a notification",
+              "Optional snooze for ringing High Alerts",
               "Fires before every calendar event automatically — no manual setup per event",
               "Connects to Google Calendar, Apple Calendar, and Outlook Calendar",
               "Configurable lead time — set how early you want to be interrupted",

@@ -99,16 +99,16 @@ const breadcrumbJsonLd = {
 
 const comparisonRows = [
   { feature: "Alert type", standard: "Push notification", ontimer: "Persistent alarm" },
-  { feature: "Disappears automatically", standard: "Yes (seconds)", ontimer: "No — stays until dismissed" },
+  { feature: "Disappears automatically", standard: "Yes (seconds)", ontimer: "No — stays until you respond" },
   { feature: "Works when phone face-down", standard: "Often missed", ontimer: "Alarm fires regardless" },
   { feature: "Silent mode and Focus", standard: "Depends on iPhone settings", ontimer: "High Alert can ring through on iOS 26.1+ when enabled and permitted" },
-  { feature: "Requires active dismissal", standard: "No", ontimer: "Yes" },
+  { feature: "Requires active response", standard: "No", ontimer: "Yes — dismiss or snooze a High Alert" },
   { feature: "Google Calendar support", standard: "Notifications only", ontimer: "Persistent alarms" },
   { feature: "Apple Calendar support", standard: "Notifications only", ontimer: "Persistent alarms" },
   { feature: "Outlook Calendar", standard: "Notifications only", ontimer: "Persistent alarms" },
   { feature: "Time To Leave alerts", standard: "Not available", ontimer: "Available (paid feature)" },
   { feature: "Time To Fly", standard: "Not available", ontimer: "Automatically discovers flights and prepares a leave-time alarm" },
-  { feature: "Per-event sound", standard: "Varies by calendar app", ontimer: "Choose a sound for a specific event" },
+  { feature: "Per-event sound", standard: "Varies by calendar app", ontimer: "Choose a built-in or imported sound for a specific event" },
 ];
 
 const whoCards = [
@@ -337,8 +337,9 @@ export default function Page() {
                 "Works with Apple Calendar",
                 "Works with Outlook Calendar",
                 "Multiple accounts supported simultaneously",
-                "Persistent alarms that stay until dismissed",
-                "Custom sounds, including event-specific sounds",
+                "Persistent alarms that stay until you respond",
+                "Custom sounds, including your own imported sounds and event-specific choices",
+                "Optional snooze for ringing High Alerts",
                 "Home-screen controls for each event",
                 "Optional Early Warning before the main alarm",
                 "Optional Time To Leave alerts based on travel time",

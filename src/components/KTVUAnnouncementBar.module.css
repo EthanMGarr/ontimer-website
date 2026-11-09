@@ -1,0 +1,67 @@
+/* Hallmark · component: announcement banner · genre: modern-minimal · theme: design.md locked
+ * states: default · hover · focus · active · navigation-only (no async states)
+ * contrast: OnTimer paper on navy · pre-emit critique: P5 H5 E5 S5 R5 V4
+ */
+.banner {
+  background: var(--navy-950);
+  color: var(--paper);
+  font-family: var(--font-body);
+  position: relative;
+}
+
+.link {
+  align-items: center;
+  color: inherit;
+  display: flex;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.35;
+  min-height: 3rem;
+  padding: var(--space-xs) var(--page-gutter);
+  text-align: center;
+  text-decoration: none;
+}
+
+.link span {
+  display: block;
+  text-wrap: balance;
+  transition: transform var(--dur-micro) var(--ease-out);
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--blue-300);
+  outline-offset: -3px;
+}
+
+.link:active span {
+  transform: translateY(var(--space-3xs));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover span {
+    transform: translateX(var(--space-2xs));
+  }
+}
+
+@media (min-width: 40rem) {
+  .link {
+    min-height: 2.75rem;
+    padding-block: var(--space-xs);
+  }
+
+  .link span {
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link span {
+    transition-duration: 0ms;
+  }
+
+  .link:active span,
+  .link:hover span {
+    transform: none;
+  }
+}

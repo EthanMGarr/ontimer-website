@@ -4,7 +4,7 @@ Use this checklist whenever adding or changing a paid API integration.
 
 ## Application Controls
 
-- [ ] Public analytics relay routes accept only same-origin browser requests, validate bounded event/parameter names and values, apply rate limits before the upstream call, and never log the GA4 Measurement Protocol secret, client identifier, IP address, page query string, or event parameters.
+- [ ] Public analytics relay routes accept only same-origin browser requests, validate bounded event batches plus bounded parameter names and values, apply rate limits before the upstream call, and never log the GA4 Measurement Protocol secret, client identifier, IP address, page query string, or event parameters.
 - [ ] Paid API keys remain server-side.
 - [ ] Public proxy routes reject requests without same-origin browser provenance.
 - [ ] Paid endpoints have per-IP and global rate limits before any upstream call.
@@ -24,6 +24,7 @@ Use this checklist whenever adding or changing a paid API integration.
 - [ ] Provider credentials use documented authenticated endpoints; undocumented free endpoints are not retained as fallback paths.
 - [ ] Provider attribution and evidence labels distinguish third-party estimates from official government or operator data.
 - [ ] A provider kill switch and a useful providerless fallback are verified.
+- [ ] A disabled or ended provider pilot does not keep public calculator pages dynamically rendered; keep dormant clients fail-closed and require a reviewed rollout before re-enabling them.
 
 ## Provider Account Controls
 
@@ -48,9 +49,12 @@ Use this checklist whenever adding or changing a paid API integration.
 
 Production website Maps credential ownership: Vercel production uses `GOOGLE_MAPS_API_KEY` from Google Cloud project `ontimer-timetofly-calculator` (`320232498812`). The key is restricted to Directions API, Places API (New), Routes API, and Geocoding API. Do not add another Maps service without repeating this checklist and reviewing the restriction.
 
+Temporary KTVU surge posture, effective 2026-11-09: the application allows up to 25,000 travel-time requests per warm instance over 24 hours, 50,000 autocomplete requests per warm instance over 24 hours, and 3,000 reverse-geocoding requests per warm instance per minute. These values intentionally avoid preempting the matching Google provider quotas during the media window. The existing same-origin, per-IP, explicit-action, debounce, one-upstream-call, server-only-key, cache, and manual-fallback controls remain mandatory. Because the application counters are not shared across instances, provider quotas remain the durable ceiling. Review actual traffic, cost by service/SKU, and throttling before retaining or rolling back these temporary values.
+
 - [ ] Restrict the API key to only the required APIs.
 - [ ] Set low daily or per-minute quotas independently for Places API (New) and Routes API.
 - [ ] Do not describe warm-instance counters as durable protection. Use a provider quota as the hard ceiling unless a distributed rate limiter or platform firewall is available; validate shared-IP and multi-region behavior before enforcing a new edge rule.
+- [ ] Keep application global windows aligned with the active provider quota window during an approved traffic event so a warm instance does not reject legitimate traffic before the provider ceiling.
 - [ ] Review Billing Reports grouped by **Service**, then **SKU**, before attributing spend to traffic or SEO.
 - [ ] Confirm whether an alert is based on actual or forecasted spend.
 - [ ] Remember that a standard budget alert does not stop Google Maps Platform spending.

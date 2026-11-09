@@ -23,7 +23,7 @@ export const comparisons: Comparison[] = [
     directAnswer:
       "Both products turn calendar events into alarms automatically. OnTimer is the stronger fit when you want event-specific sounds, Early Warning, traffic-aware Time To Leave, and Time To Fly in one iPhone workflow. Pealo is the stronger fit when broad device coverage—including Android, iPad, Mac, and web—is the priority.",
     bestForOnTimer:
-      "iPhone users who want an automatic punctuality system around each event, including custom sounds, event cards, Early Warning, Time To Leave, and Time To Fly.",
+      "iPhone users who want an automatic punctuality system around each event, including imported custom sounds, snooze, event cards, Early Warning, Time To Leave, and Time To Fly.",
     bestForCompetitor:
       "People who need calendar alarms on more device types or want Pealo's calendar-alarm workflow across iPhone, iPad, Mac, Android, and the web.",
     differences: [
@@ -45,13 +45,13 @@ export const comparisons: Comparison[] = [
     directAnswer:
       "Choose OnTimer when the schedule already lives in your calendar and you do not want to create or maintain reminders by hand. Choose Due when you want to create individual reminders and have overdue notifications repeat until you complete, reschedule, or disable them.",
     bestForOnTimer:
-      "People whose meetings, appointments, and flights already live in Apple, Google, or Outlook calendars and should become alarms automatically.",
+      "People whose meetings, appointments, and flights already live in Apple, Google, or Outlook calendars and should become alarms automatically, with a snooze choice when a High Alert rings.",
     bestForCompetitor:
       "People who want fast manual reminders, repeating overdue nudges, and reusable countdown timers for tasks and errands.",
     differences: [
       { topic: "Source of truth", ontimer: "Your existing calendar", competitor: "Reminders created in Due" },
       { topic: "Setup", ontimer: "Calendar events become alarms automatically", competitor: "Create each reminder or timer" },
-      { topic: "Persistence", ontimer: "Alarm remains active until dismissed", competitor: "Auto Snooze repeats overdue reminder notifications" },
+      { topic: "Alarm response", ontimer: "A ringing High Alert can be dismissed or snoozed", competitor: "Auto Snooze repeats overdue reminder notifications" },
       { topic: "Travel timing", ontimer: "Time To Leave and Time To Fly", competitor: "Not described on the reviewed product page" },
       { topic: "Platforms", ontimer: "iPhone", competitor: "iPhone, iPad, Apple Watch, and Mac" },
     ],
@@ -72,7 +72,7 @@ export const comparisons: Comparison[] = [
       "People looking to manage calendars and tasks inside a full calendar application across Apple platforms and Windows.",
     differences: [
       { topic: "Product role", ontimer: "Alarm layer for an existing calendar", competitor: "Complete calendar and tasks application" },
-      { topic: "Alarm focus", ontimer: "Persistent alarms with per-event sound and control", competitor: "Event and task notifications, with urgent alarms listed in Premium" },
+      { topic: "Alarm focus", ontimer: "Persistent alarms with imported or built-in sounds, snooze, and per-event control", competitor: "Event and task notifications, with urgent alarms listed in Premium" },
       { topic: "Travel timing", ontimer: "Time To Leave plus automatic Time To Fly", competitor: "Travel time and time-to-leave notifications" },
       { topic: "Calendar management", ontimer: "Open the source event in your calendar", competitor: "Create, edit, view, and organize events and tasks" },
       { topic: "Best decision", ontimer: "Add stronger alarms without replacing your calendar", competitor: "Replace or expand your calendar workflow" },
@@ -87,15 +87,15 @@ export const comparisons: Comparison[] = [
     description:
       "Compare OnTimer's persistent calendar alarms with the event alerts built into Apple Calendar on iPhone.",
     directAnswer:
-      "Apple Calendar is the place to create, edit, and organize events. OnTimer uses those events as the source of truth and adds an alarm layer that stays active until you dismiss it. They work together rather than replacing one another.",
+      "Apple Calendar is the place to create, edit, and organize events. OnTimer uses those events as the source of truth and adds an alarm layer that stays active until you respond. They work together rather than replacing one another.",
     bestForOnTimer:
       "People who already use Apple Calendar but need a stronger action signal, custom event sounds, Early Warning, or travel-aware alarms.",
     bestForCompetitor:
       "People who are satisfied with standard event alerts and primarily need to create, view, invite, and manage calendar events.",
     differences: [
       { topic: "Core job", ontimer: "Turn calendar events into alarms", competitor: "Create, organize, and view calendar events" },
-      { topic: "Alert behavior", ontimer: "Stays active until dismissed", competitor: "Uses iPhone calendar alerts and notification settings" },
-      { topic: "Per-event sound", ontimer: "Choose a distinct alarm sound for an event", competitor: "Uses Calendar alert settings" },
+      { topic: "Alert behavior", ontimer: "Stays active until you respond; High Alerts can be snoozed", competitor: "Uses iPhone calendar alerts and notification settings" },
+      { topic: "Per-event sound", ontimer: "Choose a built-in or imported sound for an event", competitor: "Uses Calendar alert settings" },
       { topic: "Travel timing", ontimer: "Time To Leave and Time To Fly", competitor: "Calendar event features vary by account and iOS settings" },
       { topic: "Relationship", ontimer: "Adds an alarm layer", competitor: "Remains the calendar source of truth" },
     ],

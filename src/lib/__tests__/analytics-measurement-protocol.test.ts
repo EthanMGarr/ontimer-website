@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import {
+  measurementProtocolBatchPayload,
   measurementProtocolPayload,
   parseFirstPartyAnalyticsEvent,
+  parseFirstPartyAnalyticsEvents,
   sanitizeAnalyticsParams,
 } from "../analytics-measurement-protocol";
 
@@ -35,6 +37,30 @@ assert.equal(payload.events[0].params.transport_source, "first_party");
 
 assert.equal(measurementProtocolPayload(event, null).user_agent, undefined);
 assert.equal(measurementProtocolPayload(event, "x".repeat(600)).user_agent?.length, 512);
+
+const batch = parseFirstPartyAnalyticsEvents({
+  client_id: event.client_id,
+  events: [
+    { event_name: "experiment_assignment", params: { session_id: 1791468000000 } },
+    { event_name: "calculator_completed", params: { calculator_type: "airport_leave_time" } },
+  ],
+});
+assert.ok(batch);
+assert.equal(batch.length, 2);
+assert.equal(batch[0].client_id, event.client_id);
+const batchPayload = measurementProtocolBatchPayload(batch, "test-agent");
+assert.equal(batchPayload.client_id, event.client_id);
+assert.equal(batchPayload.user_agent, "test-agent");
+assert.deepEqual(batchPayload.events.map(({ name }) => name), [
+  "experiment_assignment",
+  "calculator_completed",
+]);
+assert.equal(parseFirstPartyAnalyticsEvents(event)?.length, 1, "legacy single-event bodies remain valid");
+assert.equal(parseFirstPartyAnalyticsEvents({ client_id: event.client_id, events: [] }), null);
+assert.equal(parseFirstPartyAnalyticsEvents({
+  client_id: event.client_id,
+  events: Array.from({ length: 11 }, () => ({ event_name: "too_many", params: {} })),
+}), null);
 
 assert.equal(parseFirstPartyAnalyticsEvent({ event_name: "Bad Event", client_id: "12345678" }), null);
 assert.equal(parseFirstPartyAnalyticsEvent({ event_name: "calculator_completed", client_id: "short" }), null);

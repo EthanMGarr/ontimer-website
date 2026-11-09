@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Bricolage_Grotesque, IBM_Plex_Sans } from "next/font/google";
 import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
+import { KTVUAnnouncementBar } from "@/components/KTVUAnnouncementBar";
 import { ANDROID_WAITLIST_URL, APP_STORE_URL } from "@/lib/constants";
 import { homepageFaqs, productFacts } from "@/lib/product-facts";
 import "./homepage2-page.css";
@@ -137,6 +138,9 @@ export default function Homepage2() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      {/* Temporary: remove this component after the KTVU segment. */}
+      <KTVUAnnouncementBar />
 
       <section className="hp2-hero" aria-labelledby="hp2-title">
         <div className="hp2-shell hp2-hero-grid">
@@ -288,11 +292,12 @@ export default function Homepage2() {
             <h2 id="control-title">Your schedule. Your rules.</h2>
             <p>
               Home-screen event cards let you turn each alarm on or off, choose
-              its sound, set an Early Warning, or open the original calendar
-              event. Repeating meeting you don't need? Turn it off once or for
-              the whole series. Prefer alarms off by default? Choose Only
-              meetings I choose in Which Meetings Ring, then tap the bell on
-              the meetings you want.
+              an OnTimer sound or add your own, set an Early Warning, or open
+              the original calendar event. When a High Alert rings, snooze it
+              if you need a few more minutes. Repeating meeting you don't need?
+              Turn it off once or for the whole series. Prefer alarms off by
+              default? Choose Only meetings I choose in Which Meetings Ring,
+              then tap the bell on the meetings you want.
             </p>
             <Homepage2DownloadCTA compact location="homepage_controls" />
           </div>
@@ -305,10 +310,10 @@ export default function Homepage2() {
               sizes="(max-width: 959px) 54vw, 17rem"
             />
             <Image
-              src="/images/homepage2/custom-sounds.png"
-              alt="OnTimer custom alarm sound picker"
-              width={853}
-              height={1844}
+              src="/images/homepage2/add-your-own-sound-v1.png"
+              alt="OnTimer alarm sound picker with Add Your Own Sound"
+              width={1179}
+              height={2556}
               sizes="(max-width: 959px) 54vw, 17rem"
             />
           </div>

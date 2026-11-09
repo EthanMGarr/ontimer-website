@@ -40,8 +40,10 @@ const AUTOCOMPLETE_RATE_LIMIT = {
   // fields. Keep ample room for retries while bounding automated typing loops.
   perIpLimit: 60,
   perIpWindowMs: 60 * 60 * 1000,
-  globalLimit: 1_000,
-  globalWindowMs: 60 * 60 * 1000,
+  // Match the temporary provider-side daily ceiling for the KTVU traffic window.
+  // The per-IP ceiling still bounds automated typing loops.
+  globalLimit: 50_000,
+  globalWindowMs: 24 * 60 * 60 * 1000,
 };
 
 export async function GET(req: NextRequest) {

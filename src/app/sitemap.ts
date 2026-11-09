@@ -147,6 +147,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/estimated-tax-payment-dates`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/2026-estimated-tax-payment-dates`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/venue-time-to-leave-calculators`,
       lastModified: new Date(),
       changeFrequency: 'daily',

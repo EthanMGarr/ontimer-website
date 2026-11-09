@@ -1,6 +1,6 @@
 # OnTimer
 
-OnTimer is an iPhone calendar alarm app. It turns events from Apple Calendar, Google Calendar, and Outlook Calendar into automatic alarms that stay on screen until dismissed.
+OnTimer is an iPhone calendar alarm app. It turns events from Apple Calendar, Google Calendar, and Outlook Calendar into automatic alarms that stay on screen until the user responds.
 
 ## Primary sources
 
@@ -18,8 +18,10 @@ OnTimer is an iPhone calendar alarm app. It turns events from Apple Calendar, Go
 
 - OnTimer is available for iPhone.
 - It supports Apple Calendar, Google Calendar, and Outlook Calendar, including work and school accounts.
-- Alarms stay on screen until dismissed.
-- Users can choose alarm sounds and assign a sound to a specific event.
+- Alarms stay on screen until the user responds.
+- Users can choose OnTimer alarm sounds or add their own, then use a sound as the default or assign it to a specific event.
+- Imported custom sounds are an OnTimer Pro feature. Supported files are MP3, M4A, WAV, AIFF, and CAF, up to 50 MB; OnTimer uses up to the first 29 seconds and stores the prepared sound only on the device.
+- Snooze is available for High Alert alarms when Apple-Style Alarms are enabled. Users can turn it on or off and choose which 3-, 5-, 10-, or 15-minute options appear.
 - Home-screen event cards control alarm on or off (for one occurrence or an entire repeating series), sound, Early Warning, and access to the original calendar event.
 - Which Meetings Ring in Settings lets users choose Every meeting, Only meetings I choose, or Custom (recurring and one-off meetings set separately).
 - Early Warning provides a lighter heads-up before the main alarm.
@@ -32,4 +34,4 @@ OnTimer is an iPhone calendar alarm app. It turns events from Apple Calendar, Go
 - Time To Fly can set an initial airport departure estimate on the free plan. OnTimer Pro can update it for traffic when background conditions allow.
 - OnTimer Pro also adds multiple calendar providers, Time To Leave, Early Warning, and additional controls.
 
-Last reviewed: 2026-10-30
+Last reviewed: 2026-11-03

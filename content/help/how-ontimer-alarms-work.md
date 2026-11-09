@@ -4,15 +4,16 @@
 
 OnTimer turns events from Apple Calendar, Google Calendar, and Outlook Calendar into alarms on your iPhone.
 
-Unlike a passive calendar notification, an OnTimer alarm stays on screen until you dismiss it. You can choose the sound, adjust an individual event, add an Early Warning, and use Time To Leave or Time To Fly when the moment depends on travel.
+Unlike a passive calendar notification, an OnTimer alarm stays on screen until you respond. You can choose an OnTimer sound or add your own, adjust an individual event, snooze a High Alert, add an Early Warning, and use Time To Leave or Time To Fly when the moment depends on travel.
 
-This page describes current product behavior. Last reviewed: **October 16, 2026**.
+This page describes current product behavior. Last reviewed: **November 3, 2026**.
 
 ## What happens when an alarm fires
 
 - The event name and time appear in a full-screen alarm.
-- The alarm remains active until you dismiss it.
+- The alarm remains active until you respond.
 - The event can use your default sound or a sound chosen specifically for that event.
+- When snoozing is enabled for a High Alert, you can choose one of the snooze times shown on the alarm.
 - You can open the original calendar event from its card in OnTimer.
 
 No phone alert can guarantee that a person will notice or act. OnTimer is designed to be harder to miss by requiring a response instead of disappearing on its own.
@@ -34,7 +35,13 @@ Also confirm **Settings → Notifications → OnTimer → Allow Notifications** 
 
 ## Choose sounds globally or by event
 
-Choose a default alarm sound in OnTimer Settings. When a particular event needs a distinct signal, use its Home-screen event card to assign a different sound. The event-specific sound changes that event without changing your default.
+Choose a default alarm sound in OnTimer Settings. You can use an OnTimer sound or tap **Add Your Own Sound** to import an audio file with OnTimer Pro. When a particular event needs a distinct signal, use its Home-screen event card to assign a different sound. The event-specific sound changes that event without changing your default.
+
+OnTimer accepts MP3, M4A, WAV, AIFF, and CAF audio files up to 50 MB, uses up to the first 29 seconds, and prepares the sound for alarm playback. Imported sounds are stored only on your device. You can preview, rename, or delete them from the sound picker.
+
+## Snooze a High Alert
+
+Snooze works with **High Alert** when **Apple-Style Alarms** are enabled. In OnTimer Settings, you can turn snoozing on or off and choose which **3-, 5-, 10-, or 15-minute** options appear. When the alarm rings, the choices you enabled appear on the alarm for that event.
 
 ## Use the Home-screen event cards
 
@@ -42,6 +49,7 @@ Each upcoming event card gives you fine-grained control. You can:
 
 - Turn its alarm on or off, for this event or, for a repeating meeting, the whole series
 - Choose its alarm sound
+- Snooze it when a High Alert rings, if snoozing is enabled
 - Set or adjust Early Warning
 - Open the original event in your calendar
 
@@ -73,7 +81,7 @@ Time To Fly does not track flight status, delays, gates, terminals, check-in or 
 
 ## Free and Pro
 
-OnTimer is free and includes automatic alarms for one calendar provider. Time To Fly can set an initial airport departure estimate on the free plan; OnTimer Pro can update it for traffic when background conditions allow. Pro also adds multiple calendar providers, Time To Leave, Early Warning, and additional controls.
+OnTimer is free and includes automatic alarms for one calendar provider. Time To Fly can set an initial airport departure estimate on the free plan; OnTimer Pro can update it for traffic when background conditions allow. Pro also adds multiple calendar providers, Time To Leave, Early Warning, imported custom sounds, and additional controls.
 
 ## If an alarm does not behave as expected
 

@@ -3,9 +3,6 @@ import Link from "next/link";
 import { AppStoreCTA } from "@/components/CTAButton";
 import LeaveTimeCalculator from "./LeaveTimeCalculator";
 import { localizedAlternates } from "@/lib/i18n";
-import { isMapboxPilotActive } from "@/lib/mapbox-pilot";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   alternates: {
@@ -116,7 +113,6 @@ const breadcrumbJsonLd = {
 };
 
 export default function WhatTimeShouldILeavePage() {
-  const mapboxPilotEnabled = isMapboxPilotActive();
   return (
     <>
       <script
@@ -173,7 +169,7 @@ export default function WhatTimeShouldILeavePage() {
       {/* ── CALCULATOR ── */}
       <section id="calculator" className="border-t border-zinc-800 pb-8 pt-2 sm:pt-4 md:pb-10 md:pt-6">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <LeaveTimeCalculator mapboxPilotEnabled={mapboxPilotEnabled} />
+          <LeaveTimeCalculator />
         </div>
       </section>
 

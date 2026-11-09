@@ -1,4 +1,4 @@
-export const PRODUCT_FACTS_VERSION = "2026-10-30";
+export const PRODUCT_FACTS_VERSION = "2026-11-03";
 
 export const productFacts = {
   positioning: {
@@ -6,12 +6,12 @@ export const productFacts = {
     mechanism:
       "OnTimer turns events from the calendars you already use into automatic alarms on iPhone.",
     proof:
-      "Alarms stay on screen until you dismiss them, so they demand an active response instead of disappearing like a passive calendar notification.",
+      "Alarms stay on screen until you respond, so they demand active attention instead of disappearing like a passive calendar notification.",
   },
   calendars: ["Apple Calendar", "Google Calendar", "Outlook Calendar"],
   alarmBehavior: {
     persistent:
-      "OnTimer alarms stay on screen until you dismiss them.",
+      "OnTimer alarms stay on screen until you respond.",
     highAlert:
       "On iOS 26.1 and later, High Alert uses Apple's AlarmKit and can ring through Silent mode and Focus or Do Not Disturb when it is enabled and iOS permissions allow it.",
     standard:
@@ -26,7 +26,13 @@ export const productFacts = {
       "Yes. Tap the meeting's bell, or Alerting on its event card, and choose This Event Only or All Events in This Series. To undo a series setting, open Which Meetings Ring in Settings and tap Reset.",
   },
   customSounds:
-    "Choose an alarm sound and assign a different sound to a specific event when it needs a distinct signal.",
+    "Choose an OnTimer alarm sound or add your own, then use it as the default or assign it to a specific event.",
+  snooze: {
+    summary:
+      "Snooze a ringing High Alert when you need a few more minutes before responding.",
+    help:
+      "Snooze is available for High Alert alarms when Apple-Style Alarms are enabled. Turn snoozing on or off and choose which 3-, 5-, 10-, or 15-minute options appear.",
+  },
   earlyWarning:
     "Early Warning provides a lighter heads-up before the main alarm, with a default time that can be adjusted for a specific event.",
   timeToLeave:
@@ -36,7 +42,7 @@ export const productFacts = {
   timeToFlyLimitations:
     "Time To Fly does not track flight status, delays, gates, terminals, check-in or bag-drop deadlines, security waits, or travel-document requirements. Always confirm current airline and airport information.",
   pricing:
-    "OnTimer is free and includes automatic alarms for one calendar provider. Time To Fly can set an initial airport departure estimate on the free plan; OnTimer Pro can update it for traffic when background conditions allow. Pro also adds multiple calendar providers, Time To Leave, Early Warning, and additional controls.",
+    "OnTimer is free and includes automatic alarms for one calendar provider. Time To Fly can set an initial airport departure estimate on the free plan; OnTimer Pro can update it for traffic when background conditions allow. Pro also adds multiple calendar providers, Time To Leave, Early Warning, imported custom sounds, and additional controls.",
 } as const;
 
 export const homepageFaqs = [
@@ -47,7 +53,7 @@ export const homepageFaqs = [
   {
     question: "How is an OnTimer alarm different from a calendar notification?",
     answer:
-      "A calendar notification can appear once and disappear. An OnTimer alarm stays in front of you until you dismiss it and can use the sound you choose.",
+      "A calendar notification can appear once and disappear. An OnTimer alarm stays in front of you until you respond and can use the sound you choose.",
   },
   {
     question: "Which calendars work with OnTimer?",
@@ -65,6 +71,10 @@ export const homepageFaqs = [
   {
     question: "Can I choose different alarm sounds?",
     answer: `Yes, you can customize alarms. ${productFacts.customSounds}`,
+  },
+  {
+    question: "Can I snooze an OnTimer alarm?",
+    answer: `Yes. ${productFacts.snooze.summary}`,
   },
   {
     question: "What is Early Warning?",

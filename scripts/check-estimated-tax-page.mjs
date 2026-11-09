@@ -1,0 +1,40 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+
+const page = fs.readFileSync("src/app/estimated-tax-payment-dates/page.tsx", "utf8");
+const page2026 = fs.readFileSync("src/app/2026-estimated-tax-payment-dates/page.tsx", "utf8");
+const tool = fs.readFileSync("src/app/estimated-tax-payment-dates/EstimatedTaxDeadlineTool.tsx", "utf8");
+const sitemap = fs.readFileSync("src/app/sitemap.ts", "utf8");
+
+assert(page.includes('title: "2027 Estimated Tax Due Dates + Automatic Alarm Tool"'));
+assert(page2026.includes('title: "2026 Estimated Tax Due Dates + Final Payment Alarm Tool"'));
+assert(page2026.includes("One standard payment remains"));
+assert(page2026.includes("January 15, 2027"));
+assert(page2026.includes("Official 2026 schedule"));
+assert(page2026.includes("ESTIMATED_TAX_DEADLINES_2026"));
+assert(page2026.includes("ESTIMATED_TAX_DEADLINES_2027"), "the expired 2026 tool should roll forward to 2027");
+assert(page2026.indexOf("Use this tool to set reminders on your calendar") < page2026.indexOf("One standard payment remains"));
+assert(page.indexOf("Use this tool to set reminders on your calendar") < page.indexOf("Projected due dates"), "the calendar-first benefit must lead the visible snippet candidate");
+assert(page.includes("OnTimer turn each one into a hard-to-miss alarm"), "the hero must explain that alarms come from calendar events");
+assert(page.includes("The IRS has not yet published the 2027 Form 1040-ES"));
+assert(!page.includes('"@type": "FAQPage"'), "do not add tactical FAQ schema to this commercial tool");
+assert(tool.indexOf("Step 1") < tool.indexOf("Step 2"), "OnTimer acquisition must be Step 1");
+assert(tool.indexOf('label="Get Automatic Alarms"') < tool.indexOf("Put the reminders on your calendar"), "app acquisition must precede calendar creation");
+assert(tool.includes("Add Calendar Reminders"));
+assert(tool.includes('type="time"'));
+assert(tool.includes("Past reminder dates are left out automatically"));
+assert(tool.includes("schedule has passed. The tool has rolled forward to"));
+assert(tool.includes("five reminders starting one month before the remaining"));
+assert(tool.includes("Creates one calendar file with"));
+assert(tool.includes("It turns your calendar events into alarms"));
+assert(tool.includes("For iPhone · Works with Apple, Google, and Outlook calendars"));
+assert(!tool.includes("preparation events in Step 2"), "Step 1 must not refer to unexplained Step 2 content");
+assert(!tool.includes("iPhone and iPad"), "the compatibility line should name iPhone only");
+assert(!tool.includes("Choose your deadlines"));
+assert(!tool.includes('type="checkbox"'), "the preset should not burden visitors with reminder-builder controls");
+assert(tool.includes("NEXT_PUBLIC_ESTIMATED_TAX_ANDROID_AFFILIATE_URL"));
+assert(tool.includes('rel="sponsored noopener noreferrer"'));
+assert(sitemap.includes("/estimated-tax-payment-dates"));
+assert(sitemap.includes("/2026-estimated-tax-payment-dates"));
+
+console.log("estimated-tax page guardrails passed");

@@ -29,6 +29,11 @@ same outcome-led opening without inventing an airport entity.
    retitled to “Why You Miss Calendar Reminders (Even When They Work)”
 7. Wake-up treatment (2026-10-30): `/wake-up-time-calculator` retitled to “What Time Should I Set
    My Alarm? Wake-Up Time Calculator”. It is no longer an unchanged comparison.
+8. Deadline-tool treatment (2026-11-07): `/estimated-tax-payment-dates` launches with the title
+   “2027 Estimated Tax Due Dates + Automatic Alarm Tool.” Its description and first visible
+   passage lead with creating the full deadline plan and automatic alarms before giving the
+   projected dates. Treat this as the first member of a new intent cluster, not as a control for
+   established calculator pages.
 
 ## Measurement
 
@@ -69,3 +74,16 @@ the settled 28-day post-recrawl window. Use each page’s preceding 28-day perio
 query/device/position bands as its primary baseline; use the unchanged generic `/days-until` page
 and other calculator queries only as directional controls because their intent is broader. Record
 whether qualified clicks improve without losing impressions for the core `days until` variants.
+
+## Important-deadline tool treatment
+
+The estimated-tax launch tests whether a benefit-first snippet earns a click when Google can
+already answer the date query in the results. Track `estimated tax due dates`, year-qualified
+variants, `when are estimated taxes due`, and calendar/reminder/alarm modifiers separately.
+Compare query-level CTR within position bands to the page's own first settled 28-day baseline;
+use other finance publishers only as SERP context, not as an analytics control.
+
+The interaction success metric is not traffic alone. Record selected-deadline changes, calendar
+bundle creation, App Store CTA views and clicks, and Android offer interactions. Keep the title
+and opening passage stable through the first useful measurement window unless accuracy requires
+an IRS-status update.

@@ -52,7 +52,9 @@ const TRAVEL_RATE_LIMIT = {
   name: "travel-time",
   perIpLimit: 12,
   perIpWindowMs: 60 * 60 * 1000,
-  globalLimit: 300,
+  // Match the temporary provider-side daily ceiling for the KTVU traffic window.
+  // This counter is per warm instance; Google Cloud remains the durable hard cap.
+  globalLimit: 25_000,
   globalWindowMs: 24 * 60 * 60 * 1000,
 };
 

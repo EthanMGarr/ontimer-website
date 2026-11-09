@@ -82,6 +82,7 @@ assert.equal(analyticsFree.scripts.length, 0);
 
 const deployableFiles = sourceFiles(resolve("src"));
 const deployableSource = deployableFiles.map((path) => readFileSync(path, "utf8")).join("\n");
+const analyticsSource = readFileSync(resolve("src/lib/analytics.ts"), "utf8");
 assert.equal(deployableSource.includes(legacyMeasurementId), false, "legacy ID must not exist in deployable source");
 assert.equal(deployableSource.includes(iosStreamId), false, "the website must not reuse the iOS stream ID");
 assert.equal(deployableSource.includes("NEXT_PUBLIC_GA_MEASUREMENT_ID"), false, "deployment must not override the web stream ID");
@@ -90,5 +91,8 @@ assert.equal(
   1,
   "the central event dispatcher relays each requested custom event once",
 );
+assert.match(analyticsSource, /queueMicrotask\(flushFirstPartyEvents\)/, "same-interaction events must share one relay flush");
+assert.match(analyticsSource, /events: events\.map\(/, "the relay body must use the bounded batch shape");
+assert.doesNotMatch(analyticsSource, /JSON\.stringify\(\{ event_name: eventName/, "the client must not restore one Function request per custom event");
 
 console.log("analytics cutover tests passed");

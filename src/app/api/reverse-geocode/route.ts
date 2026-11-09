@@ -9,8 +9,10 @@ const REVERSE_GEOCODE_RATE_LIMIT = {
   name: "reverse-geocode",
   perIpLimit: 20,
   perIpWindowMs: 60 * 60 * 1000,
-  globalLimit: 500,
-  globalWindowMs: 60 * 60 * 1000,
+  // Match Google's provider-side per-minute ceiling without weakening the
+  // explicit-action and per-IP controls around current-location lookups.
+  globalLimit: 3_000,
+  globalWindowMs: 60 * 1000,
 };
 
 function response(address: string | null, status = 200) {

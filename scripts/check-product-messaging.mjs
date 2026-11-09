@@ -15,15 +15,18 @@ const requiredByFile = {
     "earlyWarning",
     "timeToLeave",
     "timeToFly",
+    "snooze",
     "High Alert",
   ],
   "content/help/how-ontimer-alarms-work.md": [
     "Which Meetings Ring",
     "All Events in This Series",
     "iOS 26.1",
+    "Apple-Style Alarms",
+    "Add Your Own Sound",
     "Time To Fly",
   ],
-  "src/app/features/page.tsx": ["custom", "Event Cards", "Early Warning", "Time To Leave", "Time To Fly"],
+  "src/app/features/page.tsx": ["Add Your Own Sound", "Snooze", "Event Cards", "Early Warning", "Time To Leave", "Time To Fly"],
   "src/app/compare/page.tsx": ["Methodology", "Last reviewed"],
 };
 
@@ -67,8 +70,6 @@ const forbidden = [
   /you can['’]t ignore/i,
   /alarms? (?:that )?(?:you )?can['’]t miss/i,
   /professionals can['’]t miss/i,
-  /dismiss(?:ed)? or snooze/i,
-  /snooze behavior/i,
   /Recurring Meeting Manager/,  // renamed to Which Meetings Ring in the iOS app
   /RELEASE_DATE/,  // placeholder: replace with the app release date before deploying
 ];

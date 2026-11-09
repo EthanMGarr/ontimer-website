@@ -48,26 +48,31 @@ percent of a viewport. Dark sections are allowed only when they improve hierarch
 - Secondary: dark ink text or a one-pixel outline on paper.
 - App acquisition pages may use the App Store badge treatment.
 
-On calculator results, the calendar handoff follows the primary answer and at
-most one compact calculation-summary row. Live data, provider details, alerts,
-and optional explanations must not push that handoff below the first practical
-mobile result viewport. After the handoff, the OnTimer CTA keeps the same focal
-position.
+On calculator and deadline-tool results, the primary answer is followed by the
+OnTimer acquisition action and then the clearly labeled calendar alternative.
+Live data, provider details, alerts, and optional explanations must not push
+those conversion actions below the first practical mobile result viewport.
 
-Before calendar use, calendar-capable results retain one visually subordinate
-OnTimer acquisition path for visitors who skip the calendar action. Lead with
-“Get Automatic Alarms,” state plainly that “OnTimer is free,” and use the
-supporting line for compatibility proof rather than repeating “free” or saying
-“free to download.” Do not let this secondary path compete with the answer or
-calendar action.
+For eligible non-Android visitors, lead with “Get Automatic Alarms,” state
+plainly that “OnTimer is free,” and use the supporting line for compatibility
+proof rather than repeating “free” or saying “free to download.” Keep the
+one-result or selected-results calendar handoff available as the visually
+subordinate alternative. Android retains the relevant calendar and approved
+affiliate or waitlist experience.
 
 The calculator's first editable input must also appear in the first practical
 mobile entry viewport. Context is compact and supporting content follows the
 workbench. Generic selectors begin with a neutral prompt rather than a fabricated
 default. A “Something else” escape hatch reveals a labeled free-text field; the
 phrase itself is never used as the visitor's event name. The required conversion
-sequence is input → answer → calendar → OnTimer; optional detail never interrupts
+sequence is input → answer → OnTimer → calendar alternative; optional detail never interrupts
 that sequence.
+
+Deadline tools may use a simpler staged sequence when the schedule itself is the
+result: compact search answer → Step 1 OnTimer acquisition → Step 2 preset calendar
+schedule. Reveal Step 2 after the App Store or QR action, persist it for the return
+visit, and avoid configuration that does not materially improve the schedule. The
+legal deadline is context; useful preparation alarms belong before it.
 
 ## Accessibility and privacy
 

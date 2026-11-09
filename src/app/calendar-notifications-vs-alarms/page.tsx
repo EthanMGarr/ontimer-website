@@ -75,7 +75,7 @@ const breadcrumbJsonLd = {
 
 const fullComparison = [
   { dimension: "Disappears automatically", notification: true, alarm: false },
-  { dimension: "Requires active dismissal", notification: false, alarm: true },
+  { dimension: "Requires an active response", notification: false, alarm: true },
   { dimension: "Can be ignored without interaction", notification: true, alarm: false },
   { dimension: "Stays on lock screen", notification: false, alarm: true },
   { dimension: "Competes with other alerts", notification: true, alarm: false },
@@ -288,7 +288,8 @@ export default function Page() {
             <p>
               When your meeting is about to start, the alarm fires. It stays on your screen.
               It doesn&apos;t disappear. It doesn&apos;t go away on its own. It waits for you to
-              dismiss it, which means you have to actively acknowledge it before moving on.
+              respond. With a ringing High Alert, that response can be dismissing it or
+              choosing one of your enabled snooze times.
             </p>
           </div>
           <div className="mt-8 overflow-hidden rounded-2xl border border-zinc-800">

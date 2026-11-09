@@ -7,7 +7,7 @@ import { productFacts } from "@/lib/product-facts";
 export const metadata: Metadata = {
   title: "Features | OnTimer Calendar Alarm App for iPhone",
   description:
-    "Automatic calendar alarms with custom sounds, event-level controls, Early Warning, Time To Leave, and Time To Fly for iPhone.",
+    "Automatic calendar alarms with custom sounds, snooze, event-level controls, Early Warning, Time To Leave, and Time To Fly for iPhone.",
   alternates: { canonical: "https://www.ontimer.app/features" },
 };
 
@@ -46,23 +46,39 @@ const features = [
   },
   {
     number: "03",
-    eyebrow: "03 — Sounds and Persistent Alerts",
+    eyebrow: "03 — Sounds and Persistent Alarms",
     headline: "Give important events their own alarm sound",
     description:
       `${productFacts.alarmBehavior.persistent} ${productFacts.customSounds}`,
     bullets: [
       "Choose your default alarm sound",
+      "Add your own sound",
       "Assign a sound to a specific event",
-      "Stays active until dismissed",
+      "Stays active until you respond",
       "Event details included in the alert",
     ],
-    image: "/images/homepage2/custom-sounds.png",
-    imageAlt: "OnTimer custom alarm sound picker",
+    image: "/images/homepage2/add-your-own-sound-v1.png",
+    imageAlt: "OnTimer alarm sound picker with Add Your Own Sound",
     flip: false,
   },
   {
     number: "04",
-    eyebrow: "04 — Event Cards",
+    eyebrow: "04 — Snooze",
+    headline: "Take a few more minutes without losing the alarm",
+    description: productFacts.snooze.summary,
+    bullets: [
+      "Snooze directly from a ringing High Alert",
+      "Choose which snooze times appear",
+      "Turn snoozing on or off in Settings",
+      "Available with Apple-Style Alarms",
+    ],
+    image: "/images/homepage2/snooze-alarm-v1.png",
+    imageAlt: "OnTimer snooze choices for an alarm named Meet with Jamie Smith",
+    flip: true,
+  },
+  {
+    number: "05",
+    eyebrow: "05 — Event Cards",
     headline: "Customize alarms for each event",
     description:
       productFacts.eventControls.summary,
@@ -74,11 +90,11 @@ const features = [
     ],
     image: "/images/homepage2/event-controls-v2.png",
     imageAlt: "OnTimer Home-screen event card controls",
-    flip: true,
+    flip: false,
   },
   {
-    number: "05",
-    eyebrow: "05 — Early Warning",
+    number: "06",
+    eyebrow: "06 — Early Warning",
     headline: "Get a lighter heads-up before the main alarm",
     description:
       productFacts.earlyWarning,
@@ -90,11 +106,11 @@ const features = [
     ],
     image: "/images/homepage2/early-warning.png",
     imageAlt: "OnTimer Early Warning settings on iPhone",
-    flip: false,
+    flip: true,
   },
   {
-    number: "06",
-    eyebrow: "06 — Time To Leave",
+    number: "07",
+    eyebrow: "07 — Time To Leave",
     headline: "Know when it is really time to head out",
     description: productFacts.timeToLeave,
     bullets: [
@@ -105,11 +121,11 @@ const features = [
     ],
     image: "/images/homepage2/traffic-adjustments.png",
     imageAlt: "OnTimer traffic-aware Time To Leave settings",
-    flip: true,
+    flip: false,
   },
   {
-    number: "07",
-    eyebrow: "07 — Time To Fly",
+    number: "08",
+    eyebrow: "08 — Time To Fly",
     headline: "Know when to leave for the airport",
     description: productFacts.timeToFly,
     bullets: [
@@ -120,7 +136,7 @@ const features = [
     ],
     image: "/images/homepage2/time-to-fly.png",
     imageAlt: "OnTimer Time To Fly controls for a flight on iPhone",
-    flip: false,
+    flip: true,
   },
 ];
 
@@ -179,7 +195,7 @@ export default function FeaturesPage() {
                     height={2688}
                     sizes="(max-width: 959px) 72vw, 272px"
                     className="site-feature__screen"
-                    unoptimized={feature.number === "07"}
+                    unoptimized={feature.number === "08"}
                   />
                 </div>
 

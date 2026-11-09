@@ -2,8 +2,8 @@ import { NextRequest } from "next/server";
 import { guardPaidApiRequest } from "@/lib/api-cost-guard";
 import { WEBSITE_GA_MEASUREMENT_ID } from "@/lib/analytics-config";
 import {
-  measurementProtocolPayload,
-  parseFirstPartyAnalyticsEvent,
+  measurementProtocolBatchPayload,
+  parseFirstPartyAnalyticsEvents,
 } from "@/lib/analytics-measurement-protocol";
 
 const ANALYTICS_RATE_LIMIT = {
@@ -14,7 +14,7 @@ const ANALYTICS_RATE_LIMIT = {
   globalWindowMs: 24 * 60 * 60 * 1_000,
 };
 
-const MAX_REQUEST_BYTES = 8_192;
+const MAX_REQUEST_BYTES = 32_768;
 
 export async function POST(request: NextRequest) {
   const guard = guardPaidApiRequest(request, ANALYTICS_RATE_LIMIT);
@@ -42,8 +42,8 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "invalid_json" }, { status: 400 });
   }
 
-  const event = parseFirstPartyAnalyticsEvent(rawEvent);
-  if (!event) {
+  const events = parseFirstPartyAnalyticsEvents(rawEvent);
+  if (!events) {
     return Response.json({ error: "invalid_event" }, { status: 400 });
   }
 
@@ -62,21 +62,21 @@ export async function POST(request: NextRequest) {
       method: "POST",
       cache: "no-store",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(measurementProtocolPayload(
-        event,
+      body: JSON.stringify(measurementProtocolBatchPayload(
+        events,
         request.headers.get("user-agent"),
       )),
     });
     if (!upstream.ok) {
       console.error("[analytics] GA4 Measurement Protocol rejected an event", {
-        eventName: event.event_name,
+        eventNames: events.map((event) => event.event_name).join(","),
         status: upstream.status,
       });
       return Response.json({ error: "analytics_upstream_failed" }, { status: 502 });
     }
   } catch (error) {
     console.error("[analytics] GA4 Measurement Protocol request failed", {
-      eventName: event.event_name,
+      eventNames: events.map((event) => event.event_name).join(","),
       reason: error instanceof Error ? error.name : "unknown",
     });
     return Response.json({ error: "analytics_upstream_failed" }, { status: 502 });

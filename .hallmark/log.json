@@ -1,5 +1,35 @@
 [
   {
+    "date": "2026-11-07",
+    "scope": "page",
+    "macrostructure": "Narrative Workflow",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "direct, official, one-deadline-aware",
+    "enrichment": "none",
+    "brief": "2026 estimated-tax final-payment reminder tool"
+  },
+  {
+    "date": "2026-11-07",
+    "scope": "page",
+    "macrostructure": "Narrative Workflow",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "direct, staged, preparation-first",
+    "enrichment": "none",
+    "brief": "Estimated-tax install-to-reminder-schedule conversion redesign"
+  },
+  {
+    "date": "2026-11-07",
+    "scope": "page-family",
+    "macrostructure": "Map / Diagram",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "precise, useful, deadline-aware",
+    "enrichment": "selectable four-stop deadline rail",
+    "brief": "Estimated-tax answer-to-automatic-alarm vertical slice"
+  },
+  {
     "date": "2026-11-04",
     "scope": "page",
     "macrostructure": "Task-first Conversion Workbench",

@@ -101,7 +101,7 @@ Each upcoming event has a card on the OnTimer Home screen. From there you can:
 
 - Turn the main alarm on or off
 - Turn off a repeating meeting once, or for the whole series
-- Choose the sound for that event
+- Choose an OnTimer sound or add your own, then assign it to that event
 - Set or adjust its Early Warning
 - Open the original event in your calendar
 
@@ -114,6 +114,8 @@ Give yourself more warning.
 Routine meeting?
 
 Leave your normal settings alone.
+
+When a High Alert rings, use Snooze if you need a few more minutes. In Settings, you can turn snoozing on or off and choose which snooze times appear.
 
 ## 🔕 8. Prefer alarms off by default? Choose "Only meetings I choose"
 
@@ -145,7 +147,7 @@ You don't need OnTimer Pro to benefit from OnTimer.
 
 The free version gives you automatic OnTimer alarms for a calendar provider so you can stop relying on easy-to-miss calendar notifications.
 
-Time To Fly can set an initial airport departure estimate on the free plan. Pro can update it for traffic when background conditions allow, and also adds multiple calendar providers, Time To Leave, Early Warning, and additional controls.
+Time To Fly can set an initial airport departure estimate on the free plan. Pro can update it for traffic when background conditions allow, and also adds multiple calendar providers, Time To Leave, Early Warning, imported custom sounds, and additional controls.
 
 Use what helps you.
 

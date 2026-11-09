@@ -132,20 +132,48 @@ function acquisitionParams(): AnalyticsParams {
   };
 }
 
+interface PendingFirstPartyEvent {
+  clientId: string;
+  eventName: string;
+  params: AnalyticsParams;
+}
+
+const MAX_RELAY_BATCH_SIZE = 10;
+const pendingFirstPartyEvents: PendingFirstPartyEvent[] = [];
+let relayFlushScheduled = false;
+
+function fallBackToBrowserTag(events: PendingFirstPartyEvent[]): void {
+  for (const event of events) window.gtag("event", event.eventName, event.params);
+}
+
+function flushFirstPartyEvents(): void {
+  relayFlushScheduled = false;
+  while (pendingFirstPartyEvents.length > 0) {
+    const events = pendingFirstPartyEvents.splice(0, MAX_RELAY_BATCH_SIZE);
+    void fetch("/api/analytics/events", {
+      method: "POST",
+      keepalive: true,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_id: events[0].clientId,
+        events: events.map(({ eventName, params }) => ({ event_name: eventName, params })),
+      }),
+    }).then((response) => {
+      if (!response.ok) fallBackToBrowserTag(events);
+    }).catch(() => {
+      fallBackToBrowserTag(events);
+    });
+  }
+}
+
 function sendFirstPartyEvent(eventName: string, params: AnalyticsParams): void {
   const clientId = typeof params.attribution_token === "string"
     ? params.attribution_token
     : getAttributionToken();
-  void fetch("/api/analytics/events", {
-    method: "POST",
-    keepalive: true,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ event_name: eventName, client_id: clientId, params }),
-  }).then((response) => {
-    if (!response.ok) window.gtag("event", eventName, params);
-  }).catch(() => {
-    window.gtag("event", eventName, params);
-  });
+  pendingFirstPartyEvents.push({ clientId, eventName, params });
+  if (relayFlushScheduled) return;
+  relayFlushScheduled = true;
+  queueMicrotask(flushFirstPartyEvents);
 }
 
 export function fireEvent(eventName: string, params: AnalyticsParams = {}): void {

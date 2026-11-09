@@ -150,7 +150,7 @@ const nativeOptions = [
 
 const comparisonRows = [
   ["Banner for a few seconds", "Full-screen alarm until you slide to stop"],
-  ["Same sound as every other app", "Alarm sound you choose, per event if you want"],
+  ["Same sound as every other app", "Built-in or imported alarm sound, per event if you want"],
   ["Lands in the tray with texts and email", "Interrupts whatever you're doing"],
   ["Easy to swipe away without reading", "Takes a deliberate slide to stop"],
   ["One reminder per event, set by hand", "Every event gets an alarm automatically"],
@@ -171,7 +171,7 @@ const steps = [
   },
   {
     title: "Tune the ones that matter",
-    body: "Pick how many minutes before an event it rings, give it its own sound, or switch a meeting's alarm off.",
+    body: "Pick how many minutes before an event it rings, give it a built-in or imported sound, or switch a meeting's alarm off. When a High Alert rings, you can also snooze it.",
     image: "/images/homepage2/event-controls-v2.png",
     alt: "OnTimer event screen with alarm timing, sound, and Early Warning controls",
   },

@@ -9,8 +9,9 @@ const page = readFileSync("src/app/what-time-should-i-leave/page.tsx", "utf8");
 const spanishPage = readFileSync("src/app/es/calculadora-a-que-hora-salir/page.tsx", "utf8");
 const pilotGate = readFileSync("src/lib/mapbox-pilot.ts", "utf8");
 
-assert.match(page, /dynamic = "force-dynamic"[\s\S]*?isMapboxPilotActive\(\)/, "the English page must evaluate the expiring pilot gate per request");
-assert.match(spanishPage, /dynamic = "force-dynamic"[\s\S]*?isMapboxPilotActive\(\)/, "the Spanish page must evaluate the expiring pilot gate per request");
+assert.doesNotMatch(page, /force-dynamic|isMapboxPilotActive|mapboxPilotEnabled=/, "the ended pilot must not force the English calculator through a Function");
+assert.doesNotMatch(spanishPage, /force-dynamic|isMapboxPilotActive|mapboxPilotEnabled=/, "the ended pilot must not force the Spanish calculator through a Function");
+assert.match(calculator, /mapboxPilotEnabled = false/, "the dormant client implementation must fail closed to Google");
 assert.match(pilotGate, /MAPBOX_PILOT_ENABLED[\s\S]*?MAPBOX_ACCESS_TOKEN[\s\S]*?MAPBOX_PILOT_EXPIRES_AT/, "the pilot must require its flag, token, and expiry");
 assert.match(pilotGate, /now < expiresAt/, "the pilot must fail closed after its expiry");
 assert.match(searchRoute, /guardPaidApiRequest\(request, MAPBOX_SEARCH_RATE_LIMIT\)/, "Mapbox search must retain same-origin and rate-limit guards");

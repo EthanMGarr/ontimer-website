@@ -174,6 +174,14 @@ Time To Fly does not track flight status, delays, gates, terminals, check-in or 
 
 You can choose a default alarm sound in OnTimer Settings. To make one event sound different, open that event's Home-screen card and choose its sound there. The event-specific choice applies only to that event.
 
+With OnTimer Pro, tap **Add Your Own Sound** in the sound picker to import an MP3, M4A, WAV, AIFF, or CAF file. Files can be up to 50 MB; OnTimer uses up to the first 29 seconds and stores the prepared sound only on your device. You can preview, rename, or delete an imported sound in the picker.
+
+## 😴 How do I turn snoozing on or off?
+
+Snooze is available for **High Alert** alarms when **Apple-Style Alarms** are enabled.
+
+Open OnTimer Settings and use **Allow Snoozing** to turn it on or off. You can also choose which **3-, 5-, 10-, or 15-minute** options appear. When a High Alert rings, the options you kept enabled appear on the alarm for that event.
+
 ## 🔔 What is Early Warning?
 
 **Early Warning is an OnTimer Pro feature** that gives you a lighter heads-up before your main OnTimer alarm.
@@ -192,7 +200,7 @@ You can set your default Early Warning timing in Settings and override it for in
 
 Probably not.
 
-OnTimer Free gives you the core OnTimer experience with one calendar provider. Time To Fly can set an initial airport departure estimate on the free plan; Pro can update it for traffic when background conditions allow. Additional features, including **Time To Leave, Early Warning, multiple calendar providers, and additional controls**, require OnTimer Pro.
+OnTimer Free gives you the core OnTimer experience with one calendar provider. Time To Fly can set an initial airport departure estimate on the free plan; Pro can update it for traffic when background conditions allow. Additional features, including **Time To Leave, Early Warning, multiple calendar providers, imported custom sounds, and additional controls**, require OnTimer Pro.
 
 You can explore Pro settings inside the app to see what they do before deciding whether they're useful to you.
 

@@ -4,8 +4,16 @@
     {
       "name": "ontimer-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 3000
+    },
+    {
+      "name": "ontimer-managed-preview",
+      "url": "http://localhost:3010",
+      "port": 3010
     }
   ]
 }

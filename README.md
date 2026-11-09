@@ -159,16 +159,17 @@ The repository runner runs `npm run test:calculator-release-guardrails` before c
 The core marketing pages build without external credentials. Production integrations use these variables when their related features are enabled:
 
 - `GOOGLE_MAPS_API_KEY` — places autocomplete and travel-time APIs
-- `MAPBOX_ACCESS_TOKEN` — server-only Search Box and Directions token for the general-calculator pilot
-- `MAPBOX_PILOT_ENABLED=false` — server-side kill switch; set to `true` to use Mapbox for general-calculator autocomplete and eligible driving/walking routes
-- `MAPBOX_PILOT_EXPIRES_AT` — required ISO timestamp for an enabled Mapbox pilot; the site fails closed to Google when the timestamp is missing, invalid, or reached
+- `MAPBOX_ACCESS_TOKEN` — dormant server-only Search Box and Directions token from the ended general-calculator pilot
+- `MAPBOX_PILOT_ENABLED=false` — server-side kill switch retained for the dormant Mapbox routes; re-enabling a future pilot also requires a reviewed client rollout and deployment so the static calculator pages do not become per-view Functions again
+- `MAPBOX_PILOT_EXPIRES_AT` — required ISO timestamp for any future Mapbox pilot; the paid API routes fail closed when the timestamp is missing, invalid, or reached
 - `TSA_WAIT_TIMES_API_KEY` — licensed TSAWaitTimes.com airport security estimates (server-side only)
 - `AIRPORT_SECURITY_TSAWAITTIMES_ENABLED=false` — optional kill switch for the security-estimate provider
 - Website Google Analytics uses the source-controlled production measurement ID in
   `src/lib/analytics-config.ts`; deployment environment variables do not override it.
 - `GA4_MEASUREMENT_PROTOCOL_API_SECRET` — server-only secret for the first-party
   `/api/analytics/events` relay. Custom conversion events use this relay as their
-  authoritative path and fall back to the browser tag only if the relay fails.
+  authoritative path, batch same-interaction events into one bounded request,
+  and fall back to the browser tag only if the relay fails.
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` — spam-report Turnstile widget
 - `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` — server-side spam reporting
 - `TICKETMASTER_API_KEY` — server-only event discovery for approved venue/event Time To Leave pages; reviewed fixtures keep the first vertical slice usable when this is not configured locally
