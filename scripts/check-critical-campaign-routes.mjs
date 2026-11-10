@@ -97,7 +97,12 @@ assert.match(pressPage, /https:\/\/www\.ktvu\.com\/video\/fmc-c62rzvs90bao7eq2/,
 assert.match(pressPage, /Interested in doing a story\?/, "press page must retain the media-inquiry prompt");
 assert.match(pressPage, /mailto:support@ontimer\.app/, "press page must link media inquiries to OnTimer support");
 assert.match(pressPage, /"@type": "VideoObject"/, "press page must identify the source-backed video in structured data");
+assert.match(
+  pressPage,
+  /contentUrl:\s*ktvuContentUrl/,
+  "press page VideoObject must expose the publisher-supplied video file URL",
+);
 assert.match(sitemap, /url: `\$\{baseUrl\}\/press`/, "press page must remain in the XML sitemap");
 assert.match(footer, /\["Press", "\/press"\]/, "the shared English footer must link to the press page");
 
-console.log("Critical public-route regression passed (25 checks).");
+console.log("Critical public-route regression passed (26 checks).");

@@ -19,6 +19,8 @@ const body = IBM_Plex_Sans({
 const ktvuStoryUrl = "https://www.ktvu.com/video/fmc-c62rzvs90bao7eq2";
 const ktvuImageUrl =
   "https://images.foxtv.com/static-media.fox.com/fmcv3/prod/fts/2xdght5mxvoq57cf/1200/630/39oytjhks223hani.jpg?ve=1&tl=1";
+const ktvuContentUrl =
+  "https://static-clips.fox.com/proxy/fts_clip/svc_hf_fts_clip_prod/WM_KTVU_49535707661_49535707770/49535707770/hf-uuid-e6e52838-c4e1-405d-a298-143381943f82/49535707770_lowres.mp4";
 
 export const metadata: Metadata = {
   title: { absolute: "OnTimer Press | Featured on KTVU FOX 2" },
@@ -74,7 +76,7 @@ const structuredData = {
       isPartOf: { "@id": "https://www.ontimer.app/#website" },
       about: { "@id": "https://www.ontimer.app/#app" },
       mainEntity: { "@id": `${ktvuStoryUrl}#video` },
-      dateModified: "2026-11-09",
+      dateModified: "2026-11-10",
     },
     {
       "@type": "VideoObject",
@@ -83,6 +85,7 @@ const structuredData = {
       description:
         "KTVU FOX 2 speaks with OnTimer founder Ethan Garr about the app's airport leave-time calculator.",
       url: ktvuStoryUrl,
+      contentUrl: ktvuContentUrl,
       thumbnailUrl: [ktvuImageUrl],
       uploadDate: "2026-11-09T18:09:47Z",
       publisher: {

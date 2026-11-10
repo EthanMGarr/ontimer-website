@@ -61,6 +61,7 @@ Use this checklist for every production change involving pages, routes, metadata
 ## Search Console Follow-Up
 
 - [ ] For corrected 404, redirect, canonical, or indexing issues, use **Validate Fix** in Google Search Console.
+- [ ] Every `VideoObject` includes a verified, crawlable `contentUrl` pointing to the video bytes or, when that is unavailable, an `embedUrl` pointing to the specific video player; a watch-page URL alone does not satisfy either field.
 - [ ] Allow Google time to recrawl; a clean live audit does not immediately clear historical Search Console reports.
 - [ ] For title/description experiments, update `docs/SEO_CTR_EXPERIMENTS.md`; preserve a control cohort and compare query-level mobile CTR within the same average-position bands rather than relying on pagewide CTR.
 - [ ] Keep newly changed metadata stable until a settled recrawl and a useful measurement window exist; do not stack another metadata rewrite on an unresolved test.
