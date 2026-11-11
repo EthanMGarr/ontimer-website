@@ -441,3 +441,18 @@ body {
 .locale-switcher .locale-switcher__link:hover {
   color: var(--blue-800);
 }
+
+@keyframes alarm-preview-ring {
+  0%, 100% { transform: rotate(0deg); }
+  22% { transform: rotate(-2deg); }
+  44% { transform: rotate(2deg); }
+  66% { transform: rotate(-1.25deg); }
+  82% { transform: rotate(1.25deg); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .alarm-preview--ringing {
+    animation: alarm-preview-ring 520ms ease-in-out 280ms 1;
+    transform-origin: 50% 16%;
+  }
+}

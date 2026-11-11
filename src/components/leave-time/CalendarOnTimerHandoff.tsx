@@ -309,7 +309,7 @@ export default function CalendarOnTimerHandoff({
               href={alternateCalendarHref}
               download={alternateCalendarFilename}
               onClick={() => chooseCalendar("ics")}
-              className="mt-3 inline-flex max-w-full whitespace-normal text-left text-[11px] font-medium leading-relaxed text-zinc-400 underline underline-offset-2 transition-colors [overflow-wrap:anywhere] hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:text-xs"
+              className={`${airportV2 && appPrimary ? "flex w-fit" : "inline-flex"} mt-3 max-w-full whitespace-normal text-left text-[11px] font-medium leading-relaxed text-zinc-400 underline underline-offset-2 transition-colors [overflow-wrap:anywhere] hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:text-xs`}
             >
               {airportV2 && appPrimary ? "Apple, Outlook, or another calendar" : effectiveAlternateCalendarLabel}
             </a>
@@ -343,7 +343,12 @@ export default function CalendarOnTimerHandoff({
           </p>
           {!showAndroidAffiliate && (
             <div className="col-start-2 row-start-1 sm:row-span-2">
-              <AlarmPreview time={previewTime} title={eventPreview?.title} locale={locale} />
+              <AlarmPreview
+                time={previewTime}
+                title={eventPreview?.title}
+                locale={locale}
+                emphasis={airportV2 && !calendarOpened ? "flight" : "standard"}
+              />
             </div>
           )}
           <p className={`mt-1.5 text-sm leading-relaxed text-zinc-400 ${showAndroidAffiliate ? "col-span-2" : "col-span-2 sm:col-span-1"}`}>

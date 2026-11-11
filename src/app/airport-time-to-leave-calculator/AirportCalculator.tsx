@@ -1009,6 +1009,18 @@ export default function AirportCalculator({
             }`}
           >
 
+            {airportV2Pilot && computedResult && flightDepartureAt && (
+              <AirportTripTimeline
+                variant="desktop"
+                leaveTime={fmtTime(computedResult.leaveTime, locale)}
+                airportTime={fmtTime(computedResult.arrivalTime, locale)}
+                flightTime={fmtTime(flightDepartureAt, locale)}
+                airportCode={locationCode ?? "Airport"}
+                travelDuration={fmtDuration(computedResult.travelMinutes, locale)}
+                airportDuration={fmtDuration(computedResult.bufferMinutes, locale)}
+              />
+            )}
+
             {!genericRedesign && (
               <button
                 type="button"
@@ -1455,7 +1467,17 @@ export default function AirportCalculator({
                   />
                 </div>
 
-                {ewrResultExperiment && (
+                {ewrResultExperiment && airportV2Pilot && flightDepartureAt ? (
+                  <AirportTripTimeline
+                    variant="mobile"
+                    leaveTime={fmtTime(computedResult.leaveTime, locale)}
+                    airportTime={fmtTime(computedResult.arrivalTime, locale)}
+                    flightTime={fmtTime(flightDepartureAt, locale)}
+                    airportCode={locationCode ?? "Airport"}
+                    travelDuration={fmtDuration(computedResult.travelMinutes, locale)}
+                    airportDuration={fmtDuration(computedResult.bufferMinutes, locale)}
+                  />
+                ) : ewrResultExperiment && (
                   <div className="mt-4 border-t border-zinc-800 pt-3">
                     <p className="text-sm leading-relaxed text-zinc-300">
                       {fmtDuration(factorMinutes(computedResult, "travel", computedResult.travelMinutes), locale)}
@@ -1515,36 +1537,13 @@ export default function AirportCalculator({
                   experienceVariant={airportV2Pilot ? "airport-v2" : undefined}
                 />
 
-                {airportV2Pilot && flightDepartureAt && (
-                  <section className="mt-4 border-t border-zinc-800 pt-4" aria-labelledby="jfk-trip-timeline-heading">
-                    <h3 id="jfk-trip-timeline-heading" className="text-sm font-bold text-white">Your trip at a glance</h3>
-                    <div className="mt-3 grid grid-cols-3" role="list">
-                      {[
-                        { label: "Leave", time: fmtTime(computedResult.leaveTime, locale) },
-                        { label: `Reach ${locationCode ?? "airport"}`, time: fmtTime(computedResult.arrivalTime, locale) },
-                        { label: "Flight", time: fmtTime(flightDepartureAt, locale) },
-                      ].map((stop, index) => (
-                        <div key={stop.label} role="listitem" className={`relative min-w-0 ${index === 1 ? "text-center" : index === 2 ? "text-right" : ""}`}>
-                          <div className={`absolute top-[5px] h-px bg-zinc-700 ${index === 0 ? "left-2 right-0" : index === 1 ? "left-0 right-0" : "left-0 right-2"}`} aria-hidden="true" />
-                          <span className={`relative inline-block h-2.5 w-2.5 rounded-full border-2 border-zinc-900 ${index === 0 ? "bg-green-500" : "bg-zinc-500"}`} aria-hidden="true" />
-                          <p className="mt-2 truncate text-[11px] font-semibold uppercase tracking-wide text-zinc-500">{stop.label}</p>
-                          <p className="mt-0.5 text-sm font-bold tabular-nums text-zinc-200">{stop.time}</p>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="mt-3 text-xs leading-relaxed text-zinc-500">
-                      {fmtDuration(computedResult.travelMinutes, locale)} to the airport · {fmtDuration(computedResult.bufferMinutes, locale)} before departure
-                    </p>
-                  </section>
-                )}
-
                 {ewrResultExperiment && (
                   <button
                     type="button"
                     onClick={openResultAdjustments}
-                    className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-zinc-400 underline underline-offset-4 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+                    className={`${airportV2Pilot ? "lg:hidden" : ""} mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-zinc-400 underline underline-offset-4 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400`}
                   >
-                    {copy.adjustAssumptions}
+                    {airportV2Pilot ? "Edit trip details" : copy.adjustAssumptions}
                   </button>
                 )}
 
@@ -1755,5 +1754,83 @@ export default function AirportCalculator({
         </div>
       )}
     </>
+  );
+}
+
+interface AirportTripTimelineProps {
+  variant: "mobile" | "desktop";
+  leaveTime: string;
+  airportTime: string;
+  flightTime: string;
+  airportCode: string;
+  travelDuration: string;
+  airportDuration: string;
+}
+
+function AirportTripTimeline({
+  variant,
+  leaveTime,
+  airportTime,
+  flightTime,
+  airportCode,
+  travelDuration,
+  airportDuration,
+}: AirportTripTimelineProps) {
+  const stops = [
+    { label: "Leave", time: leaveTime },
+    { label: `Reach ${airportCode}`, time: airportTime },
+    { label: "Flight", time: flightTime },
+  ];
+
+  if (variant === "desktop") {
+    return (
+      <section
+        className="hidden rounded-xl border border-zinc-800 bg-zinc-950/35 p-4 lg:block"
+        aria-label="Your trip at a glance"
+        data-airport-trip-timeline="desktop"
+      >
+        <h3 className="text-sm font-bold text-white">Your trip at a glance</h3>
+        <div className="mt-4" role="list">
+          {stops.map((stop, index) => (
+            <div key={stop.label} role="listitem">
+              <div className="grid grid-cols-[0.75rem_minmax(0,1fr)_auto] items-center gap-3">
+                <span className={`h-3 w-3 rounded-full border-2 border-zinc-950 ${index === 0 ? "bg-green-500" : "bg-zinc-500"}`} aria-hidden="true" />
+                <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">{stop.label}</p>
+                <p className="text-sm font-bold tabular-nums text-zinc-200">{stop.time}</p>
+              </div>
+              {index < stops.length - 1 && (
+                <div className="ml-[5px] grid min-h-10 grid-cols-[1px_minmax(0,1fr)] items-center gap-5" aria-hidden="true">
+                  <span className="h-full bg-zinc-700" />
+                  <span className="text-[11px] text-zinc-500">{index === 0 ? `${travelDuration} to the airport` : `${airportDuration} before departure`}</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section
+      className="mt-4 border-t border-zinc-800 pt-3 lg:hidden"
+      aria-label="Your trip at a glance"
+      data-airport-trip-timeline="mobile"
+    >
+      <h3 className="text-xs font-bold text-white">Your trip at a glance</h3>
+      <div className="mt-2 grid grid-cols-3" role="list">
+        {stops.map((stop, index) => (
+          <div key={stop.label} role="listitem" className={`relative min-w-0 ${index === 1 ? "text-center" : index === 2 ? "text-right" : ""}`}>
+            <div className={`absolute top-[5px] h-px bg-zinc-700 ${index === 0 ? "left-2 right-0" : index === 1 ? "left-0 right-0" : "left-0 right-2"}`} aria-hidden="true" />
+            <span className={`relative inline-block h-2.5 w-2.5 rounded-full border-2 border-zinc-900 ${index === 0 ? "bg-green-500" : "bg-zinc-500"}`} aria-hidden="true" />
+            <p className="mt-1 truncate text-[10px] font-semibold uppercase tracking-wide text-zinc-500">{stop.label}</p>
+            <p className="text-sm font-bold tabular-nums text-zinc-200">{stop.time}</p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-1.5 text-[11px] leading-relaxed text-zinc-500">
+        {travelDuration} to the airport · {airportDuration} before departure
+      </p>
+    </section>
   );
 }

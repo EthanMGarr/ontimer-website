@@ -5,13 +5,14 @@ interface AlarmPreviewProps {
   time?: string;
   title?: string;
   locale?: SiteLocale;
+  emphasis?: "standard" | "flight";
 }
 
 /**
  * A small rendering of the OnTimer alarm screen. Colors are fixed hex values on purpose:
  * it depicts the dark iPhone alarm, so it must not follow the site's light-theme remapping.
  */
-export default function AlarmPreview({ time, title, locale = "en" }: AlarmPreviewProps) {
+export default function AlarmPreview({ time, title, locale = "en", emphasis = "standard" }: AlarmPreviewProps) {
   const [digits, meridiem] = splitTime(time);
   const slideLabel = locale === "es" ? "desliza para detener" : "slide to stop";
   const label = time
@@ -23,7 +24,12 @@ export default function AlarmPreview({ time, title, locale = "en" }: AlarmPrevie
       role="img"
       aria-label={label}
       data-alarm-preview
-      className="flex w-[5.75rem] shrink-0 flex-col items-center rounded-2xl bg-[#0b0b0c] px-2 pb-2 pt-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.25)] ring-1 ring-[#ffffff1a]"
+      data-alarm-emphasis={emphasis}
+      className={`flex shrink-0 flex-col items-center rounded-2xl bg-[#0b0b0c] shadow-[0_6px_18px_rgba(0,0,0,0.25)] ring-1 ring-[#ffffff1a] ${
+        emphasis === "flight"
+          ? "alarm-preview--ringing min-h-[7.25rem] w-24 px-2.5 pb-2.5 pt-3"
+          : "w-[5.75rem] px-2 pb-2 pt-2.5"
+      }`}
     >
       <span className="w-full truncate text-center text-[8px] font-medium leading-tight text-[#d4d4d8]">
         ⏰ {title ?? "OnTimer"}
@@ -37,7 +43,7 @@ export default function AlarmPreview({ time, title, locale = "en" }: AlarmPrevie
         <BellIcon />
       )}
       <span className="mt-0.5 text-[8px] text-[#a1a1aa]">OnTimer</span>
-      <span className="mt-2 flex w-full items-center gap-1 rounded-full bg-[#27272a] p-0.5 pr-1.5">
+      <span className={`${emphasis === "flight" ? "mt-auto" : "mt-2"} flex w-full items-center gap-1 rounded-full bg-[#27272a] p-0.5 pr-1.5`}>
         <span className="h-3.5 w-3.5 shrink-0 rounded-full bg-[#f4f4f5]" />
         <span className="truncate text-[7px] text-[#d4d4d8]">{slideLabel}</span>
       </span>

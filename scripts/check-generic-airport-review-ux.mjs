@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spanishGeneric, spanishAirport, placeAutocomplete, airportWebsite, productStory, handoff, ctaButton] = await Promise.all([
+const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spanishGeneric, spanishAirport, placeAutocomplete, airportWebsite, productStory, handoff, ctaButton, alarmPreview] = await Promise.all([
   readFile(new URL("../src/app/airport-time-to-leave-calculator/page.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/app/airport-time-to-leave-calculator/AirportCalculator.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/airport/GenericAirportCalculator.tsx", import.meta.url), "utf8"),
@@ -14,6 +14,7 @@ const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spa
   readFile(new URL("../src/components/airport/AirportV2ProductStory.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/leave-time/CalendarOnTimerHandoff.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/CTAButton.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/components/leave-time/AlarmPreview.tsx", import.meta.url), "utf8"),
 ]);
 
 assert.match(
@@ -167,7 +168,10 @@ assert.doesNotMatch(handoff, /OnTimer works backward|How Time To Fly works/, "th
 assert.match(handoff, /presentation=\{airportV2 && !calendarOpened \? "app-store-badge" : "button"\}/, "the pilot's primary acquisition action must use the official App Store badge presentation");
 assert.match(handoff, /Or save just this trip[\s\S]*?copy\.addOneGoogle/, "the JFK calendar alternative must remain useful without competing visually with acquisition");
 assert.match(handoff, /<PlaneIcon[\s\S]*?Time To Fly/, "the JFK result must use a restrained flight cue without replacing the alarm proof");
-assert.match(calculator, /Your trip at a glance[\s\S]*?Reach \$\{locationCode/, "the pilot must put the useful personalized trip timeline after the conversion handoff");
+assert.match(handoff, /emphasis=\{airportV2 && !calendarOpened \? "flight" : "standard"\}/, "the JFK result must opt into the one-time alarm emphasis without changing other calculators");
+assert.match(calculator, /data-airport-trip-timeline="desktop"[\s\S]*?data-airport-trip-timeline="mobile"/, "the pilot must use a vertical desktop timeline and compact mobile timeline");
+assert.match(calculator, /airportV2Pilot \? "Edit trip details" : copy\.adjustAssumptions/, "the JFK mobile return action must explain that it navigates to trip editing");
+assert.match(calculator, /airportV2Pilot \? "lg:hidden"/, "the redundant JFK result-level adjustment link must be absent on desktop");
 assert.match(calculator, /airportV2Pilot && locationCode \? `Leave for \$\{locationCode\}`/, "the JFK alarm preview must name the concrete destination concisely");
 assert.match(productStory, /Time To Fly · free in OnTimer/, "the pilot product story must state the free Time To Fly offer plainly");
 assert.doesNotMatch(productStory, /works backward|Time To Fly workflow/, "the product story must demonstrate the calendar-to-alarm behavior without abstract process language");
@@ -175,5 +179,6 @@ assert.match(ctaButton, /tools\.applemediaservices\.com\/api\/badges\/download-o
 assert.match(ctaButton, /width="162"[\s\S]*?height="54"/, "the primary App Store badge must be large enough to carry the acquisition hierarchy");
 assert.match(ctaButton, /if \(!isDesktop\) trackAppStoreClick/, "opening a desktop QR popover must not count as an App Store click");
 assert.match(ctaButton, /appStoreQrUrl\(\{ location, ctaVariant, calculatorType \}\)/, "desktop QR codes must use a separately attributable campaign URL");
+assert.match(alarmPreview, /alarm-preview--ringing min-h-\[7\.25rem\] w-24/, "the JFK alarm proof must use the more realistic rectangular proportion");
 
 console.log("airport family review UX checks passed");
