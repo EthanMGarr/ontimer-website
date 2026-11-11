@@ -71,6 +71,7 @@ interface CalendarOnTimerHandoffProps {
   alarmHeading?: string;
   alarmPostCalendarHeading?: string;
   locale?: SiteLocale;
+  experienceVariant?: "airport-v2";
 }
 
 const handoffCopy = {
@@ -129,6 +130,7 @@ export default function CalendarOnTimerHandoff({
   alarmHeading,
   alarmPostCalendarHeading,
   locale = "en",
+  experienceVariant,
 }: CalendarOnTimerHandoffProps) {
   const copy = handoffCopy[locale];
   const effectiveAlternateCalendarLabel = alternateCalendarLabel ?? copy.alternate;
@@ -143,6 +145,7 @@ export default function CalendarOnTimerHandoff({
   const resultAlarmHeading = alarmHeading
     ?? (leaveTimeLabel ? copy.leaveAlarmHeading(leaveTimeLabel) : copy.alarmHeading);
   const resultAlarmBody = namedOffer ? namedOfferBody : copy.alarmBody;
+  const airportV2 = experienceVariant === "airport-v2";
   const [isAndroidDevice, setIsAndroidDevice] = useState<boolean | null>(null);
   const [experimentVariant, setExperimentVariant] = useState<CalculatorCtaVariant>("control");
   const affiliateRef = useRef<HTMLAnchorElement>(null);
@@ -328,6 +331,8 @@ export default function CalendarOnTimerHandoff({
           <p className="col-start-1 row-start-1 text-base font-bold text-white">
             {showAndroidAffiliate
               ? effectiveAndroidAffiliateOffer.heading
+              : airportV2 && !calendarOpened
+                ? "Make every flight this automatic."
               : calendarOpened
                 ? effectivePostCalendarHeading
                 : resultAlarmHeading}
@@ -340,6 +345,8 @@ export default function CalendarOnTimerHandoff({
           <p className={`mt-1.5 text-sm leading-relaxed text-zinc-400 ${showAndroidAffiliate ? "col-span-2" : "col-span-2 sm:col-span-1"}`}>
             {showAndroidAffiliate
               ? effectiveAndroidAffiliateOffer.body
+              : airportV2 && !calendarOpened
+                ? "Time To Fly is free. OnTimer finds flights in your calendar and creates a persistent alarm for when to leave."
               : calendarOpened
                 ? effectivePostCalendarBody
                 : resultAlarmBody}
@@ -394,6 +401,25 @@ export default function CalendarOnTimerHandoff({
             </>
           )}
         </div>
+        {airportV2 && !showAndroidAffiliate && !calendarOpened && (
+          <ol
+            className="mt-4 grid gap-2 border-t border-zinc-800 pt-3 text-xs text-zinc-400 sm:grid-cols-3"
+            aria-label="How Time To Fly works"
+          >
+            <li className="flex min-w-0 items-center gap-2">
+              <span className="font-bold text-green-500" aria-hidden="true">1</span>
+              <span>Flight in your calendar</span>
+            </li>
+            <li className="flex min-w-0 items-center gap-2">
+              <span className="font-bold text-green-500" aria-hidden="true">2</span>
+              <span>OnTimer works backward</span>
+            </li>
+            <li className="flex min-w-0 items-center gap-2">
+              <span className="font-bold text-green-500" aria-hidden="true">3</span>
+              <span>Leave-time alarm rings</span>
+            </li>
+          </ol>
+        )}
       </div>
       </div>
 

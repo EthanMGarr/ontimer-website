@@ -22,6 +22,14 @@ function calculatorFamily(context: AppStoreLinkContext): "leave" | "airport" | "
 }
 
 export function appStoreCampaignToken(context: AppStoreLinkContext): string | null {
+  const location = context.location?.toLowerCase() ?? "";
+  if (location.includes("airport_jfk_v2")) {
+    if (context.ctaVariant === "post_calendar_automatic_alert") return "web_jfk_v2_post";
+    if (context.ctaVariant === "result_app_primary_v1") return "web_jfk_v2_ap1";
+    if (context.ctaVariant === "result_automatic_alert") return "web_jfk_v2_result";
+    return "web_jfk_v2_content";
+  }
+
   const family = calculatorFamily(context);
   if (!family) return null;
 
@@ -53,6 +61,9 @@ export function appStoreCampaignUrl(
  * carries its own campaign token to keep desktop-to-phone installs attributable.
  */
 export function appStoreQrUrl(context: AppStoreLinkContext): string {
+  if (context.location?.toLowerCase().includes("airport_jfk_v2")) {
+    return appStoreCampaignUrl("web_qr_jfk_v2");
+  }
   const family = calculatorFamily(context);
   return family
     ? appStoreCampaignUrl(`web_qr_${family}`)

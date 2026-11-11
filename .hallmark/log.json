@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-11-11",
+    "scope": "page",
+    "macrostructure": "Workbench",
+    "theme": "design.md locked",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "calm, exact, product-led",
+    "enrichment": "live calculator result and rendered alarm preview",
+    "brief": "JFK Airport V2 answer-to-Time-To-Fly production pilot"
+  },
+  {
     "date": "2026-11-09",
     "scope": "page",
     "macrostructure": "Quote-Led",

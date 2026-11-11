@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { appStoreUrlFor } from "@/lib/app-store-links";
+import { appStoreQrUrl, appStoreUrlFor } from "@/lib/app-store-links";
 import {
   trackAppStoreClick,
   trackAutomaticAlertCTAViewed,
@@ -97,7 +97,9 @@ export function AppStoreButton({
       target="_blank"
       rel="noopener noreferrer"
       className={`${base} ${variants[variant]} ${sizeClasses[size]} ${className}`}
-      onClick={() => trackAppStoreClick(location, trackedContext)}
+      onClick={() => {
+        if (!isDesktop) trackAppStoreClick(location, trackedContext);
+      }}
     >
       <AppleIcon className="h-4 w-4" />
       {label}
@@ -111,7 +113,11 @@ export function AppStoreButton({
 
   // Desktop: intercept click and show QR popover instead of navigating to App Store
   return (
-    <AppStoreQRPopover placement={placement} location={location} appStoreUrl={appStoreLink.url}>
+    <AppStoreQRPopover
+      placement={placement}
+      location={location}
+      appStoreUrl={appStoreQrUrl({ location, ctaVariant, calculatorType })}
+    >
       {link}
     </AppStoreQRPopover>
   );

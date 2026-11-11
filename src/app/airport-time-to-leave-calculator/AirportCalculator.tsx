@@ -453,6 +453,7 @@ interface AirportCalculatorProps {
   locale?: SiteLocale;
   initialArrivalMode?: ArrivalMode;
   initialPlan?: ParsedDepartureAirportPlan;
+  airportV2Pilot?: boolean;
 }
 
 const genericExample: CalculatorExample = {
@@ -475,6 +476,7 @@ export default function AirportCalculator({
   locale = "en",
   initialArrivalMode = "parking",
   initialPlan,
+  airportV2Pilot = false,
 }: AirportCalculatorProps) {
   const copy = airportCopy[locale];
   const initialAirportOption = initialPlan?.airportCode
@@ -986,7 +988,12 @@ export default function AirportCalculator({
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <>
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6">
+      <div
+        data-airport-v2-pilot={airportV2Pilot || undefined}
+        className={`rounded-2xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6 ${
+          airportV2Pilot ? "shadow-[0_1.5rem_4rem_var(--color-shadow)]" : ""
+        }`}
+      >
         <div className={`grid gap-6 ${
           resultHeroMode
             ? "lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.75fr)] lg:items-start"
@@ -1482,7 +1489,11 @@ export default function AirportCalculator({
                   postCalendarHeading={copy.alarmHeading}
                   postCalendarBody={copy.alarmBody}
                   locale={locale}
-                  appLocation={locationCode ? `airport_${locationCode.toLowerCase()}_result` : "airport_calculator_inline"}
+                  appLocation={airportV2Pilot
+                    ? "airport_jfk_v2_result"
+                    : locationCode
+                      ? `airport_${locationCode.toLowerCase()}_result`
+                      : "airport_calculator_inline"}
                   leaveTimeLabel={fmtTime(computedResult.leaveTime, locale)}
                   leaveAlarmBody={copy.timeToFlyOffer}
                   analyticsContext={{
@@ -1501,6 +1512,7 @@ export default function AirportCalculator({
                     title: calendarEventTitle,
                     startLabel: fmtTime(computedResult.leaveTime, locale),
                   }}
+                  experienceVariant={airportV2Pilot ? "airport-v2" : undefined}
                 />
 
                 {ewrResultExperiment && (

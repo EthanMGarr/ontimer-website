@@ -15,6 +15,7 @@ interface AirportDeparturePlannerProps {
   longHaulLabel?: string;
   securityLabel?: string;
   showIntentNav?: boolean;
+  airportV2Pilot?: boolean;
 }
 
 function AirportDeparturePlannerView({
@@ -27,6 +28,7 @@ function AirportDeparturePlannerView({
   longHaulLabel,
   securityLabel,
   showIntentNav = false,
+  airportV2Pilot = false,
   planningIntent,
 }: AirportDeparturePlannerProps & { planningIntent: AirportPlanningIntent }) {
   return (
@@ -49,6 +51,7 @@ function AirportDeparturePlannerView({
         securityLabel={securityLabel}
         initialArrivalMode={planningIntent === "dropoff" ? "dropoff" : "parking"}
         genericRedesign
+        airportV2Pilot={airportV2Pilot}
       />
     </>
   );

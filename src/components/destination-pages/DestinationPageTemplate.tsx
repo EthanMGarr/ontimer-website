@@ -17,6 +17,8 @@ export interface DestinationPageModel {
     description: string;
   };
   planner: React.ReactNode;
+  experienceVariant?: "airport-v2";
+  productStory?: React.ReactNode;
   planningFacts: {
     sectionId: string;
     heading: string;
@@ -51,8 +53,9 @@ export interface DestinationPageModel {
 }
 
 export default function DestinationPageTemplate({ model }: { model: DestinationPageModel }) {
+  const airportV2 = model.experienceVariant === "airport-v2";
   return (
-    <>
+    <div data-destination-experience={model.experienceVariant}>
       <LocationSectionTracker locationCode={model.trackerCode} />
       {model.jsonLd.map((item, index) => (
         <script
@@ -78,9 +81,11 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
         </div>
       </nav>
 
-      <section className="relative overflow-hidden pb-3 pt-4 sm:pb-5 sm:pt-6 md:pt-9">
+      <section className={`relative overflow-hidden ${airportV2 ? "pb-3 pt-3 sm:pb-5 sm:pt-5 md:pt-7" : "pb-3 pt-4 sm:pb-5 sm:pt-6 md:pt-9"}`}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.12),transparent)]" />
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6">
+          <div className={airportV2 ? "grid min-w-0 gap-5 md:grid-cols-[minmax(0,1fr)_13rem] md:items-end md:gap-10" : ""}>
+          <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <p className="text-sm font-semibold uppercase tracking-wider text-green-500">
               {model.hero.eyebrow}
@@ -97,6 +102,18 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-300 sm:mt-4 sm:text-base">
             {model.hero.description}
           </p>
+          </div>
+          {airportV2 && (
+            <aside className="hidden min-w-0 border-l border-zinc-800 pl-6 md:block" aria-label="Calculator coverage">
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-zinc-500">Your answer includes</p>
+              <ul className="mt-3 space-y-2 text-sm font-semibold text-zinc-300">
+                <li>Traffic for your travel window</li>
+                <li>JFK airport arrival time</li>
+                <li>Security, bags, and terminal access</li>
+              </ul>
+            </aside>
+          )}
+          </div>
         </div>
       </section>
 
@@ -109,6 +126,8 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
           {model.planner}
         </div>
       </section>
+
+      {model.productStory}
 
       <section
         data-location-section={model.planningFacts.sectionId}
@@ -267,6 +286,6 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spanishGeneric, spanishAirport, placeAutocomplete] = await Promise.all([
+const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spanishGeneric, spanishAirport, placeAutocomplete, airportWebsite, productStory, handoff, ctaButton] = await Promise.all([
   readFile(new URL("../src/app/airport-time-to-leave-calculator/page.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/app/airport-time-to-leave-calculator/AirportCalculator.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/airport/GenericAirportCalculator.tsx", import.meta.url), "utf8"),
@@ -10,6 +10,10 @@ const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spa
   readFile(new URL("../src/app/es/calculadora-cuando-salir-al-aeropuerto/page.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/app/es/aeropuerto/[slug]/page.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/PlaceAutocomplete.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/core/leave-time/plugins/airports/website.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/components/airport/AirportV2ProductStory.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/components/leave-time/CalendarOnTimerHandoff.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/components/CTAButton.tsx", import.meta.url), "utf8"),
 ]);
 
 assert.match(
@@ -153,5 +157,13 @@ assert.match(
   /aria-describedby=\{ariaDescribedBy\}/,
   "PlaceAutocomplete must expose the helper relationship to assistive technology",
 );
+assert.match(airportWebsite, /location\.code === "JFK"/, "the Airport V2 production pilot must stay isolated to JFK");
+assert.match(airportWebsite, /<AirportV2ProductStory airportCode=\{location\.code\}/, "the JFK pilot must include the Time To Fly product story");
+assert.match(calculator, /experienceVariant=\{airportV2Pilot \? "airport-v2" : undefined\}/, "the JFK result must opt into the product-led handoff");
+assert.match(handoff, /Make every flight this automatic\./, "the pilot result must connect the one-time answer to recurring automation");
+assert.match(handoff, /Get Automatic Alarms[\s\S]*?Flight in your calendar/, "the primary app action must remain ahead of optional Time To Fly detail");
+assert.match(productStory, /Time To Fly · free in OnTimer/, "the pilot product story must state the free Time To Fly offer plainly");
+assert.match(ctaButton, /if \(!isDesktop\) trackAppStoreClick/, "opening a desktop QR popover must not count as an App Store click");
+assert.match(ctaButton, /appStoreQrUrl\(\{ location, ctaVariant, calculatorType \}\)/, "desktop QR codes must use a separately attributable campaign URL");
 
 console.log("airport family review UX checks passed");

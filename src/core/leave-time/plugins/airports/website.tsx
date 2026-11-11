@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import AirportDeparturePlanner, {
   AirportDeparturePlannerFallback,
 } from "@/components/airport/AirportDeparturePlanner";
+import AirportV2ProductStory from "@/components/airport/AirportV2ProductStory";
 import type { DestinationPageModel } from "@/components/destination-pages/DestinationPageTemplate";
 import type {
   DestinationTypeDefinition,
@@ -232,6 +233,7 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
   const faqItems = airportDestinationType.buildFaqItems(location);
   const searchName = buildAirportSearchName(location);
   const isPickupPilot = isAirportPickupPilotSlug(location.slug);
+  const airportV2Pilot = location.code === "JFK";
   const departurePlannerProps = {
     slug: location.slug,
     airportCode: location.code,
@@ -242,6 +244,7 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
     longHaulLabel: location.airport.longHaulLabel,
     securityLabel: location.airport.securityLabel,
     showIntentNav: isPickupPilot,
+    airportV2Pilot,
   };
 
   return {
@@ -249,6 +252,7 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
     jsonLd: airportDestinationType.buildStructuredData(location),
     breadcrumbs: airportDestinationType.buildInternalLinks(location),
     currentBreadcrumbLabel: location.code,
+    experienceVariant: airportV2Pilot ? "airport-v2" : undefined,
     hero: {
       eyebrow: `Free airport calculator · ${searchName}`,
       secondaryLabels: [location.city, location.reviewedLabel],
@@ -265,6 +269,9 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
         <AirportDeparturePlannerFallback {...departurePlannerProps} />
       )
     ),
+    productStory: airportV2Pilot ? (
+      <AirportV2ProductStory airportCode={location.code} />
+    ) : undefined,
     planningFacts: {
       sectionId: `${location.code.toLowerCase()}-planning-facts`,
       heading: `What can add time on the way to ${location.shortName}`,

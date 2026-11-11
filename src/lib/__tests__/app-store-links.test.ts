@@ -54,5 +54,11 @@ assert.equal(siteQrUrl.searchParams.get("ct"), "web_qr_site");
 assert.equal(siteQrUrl.searchParams.get("pt"), APP_STORE_PROVIDER_TOKEN);
 assert.equal(new URL(appStoreQrUrl({ location: "airport_lax_result" })).searchParams.get("ct"), "web_qr_airport");
 assert.equal(new URL(appStoreQrUrl({ location: "leave_calculator_result" })).searchParams.get("ct"), "web_qr_leave");
+assert.equal(appStoreCampaignToken({
+  calculatorType: "airport_leave_time",
+  location: "airport_jfk_v2_result",
+  ctaVariant: "result_app_primary_v1",
+}), "web_jfk_v2_ap1");
+assert.equal(new URL(appStoreQrUrl({ location: "airport_jfk_v2_result" })).searchParams.get("ct"), "web_qr_jfk_v2");
 
 console.log("App Store campaign link tests passed.");
