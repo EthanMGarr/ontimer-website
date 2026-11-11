@@ -170,6 +170,10 @@ assert.match(handoff, /Or save just this trip[\s\S]*?copy\.addOneGoogle/, "the J
 assert.match(handoff, /<PlaneIcon[\s\S]*?Time To Fly/, "the JFK result must use a restrained flight cue without replacing the alarm proof");
 assert.match(handoff, /emphasis=\{airportV2 && !calendarOpened \? "flight" : "standard"\}/, "the JFK result must opt into the one-time alarm emphasis without changing other calculators");
 assert.match(calculator, /data-airport-trip-timeline="desktop"[\s\S]*?data-airport-trip-timeline="mobile"/, "the pilot must use a vertical desktop timeline and compact mobile timeline");
+assert.match(calculator, /trafficBasis === "live"[\s\S]*?Current traffic[\s\S]*?trafficBasis === "predicted"[\s\S]*?Expected traffic/, "the JFK timeline must distinguish current from expected traffic using the actual provider basis");
+assert.match(calculator, /TSA wait at arrival · ~\{securityWaitMinutes\} min expected · \{securityAllowanceMinutes\} min allowed/, "the desktop timeline must distinguish the predicted TSA wait from the conservative allowance");
+assert.match(calculator, /TSA at arrival · ~\{securityWaitMinutes\} min expected · \{securityAllowanceMinutes\} min allowed/, "the compact mobile timeline must surface the TSA intelligence without hiding acquisition");
+assert.match(calculator, /TSAWaitTimes\.com estimate[\s\S]*?OnTimer planning estimate/, "the timeline must identify licensed versus fallback security evidence honestly");
 assert.match(calculator, /airportV2Pilot \? "Edit trip details" : copy\.adjustAssumptions/, "the JFK mobile return action must explain that it navigates to trip editing");
 assert.match(calculator, /airportV2Pilot \? "lg:hidden"/, "the redundant JFK result-level adjustment link must be absent on desktop");
 assert.match(calculator, /airportV2Pilot && locationCode \? `Leave for \$\{locationCode\}`/, "the JFK alarm preview must name the concrete destination concisely");

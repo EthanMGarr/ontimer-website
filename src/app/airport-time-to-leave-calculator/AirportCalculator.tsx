@@ -262,6 +262,14 @@ function fmtDuration(minutes: number, locale: SiteLocale = "en"): string {
   return m === 0 ? `${h} ${hourLabel}` : `${h} ${hourLabel} ${m} min`;
 }
 
+function travelIntelligenceLabel(result: ComputedResult, arrivalMode: ArrivalMode): string {
+  if (arrivalMode === "transit" || result.trafficBasis === "scheduled") return "Scheduled transit";
+  if (result.trafficBasis === "live") return "Current traffic";
+  if (result.trafficBasis === "predicted") return "Expected traffic";
+  if (result.travelSource === "manual") return "Entered travel time";
+  return "Travel estimate";
+}
+
 function factorMinutes(result: ComputedResult, key: string, fallback: number): number {
   return result.factors.find((factor) => factor.key === key)?.minutes ?? fallback;
 }
@@ -1018,6 +1026,10 @@ export default function AirportCalculator({
                 airportCode={locationCode ?? "Airport"}
                 travelDuration={fmtDuration(computedResult.travelMinutes, locale)}
                 airportDuration={fmtDuration(computedResult.bufferMinutes, locale)}
+                travelIntelligence={travelIntelligenceLabel(computedResult, arrivalMode)}
+                securityWaitMinutes={securityIntelligence?.predictedWaitAtArrival.minutes}
+                securityAllowanceMinutes={securityIntelligence?.recommendedSecurityAllowance.minutes}
+                securitySource={licensedSecurityEvidence ? "TSAWaitTimes.com estimate" : "OnTimer planning estimate"}
               />
             )}
 
@@ -1476,6 +1488,10 @@ export default function AirportCalculator({
                     airportCode={locationCode ?? "Airport"}
                     travelDuration={fmtDuration(computedResult.travelMinutes, locale)}
                     airportDuration={fmtDuration(computedResult.bufferMinutes, locale)}
+                    travelIntelligence={travelIntelligenceLabel(computedResult, arrivalMode)}
+                    securityWaitMinutes={securityIntelligence?.predictedWaitAtArrival.minutes}
+                    securityAllowanceMinutes={securityIntelligence?.recommendedSecurityAllowance.minutes}
+                    securitySource={licensedSecurityEvidence ? "TSAWaitTimes.com estimate" : "OnTimer planning estimate"}
                   />
                 ) : ewrResultExperiment && (
                   <div className="mt-4 border-t border-zinc-800 pt-3">
@@ -1765,6 +1781,10 @@ interface AirportTripTimelineProps {
   airportCode: string;
   travelDuration: string;
   airportDuration: string;
+  travelIntelligence: string;
+  securityWaitMinutes?: number;
+  securityAllowanceMinutes?: number;
+  securitySource: string;
 }
 
 function AirportTripTimeline({
@@ -1775,6 +1795,10 @@ function AirportTripTimeline({
   airportCode,
   travelDuration,
   airportDuration,
+  travelIntelligence,
+  securityWaitMinutes,
+  securityAllowanceMinutes,
+  securitySource,
 }: AirportTripTimelineProps) {
   const stops = [
     { label: "Leave", time: leaveTime },
@@ -1801,7 +1825,17 @@ function AirportTripTimeline({
               {index < stops.length - 1 && (
                 <div className="ml-[5px] grid min-h-10 grid-cols-[1px_minmax(0,1fr)] items-center gap-5" aria-hidden="true">
                   <span className="h-full bg-zinc-700" />
-                  <span className="text-[11px] text-zinc-500">{index === 0 ? `${travelDuration} to the airport` : `${airportDuration} before departure`}</span>
+                  {index === 0 ? (
+                    <span className="text-[11px] text-zinc-500">{travelIntelligence} · {travelDuration} to the airport</span>
+                  ) : (
+                    <span className="flex flex-col gap-0.5 text-[11px] text-zinc-500">
+                      <span>{airportDuration} before departure</span>
+                      {securityWaitMinutes !== undefined && securityAllowanceMinutes !== undefined && (
+                        <span>TSA wait at arrival · ~{securityWaitMinutes} min expected · {securityAllowanceMinutes} min allowed</span>
+                      )}
+                      <span className="text-[10px] text-zinc-400">{securitySource}</span>
+                    </span>
+                  )}
                 </div>
               )}
             </div>
@@ -1828,9 +1862,12 @@ function AirportTripTimeline({
           </div>
         ))}
       </div>
-      <p className="mt-1.5 text-[11px] leading-relaxed text-zinc-500">
-        {travelDuration} to the airport · {airportDuration} before departure
-      </p>
+      <div className="mt-1.5 space-y-0.5 text-[11px] leading-relaxed text-zinc-500">
+        <p>{travelIntelligence} · {travelDuration} to the airport</p>
+        {securityWaitMinutes !== undefined && securityAllowanceMinutes !== undefined && (
+          <p>TSA at arrival · ~{securityWaitMinutes} min expected · {securityAllowanceMinutes} min allowed</p>
+        )}
+      </div>
     </section>
   );
 }
