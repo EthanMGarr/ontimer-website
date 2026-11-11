@@ -27,15 +27,15 @@ export default function AirportV2ProductStory({
             id="time-to-fly-heading"
             className="mt-3 min-w-0 text-3xl font-black leading-tight tracking-tight text-white [overflow-wrap:anywhere] sm:text-4xl"
           >
-            One leave time now. Every flight after this, automatic.
+            Connect your calendar once. OnTimer handles the flights after that.
           </h2>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-400">
-            This calculator solves one trip. Time To Fly automatically discovers flights in your calendar, works backward from departure, and creates a persistent alarm for when it is time to leave.
+            Time To Fly automatically finds the flights already on your calendar and sets a persistent alarm for when it is time to leave.
           </p>
           <div className="mt-6">
             <AppStoreButton
               size="lg"
-              label="Get Time To Fly"
+              label="Get OnTimer for iPhone →"
               location="airport_jfk_v2_content"
               analyticsContext={{
                 calculator_type: "airport_leave_time",
@@ -44,6 +44,7 @@ export default function AirportV2ProductStory({
                 location_code: airportCode,
               }}
               className="justify-center whitespace-nowrap"
+              presentation="text-link"
             />
             <p className="mt-2 text-xs leading-relaxed text-zinc-500">
               OnTimer is free for iPhone. Works with Google Calendar, Apple Calendar, and Outlook Calendar.
@@ -52,33 +53,17 @@ export default function AirportV2ProductStory({
         </div>
 
         <div className="min-w-0 rounded-2xl border border-zinc-800 bg-zinc-950/40 p-4 sm:p-6">
-          <p className="text-sm font-bold text-white">From calendar event to leave-time alarm</p>
-          <ol className="mt-5 grid gap-0" aria-label="Time To Fly workflow">
-            <li className="grid min-w-0 grid-cols-[2.25rem_minmax(0,1fr)] gap-3 pb-5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-green-500 text-sm font-black text-black">1</span>
-              <div className="min-w-0 border-b border-zinc-800 pb-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-zinc-500">Your calendar</p>
-                <p className="mt-1 font-bold text-white">Flight to {airportCode}</p>
-                <p className="mt-1 text-sm leading-relaxed text-zinc-400">No second itinerary to maintain.</p>
-              </div>
-            </li>
-            <li className="grid min-w-0 grid-cols-[2.25rem_minmax(0,1fr)] gap-3 pb-5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 text-sm font-black text-green-500">2</span>
-              <div className="min-w-0 border-b border-zinc-800 pb-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-zinc-500">OnTimer</p>
-                <p className="mt-1 font-bold text-white">Works backward from departure</p>
-                <p className="mt-1 text-sm leading-relaxed text-zinc-400">Travel, airport arrival, bags, security, and terminal time.</p>
-              </div>
-            </li>
-            <li className="grid min-w-0 grid-cols-[2.25rem_minmax(0,1fr)] gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 text-sm font-black text-green-500">3</span>
-              <div className="min-w-0">
-                <p className="text-xs font-bold uppercase tracking-wider text-zinc-500">Your iPhone</p>
-                <p className="mt-1 font-bold text-white">A persistent alarm when it is time to leave</p>
-                <p className="mt-1 text-sm leading-relaxed text-zinc-400">An alarm that requires acknowledgment, not a passive notification.</p>
-              </div>
-            </li>
-          </ol>
+          <p className="text-sm font-bold text-white">From the flight you already saved…</p>
+          <div className="mt-5 rounded-xl border border-zinc-800 bg-zinc-900/70 p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-zinc-500">Calendar</p>
+            <p className="mt-1 font-bold text-white">Flight from {airportCode}</p>
+          </div>
+          <div className="ml-7 h-8 border-l border-dashed border-green-500/60" aria-hidden="true" />
+          <div className="rounded-xl border border-green-500/40 bg-green-500/[0.07] p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-green-500">OnTimer</p>
+            <p className="mt-1 font-bold text-white">Leave-time alarm created automatically</p>
+            <p className="mt-1 text-sm leading-relaxed text-zinc-400">Persistent, so it is harder to miss than a passive notification.</p>
+          </div>
         </div>
       </div>
     </section>

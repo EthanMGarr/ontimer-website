@@ -159,10 +159,16 @@ assert.match(
 );
 assert.match(airportWebsite, /location\.code === "JFK"/, "the Airport V2 production pilot must stay isolated to JFK");
 assert.match(airportWebsite, /<AirportV2ProductStory airportCode=\{location\.code\}/, "the JFK pilot must include the Time To Fly product story");
+assert.match(airportWebsite, /secondaryLabels: airportV2Pilot \? \[location\.city\]/, "the JFK task path must not promote its review date as hero content");
 assert.match(calculator, /experienceVariant=\{airportV2Pilot \? "airport-v2" : undefined\}/, "the JFK result must opt into the product-led handoff");
-assert.match(handoff, /Make every flight this automatic\./, "the pilot result must connect the one-time answer to recurring automation");
-assert.match(handoff, /Get Automatic Alarms[\s\S]*?Flight in your calendar/, "the primary app action must remain ahead of optional Time To Fly detail");
+assert.match(handoff, /Never miss the moment to leave for a flight\./, "the pilot result must lead with the recurring flight outcome");
+assert.match(handoff, /Connect your calendar once\.[\s\S]*?automatically finds your flights[\s\S]*?OnTimer is free\./, "the pilot result must explain automatic flight alarms plainly and honestly");
+assert.doesNotMatch(handoff, /OnTimer works backward|How Time To Fly works/, "the pilot result must not add an abstract numbered explainer after the primary action");
+assert.match(handoff, /presentation=\{airportV2 && !calendarOpened \? "app-store-badge" : "button"\}/, "the pilot's primary acquisition action must use the official App Store badge presentation");
+assert.match(calculator, /Your trip at a glance[\s\S]*?Reach \$\{locationCode/, "the pilot must put the useful personalized trip timeline after the conversion handoff");
 assert.match(productStory, /Time To Fly · free in OnTimer/, "the pilot product story must state the free Time To Fly offer plainly");
+assert.doesNotMatch(productStory, /works backward|Time To Fly workflow/, "the product story must demonstrate the calendar-to-alarm behavior without abstract process language");
+assert.match(ctaButton, /tools\.applemediaservices\.com\/api\/badges\/download-on-the-app-store\/black\/en-us/, "the pilot badge presentation must use Apple's official preferred badge artwork");
 assert.match(ctaButton, /if \(!isDesktop\) trackAppStoreClick/, "opening a desktop QR popover must not count as an App Store click");
 assert.match(ctaButton, /appStoreQrUrl\(\{ location, ctaVariant, calculatorType \}\)/, "desktop QR codes must use a separately attributable campaign URL");
 

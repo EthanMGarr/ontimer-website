@@ -23,6 +23,7 @@ interface CTAButtonProps {
   // Use "above" when the button sits near the bottom of the viewport (e.g. footer).
   placement?: "above" | "below";
   analyticsContext?: AnalyticsParams;
+  presentation?: "button" | "app-store-badge" | "text-link";
 }
 
 const sizeClasses = {
@@ -39,6 +40,7 @@ export function AppStoreButton({
   label = "Download on the App Store",
   placement = "below",
   analyticsContext = {},
+  presentation = "button",
 }: CTAButtonProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -73,7 +75,7 @@ export function AppStoreButton({
     return () => observer.disconnect();
   }, [analyticsContext]);
 
-  const base = "inline-flex items-center gap-2.5 rounded-full font-semibold transition-colors";
+  const base = "inline-flex items-center gap-2.5 font-semibold transition-colors";
   const variants = {
     primary: "bg-green-500 text-black hover:bg-green-400",
     outline:
@@ -90,19 +92,37 @@ export function AppStoreButton({
     ? { ...analyticsContext, app_store_campaign: appStoreLink.campaignToken }
     : analyticsContext;
 
+  const presentationClasses = presentation === "app-store-badge"
+    ? "min-h-11 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green-400"
+    : presentation === "text-link"
+      ? "min-h-11 rounded-sm text-sm text-white underline decoration-zinc-600 underline-offset-4 hover:decoration-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green-400"
+      : `${variants[variant]} ${sizeClasses[size]} rounded-full`;
+
   const link = (
     <a
       ref={buttonRef}
       href={appStoreLink.url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`${base} ${variants[variant]} ${sizeClasses[size]} ${className}`}
+      className={`${base} ${presentationClasses} ${className}`}
       onClick={() => {
         if (!isDesktop) trackAppStoreClick(location, trackedContext);
       }}
     >
-      <AppleIcon className="h-4 w-4" />
-      {label}
+      {presentation === "app-store-badge" ? (
+        <img
+          src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us"
+          alt="Download on the App Store"
+          width="135"
+          height="45"
+          className="h-[45px] w-[135px]"
+        />
+      ) : (
+        <>
+          {presentation === "button" && <AppleIcon className="h-4 w-4" />}
+          {label}
+        </>
+      )}
     </a>
   );
 

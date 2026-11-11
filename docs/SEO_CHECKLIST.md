@@ -94,7 +94,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Keep the calculator and its brief orientation in the first task area. Long-form SEO/GEO guidance belongs after the tool and must not delay the primary action.
 - [ ] Give a specific result before asking for conversion. For eligible non-Android calculator visitors, keep the established app-primary hierarchy: result first, “Get Automatic Alarms” as the primary action, and the one-result calendar handoff as the clearly labeled secondary alternative. Android retains the established calendar/affiliate experience.
 - [ ] Remove repeated keyword sections that restate the same answer without adding a distinct decision, example, or planning factor.
-- [ ] Explain where a planning answer can vary, identify what the traveler must verify, show the review date, and link to relevant primary sources without implying that a planning estimate is a guarantee.
+- [ ] Explain where a planning answer can vary, identify what the traveler must verify, show the honest review date beside the supporting sources, and link to relevant primary sources without implying that a planning estimate is a guarantee. Do not promote a review date in the mobile task path or refresh it without actually rechecking the sources.
 - [ ] Measure the full answer funnel separately: calculator start, personalized answer generated, calendar handoff, post-calendar alarm CTA view, and App Store outbound click. Include intent cluster and location code where available.
 
 ## Search Snippet Candidates

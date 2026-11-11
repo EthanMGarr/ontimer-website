@@ -255,7 +255,7 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
     experienceVariant: airportV2Pilot ? "airport-v2" : undefined,
     hero: {
       eyebrow: `Free airport calculator · ${searchName}`,
-      secondaryLabels: [location.city, location.reviewedLabel],
+      secondaryLabels: airportV2Pilot ? [location.city] : [location.city, location.reviewedLabel],
       titlePrefix: "Find out exactly when to leave for",
       titleHighlight: searchName,
       description: buildAirportSnippetCandidate(location),

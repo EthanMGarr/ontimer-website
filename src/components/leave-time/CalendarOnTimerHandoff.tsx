@@ -332,7 +332,7 @@ export default function CalendarOnTimerHandoff({
             {showAndroidAffiliate
               ? effectiveAndroidAffiliateOffer.heading
               : airportV2 && !calendarOpened
-                ? "Make every flight this automatic."
+                ? "Never miss the moment to leave for a flight."
               : calendarOpened
                 ? effectivePostCalendarHeading
                 : resultAlarmHeading}
@@ -346,7 +346,7 @@ export default function CalendarOnTimerHandoff({
             {showAndroidAffiliate
               ? effectiveAndroidAffiliateOffer.body
               : airportV2 && !calendarOpened
-                ? "Time To Fly is free. OnTimer finds flights in your calendar and creates a persistent alarm for when to leave."
+                ? "Connect your calendar once. Time To Fly automatically finds your flights and sets a persistent alarm for when it is time to leave. OnTimer is free."
               : calendarOpened
                 ? effectivePostCalendarBody
                 : resultAlarmBody}
@@ -396,30 +396,12 @@ export default function CalendarOnTimerHandoff({
                       : "result_automatic_alert",
                   ...analyticsContext,
                 }}
+                presentation={airportV2 && !calendarOpened ? "app-store-badge" : "button"}
               />
               <p className="mt-2 text-[11px] text-zinc-500">{copy.appStore}</p>
             </>
           )}
         </div>
-        {airportV2 && !showAndroidAffiliate && !calendarOpened && (
-          <ol
-            className="mt-4 grid gap-2 border-t border-zinc-800 pt-3 text-xs text-zinc-400 sm:grid-cols-3"
-            aria-label="How Time To Fly works"
-          >
-            <li className="flex min-w-0 items-center gap-2">
-              <span className="font-bold text-green-500" aria-hidden="true">1</span>
-              <span>Flight in your calendar</span>
-            </li>
-            <li className="flex min-w-0 items-center gap-2">
-              <span className="font-bold text-green-500" aria-hidden="true">2</span>
-              <span>OnTimer works backward</span>
-            </li>
-            <li className="flex min-w-0 items-center gap-2">
-              <span className="font-bold text-green-500" aria-hidden="true">3</span>
-              <span>Leave-time alarm rings</span>
-            </li>
-          </ol>
-        )}
       </div>
       </div>
 

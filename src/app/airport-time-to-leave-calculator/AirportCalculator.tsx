@@ -1515,6 +1515,29 @@ export default function AirportCalculator({
                   experienceVariant={airportV2Pilot ? "airport-v2" : undefined}
                 />
 
+                {airportV2Pilot && flightDepartureAt && (
+                  <section className="mt-4 border-t border-zinc-800 pt-4" aria-labelledby="jfk-trip-timeline-heading">
+                    <h3 id="jfk-trip-timeline-heading" className="text-sm font-bold text-white">Your trip at a glance</h3>
+                    <div className="mt-3 grid grid-cols-3" role="list">
+                      {[
+                        { label: "Leave", time: fmtTime(computedResult.leaveTime, locale) },
+                        { label: `Reach ${locationCode ?? "airport"}`, time: fmtTime(computedResult.arrivalTime, locale) },
+                        { label: "Flight", time: fmtTime(flightDepartureAt, locale) },
+                      ].map((stop, index) => (
+                        <div key={stop.label} role="listitem" className={`relative min-w-0 ${index === 1 ? "text-center" : index === 2 ? "text-right" : ""}`}>
+                          <div className={`absolute top-[5px] h-px bg-zinc-700 ${index === 0 ? "left-2 right-0" : index === 1 ? "left-0 right-0" : "left-0 right-2"}`} aria-hidden="true" />
+                          <span className={`relative inline-block h-2.5 w-2.5 rounded-full border-2 border-zinc-900 ${index === 0 ? "bg-green-500" : "bg-zinc-500"}`} aria-hidden="true" />
+                          <p className="mt-2 truncate text-[11px] font-semibold uppercase tracking-wide text-zinc-500">{stop.label}</p>
+                          <p className="mt-0.5 text-sm font-bold tabular-nums text-zinc-200">{stop.time}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="mt-3 text-xs leading-relaxed text-zinc-500">
+                      {fmtDuration(computedResult.travelMinutes, locale)} to the airport · {fmtDuration(computedResult.bufferMinutes, locale)} before departure
+                    </p>
+                  </section>
+                )}
+
                 {ewrResultExperiment && (
                   <button
                     type="button"
