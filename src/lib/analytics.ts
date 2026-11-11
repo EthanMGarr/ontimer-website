@@ -6,6 +6,7 @@ import {
 } from "@/lib/calculator-cta-experiment";
 import { localeForPathname, type SiteLocale } from "@/lib/i18n";
 import { isWebsiteAnalyticsEnabled, WEBSITE_GA_MEASUREMENT_ID } from "@/lib/analytics-config";
+import { capturePostHogEvent } from "@/lib/posthog";
 
 /// Centralized GA4 event tracking for OnTimer marketing site.
 ///
@@ -163,18 +164,22 @@ export function fireEvent(eventName: string, params: AnalyticsParams = {}): void
     ? { calculator_cta_eligibility: calculatorEligibility }
     : {};
   if (experiment && shouldTrackCalculatorExperimentAssignment()) {
-    sendFirstPartyEvent("experiment_assignment", {
+    const experimentParams = {
       ...acquisition,
       ...eligibilityParams,
       ...experiment,
-    });
+    };
+    sendFirstPartyEvent("experiment_assignment", experimentParams);
+    capturePostHogEvent("experiment_assignment", experimentParams);
   }
-  sendFirstPartyEvent(eventName, {
+  const enrichedParams = {
     ...acquisition,
     ...params,
     ...eligibilityParams,
     ...(experiment ?? {}),
-  });
+  };
+  sendFirstPartyEvent(eventName, enrichedParams);
+  capturePostHogEvent(eventName, enrichedParams);
 }
 
 function baseParams(location: string): AnalyticsParams {

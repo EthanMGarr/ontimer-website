@@ -4,6 +4,8 @@ This changelog records meaningful website fixes, improvements, and maintenance o
 
 ## Unreleased
 
+- 2026-11-11: Added privacy-gated PostHog product analytics alongside GA4. The site now sends explicit page views and the existing named conversion/calculator events to the shared OnTimer PostHog project while preserving regulated-region consent, excluding analytics-free medication routes, and leaving autocapture, exception capture, and session replay disabled to avoid collecting calculator inputs or sensitive page content. PostHog keeps its own anonymous identity and receives the existing first-party attribution token as an event property; App Store campaign links remain the source of truth for store-side campaign reporting.
+
 - 2026-10-10: Updated the Terms of Service (Last Updated October 10, 2026) with a Time to Fly airport alarms paragraph in Section 6: flight recognition limits, no flight-status/check-in/security/document tracking, free estimates set once, Premium updates depend on background activity, and the user remains responsible for arriving on time.
 
 - 2026-10-10: Updated the Privacy Policy (Last Updated October 10, 2026) for the iOS app's Time to Fly airport alarms: calendar purposes, the event description and location rows (flight recognition on device; confirmation codes not stored), Location Information, Apple MapKit (departure airport location), and the Google API Services Limited Use feature list.

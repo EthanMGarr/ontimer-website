@@ -3,8 +3,10 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef, Suspense } from "react";
 import { initializeAnalytics } from "@/lib/analytics";
+import { CONSENT_EVENT } from "@/lib/consent";
 import { isAnalyticsFreeMedicationPath } from "@/lib/medication-route-privacy";
 import { localeForPathname } from "@/lib/i18n";
+import { capturePostHogPageView } from "@/lib/posthog";
 
 declare global {
   interface Window {
@@ -29,6 +31,14 @@ function PageViewTracker() {
       return;
     }
     window.__ontimerStartAnalytics?.();
+    const pagePath = pathname + (searchParams.toString() ? `?${searchParams}` : "");
+    const pageProperties = {
+      page_path: pagePath,
+      page_title: document.title,
+      content_language: localeForPathname(pathname),
+      locale: localeForPathname(pathname),
+    };
+    capturePostHogPageView(pageProperties);
     if (initialPathRef.current) {
       initialPathRef.current = false;
       return;
@@ -37,13 +47,25 @@ function PageViewTracker() {
     window.gtag("consent", "update", { analytics_storage: "granted" });
 
     window.gtag("event", "page_view", {
-      page_path: pathname + (searchParams.toString() ? `?${searchParams}` : ""),
       page_location: window.location.href,
-      page_title: document.title,
-      content_language: localeForPathname(pathname),
-      locale: localeForPathname(pathname),
+      ...pageProperties,
     });
   }, [pathname, searchParams]);
+
+  useEffect(() => {
+    const captureAfterConsent = (event: Event) => {
+      if (!(event instanceof CustomEvent) || event.detail !== "granted") return;
+      if (isAnalyticsFreeMedicationPath(window.location.pathname)) return;
+      capturePostHogPageView({
+        page_path: window.location.pathname + window.location.search,
+        page_title: document.title,
+        content_language: localeForPathname(window.location.pathname),
+        locale: localeForPathname(window.location.pathname),
+      });
+    };
+    window.addEventListener(CONSENT_EVENT, captureAfterConsent);
+    return () => window.removeEventListener(CONSENT_EVENT, captureAfterConsent);
+  }, []);
 
   return null;
 }
