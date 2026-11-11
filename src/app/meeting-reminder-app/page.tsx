@@ -110,7 +110,7 @@ export default function MeetingReminderApp() {
             </p>
           </div>
           <div className="mt-8">
-            <AppStoreCTA location="meeting_reminder_app_hero" />
+            <AppStoreCTA location="meeting_reminder_app_hero" productPage="meeting_alarm" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
@@ -199,7 +199,7 @@ export default function MeetingReminderApp() {
             ))}
           </div>
           <div className="mt-8">
-            <AppStoreCTA location="meeting_reminder_app_solution" />
+            <AppStoreCTA location="meeting_reminder_app_solution" productPage="meeting_alarm" />
           </div>
         </div>
       </section>
@@ -330,7 +330,7 @@ export default function MeetingReminderApp() {
             Replace passive calendar notifications with alarms that demand acknowledgment before every meeting.
           </p>
           <div className="mt-8">
-            <AppStoreCTA location="meeting_reminder_app_final_cta" />
+            <AppStoreCTA location="meeting_reminder_app_final_cta" productPage="meeting_alarm" />
           </div>
           <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>

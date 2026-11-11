@@ -15,6 +15,7 @@ Use this checklist for every production change involving pages, routes, metadata
 - [ ] Every intended indexable HTML page has a unique title and description.
 - [ ] Page-level Open Graph URLs use the page canonical, and Open Graph/Twitter descriptions match the page-specific intent instead of inheriting generic site copy.
 - [ ] The global iOS Smart App Banner keeps its App Store `app-argument` attribution URL with the `web_smart_banner` campaign token; verify the rendered `apple-itunes-app` meta tag after deployment.
+- [ ] Intent-specific acquisition pages route both mobile App Store links and desktop QR payloads to the same approved custom product page: meeting-alarm pages to Meeting Alarm, lateness pages to Never Be Late, and leave-time/airport/cruise funnels to Time to Leave. Preserve `pt`, `ct`, and `mt`, verify the intended `ppid`, and keep general-site, Smart App Banner, and saved-calendar links on the default product page.
 - [ ] Every intended indexable HTML page has a self-referencing canonical URL on `https://www.ontimer.app`.
 - [ ] Every localized page has an explicit locale URL, reciprocal `hreflang` links for each published language plus `x-default`, a locale-correct canonical, and matching entries in the sitemap. Do not use automatic country or browser-language redirects.
 - [ ] Localized pages render complete translated UI, metadata, structured data, validation, result and calendar-handoff copy; do not index pages with silent English fallback content.

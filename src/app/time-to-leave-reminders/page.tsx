@@ -98,7 +98,7 @@ export default function TimeToLeaveReminders() {
             </p>
           </div>
           <div className="mt-8">
-            <AppStoreCTA />
+            <AppStoreCTA productPage="time_to_leave" />
           </div>
         </div>
       </section>
@@ -282,7 +282,7 @@ export default function TimeToLeaveReminders() {
             Download OnTimer and get traffic-aware departure alerts from your calendar.
           </p>
           <div className="mt-8">
-            <AppStoreCTA />
+            <AppStoreCTA productPage="time_to_leave" />
           </div>
         </div>
       </section>

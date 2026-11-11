@@ -204,7 +204,7 @@ export default function Page() {
               clock — full screen, sound and vibration — until you slide to stop it.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-4">
-              <AppStoreCTA location="turn_events_into_alarms_hero" />
+              <AppStoreCTA location="turn_events_into_alarms_hero" productPage="meeting_alarm" />
             </div>
             <p className="mt-3 text-sm text-zinc-500">
               Free for iPhone · Google Calendar · Apple Calendar · Outlook Calendar
@@ -307,7 +307,7 @@ export default function Page() {
             ))}
           </ol>
           <div className="mt-12 flex flex-col items-center text-center">
-            <AppStoreCTA location="turn_events_into_alarms_how_it_works" />
+            <AppStoreCTA location="turn_events_into_alarms_how_it_works" productPage="meeting_alarm" />
             <p className="mt-3 text-sm text-zinc-500">Free · Works with the calendar you already use</p>
           </div>
         </div>
@@ -395,7 +395,7 @@ export default function Page() {
             Free for iPhone. Connect your calendar once and every event gets an alarm.
           </p>
           <div className="mt-8 flex justify-center">
-            <AppStoreCTA location="turn_events_into_alarms_final_cta" />
+            <AppStoreCTA location="turn_events_into_alarms_final_cta" productPage="meeting_alarm" />
           </div>
         </div>
       </section>

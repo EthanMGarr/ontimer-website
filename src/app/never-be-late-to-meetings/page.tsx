@@ -530,7 +530,7 @@ export default function NeverBeLateToMeetingsPage() {
             late to.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <AppStoreCTA />
+            <AppStoreCTA productPage="never_be_late" />
             <AndroidWaitlistButton size="lg" />
           </div>
           <p className="mt-3 text-xs text-zinc-400">

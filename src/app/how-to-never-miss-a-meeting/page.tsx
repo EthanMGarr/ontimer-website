@@ -335,7 +335,7 @@ export default function HowToNeverMissAMeeting() {
             Try OnTimer — a meeting reminder system designed to make sure you&apos;re never late again.
           </p>
           <div className="mt-8">
-            <AppStoreCTA location="how-to-never-miss-a-meeting" />
+            <AppStoreCTA location="how-to-never-miss-a-meeting" productPage="meeting_alarm" />
           </div>
         </div>
       </section>

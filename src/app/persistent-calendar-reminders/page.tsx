@@ -129,7 +129,7 @@ export default function Page() {
             distinction means and how to actually set it up.
           </p>
           <div className="mt-8 flex flex-wrap gap-4 items-center">
-            <AppStoreCTA location="persistent_reminders_hero" />
+            <AppStoreCTA location="persistent_reminders_hero" productPage="meeting_alarm" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Works with Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
@@ -265,7 +265,7 @@ export default function Page() {
             ))}
           </div>
           <div className="mt-8">
-            <AppStoreCTA location="persistent_reminders_how_it_works" />
+            <AppStoreCTA location="persistent_reminders_how_it_works" productPage="meeting_alarm" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
@@ -352,7 +352,7 @@ export default function Page() {
             Download OnTimer and replace dismissible notifications with persistent alarms.
           </p>
           <div className="mt-8">
-            <AppStoreCTA location="persistent_reminders_final_cta" />
+            <AppStoreCTA location="persistent_reminders_final_cta" productPage="meeting_alarm" />
           </div>
           <p className="mt-3 text-sm text-zinc-500">Free · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>

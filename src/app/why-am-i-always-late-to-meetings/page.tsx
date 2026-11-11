@@ -443,7 +443,7 @@ export default function WhyAmIAlwaysLateMeetings() {
             late without having to think about it.
           </p>
           <div className="mt-8">
-            <AppStoreCTA location="why-always-late-cta" />
+            <AppStoreCTA location="why-always-late-cta" productPage="never_be_late" />
           </div>
         </div>
       </section>

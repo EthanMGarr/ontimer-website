@@ -675,7 +675,7 @@ export default function WhatToSayWhenLateMeeting() {
             on time and never need a recovery script.
           </p>
           <div className="mt-8">
-            <AppStoreCTA location="what-to-say-late-cta" />
+            <AppStoreCTA location="what-to-say-late-cta" productPage="never_be_late" />
           </div>
         </div>
       </section>

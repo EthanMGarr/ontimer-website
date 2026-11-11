@@ -138,7 +138,7 @@ export default function BestMeetingReminderApp() {
             </p>
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <AppStoreCTA />
+            <AppStoreCTA productPage="meeting_alarm" />
             <AndroidWaitlistButton size="lg" />
           </div>
         </div>
@@ -356,7 +356,7 @@ export default function BestMeetingReminderApp() {
             Stop relying on notifications. Get alarms you can&apos;t ignore.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <AppStoreCTA />
+            <AppStoreCTA productPage="meeting_alarm" />
           </div>
           <p className="mt-6 text-sm text-zinc-400">
             Android coming soon —{" "}

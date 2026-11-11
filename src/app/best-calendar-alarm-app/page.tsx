@@ -159,7 +159,7 @@ export default function Page() {
             calendar events into alarms that stay on screen until you dismiss them.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <AppStoreCTA location="best_alarm_app_hero" />
+            <AppStoreCTA location="best_alarm_app_hero" productPage="meeting_alarm" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">OnTimer is free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
@@ -352,7 +352,7 @@ export default function Page() {
             </ul>
           </div>
           <div className="mt-8">
-            <AppStoreCTA location="best_alarm_app_features" />
+            <AppStoreCTA location="best_alarm_app_features" productPage="meeting_alarm" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">OnTimer is free · iPhone</p>
         </div>
@@ -415,7 +415,7 @@ export default function Page() {
             response before every meeting, flight, and appointment.
           </p>
           <div className="mt-8">
-            <AppStoreCTA location="best_alarm_app_final_cta" />
+            <AppStoreCTA location="best_alarm_app_final_cta" productPage="meeting_alarm" />
           </div>
         </div>
       </section>

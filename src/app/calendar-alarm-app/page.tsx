@@ -145,7 +145,7 @@ export default function CalendarAlarmApp() {
             automatically.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <AppStoreCTA location="calendar_alarm_app_hero" />
+            <AppStoreCTA location="calendar_alarm_app_hero" productPage="meeting_alarm" />
             <AndroidWaitlistButton size="lg" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Free · Works with Google Calendar · Apple Calendar · Outlook Calendar</p>
@@ -356,7 +356,7 @@ export default function CalendarAlarmApp() {
             — OnTimer just makes sure you can&apos;t ignore it.
           </p>
           <div className="mt-8">
-            <AppStoreCTA location="calendar_alarm_app_how_it_works" />
+            <AppStoreCTA location="calendar_alarm_app_how_it_works" productPage="meeting_alarm" />
           </div>
           <div className="mt-6 flex flex-wrap gap-4">
             <Link href="/features" className="text-sm font-semibold text-green-500 hover:text-green-400">See all features →</Link>
@@ -415,7 +415,7 @@ export default function CalendarAlarmApp() {
             Works with Google Calendar, Apple Calendar, and Outlook Calendar.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <AppStoreCTA location="calendar_alarm_app_final_cta" />
+            <AppStoreCTA location="calendar_alarm_app_final_cta" productPage="meeting_alarm" />
           </div>
           <p className="mt-6 text-sm text-zinc-400">
             Android coming soon —{" "}

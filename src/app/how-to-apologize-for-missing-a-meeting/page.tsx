@@ -596,7 +596,7 @@ export default function HowToApologizeForMissingMeeting() {
             have to write another apology.
           </p>
           <div className="mt-8">
-            <AppStoreCTA location="apologize-missing-meeting-cta" />
+            <AppStoreCTA location="apologize-missing-meeting-cta" productPage="never_be_late" />
           </div>
         </div>
       </section>

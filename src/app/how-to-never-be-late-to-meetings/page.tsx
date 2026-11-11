@@ -78,7 +78,7 @@ export default function HowToNeverBeLateToMeetings() {
             time gets underestimated.
           </p>
           <div className="mt-8">
-            <AppStoreCTA />
+            <AppStoreCTA productPage="never_be_late" />
           </div>
         </div>
       </section>
@@ -283,7 +283,7 @@ export default function HowToNeverBeLateToMeetings() {
             Download OnTimer and make your calendar harder to ignore.
           </p>
           <div className="mt-8">
-            <AppStoreCTA />
+            <AppStoreCTA productPage="never_be_late" />
           </div>
         </div>
       </section>

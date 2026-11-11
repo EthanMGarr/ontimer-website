@@ -161,7 +161,7 @@ export default function Page() {
             execution gap. And notifications aren&rsquo;t designed to close it.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <AppStoreCTA location="last5min_hero" />
+            <AppStoreCTA location="last5min_hero" productPage="never_be_late" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
@@ -388,7 +388,7 @@ export default function Page() {
             ))}
           </div>
           <div className="mt-8">
-            <AppStoreCTA location="last5min_solution" />
+            <AppStoreCTA location="last5min_solution" productPage="never_be_late" />
           </div>
           <p className="mt-3 text-xs text-zinc-500">Free · iPhone · Google Calendar · Apple Calendar · Outlook Calendar</p>
         </div>
@@ -406,7 +406,7 @@ export default function Page() {
               gets an alarm that won&rsquo;t let you drift past the deadline.
             </p>
             <div className="mt-6">
-              <AppStoreCTA location="last5min_midpage" />
+              <AppStoreCTA location="last5min_midpage" productPage="never_be_late" />
             </div>
           </div>
         </div>
@@ -470,7 +470,7 @@ export default function Page() {
             close the execution gap instead of contributing to it.
           </p>
           <div className="mt-8">
-            <AppStoreCTA location="last5min_final_cta" />
+            <AppStoreCTA location="last5min_final_cta" productPage="never_be_late" />
           </div>
         </div>
       </section>

@@ -433,7 +433,7 @@ export default function JoinMeetingLateEtiquette() {
             on time, every time.
           </p>
           <div className="mt-8">
-            <AppStoreCTA location="join-late-etiquette-cta" />
+            <AppStoreCTA location="join-late-etiquette-cta" productPage="never_be_late" />
           </div>
         </div>
       </section>

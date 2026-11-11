@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { appStoreQrUrl,
   APP_STORE_PROVIDER_TOKEN,
+  APP_STORE_PRODUCT_PAGE_URLS,
   appStoreCampaignToken,
   appStoreCampaignUrl,
   appStoreUrlFor,
@@ -31,6 +32,9 @@ assert.equal(appStoreCampaignToken({
   ctaVariant: "result_app_primary_v1",
 }), "web_until_result_ap1");
 assert.equal(appStoreCampaignToken({ location: "footer" }), null);
+assert.equal(appStoreCampaignToken({ productPage: "meeting_alarm" }), "web_cpp_meeting");
+assert.equal(appStoreCampaignToken({ productPage: "never_be_late" }), "web_cpp_never_late");
+assert.equal(appStoreCampaignToken({ productPage: "time_to_leave" }), "web_cpp_leave");
 
 for (const calculatorType of ["leave_time", "airport_leave_time", "wake_up", "cruise_leave_time", "days_until"]) {
   const token = appStoreCampaignToken({ calculatorType, ctaVariant: "result_app_primary_v1" });
@@ -49,10 +53,34 @@ assert.equal(smartBannerUrl.searchParams.get("ct"), "web_smart_banner");
 assert.equal(smartBannerUrl.searchParams.get("mt"), "8");
 assert.equal(appStoreUrlFor({ location: "footer" }).campaignToken, null);
 
+for (const productPage of ["meeting_alarm", "never_be_late", "time_to_leave"] as const) {
+  const productPageUrl = new URL(appStoreUrlFor({ productPage }).url);
+  const expectedUrl = new URL(APP_STORE_PRODUCT_PAGE_URLS[productPage]);
+  assert.equal(productPageUrl.searchParams.get("ppid"), expectedUrl.searchParams.get("ppid"));
+  assert.equal(productPageUrl.searchParams.get("pt"), APP_STORE_PROVIDER_TOKEN);
+  assert.ok(productPageUrl.searchParams.get("ct")?.startsWith("web_cpp_"));
+  assert.equal(productPageUrl.searchParams.get("mt"), "8");
+}
+
+const leaveCalculatorUrl = new URL(appStoreUrlFor({ location: "leave_calculator_conversion" }).url);
+assert.equal(
+  leaveCalculatorUrl.searchParams.get("ppid"),
+  new URL(APP_STORE_PRODUCT_PAGE_URLS.time_to_leave).searchParams.get("ppid"),
+);
+assert.equal(leaveCalculatorUrl.searchParams.get("ct"), "web_leave_content");
+
 const siteQrUrl = new URL(appStoreQrUrl({ location: "homepage_hero" }));
 assert.equal(siteQrUrl.searchParams.get("ct"), "web_qr_site");
 assert.equal(siteQrUrl.searchParams.get("pt"), APP_STORE_PROVIDER_TOKEN);
 assert.equal(new URL(appStoreQrUrl({ location: "airport_lax_result" })).searchParams.get("ct"), "web_qr_airport");
 assert.equal(new URL(appStoreQrUrl({ location: "leave_calculator_result" })).searchParams.get("ct"), "web_qr_leave");
+assert.equal(
+  new URL(appStoreQrUrl({ productPage: "meeting_alarm" })).searchParams.get("ppid"),
+  new URL(APP_STORE_PRODUCT_PAGE_URLS.meeting_alarm).searchParams.get("ppid"),
+);
+assert.equal(
+  new URL(appStoreQrUrl({ productPage: "never_be_late" })).searchParams.get("ct"),
+  "web_qr_cpp_never_late",
+);
 
 console.log("App Store campaign link tests passed.");

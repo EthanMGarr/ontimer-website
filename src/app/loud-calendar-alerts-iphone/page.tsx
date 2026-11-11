@@ -98,7 +98,7 @@ export default function LoudCalendarAlertsIphone() {
             </p>
           </div>
           <div className="mt-8">
-            <AppStoreCTA />
+            <AppStoreCTA productPage="meeting_alarm" />
           </div>
         </div>
       </section>
@@ -281,7 +281,7 @@ export default function LoudCalendarAlertsIphone() {
             Download OnTimer for iPhone.
           </p>
           <div className="mt-8">
-            <AppStoreCTA />
+            <AppStoreCTA productPage="meeting_alarm" />
           </div>
         </div>
       </section>

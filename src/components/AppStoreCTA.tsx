@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { appStoreQrUrl, appStoreUrlFor } from "@/lib/app-store-links";
+import {
+  appStoreQrUrl,
+  appStoreUrlFor,
+  type AppStoreProductPage,
+} from "@/lib/app-store-links";
 import {
   trackAppStoreClick,
   trackQRCodeVisible,
@@ -12,6 +16,7 @@ import {
 
 interface AppStoreCTAProps {
   location?: string;
+  productPage?: AppStoreProductPage;
 }
 
 function AppleIcon({ className = "h-4 w-4" }: { className?: string }) {
@@ -27,10 +32,10 @@ function AppleIcon({ className = "h-4 w-4" }: { className?: string }) {
   );
 }
 
-export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
+export function AppStoreCTA({ location = "cta", productPage }: AppStoreCTAProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const appStoreLink = appStoreUrlFor({ location });
+  const appStoreLink = appStoreUrlFor({ location, productPage });
   const trackingContext: AnalyticsParams = appStoreLink.campaignToken
     ? { app_store_campaign: appStoreLink.campaignToken }
     : {};
@@ -78,7 +83,7 @@ export function AppStoreCTA({ location = "cta" }: AppStoreCTAProps) {
             >
               <QRCodeSVG
                 title="Scan to download OnTimer from the App Store"
-                value={appStoreQrUrl({ location })}
+                value={appStoreQrUrl({ location, productPage })}
                 size={128}
                 bgColor="#ffffff"
                 fgColor="#000000"

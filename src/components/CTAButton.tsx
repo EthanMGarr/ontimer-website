@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { appStoreUrlFor } from "@/lib/app-store-links";
+import { appStoreUrlFor, type AppStoreProductPage } from "@/lib/app-store-links";
 import {
   trackAppStoreClick,
   trackAutomaticAlertCTAViewed,
@@ -23,6 +23,7 @@ interface CTAButtonProps {
   // Use "above" when the button sits near the bottom of the viewport (e.g. footer).
   placement?: "above" | "below";
   analyticsContext?: AnalyticsParams;
+  productPage?: AppStoreProductPage;
 }
 
 const sizeClasses = {
@@ -39,6 +40,7 @@ export function AppStoreButton({
   label = "Download on the App Store",
   placement = "below",
   analyticsContext = {},
+  productPage,
 }: CTAButtonProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -85,7 +87,7 @@ export function AppStoreButton({
   const calculatorType = typeof analyticsContext.calculator_type === "string"
     ? analyticsContext.calculator_type
     : undefined;
-  const appStoreLink = appStoreUrlFor({ location, ctaVariant, calculatorType });
+  const appStoreLink = appStoreUrlFor({ location, ctaVariant, calculatorType, productPage });
   const trackedContext = appStoreLink.campaignToken
     ? { ...analyticsContext, app_store_campaign: appStoreLink.campaignToken }
     : analyticsContext;

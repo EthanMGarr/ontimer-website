@@ -51,7 +51,7 @@ export default function BestMeetingReminderAppsIphone() {
             before it is too late.
           </p>
           <div className="mt-8">
-            <AppStoreCTA />
+            <AppStoreCTA productPage="meeting_alarm" />
           </div>
         </div>
       </section>
@@ -249,7 +249,7 @@ export default function BestMeetingReminderAppsIphone() {
             Download OnTimer for iPhone.
           </p>
           <div className="mt-8">
-            <AppStoreCTA />
+            <AppStoreCTA productPage="meeting_alarm" />
           </div>
         </div>
       </section>
