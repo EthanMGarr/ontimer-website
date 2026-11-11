@@ -95,7 +95,7 @@ const airportCopy = {
     calculating: "Calculating leave time...", update: "Update Leave Time", show: "Show My Leave Time", calculate: "Calculate leave time",
     addAirport: "Add your airport to calculate.",
     whatWeUse: "What we use", smartTiming: "Smart airport timing enabled", smartTimingBody: "We automatically account for the timing factors most travelers miss.",
-    bagDropTime: "Bag drop time", hideAdjustments: "Hide adjustments", hideAssumptions: "Hide assumptions", adjustAssumptions: "Adjust assumptions", customize: "Customize timing assumptions", modified: "modified",
+    bagDropTime: "Bag drop time", hideAdjustments: "Hide timing options", hideAssumptions: "Hide assumptions", adjustAssumptions: "Customize timing", customize: "Customize timing assumptions", modified: "modified",
     trustedPrograms: "Trusted traveler programs", bags: "Bags", checkingBag: "Checking a bag", gettingThere: "Getting to the airport by",
     parkingMode: "Parking", rideshare: "Rideshare", dropoff: "Drop-off", publicTransit: "Public transit", transitTime: "Transit time", driveTime: "Drive time",
     automaticTravel: "Estimated automatically from your locations for the selected travel mode.", manualTravel: "Enter travel time manually instead", example35: "e.g. 35",
@@ -126,7 +126,7 @@ const airportCopy = {
     calculating: "Calculando la hora de salida…", update: "Actualizar hora de salida", show: "Mostrar mi hora de salida", calculate: "Calcular hora de salida",
     addAirport: "Añade tu aeropuerto para calcular.",
     whatWeUse: "Qué tenemos en cuenta", smartTiming: "Planificación inteligente del aeropuerto", smartTimingBody: "Incluimos automáticamente los tiempos que más suelen olvidarse.",
-    bagDropTime: "Tiempo para facturar equipaje", hideAdjustments: "Ocultar ajustes", hideAssumptions: "Ocultar supuestos", adjustAssumptions: "Ajustar tiempos", customize: "Personalizar tiempos", modified: "modificados",
+    bagDropTime: "Tiempo para facturar equipaje", hideAdjustments: "Ocultar opciones", hideAssumptions: "Ocultar supuestos", adjustAssumptions: "Personalizar tiempos", customize: "Personalizar tiempos", modified: "modificados",
     trustedPrograms: "Programas para viajeros autorizados", bags: "Equipaje", checkingBag: "Voy a facturar equipaje", gettingThere: "Cómo llegarás al aeropuerto",
     parkingMode: "Aparcamiento", rideshare: "VTC / taxi", dropoff: "Me dejan en la terminal", publicTransit: "Transporte público", transitTime: "Tiempo en transporte", driveTime: "Tiempo en coche",
     automaticTravel: "Calculado automáticamente con tus ubicaciones y el medio de transporte elegido.", manualTravel: "Indicar el tiempo de viaje manualmente", example35: "p. ej., 35",
@@ -993,6 +993,164 @@ export default function AirportCalculator({
     });
   }
 
+  const timingOptionsDisclosure = (
+    <>
+      <button
+        type="button"
+        aria-expanded={showRefinements}
+        aria-controls="airport-timing-options-panel"
+        onClick={() => {
+          const willOpen = !showRefinements;
+          setShowRefinements(willOpen);
+          if (willOpen) {
+            track("airport_timing_options_opened", {
+              ...(locationCode ? { location_code: locationCode } : {}),
+            });
+          }
+        }}
+        className={`${genericRedesign ? "" : "mt-4"} flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:bg-zinc-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 active:bg-zinc-800`}
+      >
+        <span className="flex items-center gap-2">
+          <span>
+            {showRefinements
+              ? genericRedesign ? copy.hideAdjustments : copy.hideAssumptions
+              : genericRedesign ? copy.adjustAssumptions : copy.customize}
+          </span>
+          {activeRefinementCount > 0 && !showRefinements && (
+            <span className="rounded-full bg-green-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-green-400">
+              {activeRefinementCount} {copy.modified}
+            </span>
+          )}
+        </span>
+        <span className={`flex-shrink-0 text-xs text-zinc-400 transition-transform duration-200 ${showRefinements ? "rotate-180" : ""}`}>
+          ▾
+        </span>
+      </button>
+
+      {showRefinements && (
+        <div id="airport-timing-options-panel" className="mt-4 space-y-5 border-t border-zinc-700 pt-4">
+          {effectivePlanningJurisdiction === "us" && <div>
+            <FieldLabel>{copy.trustedPrograms}</FieldLabel>
+            <div className="flex flex-wrap gap-2">
+              <Toggle checked={hasPreCheck} onChange={setHasPreCheck} label="TSA PreCheck / Global Entry" />
+              <Toggle checked={hasClear} onChange={setHasClear} label="CLEAR" />
+            </div>
+          </div>}
+          <div>
+            <FieldLabel>{copy.bags}</FieldLabel>
+            <Toggle checked={hasCheckedBag} onChange={setHasCheckedBag} label={copy.checkingBag} />
+          </div>
+          <div>
+            <FieldLabel>{copy.gettingThere}</FieldLabel>
+            <SegmentedControl
+              options={[
+                { value: "parking", label: copy.parkingMode },
+                { value: "rideshare", label: copy.rideshare },
+                { value: "dropoff", label: copy.dropoff },
+                { value: "transit", label: copy.publicTransit },
+              ]}
+              value={arrivalMode}
+              onChange={setArrivalMode}
+            />
+          </div>
+          <div>
+            <FieldLabel>{arrivalMode === "transit" ? copy.transitTime : copy.driveTime}</FieldLabel>
+            {!showManualDriveTime ? (
+              <div>
+                <p className="text-sm text-zinc-400">
+                  {copy.automaticTravel}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowManualDriveTime(true)}
+                  className="mt-1.5 text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
+                >
+                  {copy.manualTravel}
+                </button>
+              </div>
+            ) : (
+              <div>
+                <input
+                  type="number"
+                  min="0"
+                  max="2880"
+                  placeholder={copy.example35}
+                  value={manualTravelMinutes}
+                  onChange={(e) => setManualTravelMinutes(e.target.value)}
+                  className={inputClass}
+                />
+                <button
+                  type="button"
+                  onClick={() => { setShowManualDriveTime(false); setManualTravelMinutes(""); }}
+                  className="mt-1.5 text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
+                >
+                  {copy.automaticInstead}
+                </button>
+              </div>
+            )}
+          </div>
+          <div>
+            <button
+              type="button"
+              onClick={() => setShowBufferOverride(!showBufferOverride)}
+              className="text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
+            >
+              {showBufferOverride ? copy.recommendedBuffer : copy.adjustBuffer}
+            </button>
+            {showBufferOverride && (
+              <div className="mt-3">
+                <FieldLabel>{copy.customBufferMinutes}</FieldLabel>
+                <input
+                  type="number"
+                  min="0"
+                  max="480"
+                  placeholder={String(defaultBuffer)}
+                  value={customBuffer}
+                  onChange={(e) => setCustomBuffer(e.target.value)}
+                  className={inputClass}
+                />
+                <p className="mt-1.5 text-xs text-zinc-400">
+                  {`${copy.recommendedPlaceholder}: ${fmtDuration(defaultBuffer, locale)} (${defaultBuffer} min). ${copy.customBufferHelp}`}
+                </p>
+              </div>
+            )}
+          </div>
+          <div>
+            {!showSecurityOverride ? (
+              <button
+                type="button"
+                onClick={() => setShowSecurityOverride(true)}
+                className="text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
+              >
+                {copy.adjustSecurity}
+              </button>
+            ) : (
+              <div>
+                <FieldLabel>{copy.customSecurity}</FieldLabel>
+                <input
+                  type="number"
+                  min="0"
+                  max="180"
+                  placeholder={`${copy.auto}: ${estimatedSecurityMins} min`}
+                  value={customSecurityMinutes}
+                  onChange={(e) => setCustomSecurityMinutes(e.target.value)}
+                  className={inputClass}
+                />
+                <button
+                  type="button"
+                  onClick={() => { setShowSecurityOverride(false); setCustomSecurityMinutes(""); }}
+                  className="mt-1.5 text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
+                >
+                  {copy.estimatedInstead}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <>
@@ -1012,7 +1170,7 @@ export default function AirportCalculator({
 
           {/* ══ Inputs ════════════════════════════════════════════════════════ */}
           <div
-            className={`${computedResult ? "order-2" : "order-1"} space-y-4 ${
+            className={`${computedResult ? "order-2" : "order-1"} ${genericRedesign ? "flex flex-col gap-4" : "space-y-4"} ${
               resultHeroMode ? "lg:order-2 lg:opacity-80" : "lg:order-1"
             }`}
           >
@@ -1195,6 +1353,17 @@ export default function AirportCalculator({
               </div>
             </div>
 
+            {genericRedesign && (
+              <div
+                data-airport-timing-options
+                className={`order-3 rounded-xl border p-4 ${
+                  resultHeroMode ? "border-zinc-800 bg-zinc-900/60" : "border-zinc-700 bg-zinc-800/70"
+                }`}
+              >
+                {timingOptionsDisclosure}
+              </div>
+            )}
+
             <button
               type="button"
               onClick={handleCalculate}
@@ -1206,7 +1375,7 @@ export default function AirportCalculator({
                 isFetchingTravel
                 || isResolvingOrigin
               }
-              className={`w-full rounded-full px-6 py-3 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${genericRedesign ? "order-3" : ""} ${
+              className={`w-full rounded-full px-6 py-3 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${genericRedesign ? "order-4" : ""} ${
                 resultHeroMode
                   ? "border border-zinc-600 bg-zinc-800 text-zinc-100 hover:border-zinc-500 hover:bg-zinc-700"
                   : "bg-green-500 text-black hover:bg-green-400"
@@ -1223,14 +1392,18 @@ export default function AirportCalculator({
                   : copy.calculate}
             </button>
             {airport.trim().length < 2 && (
-              <p className={`${genericRedesign ? "order-4" : ""} text-center text-xs text-zinc-500`}>
+              <p className={`${genericRedesign ? "order-5" : ""} text-center text-xs text-zinc-500`}>
                 {copy.addAirport}
               </p>
             )}
             {/* Smart airport timing card */}
-            <div className={`${genericRedesign ? "order-5" : ""} rounded-xl border p-4 ${
+            <div className={genericRedesign ? "contents" : `rounded-xl border p-4 ${
               resultHeroMode ? "border-zinc-800 bg-zinc-900/60" : "border-zinc-700 bg-zinc-800/70"
             }`}>
+
+              <div className={genericRedesign ? `order-5 rounded-xl border p-4 ${
+                resultHeroMode ? "border-zinc-800 bg-zinc-900/60" : "border-zinc-700 bg-zinc-800/70"
+              }` : "contents"}>
 
               {/* Header */}
               <div>
@@ -1266,9 +1439,20 @@ export default function AirportCalculator({
                 )}
               </div>
 
-              {/* Expand button — visually interactive */}
+              </div>
+
+              {!genericRedesign && <>
+              {/* Legacy non-generic disclosure stays inside the combined timing card. */}
+              <div
+                data-airport-timing-options
+                className={genericRedesign ? `order-3 rounded-xl border p-4 ${
+                  resultHeroMode ? "border-zinc-800 bg-zinc-900/60" : "border-zinc-700 bg-zinc-800/70"
+                }` : "contents"}
+              >
               <button
                 type="button"
+                aria-expanded={showRefinements}
+                aria-controls="airport-timing-options-panel"
                 onClick={() => {
                   const willOpen = !showRefinements;
                   setShowRefinements(willOpen);
@@ -1278,7 +1462,7 @@ export default function AirportCalculator({
                     });
                   }
                 }}
-                className="mt-4 flex w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:bg-zinc-700 hover:text-white"
+                className={`${genericRedesign ? "" : "mt-4"} flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:bg-zinc-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 active:bg-zinc-800`}
               >
                 <span className="flex items-center gap-2">
                   <span>
@@ -1298,7 +1482,7 @@ export default function AirportCalculator({
               </button>
 
               {showRefinements && (
-                <div className="mt-4 space-y-5 border-t border-zinc-700 pt-4">
+                <div id="airport-timing-options-panel" className="mt-4 space-y-5 border-t border-zinc-700 pt-4">
                   {effectivePlanningJurisdiction === "us" && <div>
                     <FieldLabel>{copy.trustedPrograms}</FieldLabel>
                     <div className="flex flex-wrap gap-2">
@@ -1418,6 +1602,8 @@ export default function AirportCalculator({
                   </div>
                 </div>
               )}
+              </div>
+              </>}
             </div>
 
             {error && (

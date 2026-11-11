@@ -60,6 +60,12 @@ assert.match(
   /<CalendarOnTimerHandoff[\s\S]*?\/>[\s\S]*?copy\.adjustAssumptions/,
   "optional result adjustments must follow the conversion handoff",
 );
+assert.match(calculator, /genericRedesign \? "flex flex-col gap-4"/, "the generic airport task flow must use real flex ordering instead of inert order classes");
+assert.match(calculator, /data-airport-timing-options[\s\S]*?order-3/, "custom timing must appear before the generic airport calculation action");
+assert.match(calculator, /handleCalculate[\s\S]*?genericRedesign \? "order-4"/, "the generic airport calculation action must follow optional timing controls");
+assert.match(calculator, /genericRedesign \? `order-5 rounded-xl border p-4[\s\S]*?copy\.whatWeUse/, "the explanatory What we use card must follow the calculation action");
+assert.match(calculator, /adjustAssumptions: "Customize timing"/, "the optional timing control must use clear customer language");
+assert.match(calculator, /aria-expanded=\{showRefinements\}[\s\S]*?aria-controls="airport-timing-options-panel"/, "the timing disclosure must expose its expanded state and controlled panel");
 assert.match(calculator, /Current airport-wide estimate:/, "security detail must label the current airport-wide evidence");
 assert.match(calculator, /Estimated at your [\s\S]*? arrival:/, "security detail must label the arrival-time prediction");
 assert.match(calculator, /Your leave time includes [\s\S]*? min to protect against variation/, "security detail must explain the conservative planning allowance");
