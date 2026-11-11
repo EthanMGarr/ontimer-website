@@ -1,6 +1,7 @@
 "use client";
 
-// Hallmark pre-emit critique: palette 5 · hierarchy 5 · error prevention 4 · simplicity 5 · responsiveness 5 · visual consistency 5.
+// Hallmark · component: mobile result acquisition · genre: modern-minimal · theme: OnTimer locked.
+// Hallmark · pre-emit critique: P5 H5 E5 S5 R4 V4 · contrast: pass · responsive: pass.
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -150,8 +151,10 @@ export default function CalendarOnTimerHandoff({
   const [experimentVariant, setExperimentVariant] = useState<CalculatorCtaVariant>("control");
   const affiliateRef = useRef<HTMLAnchorElement>(null);
   const acquisitionRef = useRef<HTMLDivElement>(null);
+  const inlineAirportCtaRef = useRef<HTMLDivElement>(null);
   const affiliateViewTrackedRef = useRef(false);
   const calendarReturnCleanupRef = useRef<(() => void) | null>(null);
+  const [showAirportStickyCta, setShowAirportStickyCta] = useState(false);
   const calendarOpened = calendarProvider !== null;
   const appPrimary = experimentVariant === "app_primary" && !calendarOpened;
   const effectiveAndroidAffiliateOffer = androidAffiliateOffer ?? DEFAULT_ANDROID_AFFILIATE_OFFER;
@@ -240,6 +243,23 @@ export default function CalendarOnTimerHandoff({
     observer.observe(offer);
     return () => observer.disconnect();
   }, [showAndroidAffiliate, effectiveAndroidAffiliateOffer, calculatorType, analyticsContext]);
+
+  useEffect(() => {
+    if (!airportV2 || calendarOpened || isAndroidDevice !== false) {
+      setShowAirportStickyCta(false);
+      return;
+    }
+
+    const inlineCta = inlineAirportCtaRef.current;
+    if (!inlineCta) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setShowAirportStickyCta(!entry.isIntersecting);
+    }, { threshold: 0.5 });
+
+    observer.observe(inlineCta);
+    return () => observer.disconnect();
+  }, [airportV2, calendarOpened, isAndroidDevice]);
 
   return (
     <>
@@ -330,6 +350,28 @@ export default function CalendarOnTimerHandoff({
             Time To Fly
           </p>
         )}
+        {airportV2 && !calendarOpened && !showAndroidAffiliate && (
+          <div ref={inlineAirportCtaRef} data-airport-v2-inline-cta className="mb-4 border-b border-zinc-800 pb-4 sm:hidden">
+            <p className="text-base font-bold text-white">Get automatic alarms for every flight.</p>
+            <div className="mt-3">
+              <AppStoreButton
+                size="lg"
+                label={copy.getAlarms}
+                className="justify-center whitespace-nowrap"
+                location={appLocation}
+                analyticsContext={{
+                  calculator_type: calculatorType,
+                  cta_variant: "result_app_primary_v2_inline",
+                  ...analyticsContext,
+                }}
+                presentation="app-store-badge"
+              />
+            </div>
+            <p className="mt-2 text-[11px] leading-relaxed text-zinc-500">
+              OnTimer is free. {copy.appStore}
+            </p>
+          </div>
+        )}
         {/* Phones: headline beside the alarm, body full width. Wider: alarm beside both. */}
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3">
           <p className="col-start-1 row-start-1 text-base font-bold text-white">
@@ -361,7 +403,7 @@ export default function CalendarOnTimerHandoff({
                 : resultAlarmBody}
           </p>
         </div>
-        <div className="mt-4">
+        <div className={`mt-4 ${airportV2 && !calendarOpened && !showAndroidAffiliate ? "hidden sm:block" : ""}`}>
           {showAndroidAffiliate ? (
             <div data-nosnippet>
               <a
@@ -446,6 +488,29 @@ export default function CalendarOnTimerHandoff({
             </div>
           </div>
         </details>
+      )}
+
+      {showAirportStickyCta && (
+        <div
+          data-airport-v2-sticky-cta
+          className="fixed inset-x-0 z-40 px-3 sm:hidden"
+          style={{ bottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+        >
+          <div className="mx-auto flex max-w-sm items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-950/95 p-2 shadow-lg backdrop-blur-sm">
+            <p className="min-w-0 flex-1 text-[11px] font-semibold leading-tight text-zinc-300">OnTimer is free</p>
+            <AppStoreButton
+              size="sm"
+              label={copy.getAlarms}
+              className="flex-shrink-0 justify-center whitespace-nowrap"
+              location={`${appLocation}_sticky`}
+              analyticsContext={{
+                calculator_type: calculatorType,
+                cta_variant: "result_app_sticky_v1",
+                ...analyticsContext,
+              }}
+            />
+          </div>
+        </div>
       )}
     </>
   );

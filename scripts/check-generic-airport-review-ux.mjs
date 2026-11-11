@@ -169,6 +169,9 @@ assert.match(handoff, /presentation=\{airportV2 && !calendarOpened \? "app-store
 assert.match(handoff, /Or save just this trip[\s\S]*?copy\.addOneGoogle/, "the JFK calendar alternative must remain useful without competing visually with acquisition");
 assert.match(handoff, /<PlaneIcon[\s\S]*?Time To Fly/, "the JFK result must use a restrained flight cue without replacing the alarm proof");
 assert.match(handoff, /emphasis=\{airportV2 && !calendarOpened \? "flight" : "standard"\}/, "the JFK result must opt into the one-time alarm emphasis without changing other calculators");
+assert.match(handoff, /data-airport-v2-inline-cta[\s\S]*?Get automatic alarms for every flight\.[\s\S]*?presentation="app-store-badge"/, "the JFK mobile result must put the official App Store action directly beneath the timeline");
+assert.match(handoff, /data-airport-v2-sticky-cta[\s\S]*?result_app_sticky_v1/, "the JFK mobile result must retain an acquisition action while the inline badge is outside the viewport");
+assert.match(handoff, /IntersectionObserver[\s\S]*?setShowAirportStickyCta\(!entry\.isIntersecting\)/, "the JFK sticky action must disappear when the inline App Store action is visible");
 assert.match(calculator, /data-airport-trip-timeline="desktop"[\s\S]*?data-airport-trip-timeline="mobile"/, "the pilot must use a vertical desktop timeline and compact mobile timeline");
 assert.match(calculator, /trafficBasis === "live"[\s\S]*?Current traffic[\s\S]*?trafficBasis === "predicted"[\s\S]*?Expected traffic/, "the JFK timeline must distinguish current from expected traffic using the actual provider basis");
 assert.match(calculator, /TSA wait at arrival · ~\{securityWaitMinutes\} min expected · \{securityAllowanceMinutes\} min allowed/, "the desktop timeline must distinguish the predicted TSA wait from the conservative allowance");
