@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import AirportCalculatorPlanPrefill from "@/components/airport/AirportCalculatorPlanPrefill";
+import AirportV2ProductStory from "@/components/airport/AirportV2ProductStory";
 import GenericAirportCalculator from "@/components/airport/GenericAirportCalculator";
 import { AppStoreButton } from "@/components/CTAButton";
+import { KTVUProof } from "@/components/KTVUProof";
 import type { AirportAutocompleteOption } from "@/lib/airport-autocomplete";
 import { localizedAlternates, spanishAirportSlugs } from "@/lib/i18n";
 import { indexableTravelLocations } from "@/lib/travel-locations";
@@ -153,6 +155,9 @@ export default function SpanishAirportCalculatorPage() {
           </Suspense>
         </div>
       </section>
+
+      <AirportV2ProductStory airportCode="tu aeropuerto" locale="es" analyticsCode="generic" />
+      <KTVUProof variant="airport" locale="es" />
 
       <section className="border-t border-zinc-800 bg-zinc-900/40 py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">

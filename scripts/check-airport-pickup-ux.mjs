@@ -58,7 +58,7 @@ assert.ok(
   "the calculated answer must come before edit controls in the result state",
 );
 assert.match(calculator, /\{plan \? "Edit Trip" : "Flight arrival"\}/);
-assert.match(calculator, /plan \? "Update pickup plan" : "Calculate when to leave"/);
+assert.match(calculator, /plan \? "Recalculate pickup time" : "Calculate when to leave"/);
 assert.match(calculator, /function resetResult\(\) \{ setCalendarProvider\(null\); setError\(""\); \}/, "editing must keep the result beside the form until the user updates it");
 assert.match(calculator, /resultPanelRef\.current\?\.scrollIntoView/,
   "mobile submission must move the completed answer into view");

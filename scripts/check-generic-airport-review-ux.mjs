@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spanishGeneric, spanishAirport, placeAutocomplete, airportWebsite, productStory, handoff, ctaButton, alarmPreview, destinationTemplate, homepage, ktvuProof] = await Promise.all([
+const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spanishGeneric, spanishAirport, placeAutocomplete, airportWebsite, productStory, handoff, ctaButton, alarmPreview, destinationTemplate, homepage, ktvuProof, globals] = await Promise.all([
   readFile(new URL("../src/app/airport-time-to-leave-calculator/page.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/app/airport-time-to-leave-calculator/AirportCalculator.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/airport/GenericAirportCalculator.tsx", import.meta.url), "utf8"),
@@ -18,6 +18,7 @@ const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spa
   readFile(new URL("../src/components/destination-pages/DestinationPageTemplate.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/app/homepage2/page.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/KTVUProof.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/app/globals.css", import.meta.url), "utf8"),
 ]);
 
 assert.match(
@@ -32,13 +33,13 @@ for (const [name, source] of [["English generic", page], ["Spanish generic", spa
 }
 assert.match(
   genericCalculator,
-  /<AirportCalculator \{\.\.\.props\} genericRedesign \/>/,
-  "the generic wrapper must enforce the reviewed task-first experience after all caller props",
+  /<AirportCalculator \{\.\.\.props\} genericRedesign airportV2Pilot \/>/,
+  "the generic wrapper must enforce the reviewed product-led experience after all caller props",
 );
 assert.match(
   genericCalculator,
-  /Omit<[\s\S]*?"genericRedesign"/,
-  "callers must not be able to disable the generic task-first experience",
+  /Omit<[\s\S]*?"genericRedesign" \| "airportV2Pilot"/,
+  "callers must not be able to disable the generic product-led experience",
 );
 assert.match(
   planPrefill,
@@ -64,7 +65,12 @@ assert.match(calculator, /genericRedesign \? "flex flex-col gap-4"/, "the generi
 assert.match(calculator, /data-airport-timing-options[\s\S]*?order-3/, "custom timing must appear before the generic airport calculation action");
 assert.match(calculator, /handleCalculate[\s\S]*?genericRedesign \? "order-4"/, "the generic airport calculation action must follow optional timing controls");
 assert.match(calculator, /genericRedesign \? `order-5 rounded-xl border p-4[\s\S]*?copy\.whatWeUse/, "the explanatory What we use card must follow the calculation action");
-assert.match(calculator, /adjustAssumptions: "Customize timing"/, "the optional timing control must use clear customer language");
+assert.match(calculator, /adjustAssumptions: "Adjust details"/, "the optional timing control must read like a clear action");
+assert.doesNotMatch(calculator, /hover:bg-zinc-700 hover:text-white|active:bg-zinc-800/, "the timing disclosure must not enter an unreadable sticky hover or pressed state on the light calculator surface");
+assert.match(calculator, /calculator-disclosure/, "the timing disclosure must use the explicit cross-browser contrast contract");
+assert.match(globals, /\.site-modern \.calculator-disclosure:hover,[\s\S]*?\.calculator-disclosure:active,[\s\S]*?background-color: var\(--sky-100\);[\s\S]*?color: var\(--navy-950\);[\s\S]*?-webkit-tap-highlight-color: transparent/, "the light calculator disclosure must remain readable in persistent iOS hover and pressed states");
+assert.match(calculator, /update: "Recalculate Leave Time"/, "a changed completed result must offer an explicit recalculation action");
+assert.match(calculator, /\(!computedResult \|\| lastCalculatedInputSignature !== currentCalculationInputSignature\)[\s\S]*?onClick=\{handleCalculate\}/, "the recalculation action must stay hidden until a completed result has actually been changed");
 assert.match(calculator, /aria-expanded=\{showRefinements\}[\s\S]*?aria-controls="airport-timing-options-panel"/, "the timing disclosure must expose its expanded state and controlled panel");
 assert.match(calculator, /Current airport-wide estimate:/, "security detail must label the current airport-wide evidence");
 assert.match(calculator, /Estimated at your [\s\S]*? arrival:/, "security detail must label the arrival-time prediction");
@@ -96,8 +102,8 @@ assert.match(
 );
 assert.match(
   calculator,
-  /Recommended airport arrival[\s\S]*?fmtDuration\(defaultBuffer, locale\)[\s\S]*?defaultBuffer} min/,
-  "the recommendation must associate the readable duration with its minute total",
+  /Recommended airport arrival[\s\S]*?fmtDuration\(defaultBuffer, locale\)[\s\S]*?copy\.beforeFlight/,
+  "the recommendation must use a readable hours-and-minutes duration",
 );
 assert.match(
   calculator,
@@ -168,9 +174,11 @@ assert.match(
   /aria-describedby=\{ariaDescribedBy\}/,
   "PlaceAutocomplete must expose the helper relationship to assistive technology",
 );
-assert.match(airportWebsite, /location\.code === "JFK"/, "the Airport V2 production pilot must stay isolated to JFK");
-assert.match(airportWebsite, /<AirportV2ProductStory airportCode=\{location\.code\}/, "the JFK pilot must include the Time To Fly product story");
-assert.match(airportWebsite, /secondaryLabels: airportV2Pilot \? \[location\.city\]/, "the JFK task path must not promote its review date as hero content");
+assert.match(airportWebsite, /const airportV2Experience = true/, "every airport departure page must use the approved product-led experience");
+assert.match(airportWebsite, /productStory: <AirportV2ProductStory airportCode=\{location\.code\} \/>/, "every airport departure page must include the Time To Fly product story");
+assert.match(airportWebsite, /secondaryLabels: \[location\.city\]/, "airport task paths must not promote their review date as hero content");
+assert.match(spanishAirport, /airportV2Pilot[\s\S]*?<AirportV2ProductStory airportCode=\{location\.code\} locale="es" \/>[\s\S]*?<KTVUProof variant="airport" locale="es" \/>/, "Spanish airport pages must use the fully localized product-led experience");
+assert.match(spanishGeneric, /<AirportV2ProductStory airportCode="tu aeropuerto" locale="es" analyticsCode="generic" \/>[\s\S]*?<KTVUProof variant="airport" locale="es" \/>/, "the Spanish generic airport calculator must include localized product and proof sections");
 assert.match(calculator, /experienceVariant=\{airportV2Pilot \? "airport-v2" : undefined\}/, "the JFK result must opt into the product-led handoff");
 assert.match(handoff, /Never miss the moment to leave for a flight\./, "the pilot result must lead with the recurring flight outcome");
 assert.match(handoff, /Connect your calendar once\.[\s\S]*?automatically finds your flights[\s\S]*?OnTimer is free\./, "the pilot result must explain automatic flight alarms plainly and honestly");
@@ -179,25 +187,33 @@ assert.match(handoff, /presentation=\{airportV2 && !calendarOpened \? "app-store
 assert.match(handoff, /Or save just this trip[\s\S]*?copy\.addOneGoogle/, "the JFK calendar alternative must remain useful without competing visually with acquisition");
 assert.match(handoff, /<PlaneIcon[\s\S]*?Time To Fly/, "the JFK result must use a restrained flight cue without replacing the alarm proof");
 assert.match(handoff, /emphasis=\{airportV2 && !calendarOpened \? "flight" : "standard"\}/, "the JFK result must opt into the one-time alarm emphasis without changing other calculators");
-assert.match(handoff, /data-airport-v2-inline-cta[\s\S]*?Get automatic alarms for every flight\.[\s\S]*?presentation="app-store-badge"/, "the JFK mobile result must put the official App Store action directly beneath the timeline");
+assert.match(handoff, /flightAlarms: "Get automatic alarms for every flight\."[\s\S]*?flightAlarms: "Recibe alarmas automáticas para todos tus vuelos\."/, "the airport acquisition headline must be localized in English and Spanish");
+assert.match(handoff, /data-airport-v2-inline-cta[\s\S]*?copy\.flightAlarms[\s\S]*?presentation="app-store-badge"/, "the mobile airport result must put the localized official App Store action directly beneath the timeline");
 assert.match(handoff, /data-airport-v2-sticky-cta[\s\S]*?result_app_sticky_v1/, "the JFK mobile result must retain an acquisition action while the inline badge is outside the viewport");
 assert.match(handoff, /IntersectionObserver[\s\S]*?setShowAirportStickyCta\(!entry\.isIntersecting\)/, "the JFK sticky action must disappear when the inline App Store action is visible");
 assert.match(calculator, /data-airport-trip-timeline="desktop"[\s\S]*?data-airport-trip-timeline="mobile"/, "the pilot must use a vertical desktop timeline and compact mobile timeline");
 assert.match(calculator, /trafficBasis === "live"[\s\S]*?Drive to \$\{airportCode\} now[\s\S]*?trafficBasis === "predicted"[\s\S]*?Expected drive to \$\{airportCode\}/, "the JFK timeline must distinguish current from expected driving using the actual provider basis");
-assert.match(calculator, /Estimated TSA wait at arrival · ~\{securityWaitMinutes\} min/, "both timelines must surface the arrival-time TSA estimate concisely");
+assert.match(calculator, /wait: `\$\{securityWaitLabel\.charAt\(0\)\.toUpperCase\(\)\}.*estimada al llegar`/, "the Spanish timeline must localize the jurisdiction-appropriate arrival security estimate");
+assert.match(calculator, /wait: `Estimated \$\{securityWaitLabel\} at arrival`/, "the English timeline must retain the jurisdiction-appropriate arrival security estimate");
 assert.doesNotMatch(calculator, /securityAllowanceMinutes|TSA at arrival ·|min allowed/, "the compact timeline must keep the conservative allowance and heavier TSA labels in the detailed explanation");
-assert.match(calculator, /airportV2Pilot \? "Edit trip details" : copy\.adjustAssumptions/, "the JFK mobile return action must explain that it navigates to trip editing");
+assert.match(calculator, /airportV2Pilot \? locale === "es" \? "Editar detalles del viaje" : "Edit trip details" : copy\.adjustAssumptions/, "the mobile airport return action must explain that it navigates to trip editing in both locales");
 assert.match(calculator, /airportV2Pilot \? "lg:hidden"/, "the redundant JFK result-level adjustment link must be absent on desktop");
 assert.match(calculator, /airportV2Pilot && locationCode \? `Leave for \$\{locationCode\}`/, "the JFK alarm preview must name the concrete destination concisely");
-assert.match(productStory, /Time To Fly · free in OnTimer/, "the pilot product story must state the free Time To Fly offer plainly");
+assert.match(calculator, /resultScrollRequest === 0[\s\S]*?\[resultScrollRequest, genericRedesign\]/, "editing a completed JFK result must not retrigger the mobile result scroll");
+assert.doesNotMatch(calculator, /if \(!genericRedesign \|\| !computedResult[\s\S]{0,300}scrollIntoView/, "derived result changes must not steal focus or scroll while a traveler edits timing");
+assert.match(calculator, /customBufferLabel: "Arrive at the airport before departure"[\s\S]*?customBufferHours: "Hours"[\s\S]*?customBufferMinutes: "Minutes"/, "the airport buffer editor must use human-readable hours and minutes");
+assert.match(calculator, /updateCustomBufferPart\(part: "hours" \| "minutes"[\s\S]*?nextHours \* 60 \+ nextMinutes/, "the hours and minutes editor must continue supplying total minutes to the planner");
+assert.doesNotMatch(calculator, /Custom airport arrival time in minutes|\(\$\{defaultBuffer\} min\)/, "the traveler must not have to translate the recommended buffer into total minutes");
+assert.match(productStory, /Time To Fly · free in OnTimer/, "the airport product story must state the free Time To Fly offer plainly");
 assert.doesNotMatch(productStory, /works backward|Time To Fly workflow/, "the product story must demonstrate the calendar-to-alarm behavior without abstract process language");
 assert.match(ctaButton, /tools\.applemediaservices\.com\/api\/badges\/download-on-the-app-store\/black\/en-us/, "the pilot badge presentation must use Apple's official preferred badge artwork");
 assert.match(ctaButton, /width="162"[\s\S]*?height="54"/, "the primary App Store badge must be large enough to carry the acquisition hierarchy");
 assert.match(ctaButton, /if \(!isDesktop\) trackAppStoreClick/, "opening a desktop QR popover must not count as an App Store click");
 assert.match(ctaButton, /appStoreQrUrl\(\{ location, ctaVariant, calculatorType \}\)/, "desktop QR codes must use a separately attributable campaign URL");
 assert.match(alarmPreview, /alarm-preview--ringing min-h-\[7\.25rem\] w-24/, "the JFK alarm proof must use the more realistic rectangular proportion");
-assert.match(handoff, /OnTimer is free for iPhone\.<\/p>[\s\S]*?<p>\{copy\.appStore\}<\/p>/, "the promoted mobile action must separate the free iPhone claim from calendar compatibility");
-assert.match(destinationTemplate, /\{model\.productStory\}[\s\S]*?airportV2 && <KTVUProof variant="airport"/, "the KTVU proof must follow the JFK product story without expanding beyond the pilot");
+assert.match(handoff, /<p[^>]*>\{copy\.freeIphone\}<\/p>[\s\S]*?<p>\{copy\.appStore\}<\/p>/, "the promoted mobile action must separate the localized free iPhone claim from calendar compatibility");
+assert.match(destinationTemplate, /\{model\.productStory\}[\s\S]*?airportV2 && <KTVUProof variant="airport"/, "the KTVU proof must follow the product story across airport departure pages");
+assert.match(destinationTemplate, /\{model\.trackerCode\} airport arrival time/, "the airport coverage proof must name the current airport instead of JFK");
 assert.match(homepage, /<\/section>[\s\S]*?<KTVUProof \/>[\s\S]*?<section className="hp2-problem"/, "the homepage must place permanent KTVU proof directly after the hero");
 assert.doesNotMatch(homepage, /KTVUAnnouncementBar|Watching KTVU/, "the stale temporary KTVU announcement must not remain on the homepage");
 assert.match(ktvuProof, /Featured on KTVU FOX 2[\s\S]*?App relieving holiday airport stress[\s\S]*?Watch the KTVU segment/, "the KTVU proof must name the verified source, story, and direct watch action");

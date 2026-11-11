@@ -61,7 +61,7 @@ const calculatorCopy = {
     modes: { DRIVE: "drive", WALK: "walk", TRANSIT: "transit" },
     leaveFor: "Leave for", destinationFallback: "destination", leaveBy: "Leave by",
     buffer: "buffer", parkingWalkIn: "parking / walk-in", noExtraBuffer: "No extra buffer selected",
-    adjustAssumptions: "Timing options", adjustHint: "Buffer, parking, or travel time",
+    adjustAssumptions: "Adjust details", adjustHint: "Buffer, parking, or travel time",
     alarmHeading: "Don’t be late. Turn this into an alarm.", alarmBody: "OnTimer automatically sets alarms for your calendar events",
     destination: "Destination",
     whereGoing: "Where are you going?", swap: "Swap", swapAria: "Swap origin and destination",
@@ -72,11 +72,11 @@ const calculatorCopy = {
     driving: "Driving", walking: "Walking", transit: "Transit",
     confirmingAddress: "Confirming address…", estimating: "Estimating travel time…", calculate: "Calculate leave time",
     extraBuffer: "Extra buffer you like to have", parkingTime: "Parking / walk-in time",
-    hideAdjustments: "Hide adjustments", travelTime: "Travel time",
+    hideAdjustments: "Hide details", travelTime: "Travel time",
     automaticEstimate: "Estimated automatically from your locations.", manualInstead: "✏︎ Edit travel time manually",
     useAutomatic: "Use automatic estimate instead", addStartForAutomatic: "Add a starting location above for an automatic estimate.",
     exampleMinutes: "e.g. 25", travelMinutesAria: "Travel time in minutes", updating: "Updating leave time…",
-    update: "Update leave time", detailsChanged: "Trip details changed", updateNeeded: "Update the result before saving it to your calendar.",
+    update: "Recalculate leave time", detailsChanged: "Trip details changed", updateNeeded: "Recalculate before saving it to your calendar.",
     resultCurrent: "This result matches your trip details.", appStore: "Get OnTimer Free", addGoogle: "Add to Google Calendar",
     calendarDetails: ONTIMER_CALENDAR_DESCRIPTION,
   },
@@ -91,7 +91,7 @@ const calculatorCopy = {
     modes: { DRIVE: "en coche", WALK: "a pie", TRANSIT: "en transporte público" },
     leaveFor: "Salir hacia", destinationFallback: "el destino", leaveBy: "Sal a más tardar a las",
     buffer: "de margen", parkingWalkIn: "para aparcar / entrar", noExtraBuffer: "Sin margen adicional",
-    adjustAssumptions: "Opciones de tiempo", adjustHint: "Margen, aparcamiento o viaje",
+    adjustAssumptions: "Ajustar detalles", adjustHint: "Margen, aparcamiento o viaje",
     alarmHeading: "No llegues tarde. Convierte este evento en una alarma.", alarmBody: "OnTimer configura alarmas automáticamente para los eventos de tu calendario",
     destination: "Destino",
     whereGoing: "¿Adónde vas?", swap: "Intercambiar", swapAria: "Intercambiar origen y destino",
@@ -102,11 +102,11 @@ const calculatorCopy = {
     driving: "Coche", walking: "A pie", transit: "Transporte público",
     confirmingAddress: "Confirmando dirección…", estimating: "Calculando el viaje…", calculate: "Calcular hora de salida",
     extraBuffer: "Margen adicional que prefieres", parkingTime: "Tiempo para aparcar / entrar",
-    hideAdjustments: "Ocultar ajustes", travelTime: "Tiempo de viaje",
+    hideAdjustments: "Ocultar detalles", travelTime: "Tiempo de viaje",
     automaticEstimate: "Calculado automáticamente a partir de tus ubicaciones.", manualInstead: "✏︎ Indicar el tiempo manualmente",
     useAutomatic: "Usar de nuevo el cálculo automático", addStartForAutomatic: "Añade un punto de partida arriba para calcularlo automáticamente.",
     exampleMinutes: "p. ej., 25", travelMinutesAria: "Tiempo de viaje en minutos", updating: "Actualizando la hora…",
-    update: "Actualizar hora de salida", detailsChanged: "Los datos del trayecto han cambiado", updateNeeded: "Actualiza el resultado antes de guardarlo en tu calendario.",
+    update: "Recalcular hora de salida", detailsChanged: "Los datos del trayecto han cambiado", updateNeeded: "Recalcula antes de guardarlo en tu calendario.",
     resultCurrent: "Este resultado coincide con los datos del trayecto.", appStore: "Descargar OnTimer gratis", addGoogle: "Añadir a Google Calendar",
     calendarDetails: "Creado con OnTimer. Recibe alarmas automáticas para los eventos de tu calendario: https://www.ontimer.app",
   },
@@ -889,7 +889,7 @@ export default function LeaveTimeCalculator({
             <button
               type="button"
               onClick={() => setShowAssumptions(!showAssumptions)}
-              className="flex min-h-12 w-full items-center justify-between gap-3 rounded-lg border border-zinc-700 bg-zinc-800/70 px-4 py-2.5 text-left text-sm font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+              className="calculator-disclosure flex min-h-12 w-full items-center justify-between gap-3 rounded-lg border border-zinc-700 bg-zinc-800/70 px-4 py-2.5 text-left text-sm font-medium text-zinc-300 transition-colors hover:border-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
               aria-expanded={showAssumptions}
               aria-controls="timing-options-panel"
             >

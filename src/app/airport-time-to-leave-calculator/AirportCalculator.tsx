@@ -92,16 +92,16 @@ const airportCopy = {
     recommendedArrival: "Recommended airport arrival", beforeFlight: "before the flight", startingPointHelp: "Enter your starting location or use your current location so we can estimate the trip.",
     route: "Route", leavingFrom: "Leaving from", addressCity: "Address, neighborhood, or place", departureAirport: "Departure airport",
     airportPlaceholder: "Departure airport name or IATA code", airportExample: "e.g. JFK, LAX, Newark",
-    calculating: "Calculating leave time...", update: "Update Leave Time", show: "Show My Leave Time", calculate: "Calculate leave time",
+    calculating: "Calculating leave time...", update: "Recalculate Leave Time", show: "Show My Leave Time", calculate: "Calculate leave time",
     addAirport: "Add your airport to calculate.",
     whatWeUse: "What we use", smartTiming: "Smart airport timing enabled", smartTimingBody: "We automatically account for the timing factors most travelers miss.",
-    bagDropTime: "Bag drop time", hideAdjustments: "Hide timing options", hideAssumptions: "Hide assumptions", adjustAssumptions: "Customize timing", customize: "Customize timing assumptions", modified: "modified",
+    bagDropTime: "Bag drop time", hideAdjustments: "Hide details", hideAssumptions: "Hide assumptions", adjustAssumptions: "Adjust details", customize: "Customize timing assumptions", modified: "modified",
     trustedPrograms: "Trusted traveler programs", bags: "Bags", checkingBag: "Checking a bag", gettingThere: "Getting to the airport by",
     parkingMode: "Parking", rideshare: "Rideshare", dropoff: "Drop-off", publicTransit: "Public transit", transitTime: "Transit time", driveTime: "Drive time",
     automaticTravel: "Estimated automatically from your locations for the selected travel mode.", manualTravel: "Enter travel time manually instead", example35: "e.g. 35",
     automaticInstead: "Use automatic estimate instead", recommendedBuffer: "Use recommended buffer", adjustBuffer: "Adjust airport arrival buffer",
     recommendedPlaceholder: "Recommended", adjustSecurity: "Adjust security time manually", customSecurity: "Custom security time", auto: "Auto", estimatedInstead: "Use estimated time instead",
-    customBufferMinutes: "Custom airport arrival time in minutes", customBufferHelp: "Enter the total time you want between reaching the airport and your flight departure.",
+    customBufferLabel: "Arrive at the airport before departure", customBufferHours: "Hours", customBufferMinutes: "Minutes", customBufferHelp: "Choose how long before your flight you want to reach the airport.",
     forFlight: "For your", flight: "flight", leaveBy: "Leave by", drive: "drive", security: "security allowance", arriveBy: "Arrive by",
     parkingIncluded: "Parking included", transferIncluded: "Terminal transfer included", rideshareIncluded: "Rideshare access included", dropoffIncluded: "Drop-off access included", bagIncluded: "Bag drop included",
     alarmHeading: "Don’t be late. Turn this into an alarm.", alarmBody: "OnTimer automatically sets alarms for your calendar events",
@@ -123,16 +123,16 @@ const airportCopy = {
     recommendedArrival: "Llegada recomendada al aeropuerto", beforeFlight: "antes del vuelo", startingPointHelp: "Indica tu punto de partida o usa tu ubicación actual para calcular el trayecto.",
     route: "Trayecto", leavingFrom: "Sales desde", addressCity: "Dirección, barrio o lugar", departureAirport: "Aeropuerto de salida",
     airportPlaceholder: "Nombre o código IATA del aeropuerto de salida", airportExample: "p. ej., MAD, MEX, SCL",
-    calculating: "Calculando la hora de salida…", update: "Actualizar hora de salida", show: "Mostrar mi hora de salida", calculate: "Calcular hora de salida",
+    calculating: "Calculando la hora de salida…", update: "Recalcular hora de salida", show: "Mostrar mi hora de salida", calculate: "Calcular hora de salida",
     addAirport: "Añade tu aeropuerto para calcular.",
     whatWeUse: "Qué tenemos en cuenta", smartTiming: "Planificación inteligente del aeropuerto", smartTimingBody: "Incluimos automáticamente los tiempos que más suelen olvidarse.",
-    bagDropTime: "Tiempo para facturar equipaje", hideAdjustments: "Ocultar opciones", hideAssumptions: "Ocultar supuestos", adjustAssumptions: "Personalizar tiempos", customize: "Personalizar tiempos", modified: "modificados",
+    bagDropTime: "Tiempo para facturar equipaje", hideAdjustments: "Ocultar detalles", hideAssumptions: "Ocultar supuestos", adjustAssumptions: "Ajustar detalles", customize: "Personalizar tiempos", modified: "modificados",
     trustedPrograms: "Programas para viajeros autorizados", bags: "Equipaje", checkingBag: "Voy a facturar equipaje", gettingThere: "Cómo llegarás al aeropuerto",
     parkingMode: "Aparcamiento", rideshare: "VTC / taxi", dropoff: "Me dejan en la terminal", publicTransit: "Transporte público", transitTime: "Tiempo en transporte", driveTime: "Tiempo en coche",
     automaticTravel: "Calculado automáticamente con tus ubicaciones y el medio de transporte elegido.", manualTravel: "Indicar el tiempo de viaje manualmente", example35: "p. ej., 35",
     automaticInstead: "Usar el cálculo automático", recommendedBuffer: "Usar el margen recomendado", adjustBuffer: "Ajustar el margen de llegada",
     recommendedPlaceholder: "Recomendado", adjustSecurity: "Ajustar manualmente el tiempo de seguridad", customSecurity: "Tiempo de seguridad personalizado", auto: "Automático", estimatedInstead: "Usar el tiempo estimado",
-    customBufferMinutes: "Tiempo personalizado de llegada al aeropuerto en minutos", customBufferHelp: "Indica el tiempo total que quieres entre llegar al aeropuerto y la salida del vuelo.",
+    customBufferLabel: "Llega al aeropuerto antes de la salida", customBufferHours: "Horas", customBufferMinutes: "Minutos", customBufferHelp: "Elige con cuánta antelación quieres llegar al aeropuerto.",
     forFlight: "Para tu vuelo", flight: "", leaveBy: "Sal a más tardar a las", drive: "en coche", security: "de margen de seguridad", arriveBy: "Llega antes de las",
     parkingIncluded: "Aparcamiento incluido", transferIncluded: "Traslado a la terminal incluido", rideshareIncluded: "Acceso en VTC / taxi incluido", dropoffIncluded: "Acceso a la terminal incluido", bagIncluded: "Facturación de equipaje incluida",
     alarmHeading: "No llegues tarde. Convierte este evento en una alarma.", alarmBody: "OnTimer configura alarmas automáticamente para los eventos de tu calendario",
@@ -262,7 +262,14 @@ function fmtDuration(minutes: number, locale: SiteLocale = "en"): string {
   return m === 0 ? `${h} ${hourLabel}` : `${h} ${hourLabel} ${m} min`;
 }
 
-function travelIntelligenceLabel(result: ComputedResult, arrivalMode: ArrivalMode, airportCode: string): string {
+function travelIntelligenceLabel(result: ComputedResult, arrivalMode: ArrivalMode, airportCode: string, locale: SiteLocale = "en"): string {
+  if (locale === "es") {
+    if (arrivalMode === "transit" || result.trafficBasis === "scheduled") return `Transporte programado a ${airportCode}`;
+    if (result.trafficBasis === "live") return `Trayecto a ${airportCode} con tráfico actual`;
+    if (result.trafficBasis === "predicted") return `Trayecto previsto a ${airportCode}`;
+    if (result.travelSource === "manual") return `Tiempo de viaje a ${airportCode}`;
+    return `Trayecto estimado a ${airportCode}`;
+  }
   if (arrivalMode === "transit" || result.trafficBasis === "scheduled") return `Scheduled transit to ${airportCode}`;
   if (result.trafficBasis === "live") return `Drive to ${airportCode} now`;
   if (result.trafficBasis === "predicted") return `Expected drive to ${airportCode}`;
@@ -543,6 +550,8 @@ export default function AirportCalculator({
   const [calendarProvider, setCalendarProvider] = useState<"google" | "ics" | null>(null);
   const [showBreakdown, setShowBreakdown] = useState(!genericRedesign);
   const [formExpanded, setFormExpanded] = useState(true);
+  const [resultScrollRequest, setResultScrollRequest] = useState(0);
+  const [lastCalculatedInputSignature, setLastCalculatedInputSignature] = useState<string | null>(null);
 
   const securityDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const resultPanelRef = useRef<HTMLDivElement | null>(null);
@@ -660,8 +669,29 @@ export default function AirportCalculator({
   const baseBuffer = getAirportBaseBufferMinutes(flightType, hasCheckedBag, arrivalMode);
   const estimatedSecurityMins = securityEstimate?.avg ?? getAirportDefaultSecurityMinutes(flightType);
   const defaultBuffer = baseBuffer + estimatedSecurityMins;
+  const parsedCustomBuffer = Number.parseInt(customBuffer, 10);
+  const customBufferTotal = Number.isFinite(parsedCustomBuffer)
+    ? Math.min(480, Math.max(0, parsedCustomBuffer))
+    : defaultBuffer;
+  const customBufferHours = Math.floor(customBufferTotal / 60);
+  const customBufferMinuteRemainder = customBufferTotal % 60;
   const hasRouteInputs = origin.trim().length >= 2 && airport.trim().length >= 2;
   const planningMode = planningModeForDate(departureDate);
+  const currentCalculationInputSignature = [
+    departureDate,
+    departureTime,
+    flightType,
+    origin.trim(),
+    currentLocation ?? "",
+    airport.trim(),
+    arrivalMode,
+    hasCheckedBag,
+    hasPreCheck,
+    hasClear,
+    showManualDriveTime ? manualTravelMinutes : "automatic-travel",
+    showBufferOverride && customBufferTotal !== defaultBuffer ? customBufferTotal : "recommended-buffer",
+    showSecurityOverride ? customSecurityMinutes : "estimated-security",
+  ].join("|");
 
   function handleOriginChange(value: string) {
     setOrigin(value);
@@ -671,6 +701,24 @@ export default function AirportCalculator({
   function handleCurrentLocationChange(coordinates: string | null, displayLabel?: string) {
     setCurrentLocation(coordinates);
     setOrigin(coordinates ? displayLabel ?? copy.currentLocation : "");
+  }
+
+  function toggleBufferOverride() {
+    if (showBufferOverride) {
+      setShowBufferOverride(false);
+      setCustomBuffer("");
+      return;
+    }
+    setCustomBuffer(String(defaultBuffer));
+    setShowBufferOverride(true);
+  }
+
+  function updateCustomBufferPart(part: "hours" | "minutes", rawValue: string) {
+    const parsed = Number.parseInt(rawValue, 10);
+    const nextValue = Number.isFinite(parsed) ? parsed : 0;
+    const nextHours = part === "hours" ? Math.min(8, Math.max(0, nextValue)) : customBufferHours;
+    const nextMinutes = part === "minutes" ? Math.min(59, Math.max(0, nextValue)) : customBufferMinuteRemainder;
+    setCustomBuffer(String(Math.min(480, nextHours * 60 + nextMinutes)));
   }
   const manualDriveMinutes = parseInt(manualTravelMinutes, 10);
   const hasManualDriveTime = !isNaN(manualDriveMinutes) && manualDriveMinutes >= 0;
@@ -914,12 +962,12 @@ export default function AirportCalculator({
   }, [computedResult, genericRedesign]);
 
   useEffect(() => {
-    if (!genericRedesign || !computedResult || typeof window === "undefined") return;
+    if (!genericRedesign || resultScrollRequest === 0 || typeof window === "undefined") return;
     if (window.innerWidth >= 1024) return;
     window.requestAnimationFrame(() => {
       resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
-  }, [computedResult, genericRedesign]);
+  }, [resultScrollRequest, genericRedesign]);
 
   // ── Manual calculate fallback ───────────────────────────────────────────────
   async function handleCalculate() {
@@ -937,6 +985,7 @@ export default function AirportCalculator({
     const [year, month, day] = departureDate.split("-").map(Number);
     const [hour, minute] = departureTime.split(":").map(Number);
     const departure = new Date(year, month - 1, day, hour, minute, 0);
+    let calculationSucceeded = false;
 
     if (hasRouteInputs) {
       setIsFetchingTravel(true);
@@ -951,6 +1000,7 @@ export default function AirportCalculator({
         setTravelSource("google");
         setHasTrafficData(res.hasTrafficData);
         setTrafficBasis(res.trafficBasis);
+        calculationSucceeded = true;
         track("routes_api_called", { duration_minutes: res.durationMinutes, trigger: "manual" });
       } catch (caught) {
         const manual = parseInt(manualTravelMinutes, 10);
@@ -959,6 +1009,7 @@ export default function AirportCalculator({
           setTravelSource("manual");
           setHasTrafficData(false);
           setTrafficBasis("none");
+          calculationSucceeded = true;
           track("quota_fallback_used");
         } else {
           setShowRefinements(true);
@@ -971,6 +1022,7 @@ export default function AirportCalculator({
       } finally {
         setIsFetchingTravel(false);
       }
+      if (!calculationSucceeded) return;
     } else {
       if (!hasManualDriveTime) {
         setShowRefinements(true);
@@ -983,7 +1035,10 @@ export default function AirportCalculator({
       setTravelSource("manual");
       setHasTrafficData(false);
       setTrafficBasis("none");
+      calculationSucceeded = true;
     }
+    setLastCalculatedInputSignature(currentCalculationInputSignature);
+    setResultScrollRequest((request) => request + 1);
     trackCalculatorCompleted("airport_leave_time", {
       intent_cluster: "airport_when_to_leave",
       flight_type: flightType,
@@ -1008,7 +1063,7 @@ export default function AirportCalculator({
             });
           }
         }}
-        className={`${genericRedesign ? "" : "mt-4"} flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:bg-zinc-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 active:bg-zinc-800`}
+        className={`${genericRedesign ? "" : "mt-4"} calculator-disclosure flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 active:opacity-90`}
       >
         <span className="flex items-center gap-2">
           <span>
@@ -1092,25 +1147,46 @@ export default function AirportCalculator({
           <div>
             <button
               type="button"
-              onClick={() => setShowBufferOverride(!showBufferOverride)}
+              onClick={toggleBufferOverride}
               className="text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
             >
               {showBufferOverride ? copy.recommendedBuffer : copy.adjustBuffer}
             </button>
             {showBufferOverride && (
               <div className="mt-3">
-                <FieldLabel>{copy.customBufferMinutes}</FieldLabel>
-                <input
-                  type="number"
-                  min="0"
-                  max="480"
-                  placeholder={String(defaultBuffer)}
-                  value={customBuffer}
-                  onChange={(e) => setCustomBuffer(e.target.value)}
-                  className={inputClass}
-                />
+                <FieldLabel>{copy.customBufferLabel}</FieldLabel>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="min-w-0 text-xs text-zinc-400">
+                    <span className="mb-1.5 block">{copy.customBufferHours}</span>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      min="0"
+                      max="8"
+                      step="1"
+                      aria-label={`${copy.customBufferLabel}: ${copy.customBufferHours}`}
+                      value={customBufferHours}
+                      onChange={(event) => updateCustomBufferPart("hours", event.target.value)}
+                      className={inputClass}
+                    />
+                  </label>
+                  <label className="min-w-0 text-xs text-zinc-400">
+                    <span className="mb-1.5 block">{copy.customBufferMinutes}</span>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      min="0"
+                      max="59"
+                      step="5"
+                      aria-label={`${copy.customBufferLabel}: ${copy.customBufferMinutes}`}
+                      value={customBufferMinuteRemainder}
+                      onChange={(event) => updateCustomBufferPart("minutes", event.target.value)}
+                      className={inputClass}
+                    />
+                  </label>
+                </div>
                 <p className="mt-1.5 text-xs text-zinc-400">
-                  {`${copy.recommendedPlaceholder}: ${fmtDuration(defaultBuffer, locale)} (${defaultBuffer} min). ${copy.customBufferHelp}`}
+                  {`${copy.recommendedPlaceholder}: ${fmtDuration(defaultBuffer, locale)}. ${copy.customBufferHelp}`}
                 </p>
               </div>
             )}
@@ -1184,8 +1260,10 @@ export default function AirportCalculator({
                 airportCode={locationCode ?? "Airport"}
                 travelDuration={fmtDuration(computedResult.travelMinutes, locale)}
                 airportDuration={fmtDuration(computedResult.bufferMinutes, locale)}
-                travelIntelligence={travelIntelligenceLabel(computedResult, arrivalMode, locationCode ?? "the airport")}
+                travelIntelligence={travelIntelligenceLabel(computedResult, arrivalMode, locationCode ?? (locale === "es" ? "el aeropuerto" : "the airport"), locale)}
+                securityWaitLabel={locale === "es" ? "espera de seguridad" : effectivePlanningJurisdiction === "us" ? "TSA wait" : "security wait"}
                 securityWaitMinutes={securityIntelligence?.predictedWaitAtArrival.minutes}
+                locale={locale}
               />
             )}
 
@@ -1280,7 +1358,7 @@ export default function AirportCalculator({
                   onChange={setFlightType}
                 />
                 <p className="mt-2 text-xs leading-relaxed text-zinc-400" role="status">
-                  {`${copy.recommendedArrival}: ${fmtDuration(defaultBuffer, locale)} ${copy.beforeFlight} (${defaultBuffer} min).`}
+                  {`${copy.recommendedArrival}: ${fmtDuration(defaultBuffer, locale)} ${copy.beforeFlight}.`}
                 </p>
               </div>
             </div>
@@ -1364,7 +1442,7 @@ export default function AirportCalculator({
               </div>
             )}
 
-            <button
+            {(!computedResult || lastCalculatedInputSignature !== currentCalculationInputSignature) && <button
               type="button"
               onClick={handleCalculate}
               disabled={
@@ -1390,7 +1468,7 @@ export default function AirportCalculator({
                   : genericRedesign
                   ? copy.show
                   : copy.calculate}
-            </button>
+            </button>}
             {airport.trim().length < 2 && (
               <p className={`${genericRedesign ? "order-5" : ""} text-center text-xs text-zinc-500`}>
                 {copy.addAirport}
@@ -1462,7 +1540,7 @@ export default function AirportCalculator({
                     });
                   }
                 }}
-                className={`${genericRedesign ? "" : "mt-4"} flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:bg-zinc-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 active:bg-zinc-800`}
+                className={`${genericRedesign ? "" : "mt-4"} calculator-disclosure flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 active:opacity-90`}
               >
                 <span className="flex items-center gap-2">
                   <span>
@@ -1546,25 +1624,46 @@ export default function AirportCalculator({
                   <div>
                     <button
                       type="button"
-                      onClick={() => setShowBufferOverride(!showBufferOverride)}
+                      onClick={toggleBufferOverride}
                       className="text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-300"
                     >
                       {showBufferOverride ? copy.recommendedBuffer : copy.adjustBuffer}
                     </button>
                     {showBufferOverride && (
                       <div className="mt-3">
-                        <FieldLabel>{copy.customBufferMinutes}</FieldLabel>
-                        <input
-                          type="number"
-                          min="0"
-                          max="480"
-                          placeholder={String(defaultBuffer)}
-                          value={customBuffer}
-                          onChange={(e) => setCustomBuffer(e.target.value)}
-                          className={inputClass}
-                        />
+                        <FieldLabel>{copy.customBufferLabel}</FieldLabel>
+                        <div className="grid grid-cols-2 gap-3">
+                          <label className="min-w-0 text-xs text-zinc-400">
+                            <span className="mb-1.5 block">{copy.customBufferHours}</span>
+                            <input
+                              type="number"
+                              inputMode="numeric"
+                              min="0"
+                              max="8"
+                              step="1"
+                              aria-label={`${copy.customBufferLabel}: ${copy.customBufferHours}`}
+                              value={customBufferHours}
+                              onChange={(event) => updateCustomBufferPart("hours", event.target.value)}
+                              className={inputClass}
+                            />
+                          </label>
+                          <label className="min-w-0 text-xs text-zinc-400">
+                            <span className="mb-1.5 block">{copy.customBufferMinutes}</span>
+                            <input
+                              type="number"
+                              inputMode="numeric"
+                              min="0"
+                              max="59"
+                              step="5"
+                              aria-label={`${copy.customBufferLabel}: ${copy.customBufferMinutes}`}
+                              value={customBufferMinuteRemainder}
+                              onChange={(event) => updateCustomBufferPart("minutes", event.target.value)}
+                              className={inputClass}
+                            />
+                          </label>
+                        </div>
                         <p className="mt-1.5 text-xs text-zinc-400">
-                          {`${copy.recommendedPlaceholder}: ${fmtDuration(defaultBuffer, locale)} (${defaultBuffer} min). ${copy.customBufferHelp}`}
+                          {`${copy.recommendedPlaceholder}: ${fmtDuration(defaultBuffer, locale)}. ${copy.customBufferHelp}`}
                         </p>
                       </div>
                     )}
@@ -1672,8 +1771,10 @@ export default function AirportCalculator({
                     airportCode={locationCode ?? "Airport"}
                     travelDuration={fmtDuration(computedResult.travelMinutes, locale)}
                     airportDuration={fmtDuration(computedResult.bufferMinutes, locale)}
-                    travelIntelligence={travelIntelligenceLabel(computedResult, arrivalMode, locationCode ?? "the airport")}
+                    travelIntelligence={travelIntelligenceLabel(computedResult, arrivalMode, locationCode ?? (locale === "es" ? "el aeropuerto" : "the airport"), locale)}
+                    securityWaitLabel={locale === "es" ? "espera de seguridad" : effectivePlanningJurisdiction === "us" ? "TSA wait" : "security wait"}
                     securityWaitMinutes={securityIntelligence?.predictedWaitAtArrival.minutes}
+                    locale={locale}
                   />
                 ) : ewrResultExperiment && (
                   <div className="mt-4 border-t border-zinc-800 pt-3">
@@ -1710,7 +1811,9 @@ export default function AirportCalculator({
                   postCalendarBody={copy.alarmBody}
                   locale={locale}
                   appLocation={airportV2Pilot
-                    ? "airport_jfk_v2_result"
+                    ? locationCode
+                      ? `airport_${locationCode.toLowerCase()}_v2_result`
+                      : "airport_calculator_v2_result"
                     : locationCode
                       ? `airport_${locationCode.toLowerCase()}_result`
                       : "airport_calculator_inline"}
@@ -1741,7 +1844,7 @@ export default function AirportCalculator({
                     onClick={openResultAdjustments}
                     className={`${airportV2Pilot ? "lg:hidden" : ""} mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-zinc-400 underline underline-offset-4 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400`}
                   >
-                    {airportV2Pilot ? "Edit trip details" : copy.adjustAssumptions}
+                    {airportV2Pilot ? locale === "es" ? "Editar detalles del viaje" : "Edit trip details" : copy.adjustAssumptions}
                   </button>
                 )}
 
@@ -1983,7 +2086,9 @@ interface AirportTripTimelineProps {
   travelDuration: string;
   airportDuration: string;
   travelIntelligence: string;
+  securityWaitLabel: string;
   securityWaitMinutes?: number;
+  locale?: SiteLocale;
 }
 
 function AirportTripTimeline({
@@ -1995,22 +2100,39 @@ function AirportTripTimeline({
   travelDuration,
   airportDuration,
   travelIntelligence,
+  securityWaitLabel,
   securityWaitMinutes,
+  locale = "en",
 }: AirportTripTimelineProps) {
+  const timelineCopy = locale === "es" ? {
+    heading: "Tu viaje de un vistazo",
+    leave: "Sal",
+    reach: `Llega a ${airportCode}`,
+    flight: "Vuelo",
+    before: "antes de la salida",
+    wait: `${securityWaitLabel.charAt(0).toUpperCase()}${securityWaitLabel.slice(1)} estimada al llegar`,
+  } : {
+    heading: "Your trip at a glance",
+    leave: "Leave",
+    reach: `Reach ${airportCode}`,
+    flight: "Flight",
+    before: "before departure",
+    wait: `Estimated ${securityWaitLabel} at arrival`,
+  };
   const stops = [
-    { label: "Leave", time: leaveTime },
-    { label: `Reach ${airportCode}`, time: airportTime },
-    { label: "Flight", time: flightTime },
+    { label: timelineCopy.leave, time: leaveTime },
+    { label: timelineCopy.reach, time: airportTime },
+    { label: timelineCopy.flight, time: flightTime },
   ];
 
   if (variant === "desktop") {
     return (
       <section
         className="hidden rounded-xl border border-zinc-800 bg-zinc-950/35 p-4 lg:block"
-        aria-label="Your trip at a glance"
+        aria-label={timelineCopy.heading}
         data-airport-trip-timeline="desktop"
       >
-        <h3 className="text-sm font-bold text-white">Your trip at a glance</h3>
+        <h3 className="text-sm font-bold text-white">{timelineCopy.heading}</h3>
         <div className="mt-4" role="list">
           {stops.map((stop, index) => (
             <div key={stop.label} role="listitem">
@@ -2026,9 +2148,9 @@ function AirportTripTimeline({
                     <span className="text-[11px] text-zinc-500">{travelIntelligence} · {travelDuration}</span>
                   ) : (
                     <span className="flex flex-col gap-0.5 text-[11px] text-zinc-500">
-                      <span>{airportDuration} before departure</span>
+                      <span>{airportDuration} {timelineCopy.before}</span>
                       {securityWaitMinutes !== undefined && (
-                        <span>Estimated TSA wait at arrival · ~{securityWaitMinutes} min</span>
+                        <span>{timelineCopy.wait} · ~{securityWaitMinutes} min</span>
                       )}
                     </span>
                   )}
@@ -2044,10 +2166,10 @@ function AirportTripTimeline({
   return (
     <section
       className="mt-4 border-t border-zinc-800 pt-3 lg:hidden"
-      aria-label="Your trip at a glance"
+      aria-label={timelineCopy.heading}
       data-airport-trip-timeline="mobile"
     >
-      <h3 className="text-xs font-bold text-white">Your trip at a glance</h3>
+      <h3 className="text-xs font-bold text-white">{timelineCopy.heading}</h3>
       <div className="mt-2 grid grid-cols-3" role="list">
         {stops.map((stop, index) => (
           <div key={stop.label} role="listitem" className={`relative min-w-0 ${index === 1 ? "text-center" : index === 2 ? "text-right" : ""}`}>
@@ -2061,7 +2183,7 @@ function AirportTripTimeline({
       <div className="mt-1.5 space-y-0.5 text-[11px] leading-relaxed text-zinc-500">
         <p>{travelIntelligence} · {travelDuration}</p>
         {securityWaitMinutes !== undefined && (
-          <p>Estimated TSA wait at arrival · ~{securityWaitMinutes} min</p>
+          <p>{timelineCopy.wait} · ~{securityWaitMinutes} min</p>
         )}
       </div>
     </section>

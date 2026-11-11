@@ -5,7 +5,7 @@ import AirportCalculator from "@/app/airport-time-to-leave-calculator/AirportCal
 
 export type GenericAirportCalculatorProps = Omit<
   ComponentProps<typeof AirportCalculator>,
-  "genericRedesign"
+  "genericRedesign" | "airportV2Pilot"
 >;
 
 /**
@@ -16,5 +16,5 @@ export type GenericAirportCalculatorProps = Omit<
 export default function GenericAirportCalculator(
   props: GenericAirportCalculatorProps,
 ) {
-  return <AirportCalculator {...props} genericRedesign />;
+  return <AirportCalculator {...props} genericRedesign airportV2Pilot />;
 }

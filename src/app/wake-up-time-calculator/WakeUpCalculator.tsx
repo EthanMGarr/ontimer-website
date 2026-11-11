@@ -238,7 +238,7 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
     travelTime: "Travel time",
     getReady: "Get ready",
     breakfast: "Breakfast / packing",
-    adjust: "Adjust assumptions",
+    adjust: "Adjust details",
     emptyHeading: "Your wake-up time will appear here",
     emptyBody: "Fill in your destination, arrival time, and routine, then click Calculate.",
     emptyItems: ["Real travel time based on traffic", "Accounts for your morning routine", "Exact wake-up time so you are not rushed"],

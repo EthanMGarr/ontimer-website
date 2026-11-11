@@ -273,7 +273,7 @@ export default function AirportPickupCalculator({
         </details>
       </section>
       {error ? <p className="pickup-error" role="alert">{error}</p> : null}
-      <button className="pickup-submit" type="submit" disabled={isCalculating || isResolvingOrigin}>{isResolvingOrigin ? "Checking the address…" : isCalculating ? "Checking the drive…" : plan ? "Update pickup plan" : "Calculate when to leave"}</button>
+      <button className="pickup-submit" type="submit" disabled={isCalculating || isResolvingOrigin}>{isResolvingOrigin ? "Checking the address…" : isCalculating ? "Checking the drive…" : plan ? "Recalculate pickup time" : "Calculate when to leave"}</button>
     </form>
   </div>;
 }

@@ -58,7 +58,7 @@ assert.match(spanishAirportPage, /<Suspense[\s\S]*?<AirportCalculatorPlanPrefill
 assert.match(airportPrefill, /useSearchParams\(\)[\s\S]*?initialPlan=/, "the generic airport calculator must parse v1 URL state into initial fields");
 assertSourceOrder(generalLeaveCalculator, "<CalendarOnTimerHandoff", "copy.adjustAssumptions", "general leave-time adjustments must follow the conversion handoff");
 assertSourceOrder(airportCalculator, "<CalendarOnTimerHandoff", "copy.adjustAssumptions", "airport adjustments must follow the conversion handoff");
-assertSourceOrder(cruiseCalculator, "<CalendarOnTimerHandoff", "Adjust assumptions", "cruise adjustments must follow the conversion handoff");
+assertSourceOrder(cruiseCalculator, "<CalendarOnTimerHandoff", "Adjust details", "cruise adjustments must follow the conversion handoff");
 assert.match(wakeUpCalculator, /resultPanelRef\.current\?\.scrollIntoView/, "wake-up calculation must move the mobile viewport to the result");
 assertSourceOrder(wakeUpCalculator, "<CalendarOnTimerHandoff", "className=\"mt-4 space-y-3", "wake-up calculation details must follow the conversion handoff");
 

@@ -90,6 +90,11 @@ const handoffCopy = {
     leaveAlarmHeading: (time: string) => `Get a real alarm for your ${time} leave time.`,
     leavePostCalendarHeading: (time: string) => `Make your ${time} leave time ring.`,
     leaveAlarmBody: "OnTimer turns calendar events into alarms that ring and stay on screen until you stop them. Free for iPhone.",
+    saveTrip: "Or save just this trip", alternateTrip: "Apple, Outlook, or another calendar",
+    flightAlarms: "Get automatic alarms for every flight.", freeIphone: "OnTimer is free for iPhone.",
+    flightMoment: "Never miss the moment to leave for a flight.",
+    flightBody: "Connect your calendar once. Time To Fly automatically finds your flights and sets a persistent alarm for when it is time to leave. OnTimer is free.",
+    freeShort: "OnTimer is free",
   },
   es: {
     alternate: "O usa Outlook, Apple Calendar u otro calendario", ready: "Guarda esta hora de salida en tu calendario.", item: "evento",
@@ -105,6 +110,11 @@ const handoffCopy = {
     leaveAlarmHeading: (time: string) => `Recibe una alarma de verdad para salir a las ${time}.`,
     leavePostCalendarHeading: (time: string) => `Haz que suene tu hora de salida de las ${time}.`,
     leaveAlarmBody: "OnTimer convierte los eventos de tu calendario en alarmas que suenan y se quedan en pantalla hasta que las detienes. Gratis para iPhone.",
+    saveTrip: "O guarda solo este viaje", alternateTrip: "Apple, Outlook u otro calendario",
+    flightAlarms: "Recibe alarmas automáticas para todos tus vuelos.", freeIphone: "OnTimer es gratis para iPhone.",
+    flightMoment: "No te pierdas el momento de salir hacia tu vuelo.",
+    flightBody: "Conecta tu calendario una vez. Time To Fly encuentra automáticamente tus vuelos y configura una alarma persistente para cuando sea hora de salir. OnTimer es gratis.",
+    freeShort: "OnTimer es gratis",
   },
 } as const;
 
@@ -307,7 +317,7 @@ export default function CalendarOnTimerHandoff({
         ) : (
           <>
             <p className={appPrimary ? airportV2 ? "text-xs font-medium text-zinc-500" : "text-sm font-semibold text-zinc-300" : "text-lg font-bold text-white"}>
-              {appPrimary ? airportV2 ? "Or save just this trip" : copy.addGoogle : effectiveReadyHeading}
+              {appPrimary ? airportV2 ? copy.saveTrip : copy.addGoogle : effectiveReadyHeading}
             </p>
             <a
               href={calendarHref}
@@ -331,7 +341,7 @@ export default function CalendarOnTimerHandoff({
               onClick={() => chooseCalendar("ics")}
               className={`${airportV2 && appPrimary ? "flex w-fit" : "inline-flex"} mt-3 max-w-full whitespace-normal text-left text-[11px] font-medium leading-relaxed text-zinc-400 underline underline-offset-2 transition-colors [overflow-wrap:anywhere] hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:text-xs`}
             >
-              {airportV2 && appPrimary ? "Apple, Outlook, or another calendar" : effectiveAlternateCalendarLabel}
+              {airportV2 && appPrimary ? copy.alternateTrip : effectiveAlternateCalendarLabel}
             </a>
           </>
         )}
@@ -352,7 +362,7 @@ export default function CalendarOnTimerHandoff({
         )}
         {airportV2 && !calendarOpened && !showAndroidAffiliate && (
           <div ref={inlineAirportCtaRef} data-airport-v2-inline-cta className="mb-4 border-b border-zinc-800 pb-4 sm:hidden">
-            <p className="text-base font-bold text-white">Get automatic alarms for every flight.</p>
+            <p className="text-base font-bold text-white">{copy.flightAlarms}</p>
             <div className="mt-3">
               <AppStoreButton
                 size="lg"
@@ -368,7 +378,7 @@ export default function CalendarOnTimerHandoff({
               />
             </div>
             <div className="mt-2 space-y-0.5 text-[11px] leading-relaxed text-zinc-500">
-              <p>OnTimer is free for iPhone.</p>
+              <p>{copy.freeIphone}</p>
               <p>{copy.appStore}</p>
             </div>
           </div>
@@ -379,7 +389,7 @@ export default function CalendarOnTimerHandoff({
             {showAndroidAffiliate
               ? effectiveAndroidAffiliateOffer.heading
               : airportV2 && !calendarOpened
-                ? "Never miss the moment to leave for a flight."
+                ? copy.flightMoment
               : calendarOpened
                 ? effectivePostCalendarHeading
                 : resultAlarmHeading}
@@ -398,7 +408,7 @@ export default function CalendarOnTimerHandoff({
             {showAndroidAffiliate
               ? effectiveAndroidAffiliateOffer.body
               : airportV2 && !calendarOpened
-                ? "Connect your calendar once. Time To Fly automatically finds your flights and sets a persistent alarm for when it is time to leave. OnTimer is free."
+                ? copy.flightBody
               : calendarOpened
                 ? effectivePostCalendarBody
                 : resultAlarmBody}
@@ -498,7 +508,7 @@ export default function CalendarOnTimerHandoff({
           style={{ bottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
         >
           <div className="mx-auto flex max-w-sm items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-950/95 p-2 shadow-lg backdrop-blur-sm">
-            <p className="min-w-0 flex-1 text-[11px] font-semibold leading-tight text-zinc-300">OnTimer is free</p>
+            <p className="min-w-0 flex-1 text-[11px] font-semibold leading-tight text-zinc-300">{copy.freeShort}</p>
             <AppStoreButton
               size="sm"
               label={copy.getAlarms}

@@ -109,7 +109,7 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
               <p className="text-xs font-bold uppercase tracking-[0.14em] text-zinc-500">Your answer includes</p>
               <ul className="mt-3 space-y-2 text-sm font-semibold text-zinc-300">
                 <li>Traffic for your travel window</li>
-                <li>JFK airport arrival time</li>
+                <li>{model.trackerCode} airport arrival time</li>
                 <li>Security, bags, and terminal access</li>
               </ul>
             </aside>

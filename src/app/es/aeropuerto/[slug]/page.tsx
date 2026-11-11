@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AirportCalculator from "@/app/airport-time-to-leave-calculator/AirportCalculator";
+import AirportV2ProductStory from "@/components/airport/AirportV2ProductStory";
 import { AppStoreButton } from "@/components/CTAButton";
+import { KTVUProof } from "@/components/KTVUProof";
 import { localizedAlternates, spanishAirportSlugs } from "@/lib/i18n";
 import { getTravelLocation } from "@/lib/travel-locations";
 import { isSpanishAirportSlug, spanishAirportCopy } from "@/lib/spanish-airports";
@@ -113,7 +115,6 @@ export default async function SpanishAirportPage({ params }: SpanishAirportPageP
           <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-green-500">Calculadora gratuita · {location.code} · {copy.city}</p>
           <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">Descubre exactamente cuándo salir hacia <span className="text-green-500">{copy.shortName} ({location.code})</span></h1>
           <p className="mt-3 text-sm leading-relaxed text-zinc-300 sm:mt-5 sm:text-base">{copy.directAnswer}</p>
-          <p className="mt-3 text-xs text-zinc-500">Información revisada el {new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${location.reviewedOn}T12:00:00Z`))}.</p>
         </div>
       </section>
 
@@ -128,9 +129,13 @@ export default async function SpanishAirportPage({ params }: SpanishAirportPageP
             securityLabel="Seguridad del aeropuerto"
             locale="es"
             genericRedesign
+            airportV2Pilot
           />
         </div>
       </section>
+
+      <AirportV2ProductStory airportCode={location.code} locale="es" />
+      <KTVUProof variant="airport" locale="es" />
 
       <section className="border-t border-zinc-800 bg-zinc-900/40 py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">

@@ -484,7 +484,7 @@ export default function CruiseCalculator({
               : isFetchingTravel
               ? "Calculating leave time..."
               : computedResult
-                ? "Update Leave Time"
+                ? "Recalculate Leave Time"
                 : "Show My Leave Time"}
           </button>
 
@@ -510,9 +510,9 @@ export default function CruiseCalculator({
             <button
               type="button"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className="mt-4 flex w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:bg-zinc-700 hover:text-white"
+              className="calculator-disclosure mt-4 flex w-full items-center justify-between gap-3 rounded-lg border border-zinc-600 bg-zinc-700/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 active:opacity-90"
             >
-              <span>{showAdvanced ? "Hide adjustments" : "Adjust assumptions"}</span>
+              <span>{showAdvanced ? "Hide details" : "Adjust details"}</span>
               <span className={`flex-shrink-0 text-xs text-zinc-400 transition-transform duration-200 ${showAdvanced ? "rotate-180" : ""}`}>
                 ▾
               </span>
@@ -661,7 +661,7 @@ export default function CruiseCalculator({
               />
 
               <button type="button" onClick={openResultAdjustments} className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-zinc-400 underline underline-offset-4 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400">
-                Adjust assumptions
+                Adjust details
               </button>
 
               <details className="group mt-5 border-t border-zinc-800 pt-4">

@@ -309,7 +309,7 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
           ) : null}
 
           <button className="event-calc__submit" type="submit" disabled={isLoading || isResolvingOrigin} data-state={isLoading || isResolvingOrigin ? "loading" : "default"}>
-            {isResolvingOrigin ? "Checking the address…" : isLoading ? "Estimating travel time…" : result ? "Update leave time" : "Calculate leave time"}
+            {isResolvingOrigin ? "Checking the address…" : isLoading ? "Estimating travel time…" : result ? "Recalculate leave time" : "Calculate leave time"}
           </button>
         </form>
       </div>

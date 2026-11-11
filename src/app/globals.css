@@ -223,6 +223,23 @@ body {
   background-color: var(--blue-100);
 }
 
+/* Calculator disclosures must not inherit iOS's persistent dark hover state. */
+.site-modern .calculator-disclosure,
+.site-modern .calculator-disclosure:hover,
+.site-modern .calculator-disclosure:active,
+.site-modern .calculator-disclosure[aria-expanded="true"],
+.site-modern .calculator-disclosure[aria-expanded="false"] {
+  background-color: var(--sky-100);
+  border-color: var(--line-strong);
+  color: var(--navy-950);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.site-modern .calculator-disclosure:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
 .site-modern .bg-green-500.text-black {
   color: var(--paper);
 }

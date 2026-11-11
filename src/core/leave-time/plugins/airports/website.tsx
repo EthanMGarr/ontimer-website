@@ -233,7 +233,7 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
   const faqItems = airportDestinationType.buildFaqItems(location);
   const searchName = buildAirportSearchName(location);
   const isPickupPilot = isAirportPickupPilotSlug(location.slug);
-  const airportV2Pilot = location.code === "JFK";
+  const airportV2Experience = true;
   const departurePlannerProps = {
     slug: location.slug,
     airportCode: location.code,
@@ -244,7 +244,7 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
     longHaulLabel: location.airport.longHaulLabel,
     securityLabel: location.airport.securityLabel,
     showIntentNav: isPickupPilot,
-    airportV2Pilot,
+    airportV2Pilot: airportV2Experience,
   };
 
   return {
@@ -252,10 +252,10 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
     jsonLd: airportDestinationType.buildStructuredData(location),
     breadcrumbs: airportDestinationType.buildInternalLinks(location),
     currentBreadcrumbLabel: location.code,
-    experienceVariant: airportV2Pilot ? "airport-v2" : undefined,
+    experienceVariant: "airport-v2",
     hero: {
       eyebrow: `Free airport calculator · ${searchName}`,
-      secondaryLabels: airportV2Pilot ? [location.city] : [location.city, location.reviewedLabel],
+      secondaryLabels: [location.city],
       titlePrefix: "Find out exactly when to leave for",
       titleHighlight: searchName,
       description: buildAirportSnippetCandidate(location),
@@ -269,9 +269,7 @@ export function buildAirportPageModel(location: AirportLocationProfile): Destina
         <AirportDeparturePlannerFallback {...departurePlannerProps} />
       )
     ),
-    productStory: airportV2Pilot ? (
-      <AirportV2ProductStory airportCode={location.code} />
-    ) : undefined,
+    productStory: <AirportV2ProductStory airportCode={location.code} />,
     planningFacts: {
       sectionId: `${location.code.toLowerCase()}-planning-facts`,
       heading: `What can add time on the way to ${location.shortName}`,
