@@ -165,10 +165,14 @@ assert.match(handoff, /Never miss the moment to leave for a flight\./, "the pilo
 assert.match(handoff, /Connect your calendar once\.[\s\S]*?automatically finds your flights[\s\S]*?OnTimer is free\./, "the pilot result must explain automatic flight alarms plainly and honestly");
 assert.doesNotMatch(handoff, /OnTimer works backward|How Time To Fly works/, "the pilot result must not add an abstract numbered explainer after the primary action");
 assert.match(handoff, /presentation=\{airportV2 && !calendarOpened \? "app-store-badge" : "button"\}/, "the pilot's primary acquisition action must use the official App Store badge presentation");
+assert.match(handoff, /Or save just this trip[\s\S]*?copy\.addOneGoogle/, "the JFK calendar alternative must remain useful without competing visually with acquisition");
+assert.match(handoff, /<PlaneIcon[\s\S]*?Time To Fly/, "the JFK result must use a restrained flight cue without replacing the alarm proof");
 assert.match(calculator, /Your trip at a glance[\s\S]*?Reach \$\{locationCode/, "the pilot must put the useful personalized trip timeline after the conversion handoff");
+assert.match(calculator, /airportV2Pilot && locationCode \? `Leave for \$\{locationCode\}`/, "the JFK alarm preview must name the concrete destination concisely");
 assert.match(productStory, /Time To Fly · free in OnTimer/, "the pilot product story must state the free Time To Fly offer plainly");
 assert.doesNotMatch(productStory, /works backward|Time To Fly workflow/, "the product story must demonstrate the calendar-to-alarm behavior without abstract process language");
 assert.match(ctaButton, /tools\.applemediaservices\.com\/api\/badges\/download-on-the-app-store\/black\/en-us/, "the pilot badge presentation must use Apple's official preferred badge artwork");
+assert.match(ctaButton, /width="162"[\s\S]*?height="54"/, "the primary App Store badge must be large enough to carry the acquisition hierarchy");
 assert.match(ctaButton, /if \(!isDesktop\) trackAppStoreClick/, "opening a desktop QR popover must not count as an App Store click");
 assert.match(ctaButton, /appStoreQrUrl\(\{ location, ctaVariant, calculatorType \}\)/, "desktop QR codes must use a separately attributable campaign URL");
 

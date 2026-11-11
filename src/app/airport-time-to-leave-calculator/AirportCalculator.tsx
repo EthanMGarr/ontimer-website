@@ -1509,7 +1509,7 @@ export default function AirportCalculator({
                     location: "airport_ewr_android_result",
                   } : undefined}
                   eventPreview={{
-                    title: calendarEventTitle,
+                    title: airportV2Pilot && locationCode ? `Leave for ${locationCode}` : calendarEventTitle,
                     startLabel: fmtTime(computedResult.leaveTime, locale),
                   }}
                   experienceVariant={airportV2Pilot ? "airport-v2" : undefined}

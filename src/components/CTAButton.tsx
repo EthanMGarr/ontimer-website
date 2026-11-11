@@ -113,9 +113,9 @@ export function AppStoreButton({
         <img
           src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us"
           alt="Download on the App Store"
-          width="135"
-          height="45"
-          className="h-[45px] w-[135px]"
+          width="162"
+          height="54"
+          className="h-[54px] w-[162px]"
         />
       ) : (
         <>

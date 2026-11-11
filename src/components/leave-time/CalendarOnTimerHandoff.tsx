@@ -244,20 +244,16 @@ export default function CalendarOnTimerHandoff({
   return (
     <>
       <div className="flex flex-col">
-      <div data-calendar-action data-experiment-variant={experimentVariant} className={`mt-5 min-w-0 rounded-xl border ${
-        calendarOpened && compactOpenedStatus
-          ? "px-0 pb-0 pt-4"
-          : calendarProvider === "ics"
-            ? "px-4 py-3"
-            : "p-4 sm:p-5"
-      } ${
+      <div data-calendar-action data-experiment-variant={experimentVariant} className={`min-w-0 ${
         calendarOpened
           ? compactOpenedStatus
-            ? "order-2 border-0 border-t border-zinc-800 bg-transparent"
-            : "order-2 border-zinc-700 bg-zinc-950/40"
+            ? "order-2 mt-5 border-t border-zinc-800 bg-transparent pt-4"
+            : `order-2 mt-5 rounded-xl border border-zinc-700 bg-zinc-950/40 ${calendarProvider === "ics" ? "px-4 py-3" : "p-4 sm:p-5"}`
           : appPrimary
-            ? "order-2 border-zinc-800 bg-zinc-950/30"
-            : "order-1 border-green-500/40 bg-green-500/[0.07]"
+            ? airportV2
+              ? "order-2 mt-4 border-t border-zinc-800 pt-4"
+              : "order-2 mt-5 rounded-xl border border-zinc-800 bg-zinc-950/30 p-4 sm:p-5"
+            : "order-1 mt-5 rounded-xl border border-green-500/40 bg-green-500/[0.07] p-4 sm:p-5"
       }`}>
         {calendarProvider === "google" ? (
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs">
@@ -290,8 +286,8 @@ export default function CalendarOnTimerHandoff({
           </div>
         ) : (
           <>
-            <p className={appPrimary ? "text-sm font-semibold text-zinc-300" : "text-lg font-bold text-white"}>
-              {appPrimary ? copy.addGoogle : effectiveReadyHeading}
+            <p className={appPrimary ? airportV2 ? "text-xs font-medium text-zinc-500" : "text-sm font-semibold text-zinc-300" : "text-lg font-bold text-white"}>
+              {appPrimary ? airportV2 ? "Or save just this trip" : copy.addGoogle : effectiveReadyHeading}
             </p>
             <a
               href={calendarHref}
@@ -302,7 +298,9 @@ export default function CalendarOnTimerHandoff({
                 : copy.addGoogle}
               onClick={() => chooseCalendar("google")}
               className={appPrimary
-                ? "mt-3 flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full border border-zinc-700 bg-transparent px-5 py-3 text-sm font-bold text-zinc-200 transition-colors hover:border-zinc-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-zinc-900"
+                ? airportV2
+                  ? "mt-1 inline-flex min-h-11 items-center text-sm font-semibold text-zinc-300 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-white hover:decoration-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+                  : "mt-3 flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full border border-zinc-700 bg-transparent px-5 py-3 text-sm font-bold text-zinc-200 transition-colors hover:border-zinc-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-zinc-900"
                 : "mt-4 flex min-h-12 w-full items-center justify-center whitespace-nowrap rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-black transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:bg-green-600"}
             >
               {appPrimary ? copy.addOneGoogle : copy.addGoogle}
@@ -313,7 +311,7 @@ export default function CalendarOnTimerHandoff({
               onClick={() => chooseCalendar("ics")}
               className="mt-3 inline-flex max-w-full whitespace-normal text-left text-[11px] font-medium leading-relaxed text-zinc-400 underline underline-offset-2 transition-colors [overflow-wrap:anywhere] hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:text-xs"
             >
-              {effectiveAlternateCalendarLabel}
+              {airportV2 && appPrimary ? "Apple, Outlook, or another calendar" : effectiveAlternateCalendarLabel}
             </a>
           </>
         )}
@@ -326,6 +324,12 @@ export default function CalendarOnTimerHandoff({
             ? "order-1 rounded-xl border border-green-500/40 bg-green-500/[0.07] p-5"
             : "order-2 border-t border-zinc-800 pt-5"
       }`}>
+        {airportV2 && !calendarOpened && !showAndroidAffiliate && (
+          <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-green-500">
+            <PlaneIcon className="h-3.5 w-3.5" />
+            Time To Fly
+          </p>
+        )}
         {/* Phones: headline beside the alarm, body full width. Wider: alarm beside both. */}
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3">
           <p className="col-start-1 row-start-1 text-base font-bold text-white">
@@ -385,7 +389,11 @@ export default function CalendarOnTimerHandoff({
               <AppStoreButton
                 size={calendarOpened || appPrimary ? "lg" : "md"}
                 label={calendarOpened ? copy.getFree : copy.getAlarms}
-                className={calendarOpened || appPrimary ? "w-full justify-center whitespace-nowrap" : "justify-center whitespace-nowrap"}
+                className={airportV2 && !calendarOpened
+                  ? "w-full justify-center whitespace-nowrap"
+                  : calendarOpened || appPrimary
+                    ? "w-full justify-center whitespace-nowrap"
+                    : "justify-center whitespace-nowrap"}
                 location={appLocation}
                 analyticsContext={{
                   calculator_type: calculatorType,
@@ -435,5 +443,13 @@ export default function CalendarOnTimerHandoff({
         </details>
       )}
     </>
+  );
+}
+
+function PlaneIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5L21 16Z" fill="currentColor" />
+    </svg>
   );
 }
