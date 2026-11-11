@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spanishGeneric, spanishAirport, placeAutocomplete, airportWebsite, productStory, handoff, ctaButton, alarmPreview] = await Promise.all([
+const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spanishGeneric, spanishAirport, placeAutocomplete, airportWebsite, productStory, handoff, ctaButton, alarmPreview, destinationTemplate, homepage, ktvuProof] = await Promise.all([
   readFile(new URL("../src/app/airport-time-to-leave-calculator/page.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/app/airport-time-to-leave-calculator/AirportCalculator.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/airport/GenericAirportCalculator.tsx", import.meta.url), "utf8"),
@@ -15,6 +15,9 @@ const [page, calculator, genericCalculator, planPrefill, destinationPlanner, spa
   readFile(new URL("../src/components/leave-time/CalendarOnTimerHandoff.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/CTAButton.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/leave-time/AlarmPreview.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/components/destination-pages/DestinationPageTemplate.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/app/homepage2/page.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/components/KTVUProof.tsx", import.meta.url), "utf8"),
 ]);
 
 assert.match(
@@ -57,8 +60,9 @@ assert.match(
   /<CalendarOnTimerHandoff[\s\S]*?\/>[\s\S]*?copy\.adjustAssumptions/,
   "optional result adjustments must follow the conversion handoff",
 );
-assert.match(calculator, /Expected wait at arrival:/, "security results must label the predicted queue wait");
-assert.match(calculator, /Conservative allowance included:/, "security results must distinguish the planning allowance");
+assert.match(calculator, /Current airport-wide estimate:/, "security detail must label the current airport-wide evidence");
+assert.match(calculator, /Estimated at your [\s\S]*? arrival:/, "security detail must label the arrival-time prediction");
+assert.match(calculator, /Your leave time includes [\s\S]*? min to protect against variation/, "security detail must explain the conservative planning allowance");
 assert.match(calculator, /not live airport queue data/, "fallback security estimates must not imply live airport data");
 assert.match(calculator, /addressCity: "Address, neighborhood, or place"/, "the origin field must invite landmark and business search");
 assert.doesNotMatch(
@@ -173,10 +177,9 @@ assert.match(handoff, /data-airport-v2-inline-cta[\s\S]*?Get automatic alarms fo
 assert.match(handoff, /data-airport-v2-sticky-cta[\s\S]*?result_app_sticky_v1/, "the JFK mobile result must retain an acquisition action while the inline badge is outside the viewport");
 assert.match(handoff, /IntersectionObserver[\s\S]*?setShowAirportStickyCta\(!entry\.isIntersecting\)/, "the JFK sticky action must disappear when the inline App Store action is visible");
 assert.match(calculator, /data-airport-trip-timeline="desktop"[\s\S]*?data-airport-trip-timeline="mobile"/, "the pilot must use a vertical desktop timeline and compact mobile timeline");
-assert.match(calculator, /trafficBasis === "live"[\s\S]*?Current traffic[\s\S]*?trafficBasis === "predicted"[\s\S]*?Expected traffic/, "the JFK timeline must distinguish current from expected traffic using the actual provider basis");
-assert.match(calculator, /TSA wait at arrival · ~\{securityWaitMinutes\} min expected · \{securityAllowanceMinutes\} min allowed/, "the desktop timeline must distinguish the predicted TSA wait from the conservative allowance");
-assert.match(calculator, /TSA at arrival · ~\{securityWaitMinutes\} min expected · \{securityAllowanceMinutes\} min allowed/, "the compact mobile timeline must surface the TSA intelligence without hiding acquisition");
-assert.match(calculator, /TSAWaitTimes\.com estimate[\s\S]*?OnTimer planning estimate/, "the timeline must identify licensed versus fallback security evidence honestly");
+assert.match(calculator, /trafficBasis === "live"[\s\S]*?Drive to \$\{airportCode\} now[\s\S]*?trafficBasis === "predicted"[\s\S]*?Expected drive to \$\{airportCode\}/, "the JFK timeline must distinguish current from expected driving using the actual provider basis");
+assert.match(calculator, /Estimated TSA wait at arrival · ~\{securityWaitMinutes\} min/, "both timelines must surface the arrival-time TSA estimate concisely");
+assert.doesNotMatch(calculator, /securityAllowanceMinutes|TSA at arrival ·|min allowed/, "the compact timeline must keep the conservative allowance and heavier TSA labels in the detailed explanation");
 assert.match(calculator, /airportV2Pilot \? "Edit trip details" : copy\.adjustAssumptions/, "the JFK mobile return action must explain that it navigates to trip editing");
 assert.match(calculator, /airportV2Pilot \? "lg:hidden"/, "the redundant JFK result-level adjustment link must be absent on desktop");
 assert.match(calculator, /airportV2Pilot && locationCode \? `Leave for \$\{locationCode\}`/, "the JFK alarm preview must name the concrete destination concisely");
@@ -187,5 +190,10 @@ assert.match(ctaButton, /width="162"[\s\S]*?height="54"/, "the primary App Store
 assert.match(ctaButton, /if \(!isDesktop\) trackAppStoreClick/, "opening a desktop QR popover must not count as an App Store click");
 assert.match(ctaButton, /appStoreQrUrl\(\{ location, ctaVariant, calculatorType \}\)/, "desktop QR codes must use a separately attributable campaign URL");
 assert.match(alarmPreview, /alarm-preview--ringing min-h-\[7\.25rem\] w-24/, "the JFK alarm proof must use the more realistic rectangular proportion");
+assert.match(handoff, /OnTimer is free for iPhone\.<\/p>[\s\S]*?<p>\{copy\.appStore\}<\/p>/, "the promoted mobile action must separate the free iPhone claim from calendar compatibility");
+assert.match(destinationTemplate, /\{model\.productStory\}[\s\S]*?airportV2 && <KTVUProof variant="airport"/, "the KTVU proof must follow the JFK product story without expanding beyond the pilot");
+assert.match(homepage, /<\/section>[\s\S]*?<KTVUProof \/>[\s\S]*?<section className="hp2-problem"/, "the homepage must place permanent KTVU proof directly after the hero");
+assert.doesNotMatch(homepage, /KTVUAnnouncementBar|Watching KTVU/, "the stale temporary KTVU announcement must not remain on the homepage");
+assert.match(ktvuProof, /Featured on KTVU FOX 2[\s\S]*?App relieving holiday airport stress[\s\S]*?Watch the KTVU segment/, "the KTVU proof must name the verified source, story, and direct watch action");
 
 console.log("airport family review UX checks passed");

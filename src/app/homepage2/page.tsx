@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Bricolage_Grotesque, IBM_Plex_Sans } from "next/font/google";
 import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
-import { KTVUAnnouncementBar } from "@/components/KTVUAnnouncementBar";
+import { KTVUProof } from "@/components/KTVUProof";
 import { ANDROID_WAITLIST_URL, APP_STORE_URL } from "@/lib/constants";
 import { homepageFaqs, productFacts } from "@/lib/product-facts";
 import "./homepage2-page.css";
@@ -139,9 +139,6 @@ export default function Homepage2() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Temporary: remove this component after the KTVU segment. */}
-      <KTVUAnnouncementBar />
-
       <section className="hp2-hero" aria-labelledby="hp2-title">
         <div className="hp2-shell hp2-hero-grid">
           <div className="hp2-hero-copy">
@@ -185,6 +182,8 @@ export default function Homepage2() {
           </div>
         </div>
       </section>
+
+      <KTVUProof />
 
       <section className="hp2-problem" aria-labelledby="problem-title">
         <div className="hp2-shell hp2-problem-grid">

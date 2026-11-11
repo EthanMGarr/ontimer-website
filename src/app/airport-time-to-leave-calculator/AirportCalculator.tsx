@@ -262,12 +262,12 @@ function fmtDuration(minutes: number, locale: SiteLocale = "en"): string {
   return m === 0 ? `${h} ${hourLabel}` : `${h} ${hourLabel} ${m} min`;
 }
 
-function travelIntelligenceLabel(result: ComputedResult, arrivalMode: ArrivalMode): string {
-  if (arrivalMode === "transit" || result.trafficBasis === "scheduled") return "Scheduled transit";
-  if (result.trafficBasis === "live") return "Current traffic";
-  if (result.trafficBasis === "predicted") return "Expected traffic";
-  if (result.travelSource === "manual") return "Entered travel time";
-  return "Travel estimate";
+function travelIntelligenceLabel(result: ComputedResult, arrivalMode: ArrivalMode, airportCode: string): string {
+  if (arrivalMode === "transit" || result.trafficBasis === "scheduled") return `Scheduled transit to ${airportCode}`;
+  if (result.trafficBasis === "live") return `Drive to ${airportCode} now`;
+  if (result.trafficBasis === "predicted") return `Expected drive to ${airportCode}`;
+  if (result.travelSource === "manual") return `Travel time to ${airportCode}`;
+  return `Estimated travel to ${airportCode}`;
 }
 
 function factorMinutes(result: ComputedResult, key: string, fallback: number): number {
@@ -1026,10 +1026,8 @@ export default function AirportCalculator({
                 airportCode={locationCode ?? "Airport"}
                 travelDuration={fmtDuration(computedResult.travelMinutes, locale)}
                 airportDuration={fmtDuration(computedResult.bufferMinutes, locale)}
-                travelIntelligence={travelIntelligenceLabel(computedResult, arrivalMode)}
+                travelIntelligence={travelIntelligenceLabel(computedResult, arrivalMode, locationCode ?? "the airport")}
                 securityWaitMinutes={securityIntelligence?.predictedWaitAtArrival.minutes}
-                securityAllowanceMinutes={securityIntelligence?.recommendedSecurityAllowance.minutes}
-                securitySource={licensedSecurityEvidence ? "TSAWaitTimes.com estimate" : "OnTimer planning estimate"}
               />
             )}
 
@@ -1488,10 +1486,8 @@ export default function AirportCalculator({
                     airportCode={locationCode ?? "Airport"}
                     travelDuration={fmtDuration(computedResult.travelMinutes, locale)}
                     airportDuration={fmtDuration(computedResult.bufferMinutes, locale)}
-                    travelIntelligence={travelIntelligenceLabel(computedResult, arrivalMode)}
+                    travelIntelligence={travelIntelligenceLabel(computedResult, arrivalMode, locationCode ?? "the airport")}
                     securityWaitMinutes={securityIntelligence?.predictedWaitAtArrival.minutes}
-                    securityAllowanceMinutes={securityIntelligence?.recommendedSecurityAllowance.minutes}
-                    securitySource={licensedSecurityEvidence ? "TSAWaitTimes.com estimate" : "OnTimer planning estimate"}
                   />
                 ) : ewrResultExperiment && (
                   <div className="mt-4 border-t border-zinc-800 pt-3">
@@ -1569,16 +1565,35 @@ export default function AirportCalculator({
                     aria-label={locale === "es" ? "Planificación de seguridad" : "Security planning"}
                   >
                     <p className="text-sm font-semibold text-zinc-200">{locale === "es" ? "Planificación de seguridad" : "Security planning"}</p>
-                    <p className="mt-1 text-xs leading-relaxed text-zinc-400">
-                      {locale === "es"
-                        ? `Espera prevista al llegar: ~${securityIntelligence.predictedWaitAtArrival.minutes} min · Margen conservador incluido: ${securityIntelligence.recommendedSecurityAllowance.minutes} min${hasPreCheck && openPrecheckCount > 0 ? ` · ${openPrecheckCount} PreCheck abierto${openPrecheckCount === 1 ? "" : "s"}` : ""}`
-                        : `Expected wait at arrival: ~${securityIntelligence.predictedWaitAtArrival.minutes} min · Conservative allowance included: ${securityIntelligence.recommendedSecurityAllowance.minutes} min${hasPreCheck && openPrecheckCount > 0 ? ` · ${openPrecheckCount} PreCheck checkpoint${openPrecheckCount === 1 ? "" : "s"} open` : ""}`}
-                    </p>
+                    <div className="mt-1 space-y-1 text-xs leading-relaxed text-zinc-400">
+                      {currentAirportSecurityEvidence && (
+                        <p>
+                          {locale === "es"
+                            ? `Estimación actual para todo el aeropuerto: ~${Math.round(currentAirportSecurityEvidence.minutes)} min`
+                            : `Current airport-wide estimate: ~${Math.round(currentAirportSecurityEvidence.minutes)} min`}
+                        </p>
+                      )}
+                      <p>
+                        {locale === "es"
+                          ? `Estimación para tu llegada a las ${fmtTime(computedResult.arrivalTime, locale)}: ~${securityIntelligence.predictedWaitAtArrival.minutes} min`
+                          : `Estimated at your ${fmtTime(computedResult.arrivalTime, locale)} arrival: ~${securityIntelligence.predictedWaitAtArrival.minutes} min`}
+                      </p>
+                      <p>
+                        {locale === "es"
+                          ? `Tu hora de salida incluye ${securityIntelligence.recommendedSecurityAllowance.minutes} min para cubrir variaciones.`
+                          : `Your leave time includes ${securityIntelligence.recommendedSecurityAllowance.minutes} min to protect against variation.`}
+                        {hasPreCheck && openPrecheckCount > 0
+                          ? (locale === "es"
+                            ? ` ${openPrecheckCount} punto${openPrecheckCount === 1 ? "" : "s"} PreCheck abierto${openPrecheckCount === 1 ? "" : "s"}.`
+                            : ` ${openPrecheckCount} PreCheck checkpoint${openPrecheckCount === 1 ? " is" : "s are"} open.`)
+                          : ""}
+                      </p>
+                    </div>
                     <p className="mt-1 text-xs leading-relaxed text-zinc-500">
                       {licensedSecurityEvidence
                         ? (locale === "es"
-                          ? "Fuente: TSAWaitTimes.com · estimación externa para todo el aeropuerto, no una medición oficial de la TSA."
-                          : "Source: TSAWaitTimes.com · third-party airport-wide estimate, not an official TSA measurement.")
+                          ? "Estimación del tiempo de espera por TSAWaitTimes.com."
+                          : "Wait-time estimate by TSAWaitTimes.com.")
                         : (locale === "es"
                           ? "Estimación de planificación según el tipo de vuelo y la hora prevista de llegada; no son datos en tiempo real de la fila del aeropuerto."
                           : "Planning estimate based on flight type and expected arrival time; this is not live airport queue data.")}
@@ -1783,8 +1798,6 @@ interface AirportTripTimelineProps {
   airportDuration: string;
   travelIntelligence: string;
   securityWaitMinutes?: number;
-  securityAllowanceMinutes?: number;
-  securitySource: string;
 }
 
 function AirportTripTimeline({
@@ -1797,8 +1810,6 @@ function AirportTripTimeline({
   airportDuration,
   travelIntelligence,
   securityWaitMinutes,
-  securityAllowanceMinutes,
-  securitySource,
 }: AirportTripTimelineProps) {
   const stops = [
     { label: "Leave", time: leaveTime },
@@ -1826,14 +1837,13 @@ function AirportTripTimeline({
                 <div className="ml-[5px] grid min-h-10 grid-cols-[1px_minmax(0,1fr)] items-center gap-5" aria-hidden="true">
                   <span className="h-full bg-zinc-700" />
                   {index === 0 ? (
-                    <span className="text-[11px] text-zinc-500">{travelIntelligence} · {travelDuration} to the airport</span>
+                    <span className="text-[11px] text-zinc-500">{travelIntelligence} · {travelDuration}</span>
                   ) : (
                     <span className="flex flex-col gap-0.5 text-[11px] text-zinc-500">
                       <span>{airportDuration} before departure</span>
-                      {securityWaitMinutes !== undefined && securityAllowanceMinutes !== undefined && (
-                        <span>TSA wait at arrival · ~{securityWaitMinutes} min expected · {securityAllowanceMinutes} min allowed</span>
+                      {securityWaitMinutes !== undefined && (
+                        <span>Estimated TSA wait at arrival · ~{securityWaitMinutes} min</span>
                       )}
-                      <span className="text-[10px] text-zinc-400">{securitySource}</span>
                     </span>
                   )}
                 </div>
@@ -1863,9 +1873,9 @@ function AirportTripTimeline({
         ))}
       </div>
       <div className="mt-1.5 space-y-0.5 text-[11px] leading-relaxed text-zinc-500">
-        <p>{travelIntelligence} · {travelDuration} to the airport</p>
-        {securityWaitMinutes !== undefined && securityAllowanceMinutes !== undefined && (
-          <p>TSA at arrival · ~{securityWaitMinutes} min expected · {securityAllowanceMinutes} min allowed</p>
+        <p>{travelIntelligence} · {travelDuration}</p>
+        {securityWaitMinutes !== undefined && (
+          <p>Estimated TSA wait at arrival · ~{securityWaitMinutes} min</p>
         )}
       </div>
     </section>

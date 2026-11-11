@@ -367,9 +367,10 @@ export default function CalendarOnTimerHandoff({
                 presentation="app-store-badge"
               />
             </div>
-            <p className="mt-2 text-[11px] leading-relaxed text-zinc-500">
-              OnTimer is free. {copy.appStore}
-            </p>
+            <div className="mt-2 space-y-0.5 text-[11px] leading-relaxed text-zinc-500">
+              <p>OnTimer is free for iPhone.</p>
+              <p>{copy.appStore}</p>
+            </div>
           </div>
         )}
         {/* Phones: headline beside the alarm, body full width. Wider: alarm beside both. */}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { KTVUProof } from "@/components/KTVUProof";
 import LocationSectionTracker from "@/components/LocationSectionTracker";
 import { AppStoreCTA } from "@/components/CTAButton";
 import type { FaqItem, InternalLinkDefinition } from "@/core/leave-time";
@@ -128,6 +129,8 @@ export default function DestinationPageTemplate({ model }: { model: DestinationP
       </section>
 
       {model.productStory}
+
+      {airportV2 && <KTVUProof variant="airport" />}
 
       <section
         data-location-section={model.planningFacts.sectionId}
