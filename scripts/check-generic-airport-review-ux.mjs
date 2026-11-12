@@ -135,7 +135,10 @@ assert.match(calculator, /hidden sm:inline/, "the optional status qualifier must
 assert.match(page, /detailPageHref: `\/airport-time-to-leave\/\$\{location\.slug\}`/, "the English generic calculator must map reviewed airports to their canonical detail pages");
 assert.match(spanishGeneric, /detailPageHref: spanishAirportSlugs\.includes[\s\S]*?`\/es\/aeropuerto\/\$\{location\.slug\}`[\s\S]*?: undefined/, "the Spanish generic calculator must link only airports with a reviewed localized detail page");
 assert.match(calculator, /effectiveAirportOption\?\.detailPageHref[\s\S]*?data-airport-detail-link/, "a selected reviewed airport must expose one contextual detail-page link");
-assert.match(calculator, /airport guide & calculator →/, "the contextual airport link must describe both the guide and calculator destination");
+assert.match(calculator, /Open \$\{effectiveAirportOption\.code\} calculator →/, "the contextual airport link must offer the airport-specific calculator directly");
+assert.match(calculator, /Local terminal, parking, transit and security guidance\./, "the contextual airport handoff must explain the local value without crowding the action label");
+assert.match(calculator, /trackToolNavigationClick\("airport_calculator", "airport_specific"/, "airport-specific handoffs must be measured");
+assert.match(page, /Browse airport-specific calculators →/, "the generic airport hero must expose the crawlable airport directory near the task entry");
 assert.match(page, /Does this calculator use current airport security wait times\?/, "the generic FAQ must explain current security evidence");
 assert.match(page, /TSAWaitTimes\.com[\s\S]*?not official TSA checkpoint measurements/, "the FAQ must identify the third-party source without implying official TSA measurement");
 assert.match(calculator, /data-nosnippet/, "the changing EWR value must not become a stale search-result snippet");
@@ -185,7 +188,7 @@ assert.match(handoff, /Connect your calendar once\.[\s\S]*?automatically finds y
 assert.doesNotMatch(handoff, /OnTimer works backward|How Time To Fly works/, "the pilot result must not add an abstract numbered explainer after the primary action");
 assert.match(handoff, /presentation=\{airportV2 && !calendarOpened \? "app-store-badge" : "button"\}/, "the pilot's primary acquisition action must use the official App Store badge presentation");
 assert.match(handoff, /Or save just this trip[\s\S]*?copy\.addOneGoogle/, "the JFK calendar alternative must remain useful without competing visually with acquisition");
-assert.match(handoff, /<PlaneIcon[\s\S]*?Time To Fly/, "the JFK result must use a restrained flight cue without replacing the alarm proof");
+assert.match(handoff, /<PlaneIcon[\s\S]*?ONTIMER · TIME TO FLY/, "the airport result must identify OnTimer as the app and Time To Fly as its feature");
 assert.match(handoff, /emphasis=\{airportV2 && !calendarOpened \? "flight" : "standard"\}/, "the JFK result must opt into the one-time alarm emphasis without changing other calculators");
 assert.match(handoff, /flightAlarms: "Get automatic alarms for every flight\."[\s\S]*?flightAlarms: "Recibe alarmas automáticas para todos tus vuelos\."/, "the airport acquisition headline must be localized in English and Spanish");
 assert.match(handoff, /data-airport-v2-inline-cta[\s\S]*?copy\.flightAlarms[\s\S]*?presentation="app-store-badge"/, "the mobile airport result must put the localized official App Store action directly beneath the timeline");

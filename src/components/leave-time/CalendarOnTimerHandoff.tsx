@@ -357,7 +357,7 @@ export default function CalendarOnTimerHandoff({
         {airportV2 && !calendarOpened && !showAndroidAffiliate && (
           <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-green-500">
             <PlaneIcon className="h-3.5 w-3.5" />
-            Time To Fly
+            ONTIMER · TIME TO FLY
           </p>
         )}
         {airportV2 && !calendarOpened && !showAndroidAffiliate && (

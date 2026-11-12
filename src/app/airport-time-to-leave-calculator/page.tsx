@@ -6,6 +6,7 @@ import { indexableTravelLocations } from "@/lib/travel-locations";
 import type { AirportAutocompleteOption } from "@/lib/airport-autocomplete";
 import { localizedAlternates } from "@/lib/i18n";
 import { buildAirportSearchName } from "@/lib/airport-answer-seo";
+import { TrackedToolLink } from "@/components/TrackedToolLink";
 
 const indexableAirportLocations = indexableTravelLocations.filter(
   (location) => location.kind === "airport"
@@ -115,7 +116,7 @@ const softwareAppJsonLd = {
   description:
     "A free calculator that gives a specific leave time for a flight using flight time, route, traffic, security, bags, parking and terminal access.",
   url: "https://www.ontimer.app/airport-time-to-leave-calculator",
-  dateModified: "2026-10-04",
+  dateModified: "2026-11-12",
   author: {
     "@type": "Organization",
     name: "OnTimer",
@@ -187,7 +188,16 @@ export default function AirportTimeToLeaveCalculator() {
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:text-base">
             Enter your flight&apos;s departure time, starting point and airport. This free calculator
-            uses traffic, security, bags, parking and terminal access to give you a specific leave time.
+            uses traffic, security, bags, parking and terminal access to give you a specific leave time.{" "}
+            <TrackedToolLink
+              href="/airport-time-calculators"
+              surface="airport_hero"
+              group="airport_specific"
+              position={1}
+              className="whitespace-nowrap font-semibold text-green-400 underline decoration-green-700 underline-offset-4 transition-colors hover:text-green-300"
+            >
+              Browse airport-specific calculators →
+            </TrackedToolLink>
           </p>
         </div>
       </section>

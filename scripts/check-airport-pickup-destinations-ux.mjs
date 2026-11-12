@@ -32,14 +32,19 @@ assert.match(route, /buildAirportPickupHeading\(location\)/, "pickup H1s and tit
 assert.match(airportSeo, /Find out exactly when to leave for a pickup at \$\{buildAirportSearchName\(input\)\}/, "pickup headings must retain pickup intent before the readable airport name and code");
 assert.doesNotMatch(route, /indefiniteArticleForAirportCode/, "airport pickup copy must not regress to code-first article grammar");
 assert.match(read("src/app/airport-pickup-time-calculator/page.tsx"), /airportPickupProfiles\.map/, "the generic pickup hub must link every reviewed airport page");
+assert.match(pickupDirectory, /<AirportDirectorySearch guides=\{pickupGuides\} mode="pickup" \/>[\s\S]*?href="\/airport-pickup-time-calculator"[\s\S]*?Any-airport pickup calculator[\s\S]*?Popular airports[\s\S]*?featuredPickupAirports\.map[\s\S]*?All \{pickupAirports\.length\} airport pickup calculators/, "the pickup directory must match the established searchable airport-index hierarchy and expose the any-airport calculator above visible airport choices");
+assert.doesNotMatch(pickupDirectory, /<AirportPickupCalculator/, "the directory must link to the generic calculator rather than embedding and duplicating it");
+assert.doesNotMatch(pickupDirectory, /Airport not in the reviewed list\?|reviewed list/, "the directory must not refer to a reviewed list before showing airport choices");
 assert.match(read("src/app/airport-time-calculators/page.tsx"), /Choose a reviewed airport/, "the public directory must describe the cohort for travelers rather than call it a pilot");
 assert.match(pickupDirectory, /airportPickupProfiles\.flatMap/, "the pickup directory must be generated from every reviewed profile");
 assert.match(pickupDirectory, /numberOfItems: pickupAirports\.length/, "the pickup directory must expose its complete ItemList count");
 assert.match(pickupDirectory, /<AirportDirectorySearch guides=\{pickupGuides\} mode="pickup" \/>/, "pickup search must keep unmatched airports on the generic pickup path");
-assert.match(pickupDirectory, /Calculate any airport pickup/, "the reviewed directory must retain an any-airport fallback");
+assert.match(pickupDirectory, /Any-airport pickup calculator/, "the directory must retain a plain-language path to the generic calculator");
 assert.match(timeCalculators, /href="\/airport-pickup-calculators"[\s\S]*count=\{airportPickupProfiles\.length\}/, "the main calculator hub must link and count the pickup directory");
+assert.equal((header.match(/href: "\/airport-pickup-time-calculator"/g) ?? []).length, 1);
 assert.equal((header.match(/href: "\/airport-pickup-calculators"/g) ?? []).length, 1);
 assert.equal((footer.match(/"\/airport-pickup-calculators"/g) ?? []).length, 1);
+assert.equal((footer.match(/"\/airport-pickup-time-calculator"/g) ?? []).length, 1);
 assert.doesNotMatch(header, /\/airport-pickup\//);
 assert.doesNotMatch(footer, /\/airport-pickup\//);
 

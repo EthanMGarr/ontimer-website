@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { TrackedToolLink } from "@/components/TrackedToolLink";
 import {
   getTravelLocationPath,
   indexableTravelLocations,
@@ -34,11 +35,13 @@ export function DirectoryShell({
   eyebrow,
   title,
   description,
+  heroSupplement,
   children,
 }: {
   eyebrow: string;
   title: string;
   description: string;
+  heroSupplement?: ReactNode;
   children: ReactNode;
 }) {
   return (
@@ -48,6 +51,7 @@ export function DirectoryShell({
           <p className="site-kicker">{eyebrow}</p>
           <h1 className="site-title">{title}</h1>
           <p className="site-lede">{description}</p>
+          {heroSupplement}
         </div>
       </section>
       {children}
@@ -111,17 +115,16 @@ export function CategoryLink({
   label,
   description,
   count,
+  analytics,
 }: {
   href: string;
   label: string;
   description: string;
   count?: number;
+  analytics?: { surface: string; group: string; position: number };
 }) {
-  return (
-    <Link
-      href={href}
-      className="site-category-link"
-    >
+  const content = (
+    <>
       <span className="site-category-link__top">
         <strong>{label}</strong>
         <span>View</span>
@@ -132,6 +135,16 @@ export function CategoryLink({
           {count} calculators
         </span>
       ) : null}
+    </>
+  );
+
+  return analytics ? (
+    <TrackedToolLink href={href} className="site-category-link" {...analytics}>
+      {content}
+    </TrackedToolLink>
+  ) : (
+    <Link href={href} className="site-category-link">
+      {content}
     </Link>
   );
 }

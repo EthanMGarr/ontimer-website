@@ -67,6 +67,8 @@ interface TravelResult {
   provider: "google" | "mapbox";
 }
 
+type TrafficModel = "best_guess" | "pessimistic";
+
 interface CacheEntry {
   value: TravelResult;
   expiresAt: number;
@@ -123,8 +125,8 @@ function bucketTime(unixSeconds: number): number {
   return Math.round(unixSeconds / bucketSec) * bucketSec;
 }
 
-function cacheKey(origin: string, dest: string, bucket: number, mode: string, provider: string): string {
-  return `${provider}|${normalize(origin)}|${normalize(dest)}|${bucket}|${mode}`;
+function cacheKey(origin: string, dest: string, bucket: number, mode: string, provider: string, trafficModel: TrafficModel): string {
+  return `${provider}|${normalize(origin)}|${normalize(dest)}|${bucket}|${mode}|${trafficModel}`;
 }
 
 /**
@@ -152,7 +154,8 @@ async function callRoutesApi(
   destination: string,
   bucketedTime: number,
   apiKey: string,
-  travelMode: string
+  travelMode: string,
+  trafficModel: TrafficModel,
 ): Promise<TravelResult> {
   // Routes API requires departureTime >= now (RFC3339 UTC).
   // Clamp so a bucketed time that fell into the past is still accepted.
@@ -167,7 +170,10 @@ async function callRoutesApi(
   };
 
   if (travelMode === "DRIVE") {
-    body.routingPreference = "TRAFFIC_AWARE";
+    body.routingPreference = trafficModel === "pessimistic"
+      ? "TRAFFIC_AWARE_OPTIMAL"
+      : "TRAFFIC_AWARE";
+    if (trafficModel === "pessimistic") body.trafficModel = "PESSIMISTIC";
     body.departureTime = departureTime;
   } else if (travelMode === "TRANSIT") {
     body.departureTime = departureTime;
@@ -268,6 +274,9 @@ async function handleTravelTimeRequest(request: NextRequest, searchParams: URLSe
   const rawMode = searchParams.get("travelMode") ?? "DRIVE";
   const travelMode = ["DRIVE", "WALK", "TRANSIT"].includes(rawMode) ? rawMode : "DRIVE";
   const requestedProvider = searchParams.get("provider") === "mapbox" ? "mapbox" : "google";
+  const trafficModel: TrafficModel = searchParams.get("trafficModel") === "pessimistic"
+    ? "pessimistic"
+    : "best_guess";
   const originCoordinates = parseRouteCoordinates(
     searchParams.get("originLatitude"),
     searchParams.get("originLongitude")
@@ -319,7 +328,7 @@ async function handleTravelTimeRequest(request: NextRequest, searchParams: URLSe
   const routingDestination = useMapbox
     ? `${destinationCoordinates.latitude},${destinationCoordinates.longitude}`
     : destination;
-  const key = cacheKey(routingOrigin, routingDestination, bucket, travelMode, provider);
+  const key = cacheKey(routingOrigin, routingDestination, bucket, travelMode, provider, trafficModel);
 
   // ── In-memory TTL cache ──────────────────────────────────────────────────
   const cached = cacheGet(key);
@@ -352,7 +361,7 @@ async function handleTravelTimeRequest(request: NextRequest, searchParams: URLSe
       mapboxToken as string,
       travelMode as "DRIVE" | "WALK"
     )
-    : callRoutesApi(origin, destination, bucket, apiKey as string, travelMode);
+    : callRoutesApi(origin, destination, bucket, apiKey as string, travelMode, trafficModel);
   inflight.set(key, promise);
 
   try {
@@ -402,6 +411,7 @@ export async function POST(request: NextRequest) {
     "departureTime",
     "travelMode",
     "provider",
+    "trafficModel",
     "originLatitude",
     "originLongitude",
     "destinationLatitude",

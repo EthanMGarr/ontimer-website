@@ -31,7 +31,7 @@
     "test:app-store-links": "tsc --module commonjs --target es2022 --moduleResolution node --outDir /tmp/ontimer-app-store-link-tests --skipLibCheck --esModuleInterop --noEmit false src/lib/app-store-links.ts src/lib/__tests__/app-store-links.test.ts && node /tmp/ontimer-app-store-link-tests/__tests__/app-store-links.test.js",
     "test:until": "tsc --module commonjs --target es2022 --moduleResolution node --outDir /tmp/ontimer-until-tests --skipLibCheck --esModuleInterop --noEmit false src/lib/until.ts src/lib/__tests__/until.test.ts && node /tmp/ontimer-until-tests/__tests__/until.test.js",
     "test:until:ssr": "node scripts/check-until-ssr.mjs",
-    "test:airport-pickup": "tsc --module commonjs --target es2022 --moduleResolution node --outDir /tmp/ontimer-airport-pickup-tests --skipLibCheck --esModuleInterop --noEmit false src/lib/airport-pickup.ts src/lib/__tests__/airport-pickup.test.ts && node /tmp/ontimer-airport-pickup-tests/__tests__/airport-pickup.test.js",
+    "test:airport-pickup": "tsc --module commonjs --target es2022 --moduleResolution node --outDir /tmp/ontimer-airport-pickup-tests --skipLibCheck --esModuleInterop --noEmit false src/lib/airport-pickup.ts src/lib/airport-time-zones.generated.ts src/lib/airport-time-zone.ts src/lib/__tests__/airport-pickup.test.ts src/lib/__tests__/airport-time-zone.test.ts && node /tmp/ontimer-airport-pickup-tests/__tests__/airport-pickup.test.js && node /tmp/ontimer-airport-pickup-tests/__tests__/airport-time-zone.test.js",
     "test:airport-pickup:ux": "node scripts/check-airport-pickup-ux.mjs",
     "test:airport-pickup:destinations": "node scripts/check-airport-pickup-destinations-ux.mjs",
     "test:airport-pickup:profiles": "tsc --module commonjs --target es2022 --moduleResolution node --outDir /tmp/ontimer-airport-pickup-profile-tests --skipLibCheck --esModuleInterop --noEmit false src/lib/airport-pickup-profiles.ts src/lib/__tests__/airport-pickup-profiles.test.ts && node /tmp/ontimer-airport-pickup-profile-tests/__tests__/airport-pickup-profiles.test.js",
@@ -77,6 +77,7 @@
     "recharts": "^3.8.1"
   },
   "devDependencies": {
+    "airport-timezone": "^1.1.1",
     "@types/marked": "^6.0.0",
     "@types/node": "^20",
     "@types/react": "^19",

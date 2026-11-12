@@ -252,6 +252,30 @@ export function trackLanguageSwitch(
   });
 }
 
+export function trackToolsMenuOpened(surface: "desktop_menu" | "mobile_menu"): void {
+  fireEvent("tools_menu_opened", {
+    page_path: window.location.pathname,
+    surface,
+    device_type: getDeviceType(),
+  });
+}
+
+export function trackToolNavigationClick(
+  surface: string,
+  group: string,
+  destination: string,
+  position: number,
+): void {
+  fireEvent("tool_navigation_click", {
+    page_path: window.location.pathname,
+    surface,
+    tool_group: group,
+    destination,
+    link_position: position,
+    device_type: getDeviceType(),
+  });
+}
+
 export function trackAutomaticAlertCTAViewed(
   calculatorType: string,
   ctaVariant: string,

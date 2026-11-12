@@ -8,8 +8,7 @@ import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHando
 import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
-import { getDefaultAirportEventTime } from "@/lib/airport-planning-default";
-import { calculateAirportPickup, type AirportPickupPlan } from "@/lib/airport-pickup";
+import { calculateAirportPickup, pickupTrafficEstimateAt, recommendedPickupTrafficCushion, type AirportPickupPlan } from "@/lib/airport-pickup";
 import {
   buildGoogleCalendarLink,
   buildIcsCalendarDataUri,
@@ -24,22 +23,20 @@ import {
   isInvalidTravelTimeLocation,
   readTravelTimeResponse,
 } from "@/lib/travel-time-errors";
+import {
+  airportLocalDateTime,
+  airportLocalInputParts,
+  airportTimeZoneForCode,
+  airportTimeZoneLabel,
+} from "@/lib/airport-time-zone";
 
 type Relationship = "someone" | "friend" | "colleague" | "wife" | "husband" | "girlfriend" | "boyfriend" | "daughter" | "son" | "parent" | "cousin" | "family member";
 type TravelResult = { durationMinutes: number; hasTrafficData: boolean; trafficBasis: "live" | "predicted" | "scheduled" | "none" };
-const formatTime = (date: Date) => date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-const formatDateTime = (date: Date) => date.toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-const localInputDateString = (date: Date) => {
-  const pad = (value: number) => String(value).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-};
-const localInputTimeString = (date: Date) => {
-  const pad = (value: number) => String(value).padStart(2, "0");
-  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
-};
+const formatTime = (date: Date, timeZone: string | null) => date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", ...(timeZone ? { timeZone } : {}) });
+const formatDateTime = (date: Date, timeZone: string | null) => date.toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", ...(timeZone ? { timeZone } : {}) });
 
 async function fetchDriveTime(origin: string, destination: string, departureAt: Date): Promise<TravelResult> {
-  const params = new URLSearchParams({ origin: origin.trim(), destination: destination.trim(), departureTime: Math.floor(departureAt.getTime() / 1000).toString(), travelMode: "DRIVE" });
+  const params = new URLSearchParams({ origin: origin.trim(), destination: destination.trim(), departureTime: Math.floor(departureAt.getTime() / 1000).toString(), travelMode: "DRIVE", trafficModel: "pessimistic" });
   const response = await fetch(`/api/travel-time?${params}`);
   return readTravelTimeResponse<TravelResult>(response);
 }
@@ -61,24 +58,24 @@ export default function AirportPickupCalculator({
   intentNav,
   initialPlan,
 }: AirportPickupCalculatorProps) {
-  const initialLandingDate = initialPlan?.landingAt
-    ? localInputDateString(initialPlan.landingAt)
-    : "";
-  const initialLandingTime = initialPlan?.landingAt
-    ? localInputTimeString(initialPlan.landingAt)
-    : "";
+  const initialAirportCode = initialPlan?.airportCode ?? locationCode ?? null;
+  const initialAirportTimeZone = airportTimeZoneForCode(initialAirportCode);
+  const initialLandingParts = initialPlan?.landingAt
+    ? airportLocalInputParts(initialPlan.landingAt, initialAirportTimeZone)
+    : { date: "", time: "" };
   const initialAirportValue = initialPlan?.airportName ?? initialPlan?.airportCode ?? initialAirport;
   const hasInitialLanding = Boolean(initialPlan?.landingAt);
   const [today, setToday] = useState("");
   const [relationship, setRelationship] = useState<Relationship>("someone");
   const [airport, setAirport] = useState(initialAirportValue);
-  const [selectedAirportCode, setSelectedAirportCode] = useState<string | null>(initialPlan?.airportCode ?? locationCode ?? null);
-  const [arrivalDate, setArrivalDate] = useState(initialLandingDate);
-  const [arrivalTime, setArrivalTime] = useState(initialLandingTime);
+  const [selectedAirportCode, setSelectedAirportCode] = useState<string | null>(initialAirportCode);
+  const [arrivalDate, setArrivalDate] = useState(initialLandingParts.date);
+  const [arrivalTime, setArrivalTime] = useState(initialLandingParts.time);
   const [origin, setOrigin] = useState("");
   const [currentLocation, setCurrentLocation] = useState<string | null>(null);
   const [checkedBag, setCheckedBag] = useState(initialPlan?.checkedBag ?? false);
   const [international, setInternational] = useState(initialPlan?.flightType === "international");
+  const [globalEntry, setGlobalEntry] = useState(false);
   const [meetInside, setMeetInside] = useState(initialPlan?.meetMode === "inside");
   const [manualDrive, setManualDrive] = useState("");
   const [plan, setPlan] = useState<(AirportPickupPlan & { driveMinutes: number; trafficBasis: TravelResult["trafficBasis"] | "manual" }) | null>(null);
@@ -87,9 +84,18 @@ export default function AirportPickupCalculator({
   const [isResolvingOrigin, setIsResolvingOrigin] = useState(false);
   const [error, setError] = useState("");
   const started = useRef(false);
+  const defaultTimeInitialized = useRef(false);
   const resultPanelRef = useRef<HTMLElement>(null);
   const person = relationship === "someone" ? "your passenger" : `your ${relationship}`;
-  const arrivalValue = arrivalDate && arrivalTime ? `${arrivalDate}T${arrivalTime}` : "";
+  const normalizedAirportCode = (selectedAirportCode ?? airport).trim().toUpperCase();
+  const airportPlanCode = normalizedAirportCode && /^[A-Z]{3}$/.test(normalizedAirportCode)
+    ? normalizedAirportCode
+    : undefined;
+  const airportTimeZone = airportTimeZoneForCode(airportPlanCode);
+  const landingAt = arrivalDate && arrivalTime
+    ? airportLocalDateTime(arrivalDate, arrivalTime, airportTimeZone)
+    : null;
+  const landingTimeZoneLabel = airportTimeZoneLabel(airportTimeZone, landingAt ?? new Date());
   const analyticsContext = {
     airport_code: locationCode ?? "unspecified",
     page_type: pageType,
@@ -97,13 +103,14 @@ export default function AirportPickupCalculator({
   };
 
   useEffect(() => {
-    const defaults = getDefaultAirportEventTime();
-    setToday(defaults.date);
-    if (!hasInitialLanding) {
+    setToday(airportLocalInputParts(new Date(), airportTimeZone).date);
+    if (!hasInitialLanding && !defaultTimeInitialized.current) {
+      const defaults = airportLocalInputParts(new Date(Date.now() + 4 * 60 * 60 * 1000), airportTimeZone);
       setArrivalDate(defaults.date);
       setArrivalTime(defaults.time);
+      defaultTimeInitialized.current = true;
     }
-  }, [hasInitialLanding]);
+  }, [airportTimeZone, hasInitialLanding]);
 
   useEffect(() => {
     if (initialAirport || typeof window === "undefined") return;
@@ -122,11 +129,6 @@ export default function AirportPickupCalculator({
     return () => window.cancelAnimationFrame(frame);
   }, [plan]);
 
-  const landingAt = arrivalValue ? new Date(arrivalValue) : null;
-  const normalizedAirportCode = (selectedAirportCode ?? airport).trim().toUpperCase();
-  const airportPlanCode = normalizedAirportCode && /^[A-Z]{3}$/.test(normalizedAirportCode)
-    ? normalizedAirportCode
-    : undefined;
   const recalculateUrl = plan && landingAt && !Number.isNaN(landingAt.getTime())
     ? buildAirportPlanLink({
         kind: "pickup",
@@ -160,22 +162,25 @@ export default function AirportPickupCalculator({
 
   async function calculate() {
     noteStarted();
-    const arrival = new Date(arrivalValue);
+    const arrival = landingAt ?? new Date(Number.NaN);
     if (!airport.trim() || !origin.trim() || Number.isNaN(arrival.getTime())) { setError("Add the pickup airport, scheduled landing time, and where you’re driving from."); return; }
+    if (arrival.getTime() <= Date.now()) { setError("Choose a scheduled landing time that is still ahead."); return; }
     setIsCalculating(true); setError("");
     try {
       let driveMinutes: number;
       let trafficBasis: TravelResult["trafficBasis"] | "manual";
       if (manualDrive.trim()) { driveMinutes = Number(manualDrive); trafficBasis = "manual"; }
       else {
-        const roughReady = new Date(arrival.getTime() + (20 + (checkedBag ? 20 : 0) + (international ? 45 : 0)) * 60_000);
-        const route = await fetchDriveTime(currentLocation ?? origin, airport, roughReady);
+        // Probe a plausible leave window with one paid lookup. The old
+        // passenger-ready lookup could be an hour or more too late.
+        const route = await fetchDriveTime(currentLocation ?? origin, airport, pickupTrafficEstimateAt(arrival));
         driveMinutes = route.durationMinutes; trafficBasis = route.trafficBasis;
       }
       if (!Number.isFinite(driveMinutes) || driveMinutes <= 0) throw new Error("Invalid travel time");
-      const timing = calculateAirportPickup({ arrival, deplaneMinutes: 10, airportWalkMinutes: 10, bagMinutes: checkedBag ? 20 : 0, immigrationMinutes: international ? 45 : 0, driveMinutes, parkingMinutes: meetInside ? 20 : 0, curbTimingMinutes: meetInside ? 0 : 5 });
+      const trafficCushionMinutes = trafficBasis === "manual" ? 0 : recommendedPickupTrafficCushion(driveMinutes);
+      const timing = calculateAirportPickup({ arrival, deplaneMinutes: 10, airportWalkMinutes: 10, bagMinutes: checkedBag ? 20 : 0, immigrationMinutes: international ? globalEntry ? 15 : 45 : 0, driveMinutes, trafficCushionMinutes, parkingMinutes: meetInside ? 20 : 0, curbTimingMinutes: 0 });
       setPlan({ ...timing, driveMinutes, trafficBasis });
-      trackCalculatorCompleted("airport_pickup", { ...analyticsContext, relationship, checked_bag: checkedBag ? 1 : 0, international: international ? 1 : 0, meet_inside: meetInside ? 1 : 0, drive_minutes: driveMinutes });
+      trackCalculatorCompleted("airport_pickup", { ...analyticsContext, relationship, checked_bag: checkedBag ? 1 : 0, international: international ? 1 : 0, global_entry: globalEntry ? 1 : 0, meet_inside: meetInside ? 1 : 0, drive_minutes: driveMinutes, traffic_cushion_minutes: trafficCushionMinutes });
     } catch (caught) {
       setError(isInvalidTravelTimeLocation(caught)
         ? invalidAddressMessage()
@@ -186,14 +191,14 @@ export default function AirportPickupCalculator({
 
   return <div className={`pickup-workbench pickup-shell${plan ? " pickup-workbench--ready" : ""}`}>
     {plan ? <section ref={resultPanelRef} className="pickup-result pickup-result--ready" aria-live="polite">
-      <p className="pickup-result__context">For the {formatTime(new Date(arrivalValue))} arrival</p>
-      <p className="pickup-step">Leave by</p>
-      <h2>{formatTime(plan.leaveAt)}</h2>
-      <p className="pickup-result__date">{formatDateTime(plan.leaveAt)}</p>
-      {calendarEvent ? <CalendarOnTimerHandoff calendarHref={buildGoogleCalendarLink(calendarEvent)} alternateCalendarHref={buildIcsCalendarDataUri(calendarEvent)} alternateCalendarFilename="airport-pickup.ics" calendarProvider={calendarProvider} setCalendarProvider={setCalendarProvider} calculatorType="airport_pickup" readyHeading={`Put ${person}’s pickup on your calendar.`} openedItemLabel="pickup event" compactOpenedStatus postCalendarHeading="Get an alarm when it’s time to leave." postCalendarBody="OnTimer turns this pickup into an automatic calendar alarm." appLocation="airport_pickup_after_calendar" leaveTimeLabel={formatTime(plan.leaveAt)} analyticsContext={{ ...analyticsContext, relationship }} eventPreview={{ title: calendarEvent.title, startLabel: formatDateTime(plan.leaveAt) }} /> : null}
-      <div className="pickup-timeline"><div><span>1</span><p><strong>You leave</strong>{formatTime(plan.leaveAt)} · {plan.driveMinutes} min drive</p></div><div><span>2</span><p><strong>Flight lands</strong>{formatTime(new Date(arrivalValue))} at {airport}</p></div><div><span>3</span><p><strong>{person} reaches pickup</strong>About {formatTime(plan.passengerReady)}</p></div></div>
-      <details className="pickup-breakdown"><summary>How we estimated this</summary><dl><div><dt>Getting off the plane</dt><dd>10 min</dd></div><div><dt>Walk to arrivals</dt><dd>10 min</dd></div>{checkedBag ? <div><dt>Checked bag</dt><dd>20 min</dd></div> : null}{international ? <div><dt>Immigration</dt><dd>45 min</dd></div> : null}{meetInside ? <div><dt>Parking and walking in</dt><dd>20 min</dd></div> : <div><dt>Curb timing</dt><dd>Aim 5 min after they’re ready</dd></div>}<div><dt>Your drive</dt><dd>{plan.driveMinutes} min · {plan.trafficBasis === "live" ? "live traffic" : plan.trafficBasis === "predicted" ? "expected traffic" : "estimate"}</dd></div></dl></details>
-      <p className="pickup-assumption">Flight schedules can change. Check the airline before you leave.</p>
+      <p className="pickup-result__context">For the {formatTime(landingAt as Date, airportTimeZone)} {landingTimeZoneLabel} arrival</p>
+      <p className="pickup-step">Recommended leave by</p>
+      <h2>{formatTime(plan.leaveAt, airportTimeZone)}</h2>
+      <p className="pickup-result__date">{formatDateTime(plan.leaveAt, airportTimeZone)} · {landingTimeZoneLabel}</p>
+      {calendarEvent ? <CalendarOnTimerHandoff calendarHref={buildGoogleCalendarLink(calendarEvent)} alternateCalendarHref={buildIcsCalendarDataUri(calendarEvent)} alternateCalendarFilename="airport-pickup.ics" calendarProvider={calendarProvider} setCalendarProvider={setCalendarProvider} calculatorType="airport_pickup" readyHeading={`Put ${person}’s pickup on your calendar.`} openedItemLabel="pickup event" compactOpenedStatus postCalendarHeading="Get an alarm when it’s time to leave." postCalendarBody="OnTimer turns this pickup into an automatic calendar alarm." appLocation="airport_pickup_after_calendar" leaveTimeLabel={formatTime(plan.leaveAt, airportTimeZone)} analyticsContext={{ ...analyticsContext, relationship }} eventPreview={{ title: calendarEvent.title, startLabel: formatDateTime(plan.leaveAt, airportTimeZone) }} /> : null}
+      <div className="pickup-timeline"><div><span>1</span><p><strong>You leave</strong>{formatTime(plan.leaveAt, airportTimeZone)} · {plan.driveMinutes} min drive{plan.trafficCushionMinutes ? ` + ${plan.trafficCushionMinutes} min cushion` : ""}</p></div><div><span>2</span><p><strong>Flight lands</strong>{formatTime(landingAt as Date, airportTimeZone)} {landingTimeZoneLabel} at {airport}</p></div><div><span>3</span><p><strong>{person} reaches pickup</strong>About {formatTime(plan.passengerReady, airportTimeZone)} {landingTimeZoneLabel}</p></div></div>
+      <details className="pickup-breakdown"><summary>How we estimated this</summary><dl><div><dt>Getting off the plane</dt><dd>10 min</dd></div><div><dt>Walk to arrivals</dt><dd>10 min</dd></div>{checkedBag ? <div><dt>Checked bag</dt><dd>20 min</dd></div> : null}{international ? <div><dt>{globalEntry ? "Global Entry" : "Immigration and customs"}</dt><dd>{globalEntry ? 15 : 45} min planning estimate</dd></div> : null}{meetInside ? <div><dt>Parking and walking in</dt><dd>20 min</dd></div> : null}<div><dt>Your drive</dt><dd>{plan.driveMinutes} min · {plan.trafficBasis === "manual" ? "your estimate" : "bad-traffic estimate around 90 min before landing"}</dd></div>{plan.trafficCushionMinutes ? <div><dt>Traffic cushion</dt><dd>{plan.trafficCushionMinutes} min</dd></div> : null}</dl></details>
+      <p className="pickup-assumption">Traffic and flight timing can still change. Recheck the live route and airline before leaving.</p>
     </section> : null}
 
     <form className="pickup-form" onSubmit={(event) => { event.preventDefault(); void calculate(); }}>
@@ -218,7 +223,7 @@ export default function AirportPickupCalculator({
         </div>}
         <div className="pickup-landing__fields">
           <CalculatorDateField
-            label="Flight date"
+            label="Flight date at the airport"
             value={arrivalDate}
             today={today}
             inputId="pickup-arrival-date"
@@ -229,7 +234,7 @@ export default function AirportPickupCalculator({
             onChange={(value) => { noteStarted(); setArrivalDate(value); resetResult(); }}
           />
           <div>
-            <label htmlFor="pickup-arrival-time">Flight lands at</label>
+            <label htmlFor="pickup-arrival-time">Flight lands at ({landingTimeZoneLabel})</label>
             <input id="pickup-arrival-time" className="pickup-input" type="time" value={arrivalTime} onChange={(event) => { noteStarted(); setArrivalTime(event.target.value); resetResult(); }} />
           </div>
         </div>
@@ -249,7 +254,8 @@ export default function AirportPickupCalculator({
         <h2 id="pickup-details-heading">Pickup details</h2>
         <fieldset className="pickup-choices"><legend className="pickup-visually-hidden">Pickup details</legend>
           <label><input type="checkbox" checked={checkedBag} onChange={(event) => { setCheckedBag(event.target.checked); resetResult(); }} /> Checked bag</label>
-          <label><input type="checkbox" checked={international} onChange={(event) => { setInternational(event.target.checked); resetResult(); }} /> International arrival</label>
+          <label><input type="checkbox" checked={international} onChange={(event) => { setInternational(event.target.checked); if (!event.target.checked) setGlobalEntry(false); resetResult(); }} /> International arrival</label>
+          {international ? <label><input type="checkbox" checked={globalEntry} onChange={(event) => { setGlobalEntry(event.target.checked); resetResult(); }} /> Passenger has Global Entry</label> : null}
           <label><input type="checkbox" checked={meetInside} onChange={(event) => { setMeetInside(event.target.checked); resetResult(); }} /> Park and meet inside</label>
         </fieldset>
         <details className="pickup-personalize">

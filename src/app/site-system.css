@@ -102,6 +102,38 @@
   margin-inline: auto;
 }
 
+.site-hero-links {
+  align-items: baseline;
+  border-top: 1px solid var(--line-strong);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-lg);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-md);
+}
+
+.site-hero-links strong {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.site-hero-links a {
+  color: var(--blue-800);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.site-hero-links a:hover {
+  color: var(--blue-950);
+}
+
+.site-hero-links a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
 .site-actions {
   align-items: center;
   display: flex;
@@ -436,11 +468,20 @@
 .site-directory-section {
   background: var(--paper);
   padding-block: clamp(3.5rem, 8vw, 6rem);
+  scroll-margin-top: 5.5rem;
 }
 
 .site-directory-section--tint {
   background: var(--sky-50);
   border-block: 1px solid var(--line);
+}
+
+.site-directory-section--featured-tools {
+  padding-block: clamp(2rem, 5vw, 3.5rem);
+}
+
+.site-directory-section--featured-tools .site-directory-grid {
+  gap: var(--space-md);
 }
 
 .site-directory-grid {
@@ -470,6 +511,86 @@
 
 .site-directory-list {
   border-top: 1px solid var(--line-strong);
+}
+
+.site-featured-tool-list {
+  border-top: 1px solid var(--line-strong);
+  display: grid;
+}
+
+.site-featured-tool-list a {
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--ink);
+  display: grid;
+  gap: 0.2rem;
+  padding-block: var(--space-md);
+  text-decoration: none;
+}
+
+.site-featured-tool-list strong {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  letter-spacing: -0.025em;
+}
+
+.site-featured-tool-list span {
+  color: var(--ink-muted);
+}
+
+.site-featured-tool-list a:hover strong {
+  color: var(--blue-700);
+}
+
+.site-tool-bucket-index {
+  background: var(--paper);
+  border-bottom: 1px solid var(--line-strong);
+  padding-block: clamp(2.5rem, 6vw, 4rem);
+}
+
+.site-tool-bucket-index__inner {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.site-tool-bucket-index__intro h2 {
+  font-size: clamp(1.65rem, 4vw, 2.25rem);
+  margin: 0;
+}
+
+.site-tool-bucket-index__intro p {
+  color: var(--ink-muted);
+  margin: var(--space-xs) 0 0;
+}
+
+.site-tool-bucket-list {
+  border-top: 1px solid var(--line-strong);
+  display: grid;
+}
+
+.site-tool-bucket-list a {
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--ink);
+  display: grid;
+  gap: var(--space-xs);
+  min-width: 0;
+  padding-block: var(--space-lg);
+  text-decoration: none;
+}
+
+.site-tool-bucket-list strong {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.site-tool-bucket-list span {
+  color: var(--ink-muted);
+  line-height: 1.55;
+}
+
+.site-tool-bucket-list a:hover strong {
+  color: var(--blue-700);
 }
 
 .site-category-link {
@@ -624,6 +745,19 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .site-tool-bucket-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .site-tool-bucket-list a:nth-child(odd) {
+    border-right: 1px solid var(--line-strong);
+    padding-right: var(--space-xl);
+  }
+
+  .site-tool-bucket-list a:nth-child(even) {
+    padding-left: var(--space-xl);
+  }
+
   .site-letter-group {
     grid-template-columns: 4rem minmax(0, 1fr);
   }
@@ -648,6 +782,15 @@
   }
 
   .site-directory-grid {
+    grid-template-columns: minmax(18rem, 0.4fr) minmax(0, 0.6fr);
+  }
+
+  .site-directory-section--featured-tools .site-directory-grid,
+  .site-tool-bucket-index__inner {
+    gap: var(--space-2xl);
+  }
+
+  .site-tool-bucket-index__inner {
     grid-template-columns: minmax(18rem, 0.4fr) minmax(0, 0.6fr);
   }
 
@@ -687,10 +830,18 @@
   max-width: 34rem;
 }
 
+.site-airport-pickup-reviewed {
+  margin-top: 0;
+}
+
+.site-actions--airport-directory {
+  margin-block: calc(var(--space-lg) * -0.25) var(--space-xl);
+}
+
 /* Airport directory hero: tighter on phones so the search and the start of
    Popular airports share the first screen. */
 .site-hero--airport-directory {
-  padding-block: var(--space-lg) var(--space-2xl);
+  padding-block: var(--space-lg);
 }
 
 .site-hero--airport-directory .site-directory-grid {
@@ -704,7 +855,7 @@
 
 @media (min-width: 60rem) {
   .site-hero--airport-directory {
-    padding-block: clamp(4rem, 9vw, 6.5rem);
+    padding-block: clamp(2.5rem, 5vw, 4rem) var(--space-xl);
   }
 
   .site-hero--airport-directory .site-directory-grid {

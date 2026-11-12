@@ -11,7 +11,7 @@ import PlanningEstimateNotice from "@/components/leave-time/PlanningEstimateNoti
 import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import AirportAutocomplete from "@/components/AirportAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
-import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
+import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted, trackToolNavigationClick } from "@/lib/analytics";
 import {
   buildDepartureAirportPlanCalendarDescription,
   buildGoogleCalendarLink,
@@ -1407,15 +1407,22 @@ export default function AirportCalculator({
                         locale={locale}
                       />
                       {effectiveAirportOption?.detailPageHref && (
-                        <a
-                          href={effectiveAirportOption.detailPageHref}
-                          className="mt-2 inline-flex min-h-6 items-center text-xs font-medium text-zinc-400 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-zinc-200 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 active:text-white"
-                          data-airport-detail-link
-                        >
-                          {locale === "es"
-                            ? `Guía y calculadora de ${effectiveAirportOption.code} →`
-                            : `${effectiveAirportOption.code} airport guide & calculator →`}
-                        </a>
+                        <div className="mt-2" data-airport-detail-link>
+                          <a
+                            href={effectiveAirportOption.detailPageHref}
+                            className="inline-flex min-h-6 items-center whitespace-nowrap text-xs font-semibold text-green-400 underline decoration-green-700 underline-offset-4 transition-colors hover:text-green-300 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 active:text-white"
+                            onClick={() => trackToolNavigationClick("airport_calculator", "airport_specific", effectiveAirportOption.detailPageHref!, 1)}
+                          >
+                            {locale === "es"
+                              ? `Abrir calculadora de ${effectiveAirportOption.code} →`
+                              : `Open ${effectiveAirportOption.code} calculator →`}
+                          </a>
+                          <p className="mt-1 text-xs leading-relaxed text-zinc-400">
+                            {locale === "es"
+                              ? "Guía local de terminales, estacionamiento, transporte y seguridad."
+                              : "Local terminal, parking, transit and security guidance."}
+                          </p>
+                        </div>
                       )}
                     </>
                   ) : (

@@ -1,4 +1,4 @@
-/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 · macrostructure: Index-First / Reviewed Airport Index · theme: locked design.md */
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 · macrostructure: Searchable Airport Index · theme: locked design.md */
 import type { Metadata } from "next";
 import Link from "next/link";
 import AirportDirectorySearch from "@/components/airport/AirportDirectorySearch";
@@ -39,6 +39,8 @@ const pickupGuides = pickupAirports.map(({ profile, location }) => ({
   city: location.city,
   href: getAirportPickupPath(profile.slug),
 }));
+
+const featuredPickupAirports = pickupAirports.slice(0, 6);
 
 const pageUrl = "https://www.ontimer.app/airport-pickup-calculators";
 const jsonLd = {
@@ -95,26 +97,31 @@ export default function AirportPickupCalculatorsDirectory() {
         <div className="site-shell">
           <div className="site-directory-grid">
             <div>
-              <p className="site-kicker">Airport pickup calculators</p>
-              <h1 className="site-title">Choose an airport pickup calculator</h1>
+              <p className="site-kicker">Airport guides &amp; calculators</p>
+              <h1 className="site-title">Find out exactly when to leave for an airport pickup</h1>
               <p className="site-lede">
-                Find out exactly when to leave using the passenger&apos;s landing time,
-                deplaning, bags, immigration and your drive—plus reviewed local pickup guidance.
+                Choose the passenger&apos;s airport, enter the landing time and your route, and get a
+                specific time to leave.
               </p>
             </div>
 
             <div>
               <AirportDirectorySearch guides={pickupGuides} mode="pickup" />
+
+              <div className="site-actions site-actions--airport-directory">
+                <Link href="/airport-pickup-time-calculator" className="site-secondary-action">
+                  Any-airport pickup calculator
+                </Link>
+              </div>
+
               <div className="site-directory-intro">
                 <div>
-                  <p>{pickupAirports.length} reviewed airports</p>
-                  <p>
-                    Each airport page adds local terminal, curb, waiting-lot and road details
-                    to the same pickup calculator.
-                  </p>
+                  <p>Popular airports</p>
+                  <p>Start with a popular airport, or search above by airport, city or code.</p>
                 </div>
+
                 <div className="site-featured-grid site-featured-grid--spaced">
-                  {pickupAirports.slice(0, 6).map(({ profile, location }) => (
+                  {featuredPickupAirports.map(({ profile, location }) => (
                     <Link
                       key={profile.slug}
                       href={getAirportPickupPath(profile.slug)}
@@ -131,13 +138,13 @@ export default function AirportPickupCalculatorsDirectory() {
         </div>
       </section>
 
-      <section className="site-directory-section">
+      <section className="site-directory-section site-airport-pickup-reviewed" id="reviewed-airports">
         <div className="site-shell site-directory-grid">
           <div className="site-directory-intro">
-            <p>All airport pickup calculators</p>
+            <p>All {pickupAirports.length} airport pickup calculators</p>
             <p>
-              Choose the passenger&apos;s arrival airport. Every page keeps the calculator first
-              and places the reviewed local instructions afterward.
+              Choose the passenger&apos;s arrival airport. Each page combines the pickup calculator
+              with local terminal, curb, waiting-lot and road guidance.
             </p>
           </div>
           <div className="site-location-grid">
@@ -155,31 +162,6 @@ export default function AirportPickupCalculatorsDirectory() {
         </div>
       </section>
 
-      <section className="site-directory-section site-directory-section--tint">
-        <div className="site-shell site-directory-grid">
-          <div className="site-directory-intro">
-            <p>Any airport</p>
-            <p>
-              If the airport is not in the reviewed list yet, use the general pickup calculator.
-              It supports any airport without inventing local instructions we have not verified.
-            </p>
-          </div>
-          <div>
-            <h2 className="site-section-title">Calculate an airport pickup</h2>
-            <p className="site-note">
-              Enter the landing time and your starting point to get a specific time to leave.
-            </p>
-            <div className="site-actions">
-              <Link href="/airport-pickup-time-calculator" className="site-secondary-action">
-                Calculate any airport pickup
-              </Link>
-              <Link href="/airport-time-calculators" className="site-text-action">
-                Browse airport departure calculators <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
