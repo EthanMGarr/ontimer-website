@@ -12,6 +12,9 @@ const placeAutocomplete = readFileSync("src/components/PlaceAutocomplete.tsx", "
 const autocompleteLibrary = readFileSync("src/lib/places-autocomplete.ts", "utf8");
 const globalStyles = readFileSync("src/app/globals.css", "utf8");
 const rootLayout = readFileSync("src/app/layout.tsx", "utf8");
+const autocompleteHandleChange = placeAutocomplete.match(
+  /const handleChange = useCallback\([\s\S]*?\/\/ ── Selection/
+)?.[0] ?? "";
 
 assert.equal(component.includes("formExpanded"), false, "the trip form must never collapse on mobile");
 assert.equal(component.includes("showRouteHint"), false, "route errors must not appear while an address is being typed");
@@ -62,6 +65,18 @@ assert.match(component, /currentLocation: "Current location found"/, "the genera
 assert.match(component, /fetchNearestAddress\(coords\.latitude, coords\.longitude, locale\)/, "the general calculator must show the nearest readable address, not only a generic current-location label");
 assert.match(component, /setOrigin\(address \?\? copy\.currentLocation\)/, "the general calculator must fall back to the generic label only when no address is available");
 assert.match(placeAutocomplete, /isPaste \? AUTOCOMPLETE_PASTE_DEBOUNCE_MS : AUTOCOMPLETE_TYPING_DEBOUNCE_MS/, "address autocomplete must use the reviewed typing and paste delays");
+assert.match(placeAutocomplete, /const minimumCharacters = types === "airport" \? 2 : 4;/, "paid address autocomplete must not start before four characters");
+assert.ok(autocompleteHandleChange, "the guarded autocomplete input-change path must remain discoverable");
+assert.doesNotMatch(
+  autocompleteHandleChange,
+  /fireEvent|capturePostHog|gtag|track\(/,
+  "location keystrokes must never emit analytics events"
+);
+assert.match(
+  autocompleteHandleChange,
+  /clearTimeout\(debounceRef\.current\)[\s\S]*?requestRef\.current\?\.abort\(\)[\s\S]*?setTimeout\([\s\S]*?AUTOCOMPLETE_TYPING_DEBOUNCE_MS/,
+  "each edit must cancel stale work and replace—not add—its delayed autocomplete lookup"
+);
 assert.match(placeAutocomplete, /inputType === "insertReplacementText"/, "address autocomplete must recognize iOS Contact AutoFill replacement events");
 assert.match(placeAutocomplete, /val\.length - previousValue\.length > 1/, "address autocomplete must recognize bulk address insertion even when the browser omits a specific AutoFill input type");
 assert.match(placeAutocomplete, /fetchSuggestions\(val, requestId, isBulkInsertion, isAutoFill\)/, "bulk AutoFill and paste lookups must be allowed to finish after the browser blurs the field");
