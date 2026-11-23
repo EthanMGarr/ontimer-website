@@ -38,9 +38,9 @@
 .pickup-error { color: #a82626; font-weight: 650; }
 .pickup-result { overflow: hidden; border: 1px solid var(--pickup-blue); background: var(--pickup-pale); color: var(--pickup-ink); }
 .pickup-result__context { margin: 0 0 8px; color: var(--pickup-muted); font-size: .85rem; line-height: 1.45; }
-.pickup-result .pickup-step { margin-bottom: 8px; color: var(--pickup-ink); }
+.pickup-result .pickup-step { margin-bottom: 8px; color: var(--pickup-ink); font-size: .9rem; font-weight: 800; letter-spacing: .07em; }
 .pickup-result > p:not(.pickup-step) { color: var(--pickup-muted); line-height: 1.55; }
-.pickup-result--ready h2 { color: var(--pickup-blue); font-size: clamp(3.4rem, 7vw, 6rem); font-weight: 750; letter-spacing: -.05em; line-height: .95; }
+.pickup-result--ready h2 { color: var(--pickup-blue); font-size: clamp(3.4rem, 6vw, 5.5rem); font-weight: 750; letter-spacing: -.05em; line-height: .95; }
 .pickup-result__date { margin-top: 9px; }
 .pickup-result dl { display: grid; gap: 12px; margin: 24px 0; }
 .pickup-result dl div { padding: 18px; border: 1px solid var(--pickup-border); border-radius: 16px; }

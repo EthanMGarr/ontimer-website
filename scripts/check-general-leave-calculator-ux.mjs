@@ -30,6 +30,7 @@ assert.match(component, /date: "Drop-off date",\s*time: "Drop-off time",/, "drop
 assert.doesNotMatch(component, /Ready for pickup at|They need to arrive by/, "interpretive pickup and drop-off time labels must not return");
 assert.match(component, /planning_purpose: journeyPurpose/, "calculator analytics must identify the selected planning purpose");
 assert.match(component, /analyticsContext=\{\{ planning_purpose: journeyPurpose \}\}/, "calendar and acquisition analytics must retain planning purpose");
+assert.match(component, /experienceVariant="leave-time-v2"/, "the generic leave-time result must use the product-led acquisition presentation");
 assert.match(component, /submitAttempted && !hasOrigin/);
 assert.equal((component.match(/onClick=\{handleCalculate\}/g) ?? []).length, 1, "render exactly one calculate/update action");
 assert.equal(component.includes("exclusivePrimaryAction"), false, "result acquisition must be available without a calendar detour");
@@ -110,6 +111,8 @@ assert.doesNotMatch(handoff, /exclusivePrimaryAction/, "the shared OnTimer actio
 assert.match(handoff, /data-calendar-secondary-acquisition/, "the shared handoff must expose a secondary OnTimer path before calendar use");
 assert.match(handoff, /OnTimer is free\. Turn calendar events into automatic alarms\./, "the acquisition path must state plainly that OnTimer is free");
 assert.match(handoff, /Works with Google Calendar, Apple Calendar, and Outlook Calendar\./, "the supporting line must provide compatibility proof");
+assert.match(handoff, /timeToLeaveEyebrow: "ONTIMER · TIME TO LEAVE"/, "the generic result must identify the Time To Leave product experience");
+assert.match(handoff, /productLedV2 && !calendarOpened \? "app-store-badge" : "button"/, "the generic and airport result experiences must use the official App Store badge");
 assert.doesNotMatch(handoff, /free to download|Free download on the App Store/, "the acquisition path must not qualify or repeat the free claim");
 
 console.log("general leave-time calculator UX checks passed");

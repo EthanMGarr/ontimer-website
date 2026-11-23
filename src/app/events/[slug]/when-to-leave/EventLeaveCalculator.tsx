@@ -7,6 +7,7 @@ import CurrentLocationControl from "@/components/CurrentLocationControl";
 import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHandoff";
 import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 import { buildIcsCalendarDataUri } from "@/lib/calendar-links";
+import { scrollCalculatorResultIntoView } from "@/lib/calculator-result-scroll";
 import {
   calculateEventLeavePlan,
   provisionalDepartureFor,
@@ -192,7 +193,7 @@ export default function EventLeaveCalculator({ event, venue }: { event: EventRec
         days_before_event: Math.max(0, Math.ceil((eventStart.getTime() - Date.now()) / 86_400_000)),
       });
       window.setTimeout(() => {
-        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        scrollCalculatorResultIntoView(resultRef.current);
       }, 50);
     } catch (caught) {
       setResult(null);

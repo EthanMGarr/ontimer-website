@@ -439,7 +439,7 @@ The proprietary value is the interpretation from evidence to arrival-time predic
 
 ### Measurement-readiness audit and fixes (2026-09-05)
 
-A code-level audit (not a doc-claims review) found that the airport calculator's own funnel events fired through a second, local tracking helper in `AirportCalculator.tsx` that never attached `attribution_token`, `landing_page`, or `traffic_source` — only the shared cross-calculator events (App Store clicks, calendar handoff, etc.) carried those dimensions. This meant the richest funnel-depth signals (`airport_leave_time_answer_generated`, breakdown/adjustments opens, quota fallback) could not be joined to acquisition source, which would have silently undermined any Phase 2 experiment analysis. Fixed: the local helper now delegates to the centralized `fireEvent()` in `src/lib/analytics.ts`, so every airport event inherits the same acquisition dimensions going forward. No saved GA4 Explorations or dashboards depended on the old shape (confirmed with Ethan before changing it).
+A code-level audit (not a doc-claims review) found that the airport calculator's own funnel events fired through a second, local tracking helper in `AirportCalculator.tsx`. Fixed: the local helper now delegates to the centralized `fireEvent()` in `src/lib/analytics.ts`, so every airport event inherits the shared event context. As of the 2026-11-18 GA4 repair, native GA acquisition, landing-page, client, session, and engagement dimensions come from the consent-aware browser Google tag; `fireEvent()` adds only the anonymous OnTimer attribution token, page path, language, and event-specific dimensions. The former custom `landing_page`, `traffic_source`, `search_query`, and synthetic session fields are intentionally retired because they did not populate GA's standard acquisition model.
 
 Also while fixing this:
 - Removed the redundant `calculator_used` event, which fired immediately before `calculator_completed` on the same code path with a strict subset of its properties and a hardcoded `trigger: "manual"` value that carried no information.
@@ -458,7 +458,7 @@ These are documented contracts only — do not fire them until Phase 2's LGA exp
 - `experiment_id` (string, e.g. `"lga_security_explanation_v1"`)
 - `variant` (string, e.g. `"control"` / `"treatment"`)
 - `assignment_method` (`"server"` | `"stable_cookie"`)
-- plus the standard acquisition dimensions via `fireEvent()` (attribution_token, landing_page, traffic_source, search_query)
+- plus the shared browser-event context via `fireEvent()` (`attribution_token`, `page_path`, `content_language`, and `locale`); use GA's native acquisition and landing-page dimensions in reporting
 
 **`airport_result_viewed`** — fired once per distinct result signature, gated on confirmed viewport visibility (IntersectionObserver, not compute completion):
 - `location_code`, `flight_type`, `arrival_mode` (existing conventions)

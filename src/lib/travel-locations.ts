@@ -475,6 +475,14 @@ interface AirportSeed {
   transitSource: SourceLink;
   parkingSource?: SourceLink;
   relatedDestinationSlugs?: string[];
+  reviewedOn?: string;
+  reviewedLabel?: string;
+  domesticArrivalMinutes?: number;
+  internationalArrivalMinutes?: number;
+  directAnswer?: string;
+  authorityIntro?: string;
+  calculatorExample?: CalculatorExample;
+  workedExamples?: WorkedExample[];
 }
 
 function createAirportProfile(seed: AirportSeed): AirportLocationProfile {
@@ -488,11 +496,11 @@ function createAirportProfile(seed: AirportSeed): AirportLocationProfile {
     shortName: seed.shortName,
     city: seed.city,
     calculatorDestination: seed.calculatorDestination ?? `${seed.name}, ${seed.city}`,
-    reviewedOn: "2026-06-28",
-    reviewedLabel: "Reviewed June 28, 2026",
-    directAnswer:
+    reviewedOn: seed.reviewedOn ?? "2026-06-28",
+    reviewedLabel: seed.reviewedLabel ?? "Reviewed June 28, 2026",
+    directAnswer: seed.directAnswer ??
       `${seed.shortName} (${seed.code}) leave time depends on ${seed.roadAccess}, the correct terminal or concourse, parking or curbside access, checked bags, TSA PreCheck, airport transfers and whether your flight is domestic or international.`,
-    authorityIntro:
+    authorityIntro: seed.authorityIntro ??
       `${seed.shortName} is busy enough that generic airport advice is not enough. The useful question is not only when to arrive, but when to leave from your actual starting point. For ${seed.code}, that means working backward from your flight time and adding the local details that can change the trip: ${seed.roadAccess}, terminal choice, parking or rideshare access, transit schedules, checked bags, TSA PreCheck and the larger buffer often needed for international departures.`,
     relatedDestinationSlugs: seed.relatedDestinationSlugs,
     destinationKnowledge: {
@@ -511,7 +519,7 @@ function createAirportProfile(seed: AirportSeed): AirportLocationProfile {
       aiSearchSummary:
         `${seed.shortName} leave-time planning should account for ${seed.roadAccess}, terminal choice, parking or curbside access, transit schedules, checked bags, TSA PreCheck and domestic or international flight buffers.`,
     },
-    calculatorExample: {
+    calculatorExample: seed.calculatorExample ?? {
       eyebrow: `Illustrative ${seed.code} example`,
       summary: `7:30 AM domestic flight · ${seed.exampleOrigin} · parking`,
       leaveTime: "Leave around 4:50 AM",
@@ -522,8 +530,8 @@ function createAirportProfile(seed: AirportSeed): AirportLocationProfile {
       ],
     },
     airport: {
-      domesticArrivalMinutes: 120,
-      internationalArrivalMinutes: 180,
+      domesticArrivalMinutes: seed.domesticArrivalMinutes ?? 120,
+      internationalArrivalMinutes: seed.internationalArrivalMinutes ?? 180,
       terminalNames: seed.terminalNames,
       accessHeading: `Getting to ${seed.code} without losing your buffer`,
       insideHeading: `Terminals, parking and transfers at ${seed.shortName}`,
@@ -557,7 +565,7 @@ function createAirportProfile(seed: AirportSeed): AirportLocationProfile {
         ],
       },
     ],
-    workedExamples: [
+    workedExamples: seed.workedExamples ?? [
       {
         title: `${seed.exampleOrigin} -> ${seed.code}`,
         subtitle: "7:30 AM domestic flight · parking · checked bag",
@@ -1398,6 +1406,176 @@ const additionalAirportProfiles: AirportLocationProfile[] = [
     officialSource: { label: "Kansas City Airport official guide", url: "https://flykc.com/" },
     transitSource: { label: "Kansas City Airport ground transportation", url: "https://flykc.com/getting-to-from/ground-transportation" },
     parkingSource: { label: "Kansas City Airport parking", url: "https://flykc.com/parking" },
+  },
+  {
+    slug: "tulsa-tul",
+    code: "TUL",
+    name: "Tulsa International Airport",
+    shortName: "Tulsa International Airport",
+    city: "Tulsa, Oklahoma",
+    terminalNames: ["Passenger Terminal", "Concourse A", "Concourse B"],
+    roadAccess: "State Highway 11, I-244, US-75, Tulsa commute traffic and the Airport Drive terminal loop",
+    roadFact: "TUL's passenger terminal is reached from State Highway 11, with common approaches connecting from I-244, US-75 and Tulsa surface streets before the Airport Drive loop.",
+    terminalFact: "Tulsa International Airport uses one passenger terminal with Concourses A and B around the central ticketing and security area.",
+    transferFact: "The security checkpoint opens at 3:45 AM, so travelers on the first departures should not assume every airport service is available earlier.",
+    transitFact: "MetroLink Tulsa Route 201 serves the airport; count the route schedule, the walk from the stop and a missed-bus cushion separately.",
+    parkingFact: "Garage parking is closest to the terminal, while economy parking adds a carside-to-curbside shuttle; valet and short-term parking create different final transfer times.",
+    exampleOrigin: "Downtown Tulsa",
+    exampleFarOrigin: "Broken Arrow",
+    transitOrigin: "Denver Avenue Station",
+    reviewedOn: "2026-11-16",
+    reviewedLabel: "Reviewed November 16, 2026",
+    domesticArrivalMinutes: 90,
+    internationalArrivalMinutes: 180,
+    directAnswer: "Tulsa International Airport recommends arriving at least 90 minutes before your scheduled departure. To find when to leave, work backward from that airport-arrival target and add the trip from your starting point, plus parking or curb access, bag drop, security and the walk to your gate. Follow an earlier deadline from your airline when it applies.",
+    authorityIntro: "Tulsa International Airport recommends arriving at least 90 minutes before departure and opens its security checkpoint at 3:45 AM. Your actual leave time also depends on the route into TUL from your starting point, whether you park or use the curb, shuttle time from economy parking, bag drop, security and the walk through the passenger terminal to Concourse A or B.",
+    calculatorExample: {
+      eyebrow: "Illustrative TUL example",
+      summary: "7:30 AM domestic flight · Downtown Tulsa · parking",
+      leaveTime: "Leave around 5:25 AM",
+      breakdown: [
+        "6:00 AM airport arrival target",
+        "20-minute parking and terminal allowance",
+        "15-minute illustrative drive plus morning cushion",
+      ],
+    },
+    workedExamples: [
+      {
+        title: "Downtown Tulsa -> TUL",
+        subtitle: "7:30 AM domestic flight · parking · checked bag",
+        assumptions: [
+          "Illustrative 15-minute drive plus morning cushion; use the calculator for traffic",
+          "20 minutes to park and reach the terminal",
+          "90-minute terminal-arrival target from TUL guidance",
+        ],
+        calculation: [
+          "Flight departure: 7:30 AM",
+          "Airport arrival target: 6:00 AM",
+          "Reach parking by: 5:40 AM",
+          "Illustrative drive and cushion: 15 minutes",
+        ],
+        result: "Illustrative leave time: 5:25 AM",
+      },
+      {
+        title: "Broken Arrow -> TUL",
+        subtitle: "6:00 PM domestic flight · rideshare",
+        assumptions: [
+          "Illustrative 30-minute weekday drive; actual traffic may differ materially",
+          "10-minute curb-to-check-in allowance",
+          "90-minute terminal-arrival target from TUL guidance",
+        ],
+        calculation: [
+          "Flight departure: 6:00 PM",
+          "Airport arrival target: 4:30 PM",
+          "Reach the terminal curb by: 4:20 PM",
+          "Illustrative drive: 30 minutes",
+        ],
+        result: "Illustrative leave time: 3:50 PM",
+      },
+      {
+        title: "Denver Avenue Station -> TUL",
+        subtitle: "MetroLink Route 201 · 10:00 AM domestic flight",
+        assumptions: [
+          "Illustrative 45-minute bus allowance; check the current Route 201 schedule",
+          "15 minutes for waiting, walking and airport movement",
+          "90-minute terminal-arrival target from TUL guidance",
+        ],
+        calculation: [
+          "Flight departure: 10:00 AM",
+          "Airport arrival target: 8:30 AM",
+          "Transit and connection allowance: 60 minutes",
+        ],
+        result: "Be at Denver Avenue Station ready to board by about 7:30 AM",
+      },
+    ],
+    officialSource: { label: "Tulsa Airport security and arrival guidance", url: "https://flytulsa.com/travel/flights/security/" },
+    transitSource: { label: "Tulsa Airport buses and shuttles", url: "https://flytulsa.com/travel/transportation/buses-shuttles/" },
+    parkingSource: { label: "Tulsa Airport parking options and map", url: "https://flytulsa.com/travel/parking/parking-options-map/" },
+  },
+  {
+    slug: "oklahoma-city-okc",
+    code: "OKC",
+    name: "OKC Will Rogers International Airport",
+    shortName: "Oklahoma City Will Rogers Airport",
+    city: "Oklahoma City, Oklahoma",
+    terminalNames: ["Passenger Terminal", "West Concourse", "Center Concourse", "East Concourse"],
+    roadAccess: "I-44, Airport Road, South Meridian Avenue, Oklahoma City commute traffic and the Terminal Drive loop",
+    roadFact: "OKC sits southwest of downtown Oklahoma City; common approaches use I-44, Airport Road and South Meridian Avenue before joining the Terminal Drive loop.",
+    terminalFact: "OKC uses one passenger terminal with West, Center and East concourses, plus one passenger screening checkpoint on the east side of the ticketing level.",
+    transferFact: "The passenger checkpoint opens daily at 4:00 AM, so travelers on the first departures should not assume security is available earlier.",
+    transitFact: "Oklahoma City's EMBARK bus system does not currently serve the airport, so plan a rideshare, taxi, private drop-off or parking trip rather than relying on a direct city bus.",
+    parkingFact: "Economy, long-term and covered surface parking add a complimentary shuttle, while garage and premium parking use a climate-controlled walking path to the terminal.",
+    exampleOrigin: "Downtown Oklahoma City",
+    exampleFarOrigin: "Norman",
+    transitOrigin: "Downtown Oklahoma City",
+    reviewedOn: "2026-11-16",
+    reviewedLabel: "Reviewed November 16, 2026",
+    domesticArrivalMinutes: 120,
+    internationalArrivalMinutes: 180,
+    directAnswer: "OKC Will Rogers International Airport advises passengers to arrive at the terminal two hours before departure. To find when to leave, work backward from that airport-arrival target and add the trip from your starting point, plus parking or curb access, shuttle or walking time, bag drop, security and the walk to your gate. Follow an earlier airline deadline when it applies.",
+    authorityIntro: "OKC Will Rogers International Airport advises arriving at the terminal two hours before departure. Your actual leave time also depends on the approach from I-44, Airport Road or South Meridian Avenue, whether you park or use the curb, shuttle time from a surface lot, bag drop, the single security checkpoint and the walk to the West, Center or East concourse.",
+    calculatorExample: {
+      eyebrow: "Illustrative OKC example",
+      summary: "8:00 AM domestic flight · Downtown Oklahoma City · parking",
+      leaveTime: "Leave around 5:20 AM",
+      breakdown: [
+        "6:00 AM airport arrival target",
+        "20-minute parking and terminal allowance",
+        "20-minute illustrative drive plus morning cushion",
+      ],
+    },
+    workedExamples: [
+      {
+        title: "Downtown Oklahoma City -> OKC",
+        subtitle: "8:00 AM domestic flight · parking · checked bag",
+        assumptions: [
+          "Illustrative 20-minute drive plus morning cushion; use the calculator for traffic",
+          "20 minutes to park and reach the terminal",
+          "2-hour terminal-arrival target from OKC guidance",
+        ],
+        calculation: [
+          "Flight departure: 8:00 AM",
+          "Airport arrival target: 6:00 AM",
+          "Reach parking by: 5:40 AM",
+          "Illustrative drive and cushion: 20 minutes",
+        ],
+        result: "Illustrative leave time: 5:20 AM",
+      },
+      {
+        title: "Norman -> OKC",
+        subtitle: "6:00 PM domestic flight · rideshare",
+        assumptions: [
+          "Illustrative 35-minute weekday drive; actual traffic may differ materially",
+          "10-minute curb and unloading allowance",
+          "2-hour terminal-arrival target from OKC guidance",
+        ],
+        calculation: [
+          "Flight departure: 6:00 PM",
+          "Airport arrival target: 4:00 PM",
+          "Reach the terminal curb by: 3:50 PM",
+          "Illustrative drive: 35 minutes",
+        ],
+        result: "Illustrative leave time: 3:15 PM",
+      },
+      {
+        title: "Downtown Oklahoma City -> OKC by taxi or rideshare",
+        subtitle: "10:00 AM domestic flight · no direct EMBARK airport service",
+        assumptions: [
+          "Illustrative 25-minute drive; use the calculator for current traffic",
+          "10 minutes for pickup and loading",
+          "2-hour terminal-arrival target from OKC guidance",
+        ],
+        calculation: [
+          "Flight departure: 10:00 AM",
+          "Airport arrival target: 8:00 AM",
+          "Illustrative drive and pickup allowance: 35 minutes",
+        ],
+        result: "Request your ride by about 7:25 AM",
+      },
+    ],
+    officialSource: { label: "OKC Airport arrival and transportation guidance", url: "https://flyokc.com/frequently-asked-questions/" },
+    transitSource: { label: "OKC Airport ground transportation", url: "https://flyokc.com/parking-transportation/" },
+    parkingSource: { label: "OKC Airport parking options and shuttles", url: "https://flyokc.com/parking-transportation/" },
   },
   {
     slug: "indianapolis-ind",

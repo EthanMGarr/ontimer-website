@@ -72,7 +72,7 @@ interface CalendarOnTimerHandoffProps {
   alarmHeading?: string;
   alarmPostCalendarHeading?: string;
   locale?: SiteLocale;
-  experienceVariant?: "airport-v2";
+  experienceVariant?: "airport-v2" | "leave-time-v2";
 }
 
 const handoffCopy = {
@@ -94,6 +94,7 @@ const handoffCopy = {
     flightAlarms: "Get automatic alarms for every flight.", freeIphone: "OnTimer is free for iPhone.",
     flightMoment: "Never miss the moment to leave for a flight.",
     flightBody: "Connect your calendar once. Time To Fly automatically finds your flights and sets a persistent alarm for when it is time to leave. OnTimer is free.",
+    timeToLeaveEyebrow: "ONTIMER · TIME TO LEAVE",
     freeShort: "OnTimer is free",
   },
   es: {
@@ -114,6 +115,7 @@ const handoffCopy = {
     flightAlarms: "Recibe alarmas automáticas para todos tus vuelos.", freeIphone: "OnTimer es gratis para iPhone.",
     flightMoment: "No te pierdas el momento de salir hacia tu vuelo.",
     flightBody: "Conecta tu calendario una vez. Time To Fly encuentra automáticamente tus vuelos y configura una alarma persistente para cuando sea hora de salir. OnTimer es gratis.",
+    timeToLeaveEyebrow: "ONTIMER · HORA DE SALIR",
     freeShort: "OnTimer es gratis",
   },
 } as const;
@@ -157,6 +159,8 @@ export default function CalendarOnTimerHandoff({
     ?? (leaveTimeLabel ? copy.leaveAlarmHeading(leaveTimeLabel) : copy.alarmHeading);
   const resultAlarmBody = namedOffer ? namedOfferBody : copy.alarmBody;
   const airportV2 = experienceVariant === "airport-v2";
+  const leaveTimeV2 = experienceVariant === "leave-time-v2";
+  const productLedV2 = airportV2 || leaveTimeV2;
   const [isAndroidDevice, setIsAndroidDevice] = useState<boolean | null>(null);
   const [experimentVariant, setExperimentVariant] = useState<CalculatorCtaVariant>("control");
   const affiliateRef = useRef<HTMLAnchorElement>(null);
@@ -360,6 +364,11 @@ export default function CalendarOnTimerHandoff({
             ONTIMER · TIME TO FLY
           </p>
         )}
+        {leaveTimeV2 && !calendarOpened && !showAndroidAffiliate && (
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-green-500">
+            {copy.timeToLeaveEyebrow}
+          </p>
+        )}
         {airportV2 && !calendarOpened && !showAndroidAffiliate && (
           <div ref={inlineAirportCtaRef} data-airport-v2-inline-cta className="mb-4 border-b border-zinc-800 pb-4 sm:hidden">
             <p className="text-base font-bold text-white">{copy.flightAlarms}</p>
@@ -462,7 +471,7 @@ export default function CalendarOnTimerHandoff({
                       : "result_automatic_alert",
                   ...analyticsContext,
                 }}
-                presentation={airportV2 && !calendarOpened ? "app-store-badge" : "button"}
+                presentation={productLedV2 && !calendarOpened ? "app-store-badge" : "button"}
               />
               <p className="mt-2 text-[11px] text-zinc-500">{copy.appStore}</p>
             </>

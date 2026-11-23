@@ -8,6 +8,8 @@ const css = readFileSync("src/app/airport-pickup-time-calculator/pickup.css", "u
 const directory = readFileSync("src/app/airport-time-calculators/page.tsx", "utf8");
 const pickupDirectory = readFileSync("src/app/airport-pickup-calculators/page.tsx", "utf8");
 const siteSystem = readFileSync("src/app/site-system.css", "utf8");
+const calculatorDirectory = readFileSync("src/components/CalculatorDirectory.tsx", "utf8");
+const travelLocations = readFileSync("src/lib/travel-locations.ts", "utf8");
 const calculatorDateField = readFileSync("src/components/leave-time/CalculatorDateField.tsx", "utf8");
 const airportTimeZone = readFileSync("src/lib/airport-time-zone.ts", "utf8");
 assert.doesNotMatch(page, /No flight-data subscription required/);
@@ -66,10 +68,10 @@ assert.ok(
 assert.match(calculator, /\{plan \? "Edit Trip" : "Flight arrival"\}/);
 assert.match(calculator, /plan \? "Recalculate pickup time" : "Calculate when to leave"/);
 assert.match(calculator, /function resetResult\(\) \{ setCalendarProvider\(null\); setError\(""\); \}/, "editing must keep the result beside the form until the user updates it");
-assert.match(calculator, /resultPanelRef\.current\?\.scrollIntoView/,
-  "mobile submission must move the completed answer into view");
-assert.match(calculator, /window\.innerWidth > 820/,
-  "automatic result scrolling must follow the pickup mobile breakpoint");
+assert.match(calculator, /scrollCalculatorResultIntoView\(resultPanelRef\.current\)/,
+  "submission must move the completed answer into view at every viewport width");
+assert.doesNotMatch(calculator, /window\.innerWidth > 820/,
+  "automatic result scrolling must not be suppressed on desktop");
 assert.match(calculator, /ref=\{resultPanelRef\} className="pickup-result pickup-result--ready"/);
 assert.doesNotMatch(calculator, /I’m picking up my/);
 assert.match(calculator, /useState<Relationship>\("someone"\)/);
@@ -87,6 +89,13 @@ assert.match(css, /\.pickup-landing__fields/);
 assert.match(css, /\.pickup-date-input:focus-within/);
 assert.match(css, /@media \(min-width: 40rem\).*\.pickup-landing__fields \{ grid-template-columns: repeat\(2, minmax\(0, 1fr\)\); \}/s);
 assert.match(directory, /Find out exactly when to leave for your airport/);
+assert.match(directory, /title="All airport calculators, A–Z"/, "the airport directory must clearly label the complete alphabetical index");
+assert.match(directory, /Honolulu is under H and Tulsa is under T/, "the directory must explain that grouping follows the familiar displayed airport name");
+assert.match(calculatorDirectory, /function getLocationDirectoryLabel\(location:[^)]+\)[\s\S]{0,120}return location\.shortName\.trim\(\)/, "directory labels must use the familiar displayed airport name");
+assert.match(calculatorDirectory, /const letter = getLocationDirectoryLabel\(location\)\.charAt\(0\)\.toUpperCase\(\)/, "alphabetical groups must use the same label visitors see");
+assert.doesNotMatch(calculatorDirectory, /const letter = location\.name\.charAt/, "legal airport names must not place familiar airport labels under the wrong letter");
+assert.match(travelLocations, /slug: "tulsa-tul"[\s\S]*code: "TUL"[\s\S]*reviewedOn: "2026-11-16"/, "the reviewed Tulsa airport calculator must remain in the published catalog");
+assert.match(travelLocations, /slug: "oklahoma-city-okc"[\s\S]*code: "OKC"[\s\S]*reviewedOn: "2026-11-16"/, "the reviewed Oklahoma City airport calculator must remain in the published catalog");
 assert.match(pickupDirectory, /<h1 className="site-title">Find out exactly when to leave for an airport pickup<\/h1>/);
 assert.ok(
   pickupDirectory.indexOf('href="/airport-pickup-time-calculator"')

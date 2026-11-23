@@ -89,12 +89,13 @@ export default function AirportTimeCalculatorsDirectory() {
               </div>
 
               <nav className="site-alpha-nav" aria-label="Browse airports alphabetically">
-                <p>Browse alphabetically</p>
+                <p>Jump to an airport name</p>
                 <div className="site-alpha-nav__links">
                   {airportLetters.map((letter) => (
                     <Link
                       key={letter}
                       href={`#airport-${letter}`}
+                      aria-label={`Airports beginning with ${letter}`}
                     >
                       {letter}
                     </Link>
@@ -107,7 +108,8 @@ export default function AirportTimeCalculatorsDirectory() {
       </section>
       <LocationDirectory
         locations={airportLocations}
-        intro="Every airport-specific calculator is linked here, organized alphabetically so you can choose the airport closest to your trip."
+        title="All airport calculators, A–Z"
+        intro="Airports are organized by the familiar name shown on each link, so Honolulu is under H and Tulsa is under T."
         idPrefix="airport"
       />
       <section className="site-section site-section--tint">

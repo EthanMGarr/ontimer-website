@@ -20,6 +20,7 @@ import {
 } from "@/lib/calendar-links";
 import { getAirportDepartureStatus } from "@/lib/airport-departure-status";
 import { getDefaultAirportEventTime } from "@/lib/airport-planning-default";
+import { scrollCalculatorResultIntoView } from "@/lib/calculator-result-scroll";
 import {
   buildAirportPlanLink,
   type ParsedDepartureAirportPlan,
@@ -238,7 +239,7 @@ async function fetchTravelTime(
 // ─── Analytics ────────────────────────────────────────────────────────────────
 
 /// Routes through the centralized `fireEvent` so airport-specific events inherit
-/// attribution_token, landing_page, and traffic_source like every other tracked event.
+/// the same browser-tag session, acquisition context, and shared event dimensions.
 function track(name: string, params?: Record<string, string | number>) {
   if (typeof window === "undefined") return;
   fireEvent(name, { page_path: window.location.pathname, ...params });
@@ -963,10 +964,7 @@ export default function AirportCalculator({
 
   useEffect(() => {
     if (!genericRedesign || resultScrollRequest === 0 || typeof window === "undefined") return;
-    if (window.innerWidth >= 1024) return;
-    window.requestAnimationFrame(() => {
-      resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    return scrollCalculatorResultIntoView(resultPanelRef.current);
   }, [resultScrollRequest, genericRedesign]);
 
   // ── Manual calculate fallback ───────────────────────────────────────────────
@@ -1751,11 +1749,14 @@ export default function AirportCalculator({
                 )}
 
                 {/* Hero */}
-                <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">{copy.leaveBy}</p>
+                <p className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-zinc-300">
+                  <AirportLeaveIcon className="h-4 w-4 shrink-0 text-green-400" />
+                  <span>{copy.leaveBy}</span>
+                </p>
                 <p className={`mt-1 whitespace-nowrap font-black leading-none ${
                   currentDepartureStatus?.tone === "urgent" ? "text-red-400" : "text-green-500"
                 } ${
-                  resultHeroMode ? "text-6xl sm:text-8xl" : "text-6xl sm:text-7xl"
+                  "text-5xl sm:text-7xl"
                 }`}>
                   {fmtTime(computedResult.leaveTime, locale)}
                 </p>
@@ -2081,6 +2082,25 @@ export default function AirportCalculator({
         </div>
       )}
     </>
+  );
+}
+
+function AirportLeaveIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      data-airport-leave-icon="tabler-plane-departure"
+    >
+      <path d="M14.639 10.258l4.83-1.294a2 2 0 1 1 1.035 3.863L6.015 16.71l-4.45-5.02 2.897-.776 2.45 1.414 2.897-.776-3.743-6.244 2.898-.777 5.675 5.727" />
+      <path d="M3 21h18" />
+    </svg>
   );
 }
 

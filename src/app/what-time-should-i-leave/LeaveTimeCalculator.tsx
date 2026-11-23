@@ -13,6 +13,7 @@ import {
   trackCalculatorStarted,
 } from "@/lib/analytics";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
+import { scrollCalculatorResultIntoView } from "@/lib/calculator-result-scroll";
 import type { SiteLocale } from "@/lib/i18n";
 import {
   invalidAddressMessage,
@@ -740,7 +741,7 @@ export default function LeaveTimeCalculator({
       travel_source: travelSource,
     });
     window.setTimeout(() => {
-      resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      scrollCalculatorResultIntoView(resultPanelRef.current);
     }, 50);
   }
 
@@ -967,8 +968,8 @@ export default function LeaveTimeCalculator({
         {result && (
           <div ref={resultPanelRef} className="min-w-0 scroll-mt-28 lg:sticky lg:top-6 lg:self-start">
             <div className={`rounded-xl border p-5 ${hasPendingChanges ? "border-amber-500/40 bg-amber-500/[0.05]" : "border-zinc-700 bg-zinc-800/80"}`}>
-              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">{copy.leaveBy}</p>
-              <p className="mt-0.5 text-6xl font-black leading-none text-green-500" aria-live="polite" aria-atomic="true">{fmtTime(result.leaveTime, locale)}</p>
+              <p className="text-sm font-bold uppercase tracking-wide text-zinc-300">{copy.leaveBy}</p>
+              <p className="mt-0.5 text-5xl font-black leading-none text-green-500 sm:text-6xl" aria-live="polite" aria-atomic="true">{fmtTime(result.leaveTime, locale)}</p>
               <p className="mt-1.5 text-sm text-zinc-400">{fmtDate(result.leaveTime, locale)}</p>
 
               <div className="mt-4 border-t border-zinc-800 pt-3">
@@ -996,6 +997,7 @@ export default function LeaveTimeCalculator({
                   leaveTimeLabel={fmtTime(result.leaveTime, locale)}
                   analyticsContext={{ planning_purpose: journeyPurpose }}
                   eventPreview={{ title: leaveCalendarEvent?.title ?? `${purposeCopy.eventPrefix} ${copy.destinationFallback}`, startLabel: fmtTime(result.leaveTime, locale) }}
+                  experienceVariant="leave-time-v2"
                 />
               )}
 

@@ -9,12 +9,13 @@ import {
 
 const event = parseFirstPartyAnalyticsEvent({
   event_name: "calculator_completed",
-  client_id: "5e572021-5bf7-4b5d-9a06-83d13a6f61ba",
+  client_id: "1234567890.1791468000",
   params: {
     calculator_type: "airport_leave_time",
     experiment_variant: "app_primary",
     assignment_method: "full_rollout",
     session_id: 1791468000000,
+    engagement_time_msec: 2400,
     ignored_object: { value: "no" },
   },
 });
@@ -32,8 +33,8 @@ assert.equal(payload.user_agent, "Mozilla/5.0 (Linux; Android 15; Pixel 9) Apple
 assert.equal(payload.events[0].name, "calculator_completed");
 assert.equal(payload.events[0].params.experiment_variant, "app_primary");
 assert.equal(payload.events[0].params.session_id, 1791468000000);
-assert.equal(payload.events[0].params.engagement_time_msec, 1);
-assert.equal(payload.events[0].params.transport_source, "first_party");
+assert.equal(payload.events[0].params.engagement_time_msec, 2400);
+assert.equal(payload.events[0].params.transport_source, "server_supplement");
 
 assert.equal(measurementProtocolPayload(event, null).user_agent, undefined);
 assert.equal(measurementProtocolPayload(event, "x".repeat(600)).user_agent?.length, 512);
@@ -41,8 +42,8 @@ assert.equal(measurementProtocolPayload(event, "x".repeat(600)).user_agent?.leng
 const batch = parseFirstPartyAnalyticsEvents({
   client_id: event.client_id,
   events: [
-    { event_name: "experiment_assignment", params: { session_id: 1791468000000 } },
-    { event_name: "calculator_completed", params: { calculator_type: "airport_leave_time" } },
+    { event_name: "experiment_assignment", params: { session_id: 1791468000000, engagement_time_msec: 1200 } },
+    { event_name: "calculator_completed", params: { calculator_type: "airport_leave_time", session_id: 1791468000000, engagement_time_msec: 2400 } },
   ],
 });
 assert.ok(batch);
@@ -63,7 +64,8 @@ assert.equal(parseFirstPartyAnalyticsEvents({
 }), null);
 
 assert.equal(parseFirstPartyAnalyticsEvent({ event_name: "Bad Event", client_id: "12345678" }), null);
-assert.equal(parseFirstPartyAnalyticsEvent({ event_name: "calculator_completed", client_id: "short" }), null);
+assert.equal(parseFirstPartyAnalyticsEvent({ event_name: "calculator_completed", client_id: "synthetic-uuid", params: { session_id: 1, engagement_time_msec: 1 } }), null);
+assert.equal(parseFirstPartyAnalyticsEvent({ event_name: "calculator_completed", client_id: event.client_id, params: { session_id: 1 } }), null, "server supplements require measured engagement time");
 assert.deepEqual(sanitizeAnalyticsParams({ valid_name: 3, BadName: "no", invalid: true }), {
   valid_name: 3,
 });

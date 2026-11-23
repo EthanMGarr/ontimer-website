@@ -41,7 +41,7 @@ assert.equal(
   false,
   "the estimate warning card must not appear before the calendar handoff"
 );
-assert.match(component, /scrollIntoView\(\{ behavior: "smooth", block: "start" \}\)/, "calculation must move the result into view");
+assert.match(component, /scrollCalculatorResultIntoView\(resultRef\.current\)/, "calculation must move the result into view at every viewport width");
 assert.doesNotMatch(component, /exclusivePrimaryAction/, "the event flow must offer OnTimer before calendar use");
 assert.match(component, /postCalendarHeading="Now make sure you leave on time\."/, "the post-calendar focal state must lead with OnTimer's outcome");
 assert.match(page, /robots: isEventIndexable\(event\) \? \{ index: true, follow: true \}/, "usable future event pages must be indexable");

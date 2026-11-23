@@ -47,9 +47,7 @@ export function getDeviceType(): DeviceType {
 export type AnalyticsParams = Record<string, string | number>;
 
 const ATTRIBUTION_TOKEN_KEY = "ontimer_attribution_token";
-const ANALYTICS_SESSION_KEY = "ontimer_analytics_session_id";
 let fallbackAttributionToken: string | null = null;
-let fallbackSessionId: number | null = null;
 
 /**
  * Create the GA command queue before the remote library finishes loading.
@@ -94,87 +92,15 @@ function getAttributionToken(): string {
   return token;
 }
 
-function getAnalyticsSessionId(): number {
-  if (typeof window === "undefined") return Date.now();
-  try {
-    const existing = Number(window.sessionStorage.getItem(ANALYTICS_SESSION_KEY));
-    if (Number.isSafeInteger(existing) && existing > 0) return existing;
-  } catch {
-    // Storage can be unavailable in privacy-restricted browsing contexts.
-  }
-  if (fallbackSessionId) return fallbackSessionId;
-  fallbackSessionId = Date.now();
-  try {
-    window.sessionStorage.setItem(ANALYTICS_SESSION_KEY, String(fallbackSessionId));
-  } catch {
-    // The in-memory ID still keeps events in this page session together.
-  }
-  return fallbackSessionId;
-}
-
-function acquisitionParams(): AnalyticsParams {
-  const search = new URLSearchParams(window.location.search);
-  let source = search.get("utm_source") || "direct";
-  if (source === "direct" && document.referrer) {
-    try {
-      source = new URL(document.referrer).hostname || source;
-    } catch {
-      // Keep the conservative direct fallback for malformed referrers.
-    }
-  }
+function eventContextParams(): AnalyticsParams {
+  const locale = localeForPathname(window.location.pathname);
   return {
     attribution_token: getAttributionToken(),
-    landing_page: window.location.pathname,
-    traffic_source: source,
-    search_query: search.get("utm_term") || "unavailable",
-    content_language: localeForPathname(window.location.pathname),
-    locale: localeForPathname(window.location.pathname),
-    session_id: getAnalyticsSessionId(),
+    page_path: window.location.pathname,
+    content_language: locale,
+    locale,
+    transport_source: "browser_gtag",
   };
-}
-
-interface PendingFirstPartyEvent {
-  clientId: string;
-  eventName: string;
-  params: AnalyticsParams;
-}
-
-const MAX_RELAY_BATCH_SIZE = 10;
-const pendingFirstPartyEvents: PendingFirstPartyEvent[] = [];
-let relayFlushScheduled = false;
-
-function fallBackToBrowserTag(events: PendingFirstPartyEvent[]): void {
-  for (const event of events) window.gtag("event", event.eventName, event.params);
-}
-
-function flushFirstPartyEvents(): void {
-  relayFlushScheduled = false;
-  while (pendingFirstPartyEvents.length > 0) {
-    const events = pendingFirstPartyEvents.splice(0, MAX_RELAY_BATCH_SIZE);
-    void fetch("/api/analytics/events", {
-      method: "POST",
-      keepalive: true,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        client_id: events[0].clientId,
-        events: events.map(({ eventName, params }) => ({ event_name: eventName, params })),
-      }),
-    }).then((response) => {
-      if (!response.ok) fallBackToBrowserTag(events);
-    }).catch(() => {
-      fallBackToBrowserTag(events);
-    });
-  }
-}
-
-function sendFirstPartyEvent(eventName: string, params: AnalyticsParams): void {
-  const clientId = typeof params.attribution_token === "string"
-    ? params.attribution_token
-    : getAttributionToken();
-  pendingFirstPartyEvents.push({ clientId, eventName, params });
-  if (relayFlushScheduled) return;
-  relayFlushScheduled = true;
-  queueMicrotask(flushFirstPartyEvents);
 }
 
 export function fireEvent(eventName: string, params: AnalyticsParams = {}): void {
@@ -185,7 +111,7 @@ export function fireEvent(eventName: string, params: AnalyticsParams = {}): void
   }
 
   if (!initializeAnalytics()) return;
-  const acquisition = acquisitionParams();
+  const eventContext = eventContextParams();
   const experiment = getCalculatorCtaExperimentAssignment(true);
   const calculatorEligibility = getCalculatorCtaEligibility();
   const eligibilityParams: AnalyticsParams = calculatorEligibility
@@ -193,20 +119,20 @@ export function fireEvent(eventName: string, params: AnalyticsParams = {}): void
     : {};
   if (experiment && shouldTrackCalculatorExperimentAssignment()) {
     const experimentParams = {
-      ...acquisition,
+      ...eventContext,
       ...eligibilityParams,
       ...experiment,
     };
-    sendFirstPartyEvent("experiment_assignment", experimentParams);
+    window.gtag("event", "experiment_assignment", experimentParams);
     capturePostHogEvent("experiment_assignment", experimentParams);
   }
   const enrichedParams = {
-    ...acquisition,
+    ...eventContext,
     ...params,
     ...eligibilityParams,
     ...(experiment ?? {}),
   };
-  sendFirstPartyEvent(eventName, enrichedParams);
+  window.gtag("event", eventName, enrichedParams);
   capturePostHogEvent(eventName, enrichedParams);
 }
 

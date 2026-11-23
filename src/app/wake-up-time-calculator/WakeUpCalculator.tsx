@@ -23,6 +23,7 @@ import PlaceAutocomplete from "@/components/PlaceAutocomplete";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { fireEvent, trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
+import { scrollCalculatorResultIntoView } from "@/lib/calculator-result-scroll";
 import type { SiteLocale } from "@/lib/i18n";
 import {
   invalidAddressMessage,
@@ -281,10 +282,8 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
   }, []);
 
   useEffect(() => {
-    if (!result || typeof window === "undefined" || window.innerWidth >= 1024) return;
-    window.requestAnimationFrame(() => {
-      resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    if (!result || typeof window === "undefined") return;
+    return scrollCalculatorResultIntoView(resultPanelRef.current);
   }, [result]);
 
   function handleOriginChange(value: string) {
@@ -573,7 +572,7 @@ export default function WakeUpCalculator({ locale = "en" }: { locale?: SiteLocal
           {result ? (
             <div className="rounded-xl border border-zinc-700 bg-zinc-800 p-6">
               <div className="border-b border-zinc-700 pb-5">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                <p className="mb-1 text-sm font-bold uppercase tracking-wide text-zinc-300">
                   {copy.wakeAt}
                 </p>
                 <p className="text-5xl font-black text-green-500">

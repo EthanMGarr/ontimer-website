@@ -26,7 +26,7 @@ This is the release contract for OnTimer calculators. It protects the required i
 
 - Generic calculators must begin with a neutral prompt rather than a fabricated selection or answer. If a curated selector cannot cover every valid use case, include a clearly labeled “Something else” choice that reveals a text field for the visitor's own value.
 
-- Move focus or scroll to the result after calculation.
+- Move focus or scroll to the result after calculation at every viewport width. Desktop two-column layouts are not exempt: when result-state reordering moves the answer above the submit position, the answer must be repositioned below the sticky site header.
 - Show the answer, date/context, and no more than one compact summary row before the assigned primary action.
 - Do not put a timeline, itemized assumptions, provider details, warning cards, or educational copy before the conversion actions.
 - Put optional calculation detail in a disclosure after the conversion handoff.

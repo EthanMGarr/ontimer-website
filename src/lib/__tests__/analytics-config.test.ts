@@ -83,16 +83,15 @@ assert.equal(analyticsFree.scripts.length, 0);
 const deployableFiles = sourceFiles(resolve("src"));
 const deployableSource = deployableFiles.map((path) => readFileSync(path, "utf8")).join("\n");
 const analyticsSource = readFileSync(resolve("src/lib/analytics.ts"), "utf8");
+const retiredRelaySource = readFileSync(resolve("src/app/api/analytics/events/route.ts"), "utf8");
 assert.equal(deployableSource.includes(legacyMeasurementId), false, "legacy ID must not exist in deployable source");
 assert.equal(deployableSource.includes(iosStreamId), false, "the website must not reuse the iOS stream ID");
 assert.equal(deployableSource.includes("NEXT_PUBLIC_GA_MEASUREMENT_ID"), false, "deployment must not override the web stream ID");
-assert.equal(
-  deployableSource.match(/sendFirstPartyEvent\(eventName,/g)?.length,
-  1,
-  "the central event dispatcher relays each requested custom event once",
-);
-assert.match(analyticsSource, /queueMicrotask\(flushFirstPartyEvents\)/, "same-interaction events must share one relay flush");
-assert.match(analyticsSource, /events: events\.map\(/, "the relay body must use the bounded batch shape");
-assert.doesNotMatch(analyticsSource, /JSON\.stringify\(\{ event_name: eventName/, "the client must not restore one Function request per custom event");
+assert.match(analyticsSource, /window\.gtag\("event", eventName,/, "the central dispatcher must send custom events through the browser tag");
+assert.match(analyticsSource, /transport_source: "browser_gtag"/, "browser events must identify the repaired transport for QA");
+assert.doesNotMatch(analyticsSource, /\/api\/analytics\/events|sendFirstPartyEvent|flushFirstPartyEvents/, "browser events must not use the retired Measurement Protocol relay");
+assert.doesNotMatch(analyticsSource, /traffic_source|landing_page|search_query|session_id/, "custom parameters must not override or imitate GA4 acquisition and session fields");
+assert.match(retiredRelaySource, /status: 410/, "cached legacy bundles must be forced onto their browser-tag fallback");
+assert.doesNotMatch(retiredRelaySource, /mp\/collect|GA4_MEASUREMENT_PROTOCOL_API_SECRET/, "the retired public relay must not send Measurement Protocol events");
 
 console.log("analytics cutover tests passed");

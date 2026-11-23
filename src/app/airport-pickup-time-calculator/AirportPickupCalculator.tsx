@@ -8,6 +8,7 @@ import CalendarOnTimerHandoff from "@/components/leave-time/CalendarOnTimerHando
 import CalculatorDateField from "@/components/leave-time/CalculatorDateField";
 import CurrentLocationControl from "@/components/CurrentLocationControl";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
+import { scrollCalculatorResultIntoView } from "@/lib/calculator-result-scroll";
 import { calculateAirportPickup, pickupTrafficEstimateAt, recommendedPickupTrafficCushion, type AirportPickupPlan } from "@/lib/airport-pickup";
 import {
   buildGoogleCalendarLink,
@@ -119,14 +120,8 @@ export default function AirportPickupCalculator({
   }, [initialAirport]);
 
   useEffect(() => {
-    if (!plan || typeof window === "undefined" || window.innerWidth > 820) return;
-    const frame = window.requestAnimationFrame(() => {
-      resultPanelRef.current?.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-      });
-    });
-    return () => window.cancelAnimationFrame(frame);
+    if (!plan || typeof window === "undefined") return;
+    return scrollCalculatorResultIntoView(resultPanelRef.current);
   }, [plan]);
 
   const recalculateUrl = plan && landingAt && !Number.isNaN(landingAt.getTime())

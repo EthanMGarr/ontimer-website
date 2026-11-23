@@ -186,7 +186,7 @@ assert.match(calculator, /experienceVariant=\{airportV2Pilot \? "airport-v2" : u
 assert.match(handoff, /Never miss the moment to leave for a flight\./, "the pilot result must lead with the recurring flight outcome");
 assert.match(handoff, /Connect your calendar once\.[\s\S]*?automatically finds your flights[\s\S]*?OnTimer is free\./, "the pilot result must explain automatic flight alarms plainly and honestly");
 assert.doesNotMatch(handoff, /OnTimer works backward|How Time To Fly works/, "the pilot result must not add an abstract numbered explainer after the primary action");
-assert.match(handoff, /presentation=\{airportV2 && !calendarOpened \? "app-store-badge" : "button"\}/, "the pilot's primary acquisition action must use the official App Store badge presentation");
+assert.match(handoff, /presentation=\{productLedV2 && !calendarOpened \? "app-store-badge" : "button"\}/, "the product-led calculator results must use the official App Store badge presentation");
 assert.match(handoff, /Or save just this trip[\s\S]*?copy\.addOneGoogle/, "the JFK calendar alternative must remain useful without competing visually with acquisition");
 assert.match(handoff, /<PlaneIcon[\s\S]*?ONTIMER · TIME TO FLY/, "the airport result must identify OnTimer as the app and Time To Fly as its feature");
 assert.match(handoff, /emphasis=\{airportV2 && !calendarOpened \? "flight" : "standard"\}/, "the JFK result must opt into the one-time alarm emphasis without changing other calculators");

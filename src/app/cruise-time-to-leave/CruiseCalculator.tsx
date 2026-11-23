@@ -25,6 +25,7 @@ import {
 import type { CalculatorExample } from "@/lib/travel-locations";
 import { buildGoogleCalendarLink, buildIcsCalendarDataUri, ONTIMER_CALENDAR_DESCRIPTION } from "@/lib/calendar-links";
 import { trackCalculatorCompleted, trackCalculatorStarted } from "@/lib/analytics";
+import { scrollCalculatorResultIntoView } from "@/lib/calculator-result-scroll";
 import {
   invalidAddressMessage,
   isInvalidTravelTimeLocation,
@@ -311,11 +312,7 @@ export default function CruiseCalculator({
 
   useEffect(() => {
     if (!computedResult || typeof window === "undefined") return;
-    if (window.innerWidth >= 1024) return;
-
-    window.requestAnimationFrame(() => {
-      resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    return scrollCalculatorResultIntoView(resultPanelRef.current);
   }, [computedResult]);
 
   useEffect(() => {
@@ -617,8 +614,8 @@ export default function CruiseCalculator({
               <p className="mb-2 text-xs text-zinc-500">
                 For your {fmtTime(computedResult.targetTime)} {eventKind} cruise boarding
               </p>
-              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Leave by</p>
-              <p className="mt-1 whitespace-nowrap text-6xl font-black leading-none text-green-500 sm:text-8xl">
+              <p className="text-sm font-bold uppercase tracking-wide text-zinc-300">Leave by</p>
+              <p className="mt-1 whitespace-nowrap text-5xl font-black leading-none text-green-500 sm:text-7xl">
                 {fmtTime(computedResult.leaveAt)}
               </p>
               <p className="mt-2 text-base text-zinc-300">{fmtDate(computedResult.leaveAt)}</p>

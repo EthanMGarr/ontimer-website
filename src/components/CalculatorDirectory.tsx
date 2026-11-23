@@ -9,26 +9,37 @@ import {
 
 type LocationKind = TravelLocationProfile["kind"];
 
+export function getLocationDirectoryLabel(location: TravelLocationProfile): string {
+  return location.shortName.trim();
+}
+
+function compareDirectoryLocations(a: TravelLocationProfile, b: TravelLocationProfile): number {
+  return getLocationDirectoryLabel(a).localeCompare(getLocationDirectoryLabel(b), "en", {
+    sensitivity: "base",
+  });
+}
+
 export const airportLocations = indexableTravelLocations
   .filter((location) => location.kind === "airport")
-  .sort((a, b) => a.name.localeCompare(b.name));
+  .sort(compareDirectoryLocations);
 
 export const cruiseLocations = indexableTravelLocations
   .filter((location) => location.kind === "cruise-terminal")
-  .sort((a, b) => a.name.localeCompare(b.name));
+  .sort(compareDirectoryLocations);
 
 export function getLocationsByKind(kind: LocationKind): TravelLocationProfile[] {
   return kind === "airport" ? airportLocations : cruiseLocations;
 }
 
 export function groupLocationsAlphabetically(locations: TravelLocationProfile[]) {
-  return locations.reduce<Record<string, TravelLocationProfile[]>>((groups, location) => {
-    const letter = location.name.charAt(0).toUpperCase();
-    return {
-      ...groups,
-      [letter]: [...(groups[letter] ?? []), location],
-    };
-  }, {});
+  const groups: Record<string, TravelLocationProfile[]> = {};
+
+  for (const location of [...locations].sort(compareDirectoryLocations)) {
+    const letter = getLocationDirectoryLabel(location).charAt(0).toUpperCase();
+    groups[letter] = [...(groups[letter] ?? []), location];
+  }
+
+  return groups;
 }
 
 export function DirectoryShell({
@@ -61,10 +72,12 @@ export function DirectoryShell({
 
 export function LocationDirectory({
   locations,
+  title = "All calculators, A–Z",
   intro,
   idPrefix,
 }: {
   locations: TravelLocationProfile[];
+  title?: string;
   intro: string;
   idPrefix?: string;
 }) {
@@ -75,8 +88,8 @@ export function LocationDirectory({
     <section className="site-directory-section">
       <div className="site-shell site-directory-grid">
           <div className="site-directory-intro">
-            <p>{locations.length} calculators</p>
-            <p>{intro}</p>
+            <h2>{title}</h2>
+            <p>{locations.length} calculators. {intro}</p>
           </div>
 
           <div className="site-directory-groups">

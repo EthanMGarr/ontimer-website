@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Homepage from "@/app/homepage2/page";
 
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: { absolute: "OnTimer Calendar Alarm App for iPhone | Never Be Late Again" },
   description:

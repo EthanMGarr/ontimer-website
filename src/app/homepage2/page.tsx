@@ -4,6 +4,10 @@ import Link from "next/link";
 import { Bricolage_Grotesque, IBM_Plex_Sans } from "next/font/google";
 import { Homepage2DownloadCTA } from "@/components/Homepage2DownloadCTA";
 import { KTVUProof } from "@/components/KTVUProof";
+import {
+  isTulsaAnnouncementActive,
+  TulsaAnnouncementBar,
+} from "@/components/TulsaAnnouncementBar";
 import { ANDROID_WAITLIST_URL, APP_STORE_URL } from "@/lib/constants";
 import { homepageFaqs, productFacts } from "@/lib/product-facts";
 import "./homepage2-page.css";
@@ -28,6 +32,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://www.ontimer.app/" },
   robots: { index: false, follow: true },
 };
+
+export const revalidate = 300;
 
 const faqs = [
   ...homepageFaqs.map((faq) => ({ ...faq, link: undefined })),
@@ -120,11 +126,12 @@ function ArrowIcon() {
   );
 }
 
-function ToolIcon({ kind }: { kind: "leave" | "travel" | "medication" | "all" }) {
+function ToolIcon({ kind }: { kind: "leave" | "travel" | "medication" | "deadline" | "all" }) {
   const paths = {
     leave: <><circle cx="12" cy="12" r="8" /><path d="M12 7v5l3 2" /></>,
     travel: <><path d="m3 13 8-2 5-6 2 1-3 6 5 3-1 2-6-2-5 6-2-1 3-6-6 1Z" /></>,
     medication: <><path d="M8 4h8v16H8zM5 9h3m8 6h3" /><path d="M12 8v8m-4-4h8" /></>,
+    deadline: <><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M8 3v4m8-4v4M4 10h16m-12 4h3m2 0h3" /></>,
     all: <><circle cx="5" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /></>,
   };
 
@@ -138,6 +145,8 @@ export default function Homepage2() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      {isTulsaAnnouncementActive() ? <TulsaAnnouncementBar /> : null}
 
       <section className="hp2-hero" aria-labelledby="hp2-title">
         <div className="hp2-shell hp2-hero-grid">
@@ -352,6 +361,14 @@ export default function Homepage2() {
               <span>
                 <strong>I need a medication schedule</strong>
                 <small>Personal, caregiver, and veterinary planners.</small>
+              </span>
+              <ArrowIcon />
+            </Link>
+            <Link className="hp2-tool-card" href="/time-calculators#tax-deadlines">
+              <ToolIcon kind="deadline" />
+              <span>
+                <strong>I need to remember a tax deadline</strong>
+                <small>Choose 2026 or 2027 and download the complete reminder schedule.</small>
               </span>
               <ArrowIcon />
             </Link>

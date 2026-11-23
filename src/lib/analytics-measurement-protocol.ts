@@ -4,9 +4,8 @@ const EVENT_NAME_PATTERN = /^[a-z][a-z0-9_]{0,39}$/;
 const PARAM_NAME_PATTERN = /^[a-z][a-z0-9_]{0,39}$/;
 const MAX_STRING_VALUE_LENGTH = 100;
 const MAX_EVENTS_PER_REQUEST = 10;
-// Reserve two of GA4's 25 event-parameter slots for the relay's
-// engagement_time_msec and transport_source fields.
-const MAX_CLIENT_EVENT_PARAMS = 23;
+// Reserve one of GA4's 25 event-parameter slots for the transport marker.
+const MAX_CLIENT_EVENT_PARAMS = 24;
 
 export interface FirstPartyAnalyticsEvent {
   event_name: string;
@@ -24,7 +23,7 @@ export interface MeasurementProtocolPayload {
 }
 
 function validClientId(value: unknown): value is string {
-  return typeof value === "string" && value.length >= 8 && value.length <= 128;
+  return typeof value === "string" && /^\d{1,20}\.\d{1,20}$/.test(value);
 }
 
 function sanitizedValue(value: string | number): string | number | null {
@@ -58,17 +57,27 @@ export function parseFirstPartyAnalyticsEvent(value: unknown): FirstPartyAnalyti
     return null;
   }
 
+  const params = sanitizeAnalyticsParams(candidate.params);
+  if (
+    !Number.isSafeInteger(params.session_id) ||
+    Number(params.session_id) <= 0 ||
+    !Number.isSafeInteger(params.engagement_time_msec) ||
+    Number(params.engagement_time_msec) <= 0
+  ) {
+    return null;
+  }
+
   return {
     event_name: candidate.event_name,
     client_id: candidate.client_id,
-    params: sanitizeAnalyticsParams(candidate.params),
+    params,
   };
 }
 
 /**
- * Accept the original single-event body as well as the bounded batch emitted by
- * current clients. Keeping the legacy form prevents a deployment from dropping
- * events sent by a browser with an older cached bundle.
+ * Dormant safety contract for a future genuine server-side supplement. The
+ * public browser relay is retired; any future caller must supply native GA
+ * identity plus measured session engagement instead of generated substitutes.
  */
 export function parseFirstPartyAnalyticsEvents(value: unknown): FirstPartyAnalyticsEvent[] | null {
   const single = parseFirstPartyAnalyticsEvent(value);
@@ -92,7 +101,6 @@ export function measurementProtocolPayload(
   event: FirstPartyAnalyticsEvent,
   userAgent?: string | null,
 ): MeasurementProtocolPayload {
-  const sessionId = event.params.session_id;
   return {
     client_id: event.client_id,
     ...(userAgent ? { user_agent: userAgent.slice(0, 512) } : {}),
@@ -100,9 +108,7 @@ export function measurementProtocolPayload(
       name: event.event_name,
       params: {
         ...event.params,
-        session_id: typeof sessionId === "number" ? sessionId : Date.now(),
-        engagement_time_msec: 1,
-        transport_source: "first_party",
+        transport_source: "server_supplement",
       },
     }],
   };
@@ -118,14 +124,11 @@ export function measurementProtocolBatchPayload(
     client_id: first.client_id,
     ...(userAgent ? { user_agent: userAgent.slice(0, 512) } : {}),
     events: events.map((event) => {
-      const sessionId = event.params.session_id;
       return {
         name: event.event_name,
         params: {
           ...event.params,
-          session_id: typeof sessionId === "number" ? sessionId : Date.now(),
-          engagement_time_msec: 1,
-          transport_source: "first_party",
+          transport_source: "server_supplement",
         },
       };
     }),

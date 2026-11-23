@@ -7,7 +7,8 @@ const ktvuPagePath = path.join(root, "src", "app", "KTVU", "page.tsx");
 const ktvuActionsPath = path.join(root, "src", "app", "KTVU", "KTVUActions.tsx");
 const ktvuStylesPath = path.join(root, "src", "app", "KTVU", "ktvu.css");
 const homepagePath = path.join(root, "src", "app", "homepage2", "page.tsx");
-const announcementPath = path.join(root, "src", "components", "KTVUAnnouncementBar.tsx");
+const homepageRoutePath = path.join(root, "src", "app", "page.tsx");
+const announcementPath = path.join(root, "src", "components", "TulsaAnnouncementBar.tsx");
 const announcementStylesPath = path.join(root, "src", "components", "KTVUAnnouncementBar.module.css");
 const middlewarePath = path.join(root, "src", "middleware.ts");
 const pressPagePath = path.join(root, "src", "app", "press", "page.tsx");
@@ -32,6 +33,7 @@ const page = readFileSync(ktvuPagePath, "utf8");
 const actions = readFileSync(ktvuActionsPath, "utf8");
 const styles = readFileSync(ktvuStylesPath, "utf8");
 const homepage = readFileSync(homepagePath, "utf8");
+const homepageRoute = readFileSync(homepageRoutePath, "utf8");
 const announcement = readFileSync(announcementPath, "utf8");
 const announcementStyles = readFileSync(announcementStylesPath, "utf8");
 const middleware = readFileSync(middlewarePath, "utf8");
@@ -69,18 +71,28 @@ assert.ok(
 );
 assert.match(
   announcement,
-  /Watching KTVU\? Calculate when to leave for SFO, OAK or SJC →/,
-  "homepage announcement must keep the approved KTVU copy",
+  /Welcome FOX23 Tulsa viewers: Calculate when to leave for TUL →/,
+  "homepage announcement must keep the approved Tulsa copy",
 );
 assert.match(
   announcement,
-  /https:\/\/www\.ontimer\.app\/KTVU\?utm_source=ontimer_home&utm_medium=site_banner&utm_campaign=ktvu_interview/,
-  "homepage announcement must keep its exact campaign URL",
+  /\/airport-time-to-leave\/tulsa-tul\?utm_source=ontimer_home&utm_medium=site_banner&utm_campaign=tulsa_tv_interview_2026&utm_content=tul_airport_calculator/,
+  "homepage announcement must keep its exact campaign-attributed TUL calculator URL",
 );
+assert.match(announcement, /2026-11-16T05:00:00Z/, "Tulsa announcement must start at midnight Eastern on November 16");
+assert.match(announcement, /2026-11-21T05:00:00Z/, "Tulsa announcement must expire exactly five days later");
+const [, announcementStart] = announcement.match(/TULSA_ANNOUNCEMENT_START_MS = Date\.parse\("([^"]+)"\)/) ?? [];
+const [, announcementEnd] = announcement.match(/TULSA_ANNOUNCEMENT_END_MS = Date\.parse\("([^"]+)"\)/) ?? [];
+assert.equal(Date.parse(announcementEnd) - Date.parse(announcementStart), 5 * 24 * 60 * 60 * 1000, "Tulsa announcement window must be exactly five 24-hour days");
+assert.match(announcement, /now >= TULSA_ANNOUNCEMENT_START_MS && now < TULSA_ANNOUNCEMENT_END_MS/, "Tulsa announcement must enforce both campaign boundaries");
 assert.ok(
-  homepage.indexOf("<KTVUAnnouncementBar />") < homepage.indexOf('className="hp2-hero"'),
-  "homepage announcement must render before the hero",
+  homepage.indexOf("<TulsaAnnouncementBar />") < homepage.indexOf('className="hp2-hero"'),
+  "active Tulsa announcement must render before the hero",
 );
+assert.match(homepage, /isTulsaAnnouncementActive\(\) \? <TulsaAnnouncementBar \/> : null/, "homepage must hide the banner outside its five-day window");
+assert.match(homepage, /export const revalidate = 300/, "the homepage component must recheck the server-rendered banner window at least every five minutes");
+assert.match(homepageRoute, /export const revalidate = 300/, "the canonical homepage route must opt into five-minute revalidation");
+assert.doesNotMatch(homepage, /KTVUAnnouncementBar/, "the retired KTVU announcement must not return to the homepage");
 assert.doesNotMatch(
   announcementStyles,
   /position:\s*(?:sticky|fixed)/,
@@ -105,4 +117,4 @@ assert.match(
 assert.match(sitemap, /url: `\$\{baseUrl\}\/press`/, "press page must remain in the XML sitemap");
 assert.match(footer, /\["Press", "\/press"\]/, "the shared English footer must link to the press page");
 
-console.log("Critical public-route regression passed (26 checks).");
+console.log("Critical public-route regression passed (Tulsa campaign window and KTVU archive checks).");

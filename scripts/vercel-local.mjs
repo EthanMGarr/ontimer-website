@@ -154,6 +154,23 @@ function verifyCriticalRoutes() {
   }
 }
 
+function verifyPostHogRelease() {
+  console.log("Running PostHog production release guardrails...");
+  const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+  const result = spawnSync(npmCommand, ["run", "test:posthog-release"], {
+    cwd: repositoryRoot,
+    env: process.env,
+    stdio: "inherit",
+  });
+
+  if (result.error) {
+    fail(`could not start PostHog release guardrails. ${result.error.message}`);
+  }
+  if ((result.status ?? 1) !== 0) {
+    fail("PostHog release guardrails failed; production deployment is blocked.");
+  }
+}
+
 const action = process.argv[2];
 const pinnedVersion = verifyPinnedCli();
 
@@ -173,6 +190,7 @@ if (action !== "check" && action !== "deploy-production") {
 const projectName = verifyProjectLink();
 verifyCalculatorReleaseGuardrails();
 verifyCriticalRoutes();
+verifyPostHogRelease();
 verifyAuthentication();
 console.log(
   `Vercel preflight passed: local CLI ${pinnedVersion}, linked project ${projectName}.`,

@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(path, "utf8");
 const handoff = read("src/components/leave-time/CalendarOnTimerHandoff.tsx");
+const qrPopover = read("src/components/AppStoreQRPopover.tsx");
 const airportCalculator = read("src/app/airport-time-to-leave-calculator/AirportCalculator.tsx");
 const calendarLinks = read("src/lib/calendar-links.ts");
 const airportPage = read("src/app/airport-time-to-leave-calculator/page.tsx");
@@ -11,6 +12,9 @@ const airportPrefill = read("src/components/airport/AirportCalculatorPlanPrefill
 const generalLeaveCalculator = read("src/app/what-time-should-i-leave/LeaveTimeCalculator.tsx");
 const cruiseCalculator = read("src/app/cruise-time-to-leave/CruiseCalculator.tsx");
 const wakeUpCalculator = read("src/app/wake-up-time-calculator/WakeUpCalculator.tsx");
+const pickupCalculator = read("src/app/airport-pickup-time-calculator/AirportPickupCalculator.tsx");
+const eventCalculator = read("src/app/events/[slug]/when-to-leave/EventLeaveCalculator.tsx");
+const resultScroll = read("src/lib/calculator-result-scroll.ts");
 const analytics = read("src/lib/analytics.ts");
 const experiment = read("src/lib/calculator-cta-experiment.ts");
 const callers = [
@@ -45,6 +49,10 @@ assert.match(handoff, /OnTimer is free\. Turn calendar events into automatic ala
 assert.match(handoff, /Works with Google Calendar, Apple Calendar, and Outlook Calendar\./, "the shared supporting line must provide compatibility proof instead of repeating price");
 assert.match(handoff, /OnTimer es gratis\. Convierte los eventos de tu calendario en alarmas automáticas\./, "the shared Spanish offer must retain the same free-value disclosure");
 assert.doesNotMatch(handoff, /free to download|Free download on the App Store|se descarga gratis|Descarga gratis en App Store/, "calculator acquisition copy must not qualify or repeat the free claim");
+assert.match(qrPopover, /createPortal\([\s\S]*?document\.body/, "desktop QR popovers must escape clipped page and card containers");
+assert.match(qrPopover, /roomBelow[\s\S]*?roomAbove[\s\S]*?actualPlacement/, "desktop QR popovers must choose the visible side of their trigger");
+assert.match(qrPopover, /window\.addEventListener\("scroll", positionPopover, true\)/, "desktop QR popovers must remain anchored while nested containers scroll");
+assert.match(qrPopover, /role="dialog"[\s\S]*?aria-label="Download OnTimer QR code"/, "the portaled QR panel must retain an accessible dialog identity");
 assert.doesNotMatch(airportCalculator, /locationCode === "EWR"[\s\S]*?buildAirportPlanLink/, "departure airport-plan links must not remain limited to EWR");
 assert.match(airportCalculator, /computedResult && flightDepartureAt[\s\S]*?buildAirportPlanLink/, "every completed departure result must build an airport-plan link");
 assert.equal((airportCalculator.match(/details: calendarDetails/g) ?? []).length, 3, "every departure Google and ICS calendar builder must use the recalculation description");
@@ -59,7 +67,27 @@ assert.match(airportPrefill, /useSearchParams\(\)[\s\S]*?initialPlan=/, "the gen
 assertSourceOrder(generalLeaveCalculator, "<CalendarOnTimerHandoff", "copy.adjustAssumptions", "general leave-time adjustments must follow the conversion handoff");
 assertSourceOrder(airportCalculator, "<CalendarOnTimerHandoff", "copy.adjustAssumptions", "airport adjustments must follow the conversion handoff");
 assertSourceOrder(cruiseCalculator, "<CalendarOnTimerHandoff", "Adjust details", "cruise adjustments must follow the conversion handoff");
-assert.match(wakeUpCalculator, /resultPanelRef\.current\?\.scrollIntoView/, "wake-up calculation must move the mobile viewport to the result");
+for (const [name, source] of [
+  ["general leave-time", generalLeaveCalculator],
+  ["airport leave-time", airportCalculator],
+  ["cruise leave-time", cruiseCalculator],
+  ["wake-up", wakeUpCalculator],
+  ["airport pickup", pickupCalculator],
+  ["event leave-time", eventCalculator],
+]) {
+  assert.match(source, /scrollCalculatorResultIntoView/, `${name} calculation must move the result into view at every viewport width`);
+}
+assert.doesNotMatch(airportCalculator, /resultScrollRequest[\s\S]{0,400}window\.innerWidth/, "airport result positioning must not be suppressed on desktop");
+assert.doesNotMatch(cruiseCalculator, /computedResult[\s\S]{0,250}window\.innerWidth/, "cruise result positioning must not be suppressed on desktop");
+assert.doesNotMatch(wakeUpCalculator, /result[\s\S]{0,250}window\.innerWidth/, "wake-up result positioning must not be suppressed on desktop");
+assert.doesNotMatch(pickupCalculator, /plan[\s\S]{0,250}window\.innerWidth/, "airport pickup result positioning must not be suppressed on desktop");
+assert.match(resultScroll, /prefers-reduced-motion: reduce/, "shared result positioning must respect reduced-motion preferences");
+assert.match(airportCalculator, /data-airport-leave-icon="tabler-plane-departure"/, "airport results must use the selected Tabler takeoff icon beside the payoff");
+assert.match(airportCalculator, /M14\.639 10\.258l4\.83-1\.294/, "airport results must retain the approved plane-departure silhouette");
+assert.match(airportCalculator, /text-sm font-bold uppercase tracking-wide text-zinc-300[\s\S]{0,180}\{copy\.leaveBy\}/, "airport results must emphasize the leave-by payoff label");
+assert.match(cruiseCalculator, /text-sm font-bold uppercase tracking-wide text-zinc-300[^>]*>Leave by/, "cruise results must emphasize the leave-by payoff label");
+assert.match(generalLeaveCalculator, /text-sm font-bold uppercase tracking-wide text-zinc-300[^>]*>\{copy\.leaveBy\}/, "general results must emphasize the leave-by payoff label");
+assert.match(wakeUpCalculator, /text-sm font-bold uppercase tracking-wide text-zinc-300/, "wake-up results must emphasize the answer label");
 assertSourceOrder(wakeUpCalculator, "<CalendarOnTimerHandoff", "className=\"mt-4 space-y-3", "wake-up calculation details must follow the conversion handoff");
 
 for (const path of callers) {
