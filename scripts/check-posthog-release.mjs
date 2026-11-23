@@ -23,6 +23,8 @@ const pageViews = read("src/components/GoogleAnalytics.tsx");
 const medicationPrivacy = read("src/lib/medication-route-privacy.ts");
 const privacyPolicy = read("public/OnTimer_Privacy_Policy.html");
 const terms = read("public/OnTimer_Terms_of_Service.html");
+const privacyRoute = read("src/app/privacy/page.tsx");
+const termsRoute = read("src/app/terms/page.tsx");
 const deployWorkflow = read("scripts/vercel-local.mjs");
 
 if (!packageJson.dependencies?.["posthog-js"]) {
@@ -40,6 +42,16 @@ requireText(pageViews, "capturePostHogPageView(pageProperties)", "pageviews are 
 requireText(medicationPrivacy, "/medication-schedule", "the medication privacy boundary is missing");
 requireText(privacyPolicy, "PostHog", "the Privacy Policy does not disclose PostHog");
 requireText(terms, "PostHog", "the Terms do not name PostHog as a third-party service");
+requireText(
+  privacyRoute,
+  'permanentRedirect("/OnTimer_Privacy_Policy.html")',
+  "the /privacy route can drift from the canonical Privacy Policy"
+);
+requireText(
+  termsRoute,
+  'permanentRedirect("/OnTimer_Terms_of_Service.html")',
+  "the /terms route can drift from the canonical Terms"
+);
 requireText(deployWorkflow, "test:posthog-release", "production deploys do not run this guard");
 
 console.log("PostHog production release guard passed.");
